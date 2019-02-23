@@ -22,7 +22,9 @@ public class TypeVerifyPattern {
 
     public static <V, T> void matches(V value,
                                       Class<T> clazz, Consumer<T> consumer) {
-        if (clazz == value.getClass()) {
+        Class<?> valueClass = value.getClass();
+
+        if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
             consumer.accept((T) value);
         }
     }
@@ -62,9 +64,11 @@ public class TypeVerifyPattern {
     public static <V, T1, T2> void matches(V value,
                                            Class<T1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<T2> secondClazz, Consumer<T2> secondConsumer) {
-        if (firstClazz == value.getClass()) {
+        Class<?> valueClass = value.getClass();
+
+        if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-        } else if (secondClazz == value.getClass()) {
+        } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
         }
     }
@@ -115,11 +119,13 @@ public class TypeVerifyPattern {
                                                Class<T1> firstClazz,  Consumer<T1> firstConsumer,
                                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
                                                Class<T3> thirdClazz,  Consumer<T3> thirdConsumer) {
-        if (firstClazz == value.getClass()) {
+        Class<?> valueClass = value.getClass();
+
+        if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-        } else if (secondClazz == value.getClass()) {
+        } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-        } else if (thirdClazz == value.getClass()) {
+        } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
         }
     }
@@ -182,13 +188,15 @@ public class TypeVerifyPattern {
                                                    Class<T2> secondClazz, Consumer<T2> secondConsumer,
                                                    Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
                                                    Class<T4> forthClazz,  Consumer<T4> forthConsumer) {
-        if (firstClazz == value.getClass()) {
+        Class<?> valueClass = value.getClass();
+
+        if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-        } else if (secondClazz == value.getClass()) {
+        } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-        } else if (thirdClazz == value.getClass()) {
+        } else if (thirdClazz == valueClass  || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
-        } else if (forthClazz == value.getClass()) {
+        } else if (forthClazz == valueClass  || Reflection.isPrimitive(forthClazz, valueClass)) {
             forthConsumer.accept((T4) value);
         }
     }
@@ -262,15 +270,17 @@ public class TypeVerifyPattern {
                                                        Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
                                                        Class<T4> forthClazz,  Consumer<T4> forthConsumer,
                                                        Class<T5> fifthClazz,  Consumer<T5> fifthConsumer) {
-        if (firstClazz == value.getClass()) {
+        Class<?> valueClass = value.getClass();
+
+        if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-        } else if (secondClazz == value.getClass()) {
+        } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-        } else if (thirdClazz == value.getClass()) {
+        } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
-        } else if (forthClazz == value.getClass()) {
+        } else if (forthClazz == valueClass || Reflection.isPrimitive(forthClazz, valueClass)) {
             forthConsumer.accept((T4) value);
-        } else if (fifthClazz == value.getClass()) {
+        } else if (fifthClazz == valueClass || Reflection.isPrimitive(fifthClazz, valueClass)) {
             fifthConsumer.accept((T5) value);
         }
     }

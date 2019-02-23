@@ -1,10 +1,9 @@
 package org.kl;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.kl.state.Default;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.kl.state.Default;
 import static org.kl.handle.TypeVerifyPattern.matches;
 
 public class TypeVerifyPatternTest {
@@ -32,13 +31,17 @@ public class TypeVerifyPatternTest {
         }
     }
 
-//    @Disabled
     @Test
     public void matchesStatementTest() {
         /* 1 */
         byte value1 = 5;
         matches(value1,
                 Byte.class,  b  -> { System.out.println(b * b); }
+        );
+
+        /* 1.1 */
+        matches(value1,
+                byte.class,  b -> { System.out.println("pc1: " + b * b * b); }
         );
 
         /* 2 */
@@ -48,12 +51,25 @@ public class TypeVerifyPatternTest {
                 Short.class, s -> { System.out.println(s * s); }
         );
 
+        /* 2.1 */
+        matches(value2,
+                byte.class,  b -> { System.out.println("pc2: " + b * b * b); },
+                short.class, s -> { System.out.println("pc2: " + s * s * s); }
+        );
+
         /* 3 */
         int value3 = 25;
         matches(value3,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); }
+        );
+
+        /* 3.1 */
+        matches(value3,
+                byte.class,    b -> { System.out.println("pc3: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc3: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc3: " + i * i * i); }
         );
 
         /* 4 */
@@ -65,6 +81,14 @@ public class TypeVerifyPatternTest {
                 Long.class,    l -> { System.out.println(l * l); }
         );
 
+        /* 4.1 */
+        matches(value4,
+                byte.class,    b -> { System.out.println("pc4: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc4: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc4: " + i * i * i); },
+                long.class,    l -> { System.out.println("pc4: " + l * l * l); }
+        );
+
         /* 5 */
         float value5 = 45;
         matches(value5,
@@ -73,6 +97,15 @@ public class TypeVerifyPatternTest {
                 Integer.class, i -> { System.out.println(i * i); },
                 Long.class,    l -> { System.out.println(l * l); },
                 Float.class,   f -> { System.out.println(f * f); }
+        );
+
+        /* 5.1 */
+        matches(value5,
+                byte.class,    b -> { System.out.println("pc5: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc5: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc5: " + i * i * i); },
+                long.class,    l -> { System.out.println("pc5: " + l * l * l); },
+                float.class,   f -> { System.out.println("pc5: " + f * f * f); }
         );
 
         /* 6 */
@@ -86,18 +119,17 @@ public class TypeVerifyPatternTest {
                 Double.class,  d -> { System.out.println(d * d); }
         );
 
-        /* 7 */
-        int value7 = 65;
-        matches(value7,
-                byte.class,    b -> { System.out.println("v7: " + b * b * b); },
-                short.class,   s -> { System.out.println("v7: " + s * s * s); },
-                int.class,     i -> { System.out.println("v7: " + i * i * i); },
-                long.class,    l -> { System.out.println("v7: " + l * l * l); },
-                float.class,   f -> { System.out.println("v7: " + f * f * f); },
-                double.class,  d -> { System.out.println("v7: " + d * d * d); }
+        /* 6.1 */
+        matches(value6,
+                byte.class,    b -> { System.out.println("pc6: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc6: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc6: " + i * i * i); },
+                long.class,    l -> { System.out.println("pc6: " + l * l * l); },
+                float.class,   f -> { System.out.println("pc6: " + f * f * f); },
+                double.class,  d -> { System.out.println("pc6: " + d * d * d); }
         );
 
-        /* 8 */
+        /* 7 */
         Figure figure = new Rectangle();
 
         matches(figure,
@@ -106,7 +138,6 @@ public class TypeVerifyPatternTest {
         );
     }
 
-//    @Disabled
     @Test
     public void matchesStatementWithDefaultTest() {
         String data = "unknown";

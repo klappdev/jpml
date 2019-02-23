@@ -1,3 +1,3 @@
 package org.kl.state;
 
-public enum Default {}
+public enum Null {}

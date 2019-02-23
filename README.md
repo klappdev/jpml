@@ -107,6 +107,6 @@ Using this library developer can write in the following way.
    );
 ```
 
-Requirements:
+Requirements:<br/>
 JDK: Java 8
 
