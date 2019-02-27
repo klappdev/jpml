@@ -11,7 +11,7 @@ public class TypeGuardPatternTest {
         /* 1 */
         byte value1 = 5;
         matches(value1,
-                Byte.class, b  -> b > - 1,
+                Byte.class, b -> b > - 1,
                             b -> { System.out.println(b * b); }
         );
     }
