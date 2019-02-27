@@ -2,8 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2d3967a-d96d-43a3-9fef-664a8a2a8200" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/jpml/org/kl/DeconstructPatternTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/jpml/org/kl/DeconstructPatternTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/jpml/org/kl/TypeVerifyPatternTest$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/jpml/org/kl/TypeVerifyPatternTest$Circle.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/jpml/org/kl/TypeVerifyPatternTest$Figure.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/jpml/org/kl/TypeVerifyPatternTest$Rectangle.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/jpml/org/kl/TypeVerifyPatternTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/jpml/org/kl/TypeVerifyPatternTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,8 +44,8 @@
       <file leaf-file-name="TypeVerifyPattern.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="48" selection-start-line="48" selection-end-line="48" />
+            <state relative-caret-position="373">
+              <caret line="27" column="5" lean-forward="true" selection-start-line="20" selection-start-column="4" selection-end-line="27" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -44,20 +53,35 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DeconstructPattern.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java">
+      <file leaf-file-name="TypeGuardPattern.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="258">
-              <caret line="749" column="56" selection-start-line="749" selection-start-column="56" selection-end-line="749" selection-end-column="56" />
+            <state relative-caret-position="255">
+              <caret line="15" column="43" lean-forward="true" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DeconstructPatternTest.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java">
+      <file leaf-file-name="TypeVerifyPatternTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="450" column="31" lean-forward="true" selection-start-line="450" selection-start-column="31" selection-end-line="450" selection-end-column="31" />
+            <state relative-caret-position="170">
+              <caret line="17" column="13" lean-forward="true" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TypeGuardPatternTest.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -68,9 +92,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="Enum" />
         <option value="AnnotationType" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -118,7 +142,6 @@
         <option value="$PROJECT_DIR$/src/org/kl/Starter.java" />
         <option value="$PROJECT_DIR$/src/org/kl/handle/PatternHandler.java" />
         <option value="$PROJECT_DIR$/test/org/kl/PatterHandlerTest.java" />
-        <option value="$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java" />
         <option value="$PROJECT_DIR$/src/org/kl/lambda/QuarConsumer.java" />
         <option value="$PROJECT_DIR$/src/org/kl/lambda/TriConsumer.java" />
         <option value="$PROJECT_DIR$/src/org/kl/lambda/TriFunction.java" />
@@ -143,8 +166,6 @@
         <option value="$PROJECT_DIR$/test/org/kl/shape/Parallelepiped.java" />
         <option value="$PROJECT_DIR$/test/org/kl/shape/Tripiped.java" />
         <option value="$PROJECT_DIR$/test/org/kl/shape/Quarpiped.java" />
-        <option value="$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java" />
-        <option value="$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java" />
         <option value="$PROJECT_DIR$/test/org/kl/shape/Unpiped.java" />
         <option value="$PROJECT_DIR$/test/org/kl/shape/Bipiped.java" />
         <option value="$PROJECT_DIR$/src/org/kl/state/Default.java" />
@@ -152,6 +173,10 @@
         <option value="$PROJECT_DIR$/src/org/kl/attr/Nullable.java" />
         <option value="$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java" />
         <option value="$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java" />
+        <option value="$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java" />
+        <option value="$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java" />
+        <option value="$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java" />
+        <option value="$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java" />
       </list>
     </option>
   </component>
@@ -234,6 +259,11 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.kl" />
+    </key>
+  </component>
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -246,7 +276,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.DeconstructPatternTest">
+  <component name="RunManager" selected="JUnit.TypeGuardPatternTest">
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     </configuration>
@@ -262,6 +292,29 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="org.kl" />
       <option name="MAIN_CLASS_NAME" value="org.kl.DeconstructPatternTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration name="TypeGuardPatternTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jpml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.kl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.kl" />
+      <option name="MAIN_CLASS_NAME" value="org.kl.TypeGuardPatternTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -337,11 +390,13 @@
     <list>
       <item itemvalue="JUnit.TypeVerifyPatternTest" />
       <item itemvalue="JUnit.DeconstructPatternTest" />
+      <item itemvalue="JUnit.TypeGuardPatternTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.DeconstructPatternTest" />
+        <item itemvalue="JUnit.TypeGuardPatternTest" />
         <item itemvalue="JUnit.TypeVerifyPatternTest" />
+        <item itemvalue="JUnit.DeconstructPatternTest" />
       </list>
     </recent_temporary>
   </component>
@@ -372,24 +427,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="DeconstructPatternTest - 2019.02.27 at 13h 43m 06s.xml">
-      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="DeconstructPatternTest - 2019.02.27 at 13h 46m 50s.xml">
-      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="DeconstructPatternTest - 2019.02.27 at 13h 47m 09s.xml">
-      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="DeconstructPatternTest - 2019.02.27 at 13h 47m 26s.xml">
-      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="DeconstructPatternTest - 2019.02.27 at 13h 57m 23s.xml">
-      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="DeconstructPatternTest - 2019.02.27 at 14h 05m 29s.xml">
-      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="DeconstructPatternTest - 2019.02.27 at 14h 11m 15s.xml">
       <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
@@ -402,9 +439,27 @@
     <history-entry file="DeconstructPatternTest - 2019.02.27 at 14h 17m 51s.xml">
       <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 14h 26m 11s.xml">
+      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 14h 32m 52s.xml">
+      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TypeGuardPatternTest - 2019.02.27 at 14h 33m 02s.xml">
+      <configuration name="TypeGuardPatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TypeGuardPatternTest - 2019.02.27 at 14h 33m 16s.xml">
+      <configuration name="TypeGuardPatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TypeGuardPatternTest - 2019.02.27 at 14h 33m 27s.xml">
+      <configuration name="TypeGuardPatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TypeGuardPatternTest - 2019.02.27 at 14h 33m 36s.xml">
+      <configuration name="TypeGuardPatternTest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="76320000" />
+    <option name="totallyTimeSpent" value="77260000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -420,7 +475,7 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="3" weight="0.3294893" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.4003295" />
+      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.4003295" />
       <window_info anchor="bottom" id="Terminal" order="1" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="0" />
@@ -529,8 +584,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/kl/lambda/ClassConsumer.java" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/lang/Class.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/lang/Integer.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/lang/Boolean.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/util/function/Function.java" />
@@ -678,13 +731,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="59" column="15" lean-forward="true" selection-start-line="59" selection-start-column="15" selection-end-line="59" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/org/kl/shape/Rectangle.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -724,23 +770,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="48" selection-start-line="48" selection-end-line="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="33" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -794,8 +823,52 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="450" column="31" lean-forward="true" selection-start-line="450" selection-start-column="31" selection-end-line="450" selection-end-column="31" />
+        <state relative-caret-position="270">
+          <caret line="472" column="31" lean-forward="true" selection-start-line="472" selection-start-column="31" selection-end-line="472" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="373">
+          <caret line="27" column="5" lean-forward="true" selection-start-line="20" selection-start-column="4" selection-end-line="27" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/util/function/Predicate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="406">
+          <caret line="48" column="22" lean-forward="true" selection-start-line="48" selection-start-column="22" selection-end-line="48" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="43" lean-forward="true" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="17" column="13" lean-forward="true" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

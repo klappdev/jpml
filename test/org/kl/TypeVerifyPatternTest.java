@@ -1,35 +1,15 @@
 package org.kl;
 
 import org.junit.jupiter.api.Test;
+import org.kl.shape.Circle;
+import org.kl.shape.Figure;
+import org.kl.shape.Rectangle;
 import org.kl.state.Default;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.kl.handle.TypeVerifyPattern.matches;
 
 public class TypeVerifyPatternTest {
-
-    private abstract class Figure {
-        public abstract int square();
-    }
-
-    private class Rectangle extends Figure {
-        private int width  = 5;
-        private int height = 10;
-
-        @Override
-        public int square() {
-            return width * height;
-        }
-    }
-
-    private class Circle extends Figure {
-        private int radius = 5;
-
-        @Override
-        public int square() {
-            return (int) (2 * Math.PI * radius);
-        }
-    }
 
     @Test
     public void matchesStatementTest() {
@@ -133,8 +113,8 @@ public class TypeVerifyPatternTest {
         Figure figure = new Rectangle();
 
         matches(figure,
-                Rectangle.class,   r -> { System.out.println("rect:   " + r.square()); },
-                Circle.class,      c -> { System.out.println("circle: " + c.square()); }
+                Rectangle.class, r -> { System.out.println("rect:   " + r.square()); },
+                Circle.class,    c -> { System.out.println("circle: " + c.square()); }
         );
     }
 
