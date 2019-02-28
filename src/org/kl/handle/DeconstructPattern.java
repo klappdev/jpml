@@ -6,6 +6,7 @@ import org.kl.lambda.QuarConsumer;
 import org.kl.lambda.TriConsumer;
 import org.kl.ref.*;
 import org.kl.reflect.Reflection;
+import org.kl.state.Default;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class DeconstructPattern {
 
@@ -26,8 +29,35 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C, T> void matches(V value,
+                                         Class<C> clazz, Consumer<T> consumer,
+                                         Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (clazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            consumer.accept((T) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C, T, R> R matches(V value,
+                                         Class<C> clazz, Function<T, R> function,
+                                         Class<Default> defaultClass, Supplier<R> defaultSupplier) throws PatternException {
+        if (clazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            return function.apply((T) args[0]);
+        }
+
+        return defaultSupplier.get();
+    }
+
     public static <V, C, T1, T2> void matches(V value,
-                                              Class<C> clazz, BiConsumer<T1, T2> consumer) throws PatternException {
+                                          Class<C> clazz, BiConsumer<T1, T2> consumer) throws PatternException {
         if (clazz == value.getClass()) {
             Object[] args = checkExtractMethods(value, 2);
 
@@ -35,8 +65,22 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C, T1, T2> void matches(V value,
+                                          Class<C> clazz, BiConsumer<T1, T2> consumer,
+                                          Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (clazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            consumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C, T1, T2, T3> void matches(V value,
-                                                  Class<C> clazz, TriConsumer<T1, T2, T3> consumer) throws PatternException {
+                                          Class<C> clazz, TriConsumer<T1, T2, T3> consumer) throws PatternException {
         if (clazz == value.getClass()) {
             Object[] args = checkExtractMethods(value, 3);
 
@@ -44,13 +88,41 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C, T1, T2, T3> void matches(V value,
+                                          Class<C> clazz, TriConsumer<T1, T2, T3> consumer,
+                                          Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (clazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C, T1, T2, T3, T4> void matches(V value,
-                                                     Class<C> clazz, QuarConsumer<T1, T2, T3, T4> consumer) throws PatternException {
+                                         Class<C> clazz, QuarConsumer<T1, T2, T3, T4> consumer) throws PatternException {
         if (clazz == value.getClass()) {
             Object[] args = checkExtractMethods(value, 4);
 
             consumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C, T1, T2, T3, T4> void matches(V value,
+                                          Class<C> clazz, QuarConsumer<T1, T2, T3, T4> consumer,
+                                          Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (clazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            consumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, T1, T2> void matches(V value,
@@ -67,6 +139,26 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T2> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T2) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, T1, T2, T3> void matches(V value,
                                            Class<C1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<C2> secondClazz, BiConsumer<T2, T3> secondConsumer) throws PatternException {
@@ -79,6 +171,26 @@ public class DeconstructPattern {
 
             secondConsumer.accept((T2) args[0], (T3) args[1]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T2, T3> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T2) args[0], (T3) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, T1, T2, T3> void matches(V value,
@@ -95,6 +207,26 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T3> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T3) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4> void matches(V value,
                                            Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
                                            Class<C2> secondClazz, BiConsumer<T3, T4> secondConsumer) throws PatternException {
@@ -107,6 +239,26 @@ public class DeconstructPattern {
 
             secondConsumer.accept((T3) args[0], (T4) args[1]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T3, T4> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T3) args[0], (T4) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, T1, T2, T3, T4> void matches(V value,
@@ -123,6 +275,26 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T2) args[0], (T3) args[1], (T4) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4> void matches(V value,
                                            Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
                                            Class<C2> secondClazz, Consumer<T4> secondConsumer) throws PatternException {
@@ -135,6 +307,26 @@ public class DeconstructPattern {
 
             secondConsumer.accept((T4) args[0]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T4> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T4) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6> void matches(V value,
@@ -151,6 +343,26 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1], (T6) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5> void matches(V value,
                                            Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
                                            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondConsumer) throws PatternException {
@@ -163,6 +375,26 @@ public class DeconstructPattern {
 
             secondConsumer.accept((T3) args[0], (T4) args[1], (T5) args[2]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T3) args[0], (T4) args[1], (T5) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5> void matches(V value,
@@ -179,6 +411,26 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T4, T5> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5> void matches(V value,
                                            Class<C1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<C2> secondClazz, QuarConsumer<T2, T3, T4, T5> secondConsumer) throws PatternException {
@@ -191,6 +443,26 @@ public class DeconstructPattern {
 
             secondConsumer.accept((T2) args[0], (T3) args[1], (T4) args[2], (T5) args[3]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, QuarConsumer<T2, T3, T4, T5> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            secondConsumer.accept((T2) args[0], (T3) args[1], (T4) args[2], (T5) args[3]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5> void matches(V value,
@@ -207,6 +479,26 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  QuarConsumer<T1, T2, T3, T4> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T5> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T5) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7, T8> void matches(V value,
                                            Class<C1> firstClazz,  QuarConsumer<T1, T2, T3, T4> firstConsumer,
                                            Class<C2> secondClazz, QuarConsumer<T5, T6, T7, T8> secondConsumer) throws PatternException {
@@ -221,6 +513,25 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7, T8> void matches(V value,
+                                           Class<C1> firstClazz,  QuarConsumer<T1, T2, T3, T4> firstConsumer,
+                                           Class<C2> secondClazz, QuarConsumer<T5, T6, T7, T8> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            secondConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2], (T8) args[3]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6> void matches(V value,
                                            Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
@@ -234,6 +545,26 @@ public class DeconstructPattern {
 
             secondConsumer.accept((T3) args[0], (T4) args[1], (T5) args[2], (T6) args[3]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, QuarConsumer<T3, T4, T5, T6> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            secondConsumer.accept((T3) args[0], (T4) args[1], (T5) args[2], (T6) args[3]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6> void matches(V value,
@@ -250,6 +581,26 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6> void matches(V value,
+                                           Class<C1> firstClazz,  QuarConsumer<T1, T2, T3, T4> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T5, T6> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T5) args[0], (T6) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
                                            Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
                                            Class<C2> secondClazz, QuarConsumer<T4, T5, T6, T7> secondConsumer) throws PatternException {
@@ -264,6 +615,26 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, QuarConsumer<T4, T5, T6, T7> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1], (T6) args[2], (T7) args[3]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
                                            Class<C1> firstClazz,  QuarConsumer<T1, T2, T3, T4> firstConsumer,
                                            Class<C2> secondClazz, TriConsumer<T5, T6, T7> secondConsumer) throws PatternException {
@@ -276,6 +647,26 @@ public class DeconstructPattern {
 
             secondConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
+                                           Class<C1> firstClazz,  QuarConsumer<T1, T2, T3, T4> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T5, T6, T7> secondConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3> void matches(V value,
@@ -297,6 +688,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T2> secondConsumer,
+                                           Class<C3> thirdClazz,  Consumer<T3> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T2) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            thirdConsumer.accept((T3) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
                                            Class<C1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<C2> secondClazz, Consumer<T2> secondConsumer,
@@ -316,6 +733,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T2> secondConsumer,
+                                           Class<C3> thirdClazz,  BiConsumer<T3, T4> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T2) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            thirdConsumer.accept((T3) args[0], (T4) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
                                            Class<C1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<C2> secondClazz, BiConsumer<T2, T3> secondConsumer,
@@ -333,6 +776,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T4) args[0], (T5) args[1]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T2, T3> secondConsumer,
+                                           Class<C3> thirdClazz,  BiConsumer<T4, T5> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T2) args[0], (T3) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            thirdConsumer.accept((T4) args[0], (T5) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
@@ -354,6 +823,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T3, T4> secondConsumer,
+                                           Class<C3> thirdClazz,  BiConsumer<T5, T6> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T3) args[0], (T4) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            thirdConsumer.accept((T5) args[0], (T6) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
                                            Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
                                            Class<C2> secondClazz, Consumer<T3> secondConsumer,
@@ -371,6 +866,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T4) args[0]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T3> secondConsumer,
+                                           Class<C3> thirdClazz,  Consumer<T4> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T3) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            thirdConsumer.accept((T4) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
@@ -392,6 +913,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T3, T4> secondConsumer,
+                                           Class<C3> thirdClazz,  Consumer<T5> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T3) args[0], (T4) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            thirdConsumer.accept((T5) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
                                            Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
                                            Class<C2> secondClazz, Consumer<T3> secondConsumer,
@@ -411,6 +958,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T3> secondConsumer,
+                                           Class<C3> thirdClazz,  BiConsumer<T4, T5> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T3) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            thirdConsumer.accept((T4) args[0], (T5) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
                                            Class<C1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<C2> secondClazz, BiConsumer<T2, T3> secondConsumer,
@@ -428,6 +1001,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T4) args[0]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T2, T3> secondConsumer,
+                                           Class<C3> thirdClazz,  Consumer<T4> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T2) args[0], (T3) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            thirdConsumer.accept((T4) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
@@ -449,6 +1048,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T2> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T3, T4, T5> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T2) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T3) args[0], (T4) args[1], (T5) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
                                            Class<C1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondConsumer,
@@ -466,6 +1091,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T5, T6, T7> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T2) args[0], (T3) args[1], (T4) args[2]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8, T9> void matches(V value,
@@ -487,6 +1138,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8, T9> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T7, T8, T9> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1], (T6) args[2]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T7) args[0], (T8) args[1], (T9) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
                                            Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
                                            Class<C2> secondClazz, Consumer<T4> secondConsumer,
@@ -504,6 +1181,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T5) args[0]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T4> secondConsumer,
+                                           Class<C3> thirdClazz,  Consumer<T5> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T4) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            thirdConsumer.accept((T5) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
@@ -525,6 +1228,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondConsumer,
+                                           Class<C3> thirdClazz,  Consumer<T7> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1], (T6) args[2]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            thirdConsumer.accept((T7) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
                                            Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
                                            Class<C2> secondClazz, Consumer<T4> secondConsumer,
@@ -542,6 +1271,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T4> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T5, T6, T7> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T4) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
@@ -563,6 +1318,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T2, T3 ,T4> secondConsumer,
+                                           Class<C3> thirdClazz,  Consumer<T5> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T2) args[0], (T3) args[1], (T4) args[2]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            thirdConsumer.accept((T5) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
                                            Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
                                            Class<C2> secondClazz, BiConsumer<T3, T4> secondConsumer,
@@ -580,6 +1361,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T3, T4> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T5, T6, T7> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T3) args[0], (T4) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T5) args[0], (T6) args[1], (T7) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8> void matches(V value,
@@ -601,6 +1408,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T6, T7, T8> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T3) args[0], (T4) args[1], (T5) args[2]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T6) args[0], (T7) args[1], (T8) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
                                            Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
                                            Class<C2> secondClazz, BiConsumer<T4, T5> secondConsumer,
@@ -618,6 +1451,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T6) args[0], (T7) args[1]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T4, T5> secondConsumer,
+                                           Class<C3> thirdClazz,  BiConsumer<T6, T7> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            thirdConsumer.accept((T6) args[0], (T7) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8> void matches(V value,
@@ -639,6 +1498,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondConsumer,
+                                           Class<C3> thirdClazz,  BiConsumer<T7, T8> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1], (T6) args[2]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            thirdConsumer.accept((T7) args[0], (T8) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8> void matches(V value,
                                            Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
                                            Class<C2> secondClazz, BiConsumer<T4, T5> secondConsumer,
@@ -656,6 +1541,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T6) args[0], (T7) args[1], (T8) args[2]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T4, T5> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T6, T7, T8> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T6) args[0], (T7) args[1], (T8) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
@@ -677,6 +1588,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondConsumer,
+                                           Class<C3> thirdClazz,  BiConsumer<T6, T7> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            secondConsumer.accept((T3) args[0], (T4) args[1], (T5) args[2]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            thirdConsumer.accept((T6) args[0], (T7) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
                                            Class<C1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<C2> secondClazz, BiConsumer<T2, T3> secondConsumer,
@@ -694,6 +1631,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T4) args[0], (T5) args[1], (T6) args[2]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
+                                           Class<C1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T2, T3> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T4, T5, T6> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            firstConsumer.accept((T1) args[0]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T2) args[0], (T3) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T4) args[0], (T5) args[1], (T6) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
@@ -715,6 +1678,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, BiConsumer<T4, T5> secondConsumer,
+                                           Class<C3> thirdClazz,  Consumer<T6> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            secondConsumer.accept((T4) args[0], (T5) args[1]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            thirdConsumer.accept((T6) args[0]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
                                            Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
                                            Class<C2> secondClazz, Consumer<T3> secondConsumer,
@@ -734,6 +1723,32 @@ public class DeconstructPattern {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
+                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T3> secondConsumer,
+                                           Class<C3> thirdClazz,  TriConsumer<T4, T5, T6> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T3) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            thirdConsumer.accept((T4) args[0], (T5) args[1], (T6) args[2]);
+            return;
+        }
+
+        defaultConsumer.run();
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
                                            Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
                                            Class<C2> secondClazz, Consumer<T4> secondConsumer,
@@ -751,6 +1766,32 @@ public class DeconstructPattern {
 
             thirdConsumer.accept((T5) args[0], (T6) args[1]);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
+                                           Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,
+                                           Class<C2> secondClazz, Consumer<T4> secondConsumer,
+                                           Class<C3> thirdClazz,  BiConsumer<T5, T6> thirdConsumer,
+                                           Class<Default> defaultClass, Runnable defaultConsumer) throws PatternException {
+        if (firstClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            firstConsumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+            return;
+        } else if (secondClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            secondConsumer.accept((T4) args[0]);
+            return;
+        } else if (thirdClazz == value.getClass()) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            thirdConsumer.accept((T5) args[0], (T6) args[1]);
+            return;
+        }
+
+        defaultConsumer.run();
     }
 
     private static <V> Object[] checkExtractMethods(V value, int countParameters) throws PatternException {

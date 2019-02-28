@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2d3967a-d96d-43a3-9fef-664a8a2a8200" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jpml/org/kl/handle/TypeVerifyPattern.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/jpml/org/kl/handle/TypeVerifyPattern.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/jpml/org/kl/TypeVerifyPatternTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/jpml/org/kl/TypeVerifyPatternTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,23 +32,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TypeVerifyPattern.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java">
+      <file leaf-file-name="DeconstructPattern.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="492">
-              <caret line="494" column="80" selection-start-line="494" selection-start-column="70" selection-end-line="494" selection-end-column="80" />
+            <state relative-caret-position="117">
+              <caret line="1772" column="46" selection-start-line="1772" selection-start-column="46" selection-end-line="1772" selection-end-column="46" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#61780#61807#0" expanded="true" />
+                <element signature="e#63959#63986#0" expanded="true" />
+                <element signature="e#66138#66165#0" expanded="true" />
+                <element signature="e#68317#68344#0" expanded="true" />
+                <element signature="e#70519#70546#0" expanded="true" />
+                <element signature="e#72698#72725#0" expanded="true" />
+                <element signature="e#74830#74857#0" expanded="true" />
+                <element signature="e#76938#76965#0" expanded="true" />
+                <element signature="e#79046#79073#0" expanded="true" />
+                <element signature="e#81154#81181#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TypeVerifyPatternTest.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java">
+      <file leaf-file-name="DeconstructPatternTest.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
-              <caret line="13" column="9" lean-forward="true" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
+            <state relative-caret-position="100">
+              <caret line="884" column="12" selection-start-line="884" selection-start-column="12" selection-end-line="884" selection-end-column="12" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -84,6 +92,7 @@
       <find>ByteRef</find>
       <find>defaultClass</find>
       <find>value.getClass()</find>
+      <find>figure</find>
     </findStrings>
     <replaceStrings>
       <replace>short</replace>
@@ -98,6 +107,7 @@
       <replace>byte</replace>
       <replace>CharRef</replace>
       <replace>valueClass</replace>
+      <replace>data</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -142,12 +152,12 @@
         <option value="$PROJECT_DIR$/src/org/kl/state/Default.java" />
         <option value="$PROJECT_DIR$/src/org/kl/state/Null.java" />
         <option value="$PROJECT_DIR$/src/org/kl/attr/Nullable.java" />
-        <option value="$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java" />
-        <option value="$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java" />
-        <option value="$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java" />
-        <option value="$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java" />
         <option value="$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java" />
         <option value="$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java" />
+        <option value="$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java" />
+        <option value="$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java" />
+        <option value="$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java" />
+        <option value="$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java" />
       </list>
     </option>
   </component>
@@ -172,6 +182,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -213,7 +224,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="AndroidView" />
     </panes>
   </component>
@@ -247,7 +257,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TypeVerifyPatternTest">
+  <component name="RunManager" selected="JUnit.DeconstructPatternTest">
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     </configuration>
@@ -365,9 +375,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.TypeVerifyPatternTest" />
-        <item itemvalue="JUnit.TypeGuardPatternTest" />
         <item itemvalue="JUnit.DeconstructPatternTest" />
+        <item itemvalue="JUnit.TypeGuardPatternTest" />
+        <item itemvalue="JUnit.TypeVerifyPatternTest" />
       </list>
     </recent_temporary>
   </component>
@@ -395,44 +405,49 @@
       <workItem from="1550922004849" duration="5759000" />
       <workItem from="1551037157592" duration="4754000" />
       <workItem from="1551284121120" duration="589000" />
-      <workItem from="1551291705433" duration="4300000" />
+      <workItem from="1551291705433" duration="4740000" />
+      <workItem from="1551379197878" duration="3882000" />
+      <workItem from="1551388647035" duration="1658000" />
+      <workItem from="1551513004199" duration="5816000" />
+      <workItem from="1551555976854" duration="3157000" />
+      <workItem from="1551621698934" duration="2522000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 14m 43s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.02 at 10h 59m 13s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 16m 21s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.02 at 11h 01m 46s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 16m 45s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.02 at 11h 13m 06s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 18m 57s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.02 at 11h 20m 09s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 22m 19s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.02 at 22h 08m 34s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 24m 48s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.02 at 22h 13m 54s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 27m 25s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.02 at 22h 46m 04s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 27m 45s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.02 at 22h 46m 51s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 30m 45s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.03 at 16h 13m 40s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TypeVerifyPatternTest - 2019.02.27 at 21h 31m 17s.xml">
-      <configuration name="TypeVerifyPatternTest" configurationId="JUnit" />
+    <history-entry file="DeconstructPatternTest - 2019.03.03 at 16h 14m 34s.xml">
+      <configuration name="DeconstructPatternTest" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="82352000" />
+    <option name="totallyTimeSpent" value="99827000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -448,13 +463,13 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="3" weight="0.3294893" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.4003295" />
+      <window_info anchor="bottom" id="Run" order="7" weight="0.42174628" />
       <window_info anchor="bottom" id="Terminal" order="1" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="0" />
-      <window_info content_ui="combo" id="Project" order="6" sideWeight="0.4925865" visible="true" weight="0.26701966" />
+      <window_info content_ui="combo" id="Project" order="6" sideWeight="0.48764417" visible="true" weight="0.28744328" />
       <window_info anchor="right" id="Database" order="8" weight="0.32980332" />
-      <window_info id="Structure" order="3" sideWeight="0.5074135" side_tool="true" weight="0.26701966" />
+      <window_info id="Structure" order="3" sideWeight="0.51235586" side_tool="true" weight="0.28290468" />
       <window_info anchor="right" id="Ant Build" order="6" weight="0.25" />
       <window_info id="UI Designer" order="1" />
       <window_info anchor="right" id="Theme Preview" order="2" />
@@ -469,31 +484,31 @@
     </layout>
     <layout-to-restore>
       <window_info anchor="right" id="Palette" order="4" />
-      <window_info anchor="bottom" id="Message" order="5" />
+      <window_info anchor="bottom" id="Version Control" order="3" weight="0.3294893" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="7" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
-      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.4003295" />
+      <window_info anchor="bottom" id="Run" order="7" weight="0.4003295" />
       <window_info anchor="right" id="Theme Preview" order="2" />
-      <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="6" sideWeight="0.49423394" visible="true" weight="0.24810892" />
-      <window_info id="Structure" order="3" sideWeight="0.50576603" side_tool="true" weight="0.24810892" />
+      <window_info anchor="bottom" id="Messages" order="4" weight="0.3294893" />
+      <window_info content_ui="combo" id="Project" order="6" sideWeight="0.48764417" visible="true" weight="0.28290468" />
+      <window_info id="Structure" order="3" sideWeight="0.51235586" side_tool="true" weight="0.28290468" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="5" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="6" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="TODO" order="11" />
       <window_info id="Image Layers" order="5" />
       <window_info id="Designer" order="0" />
       <window_info id="UI Designer" order="1" />
-      <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
-      <window_info anchor="right" id="Database" order="8" weight="0.32980332" />
+      <window_info anchor="bottom" id="Find" order="6" weight="0.3294893" />
+      <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
       <window_info anchor="right" id="Palette&#9;" order="1" />
       <window_info anchor="bottom" id="Terminal" order="1" />
-      <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
-      <window_info anchor="bottom" id="Database Changes" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="3" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
-      <window_info anchor="bottom" id="Find" order="6" weight="0.3294893" />
-      <window_info anchor="bottom" id="Messages" order="4" weight="0.3294893" />
+      <window_info anchor="bottom" id="Message" order="5" />
+      <window_info anchor="right" id="Database" order="8" weight="0.32980332" />
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info id="Favorites" order="4" sideWeight="0.50082374" side_tool="true" weight="0.22314675" />
     </layout-to-restore>
@@ -751,44 +766,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="749" column="56" selection-start-line="749" selection-start-column="56" selection-end-line="749" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="472" column="31" lean-forward="true" selection-start-line="472" selection-start-column="31" selection-end-line="472" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/util/function/Predicate.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="406">
           <caret line="48" column="22" lean-forward="true" selection-start-line="48" selection-start-column="22" selection-end-line="48" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="30" selection-start-line="13" selection-start-column="30" selection-end-line="13" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="37" selection-start-line="9" selection-start-column="37" selection-end-line="9" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -810,27 +791,66 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="18" column="3" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="3" />
-          <folding>
-            <element signature="e#4570#4571#0" expanded="true" />
-            <element signature="e#4629#4630#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java">
+    <entry file="file://$PROJECT_DIR$/test/org/kl/TypeGuardPatternTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="494" column="80" selection-start-line="494" selection-start-column="70" selection-end-line="494" selection-end-column="80" />
+        <state relative-caret-position="525">
+          <caret line="71" column="45" lean-forward="true" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="62" column="13" lean-forward="true" selection-start-line="62" selection-start-column="13" selection-end-line="62" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test/org/kl/TypeVerifyPatternTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="13" column="9" lean-forward="true" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
+        <state relative-caret-position="-4267">
+          <caret line="125" column="12" selection-start-line="125" selection-start-column="12" selection-end-line="125" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TypeVerifyPattern.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/DeconstructPattern.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="1772" column="46" selection-start-line="1772" selection-start-column="46" selection-end-line="1772" selection-end-column="46" />
+          <folding>
+            <element signature="e#61780#61807#0" expanded="true" />
+            <element signature="e#63959#63986#0" expanded="true" />
+            <element signature="e#66138#66165#0" expanded="true" />
+            <element signature="e#68317#68344#0" expanded="true" />
+            <element signature="e#70519#70546#0" expanded="true" />
+            <element signature="e#72698#72725#0" expanded="true" />
+            <element signature="e#74830#74857#0" expanded="true" />
+            <element signature="e#76938#76965#0" expanded="true" />
+            <element signature="e#79046#79073#0" expanded="true" />
+            <element signature="e#81154#81181#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/kl/DeconstructPatternTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="884" column="12" selection-start-line="884" selection-start-column="12" selection-end-line="884" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
