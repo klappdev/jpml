@@ -14,6 +14,7 @@ Type test pattern allow match type and then extract value.
         case Byte    b  -> System.out.println(b * b);
         case Long    l  -> System.out.println(l * l);        
         case String  s  -> System.out.println(s * s);
+        case null       -> System.out.println("Null value ");
         default         -> System.out.println("Default value: " + data);
    };
 ```
@@ -30,6 +31,7 @@ Using this library developer can write in the following way.
            Byte.class,    b  -> { System.out.println(b * b); },
            Long.class,    l  -> { System.out.println(l * l); },
            String.class,  s  -> { System.out.println(s * s); },
+           Null.class,    () -> { System.out.println("Null value "); },
            Default.class, () -> { System.out.println("Default value: " + data); }
    );
 ```
@@ -83,6 +85,7 @@ Guard pattern allow match type and check condition for truthfulness at one time.
         case Byte    b && b > -1     -> System.out.println(b * b);
         case Long    l && l < 5      -> System.out.println(l * l);
         case String  s && !s.empty() -> System.out.println(s * s);
+        case null                    -> System.out.println("Null value ");
         default                      -> System.out.println("Default value: " + data);
    };
 ```
@@ -103,6 +106,7 @@ Using this library developer can write in the following way.
                           l  -> { System.out.println(l * l); },
            String.class,  s  -> !s.empty(),
                           s  -> { System.out.println(s * s); },
+           Null.class,    () -> { System.out.println("Null value "); },
            Default.class, () -> { System.out.println("Default value: " + data); }
    );
 ```

@@ -66,7 +66,7 @@ public class TypeVerifyPattern {
     }
 
     public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                            Class<T2> secondClazz, Consumer<T2> secondConsumer) {
         Class<?> valueClass = value.getClass();
 
@@ -78,7 +78,7 @@ public class TypeVerifyPattern {
     }
 
     public static <V, T1, T2, R> R matches(V value,
-                                           Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                           Class<T1> firstClazz, Function<T1, R> firstFunction,
                                            Class<T2> secondClazz, Function<T2, R> secondFunction) {
         Class<?> valueClass = value.getClass();
 
@@ -93,7 +93,7 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
                                            Class<Default> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
@@ -111,14 +111,14 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, R> R matches(V value,
-                                           Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                           Class<T1> firstClazz, Function<T1, R> firstFunction,
                                            Class<T2> secondClazz, Function<T2, R> secondFunction,
                                            Class<Default> defaultClass, Supplier<R> defaultSupplier) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             return firstFunction.apply((T1) value);
-        } else if (secondClazz ==  valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
+        } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             return secondFunction.apply((T2) value);
         }
 
@@ -126,9 +126,9 @@ public class TypeVerifyPattern {
     }
 
     public static <V, T1, T2, T3> void matches(V value,
-                                               Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                               Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                               Class<T3> thirdClazz,  Consumer<T3> thirdConsumer) {
+                                               Class<T3> thirdClazz, Consumer<T3> thirdConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -142,9 +142,9 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("Duplicates")
     public static <V, T1, T2, T3, R> R matches(V value,
-                                               Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                               Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                               Class<T3> thirdClazz,  Function<T3, R> thirdFunction) {
+                                               Class<T3> thirdClazz, Function<T3, R> thirdFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -160,9 +160,9 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3> void matches(V value,
-                                               Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                               Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                               Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
+                                               Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
                                                Class<Default> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
@@ -182,9 +182,9 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, T3, R> R matches(V value,
-                                               Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                               Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                               Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
+                                               Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                                Class<Default> defaultClass, Supplier<R> defaultSupplier) {
         Class<?> valueClass = value.getClass();
 
@@ -200,29 +200,29 @@ public class TypeVerifyPattern {
     }
 
     public static <V, T1, T2, T3, T4> void matches(V value,
-                                                   Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                                   Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                    Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                                   Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
-                                                   Class<T4> forthClazz,  Consumer<T4> forthConsumer) {
+                                                   Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                                   Class<T4> forthClazz, Consumer<T4> forthConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-        } else if (thirdClazz == valueClass  || Reflection.isPrimitive(thirdClazz, valueClass)) {
+        } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
-        } else if (forthClazz == valueClass  || Reflection.isPrimitive(forthClazz, valueClass)) {
+        } else if (forthClazz == valueClass || Reflection.isPrimitive(forthClazz, valueClass)) {
             forthConsumer.accept((T4) value);
         }
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                                   Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                                   Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                    Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                                   Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
-                                                   Class<T4> forthClazz,  Function<T4, R> forthFunction) {
+                                                   Class<T3> thirdClazz, Function<T3, R> thirdFunction,
+                                                   Class<T4> forthClazz, Function<T4, R> forthFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -240,10 +240,10 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4> void matches(V value,
-                                                   Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                                   Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                    Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                                   Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
-                                                   Class<T4> forthClazz,  Consumer<T4> forthConsumer,
+                                                   Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                                   Class<T4> forthClazz, Consumer<T4> forthConsumer,
                                                    Class<Default> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
@@ -266,10 +266,10 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                                   Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                                   Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                    Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                                   Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
-                                                   Class<T4> forthClazz,  Function<T4, R> forthFunction,
+                                                   Class<T3> thirdClazz, Function<T3, R> thirdFunction,
+                                                   Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                    Class<Default> defaultClass, Supplier<R> defaultSupplier) {
         Class<?> valueClass = value.getClass();
 
@@ -287,11 +287,11 @@ public class TypeVerifyPattern {
     }
 
     public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                                       Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                                       Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                        Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                                       Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
-                                                       Class<T4> forthClazz,  Consumer<T4> forthConsumer,
-                                                       Class<T5> fifthClazz,  Consumer<T5> fifthConsumer) {
+                                                       Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                                       Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                                       Class<T5> fifthClazz, Consumer<T5> fifthConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -309,11 +309,11 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("Duplicates")
     public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                                       Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                                       Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                        Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                                       Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
-                                                       Class<T4> forthClazz,  Function<T4, R> forthFunction,
-                                                       Class<T5> fifthClazz,  Function<T5, R> fifthFunction) {
+                                                       Class<T3> thirdClazz, Function<T3, R> thirdFunction,
+                                                       Class<T4> forthClazz, Function<T4, R> forthFunction,
+                                                       Class<T5> fifthClazz, Function<T5, R> fifthFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -333,11 +333,11 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                                       Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                                       Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                        Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                                       Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
-                                                       Class<T4> forthClazz,  Consumer<T4> forthConsumer,
-                                                       Class<T5> fifthClazz,  Consumer<T5> fifthConsumer,
+                                                       Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                                       Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                                       Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
                                                        Class<Default> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
@@ -363,11 +363,11 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                                       Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                                       Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                        Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                                       Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
-                                                       Class<T4> forthClazz,  Function<T4, R> forthFunction,
-                                                       Class<T5> fifthClazz,  Function<T5, R> fifthFunction,
+                                                       Class<T3> thirdClazz, Function<T3, R> thirdFunction,
+                                                       Class<T4> forthClazz, Function<T4, R> forthFunction,
+                                                       Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                        Class<Default> defaultClass, Supplier<R> defaultSupplier) {
         Class<?> valueClass = value.getClass();
 
@@ -387,12 +387,12 @@ public class TypeVerifyPattern {
     }
 
     public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                                           Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                                           Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                                           Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
-                                                           Class<T4> forthClazz,  Consumer<T4> forthConsumer,
-                                                           Class<T5> fifthClazz,  Consumer<T5> fifthConsumer,
-                                                           Class<T6> sixthClazz,  Consumer<T6> sixthConsumer) {
+                                                           Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                                           Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                                           Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
+                                                           Class<T6> sixthClazz, Consumer<T6> sixthConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -412,12 +412,12 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("Duplicates")
     public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                                           Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                                           Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                            Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                                           Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
-                                                           Class<T4> forthClazz,  Function<T4, R> forthFunction,
-                                                           Class<T5> fifthClazz,  Function<T5, R> fifthFunction,
-                                                           Class<T6> sixthClazz,  Function<T6, R> sixthFunction) {
+                                                           Class<T3> thirdClazz, Function<T3, R> thirdFunction,
+                                                           Class<T4> forthClazz, Function<T4, R> forthFunction,
+                                                           Class<T5> fifthClazz, Function<T5, R> fifthFunction,
+                                                           Class<T6> sixthClazz, Function<T6, R> sixthFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -439,12 +439,12 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                                           Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                                           Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                                           Class<T3> thirdClazz,  Consumer<T3> thirdConsumer,
-                                                           Class<T4> forthClazz,  Consumer<T4> forthConsumer,
-                                                           Class<T5> fifthClazz,  Consumer<T5> fifthConsumer,
-                                                           Class<T6> sixthClazz,  Consumer<T6> sixthConsumer,
+                                                           Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                                           Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                                           Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
+                                                           Class<T6> sixthClazz, Consumer<T6> sixthConsumer,
                                                            Class<Default> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
@@ -473,12 +473,12 @@ public class TypeVerifyPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                                           Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                                           Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                            Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                                           Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
-                                                           Class<T4> forthClazz,  Function<T4, R> forthFunction,
-                                                           Class<T5> fifthClazz,  Function<T5, R> fifthFunction,
-                                                           Class<T6> sixthClazz,  Function<T6, R> sixthFunction,
+                                                           Class<T3> thirdClazz, Function<T3, R> thirdFunction,
+                                                           Class<T4> forthClazz, Function<T4, R> forthFunction,
+                                                           Class<T5> fifthClazz, Function<T5, R> fifthFunction,
+                                                           Class<T6> sixthClazz, Function<T6, R> sixthFunction,
                                                            Class<Default> defaultClass, Supplier<R> defaultSupplier) {
         Class<?> valueClass = value.getClass();
 

@@ -1,17 +1,15 @@
 package org.kl;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.kl.error.PatternException;
 import org.kl.shape.*;
 import org.kl.state.Default;
 
-import static java.lang.System.*;
+import static java.lang.System.out;
 import static org.kl.handle.DeconstructPattern.matches;
 
 public class DeconstructPatternTest {
 
-    @Disabled
     @Test
     public void matchesStatementTest() throws PatternException {
         Figure figure;

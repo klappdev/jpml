@@ -414,7 +414,7 @@ public class TypeVerifyPatternTest {
         result2 = matches(value2,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
-                Default.class, () -> { System.out.println("Default value 2 types"); return 1; }
+                Default.class, () -> { System.out.println("Default value 2 types"); return 0; }
         );
 
         assertEquals(result2, 8);
