@@ -6,6 +6,7 @@ Java language does not support at the moment pattern matching  <br/>
 but there is hope that in the future everything will change.
 
 Using Java 8 features, we can emulate some of the features pattern matching.<br/>
+Library support such statement and expression patterns.<br/>
 Type test pattern allow match type and then extract value.
 
 ```Java
@@ -58,9 +59,24 @@ Using this library developer can write in the following way.
    Figure figure = new Rectangle();
 
    matches(figure,
-           Rectangle.class, (Integer w, Integer h) -> { System.out.println("square: " + (w * h)); },
-           Circle.class,    (Integer r)            -> { System.out.println("square: " + (2 * Math.PI * r)); },
-           Default.class,   ()                     -> { System.out.println("Default square: " + 0); }
+          Rectangle.class, (Integer w, Integer h) -> { System.out.println("square: " + (w * h)); },
+          Circle.class,    (Integer r)  -> { System.out.println("square: " + (2 * Math.PI * r)); },
+          Default.class,   ()           -> { System.out.println("Default square: " + 0); }
+   );
+```
+
+Using Java 11 feature, we can deduce types deconstruct parameters.
+
+```Java
+   import org.kl.state.Default;
+   import static org.kl.handle.DeconstructPattern.matches;
+
+   Figure figure = new Rectangle();
+
+   matches(figure,
+           Rectangle.class, (var w, var h) -> { System.out.println("square: " + (w * h)); },
+           Circle.class,    (var r)     -> { System.out.println("square: " + (2 * Math.PI * r)); },
+           Default.class,   ()          -> { System.out.println("Default square: " + 0); }
    );
 ```
 
