@@ -656,7 +656,7 @@ public class TypeVerifyPattern {
             return matches(value, firstClazz, firstFunction, secondClazz, secondFunction,
                                   thirdClazz, thirdFunction, forthClazz,  forthFunction,
                                   fifthClazz, fifthFunction, sixthClazz,  sixthFunction,
-                          defaultClass, defaultSupplier);
+                           defaultClass, defaultSupplier);
         }
 
     }

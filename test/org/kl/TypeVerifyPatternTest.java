@@ -359,6 +359,7 @@ public class TypeVerifyPatternTest {
         matches(data,
                 Rectangle.class, r  -> { System.out.println("rect:   " + r.square()); },
                 Circle.class,    c  -> { System.out.println("circle: " + c.square()); },
+                Null.class,      () -> { System.out.println("Null value shape"); },
                 Default.class,   () -> { System.out.println("Default shape"); }
         );
     }
@@ -641,8 +642,6 @@ public class TypeVerifyPatternTest {
 
     @Test
     public void matchesExpressionWithNullDefaultTest() {
-        int data = 0;
-
         /* 1 */
         int result1 = matches(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
@@ -774,7 +773,7 @@ public class TypeVerifyPatternTest {
                 long.class,    l -> { int result = (int) (2 * (l + l));  return result; },
                 float.class,   f -> { int result = (int) (2 * (f + f));  return result; },
                 double.class,  d -> { int result = (int) (2 * (d + d));  return result; },
-                Null.class,    () -> { System.out.println("Null value 5 type");     return -1; },
+                Null.class,    () -> { System.out.println("Null value 6 type");     return -1; },
                 Default.class, () -> { System.out.println("Default value 6 types"); return  0; }
         );
 
