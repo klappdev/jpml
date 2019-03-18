@@ -1,11 +1,21 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.IntRef;
+import org.kl.meta.Extract;
+import org.kl.type.IntRef;
 
 public class Rectangle extends Figure {
-    private int width  = 5;
-    private int height = 10;
+    private int width;
+    private int height;
+
+    public Rectangle() {
+        this.width  = 5;
+        this.height = 10;
+    }
+
+    public Rectangle(int width, int height) {
+        this.width  = width;
+        this.height = height;
+    }
 
     @Override
     public int square() {

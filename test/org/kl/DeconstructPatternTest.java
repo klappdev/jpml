@@ -1,15 +1,70 @@
 package org.kl;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
 import org.kl.error.PatternException;
 import org.kl.shape.*;
 import org.kl.state.Default;
 
+import java.util.*;
+
 import static java.lang.System.out;
 import static org.kl.handle.DeconstructPattern.matches;
+import static org.kl.handle.DeconstructPattern.foreach;
 
 public class DeconstructPatternTest {
+    private static Set<Circle>     listCircles;
+    private static List<Rectangle> listRectangles;
+    private static Queue<Tripiped> listTripipeds;
+    private static List<Quarpiped> listQuarpiped;
+    private static Map<Integer, String> map;
 
+    @BeforeAll
+    public static void init() {
+        listCircles = new HashSet<Circle>() {{
+            add(new Circle(5));
+            add(new Circle(10));
+            add(new Circle(15));
+        }};
+
+        listRectangles = new ArrayList<Rectangle>() {{
+            add(new Rectangle(5, 10));
+            add(new Rectangle(10, 15));
+            add(new Rectangle(15, 20));
+        }};
+
+        listTripipeds = new ArrayDeque<Tripiped>() {{
+            add(new Tripiped(5, 10, 15));
+            add(new Tripiped(10, 15, 20));
+            add(new Tripiped(15, 20, 25));
+        }};
+
+        listQuarpiped = new LinkedList<Quarpiped>() {{
+            add(new Quarpiped('1', '2', '3', '4'));
+            add(new Quarpiped('3', '4', '5', '6'));
+            add(new Quarpiped('5', '6', '7', '8'));
+        }};
+
+        map = new HashMap<Integer, String>() {{
+            put(1, "one");
+            put(2, "two");
+            put(3, "three");
+        }};
+    }
+
+    @AfterAll
+    public static void destroy() {
+        listCircles.clear();
+        listRectangles.clear();
+        listTripipeds.clear();
+        listQuarpiped.clear();
+        map.clear();
+    }
+
+    @Disabled
     @Test
     public void matchesStatementTest() throws PatternException {
         Figure figure;
@@ -482,6 +537,7 @@ public class DeconstructPatternTest {
         );
     }
 
+    @Disabled
     @Test
     public void matchesStatementWithDefaultTest() throws PatternException {
         String data = "unknown";
@@ -906,7 +962,35 @@ public class DeconstructPatternTest {
                 },
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
                 Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
-                Default.class,   () -> { System.out.println("Default value 3-1-2 type"); }
+                Default.class,  () -> { System.out.println("Default value 3-1-2 type"); }
         );
+    }
+
+    @Test
+    public void foreachLoopTest() throws PatternException {
+        /* 1 */
+        foreach(listCircles, (Integer r) -> {
+            System.out.println("Circle square: " + (2 * Math.PI * r));
+        });
+
+        /* 2 */
+        foreach(listRectangles, (Integer w, Integer h) -> {
+            System.out.println("Rect square: " + (w * h));
+        });
+
+        /* 3 */
+        foreach(listTripipeds, (Float f, Float s, Float t) -> {
+            System.out.println("Tripiped square: " + (f * s * t));
+        });
+
+        /* 4 */
+        foreach(listQuarpiped, (Character a, Character b, Character c, Character d) -> {
+            System.out.println("Quarpiped square: " + (a * b * c * d));
+        });
+
+        /* 5 */
+        foreach(map, (Integer k, String v) -> {
+            System.out.println("map entry: " + k  + " - " + v);
+        });
     }
 }

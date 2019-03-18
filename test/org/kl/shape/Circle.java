@@ -1,10 +1,18 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.IntRef;
+import org.kl.meta.Extract;
+import org.kl.type.IntRef;
 
 public class Circle extends Figure {
-    private int radius = 5;
+    private int radius;
+
+    public Circle() {
+        this.radius = 5;
+    }
+
+    public Circle(int radius) {
+        this.radius = radius;
+    }
 
     @Override
     public int square() {

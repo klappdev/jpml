@@ -1,7 +1,7 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.IntRef;
+import org.kl.meta.Extract;
+import org.kl.type.IntRef;
 
 public class Quadrate extends Figure {
     private int width = 10;

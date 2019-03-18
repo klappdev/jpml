@@ -1,13 +1,27 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.CharRef;
+import org.kl.meta.Extract;
+import org.kl.type.CharRef;
 
 public class Quarpiped extends Figure {
-    private char a = 5;
-    private char b = 5;
-    private char c = 10;
-    private char d = 15;
+    private char a;
+    private char b;
+    private char c;
+    private char d;
+
+    public Quarpiped() {
+        this.a = 5;
+        this.b = 5;
+        this.c = 10;
+        this.d = 15;
+    }
+
+    public Quarpiped(char a, char b, char c, char d) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.d = d;
+    }
 
     @Override
     public int square() {

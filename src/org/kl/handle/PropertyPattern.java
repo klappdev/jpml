@@ -1,0 +1,167 @@
+package org.kl.handle;
+
+import org.kl.bean.Item;
+import org.kl.bean.BiItem;
+import org.kl.bean.TriItem;
+import org.kl.bean.QuarItem;
+import org.kl.error.PatternException;
+
+import java.lang.reflect.Field;
+import java.util.Collection;
+
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+
+import org.kl.lambda.QuarConsumer;
+import org.kl.lambda.TriConsumer;
+
+public class PropertyPattern {
+    public static <V, T> void foreach(Collection<V> data, Item<T> item,
+                                      Consumer<T> consumer) throws PatternException {
+        for (V value : data) {
+            Object[] args = prepareFields(value, item.getName());
+
+            consumer.accept((T) args[0]);
+        }
+    }
+
+    public static <T> Item<T> of(String field) {
+        return new Item<>(field);
+    }
+
+    public static <T> Item<T> of(String field, T value) {
+        return new Item<>(field, value);
+    }
+
+    public static <V, C, T> void matches(V value, Class<C> clazz,
+                                         Item<T> item, Consumer<T> consumer) throws PatternException {
+        if (clazz == value.getClass()) {
+            Object[] args = prepareFields(value, clazz, item.getName());
+
+            if (compareValues(item.getValue(), args[0])) {
+                return;
+            }
+
+            consumer.accept((T) args[0]);
+        }
+    }
+
+    public static <V, T1, T2> void foreach(Collection<V> data, BiItem<T1, T2> item,
+                                           BiConsumer<T1, T2> consumer) throws PatternException {
+        for (V value : data) {
+            Object[] args = prepareFields(value, item.getFirstName(), item.getSecondName());
+
+            consumer.accept((T1) args[0], (T2) args[1]);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static <K, V, T1, T2> void foreach(Map<K, V> data, BiItem<T1, T2> item, BiConsumer<T1, T2> consumer) {
+        for (Map.Entry<K, V> entry : data.entrySet()) {
+            consumer.accept((T1) entry.getKey(), (T2) entry.getValue());
+        }
+    }
+
+    public static <T1, T2> BiItem<T1, T2> of(String firstField, String secondField) {
+        return new BiItem<>(firstField, secondField);
+    }
+
+    public static <T1, T2> BiItem<T1, T2> of(String firstField, T1 firstValue, String secondField, T2 secondValue) {
+        return new BiItem<>(firstField, firstValue, secondField, secondValue);
+    }
+
+    public static <V, C, T1, T2> void matches(V value, Class<C> clazz, BiItem<T1, T2> item,
+                                              BiConsumer<T1, T2> consumer) throws PatternException {
+        if (clazz == value.getClass()) {
+            Object[] args = prepareFields(value, clazz, item.getFirstName(), item.getSecondName());
+
+            if (compareValues(item.getFirstValue(), args[0]) || compareValues(item.getSecondValue(), args[1])) {
+                return;
+            }
+
+            consumer.accept((T1) args[0], (T2) args[1]);
+        }
+    }
+
+    public static <V, T1, T2, T3> void foreach(Collection<V> data, TriItem<T1, T2, T3> item,
+                                               TriConsumer<T1, T2, T3> consumer) throws PatternException {
+        for (V value : data) {
+            Object[] args = prepareFields(value, item.getFirstName(), item.getSecondName(), item.getThirdName());
+
+            consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+        }
+    }
+
+    public static <T1, T2, T3> TriItem<T1, T2, T3> of(String firstField, String secondField, String thirdField) {
+        return new TriItem<>(firstField, secondField, thirdField);
+    }
+
+    public static <T1, T2, T3> TriItem<T1, T2, T3> of(String firstField, T1 firstValue,
+                                                      String secondField, T2 secondValue,
+                                                      String thirdField, T3 thirdValue) {
+        return new TriItem<>(firstField, firstValue, secondField, secondValue, thirdField, thirdValue);
+    }
+
+    public static <V, C, T1, T2, T3> void matches(V value, Class<C> clazz, TriItem<T1, T2, T3> item,
+                                                  TriConsumer<T1, T2, T3> consumer) throws PatternException {
+        if (clazz == value.getClass()) {
+            Object[] args = prepareFields(value, clazz, item.getFirstName(), item.getSecondName(), item.getThirdName());
+
+            if (compareValues(item.getFirstValue(), args[0]) || compareValues(item.getSecondValue(), args[1]) ||
+                compareValues(item.getThirdValue(), args[2])) {
+                return;
+            }
+
+            consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+        }
+    }
+
+    public static <T1, T2, T3, T4> QuarItem<T1, T2, T3, T4> of(String firstField, String secondField,
+                                                               String thirdField, String fourthField) {
+        return new QuarItem<>(firstField, secondField, thirdField, fourthField);
+    }
+
+    public static <T1, T2, T3, T4> QuarItem<T1, T2, T3, T4> of(String firstField, T1 firstValue,
+                                                               String secondField, T2 secondValue,
+                                                               String thirdField, T3 thirdValue,
+                                                               String fourthField, T4 fourthValue) {
+        return new QuarItem<>(firstField, firstValue, secondField, secondValue,
+                              thirdField, thirdValue, fourthField, fourthValue);
+    }
+
+    public static <V, T1, T2, T3, T4> void foreach(Collection<V> data, QuarItem<T1, T2, T3, T4> item,
+                                                   QuarConsumer<T1, T2, T3, T4> consumer) throws PatternException {
+        for (V value : data) {
+            Object[] args = prepareFields(value, item.getFirstName(), item.getSecondName(),
+                                                 item.getThirdName(), item.getFourthName());
+
+            consumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
+        }
+    }
+
+    private static <V, C> Object[] prepareFields(V value, String... names) throws PatternException {
+        return  prepareFields(value, value.getClass(), names);
+    }
+
+    private static <V, C> Object[] prepareFields(V value, Class<C> clazz, String... names) throws PatternException {
+        Object[] list = new Object[names.length];
+
+        for (int i = 0; i < names.length; i++) {
+            try {
+                Field field = clazz.getDeclaredField(names[i]);
+                field.setAccessible(true);
+
+                list[i] = field.get(value);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new PatternException("Can not access to field " + names[i]);
+            }
+        }
+
+        return list;
+    }
+
+    private static <T1, T2> boolean compareValues(T1 first, T2 second) {
+        return first != null && !first.equals(second);
+    }
+}

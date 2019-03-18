@@ -1,10 +1,18 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.DoubleRef;
+import org.kl.meta.Extract;
+import org.kl.type.DoubleRef;
 
 public class Unpiped extends Figure {
-    private double radius = 20;
+    private double radius;
+
+    public Unpiped() {
+        this.radius = 20;
+    }
+
+    public Unpiped(double radius) {
+        this.radius = radius;
+    }
 
     @Override
     public int square() {

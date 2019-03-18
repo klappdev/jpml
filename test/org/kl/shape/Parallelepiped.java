@@ -1,12 +1,24 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.ShortRef;
+import org.kl.meta.Extract;
+import org.kl.type.ShortRef;
 
 public class Parallelepiped extends Figure {
-    private short width  = 5;
-    private short longitude = 5;
-    private short height = 10;
+    private short width;
+    private short longitude;
+    private short height;
+
+    public Parallelepiped() {
+        this.width = 5;
+        this.longitude = 5;
+        this.height = 10;
+    }
+
+    public Parallelepiped(short width, short longitude, short height) {
+        this.width = width;
+        this.longitude = longitude;
+        this.height = height;
+    }
 
     @Override
     public int square() {

@@ -1,13 +1,27 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.ByteRef;
+import org.kl.meta.Extract;
+import org.kl.type.ByteRef;
 
 public class Quartangle extends Figure {
-    private byte a = 5;
-    private byte b = 5;
-    private byte c = 10;
-    private byte d = 15;
+    private byte a;
+    private byte b;
+    private byte c;
+    private byte d;
+
+    public Quartangle() {
+        this.a = 5;
+        this.b = 5;
+        this.c = 10;
+        this.d = 15;
+    }
+
+    public Quartangle(byte a, byte b, byte c, byte d) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.d = d;
+    }
 
     @Override
     public int square() {

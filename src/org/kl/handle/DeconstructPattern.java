@@ -1,10 +1,10 @@
 package org.kl.handle;
 
-import org.kl.attr.Extract;
+import org.kl.meta.Extract;
 import org.kl.error.PatternException;
 import org.kl.lambda.QuarConsumer;
 import org.kl.lambda.TriConsumer;
-import org.kl.ref.*;
+import org.kl.type.*;
 import org.kl.reflect.Reflection;
 import org.kl.state.Default;
 
@@ -12,13 +12,23 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class DeconstructPattern {
+
+    public static <V, T> void foreach(Collection<V> data, Consumer<T> consumer) throws PatternException {
+        for (V value : data) {
+            Object[] args = checkExtractMethods(value, 1);
+
+            consumer.accept((T) args[0]);
+        }
+    }
 
     public static <V, C, T> void matches(V value,
                                          Class<C> clazz, Consumer<T> consumer) throws PatternException {
@@ -56,6 +66,20 @@ public class DeconstructPattern {
         return defaultSupplier.get();
     }
 
+    public static <V, T1, T2> void foreach(Collection<V> data, BiConsumer<T1, T2> consumer) throws PatternException {
+        for (V value : data) {
+            Object[] args = checkExtractMethods(value, 2);
+
+            consumer.accept((T1) args[0], (T2) args[1]);
+        }
+    }
+
+    public static <K, V, T1, T2> void foreach(Map<K, V> data, BiConsumer<T1, T2> consumer) {
+        for (Map.Entry<K, V> entry : data.entrySet()) {
+            consumer.accept((T1) entry.getKey(), (T2) entry.getValue());
+        }
+    }
+
     public static <V, C, T1, T2> void matches(V value,
                                           Class<C> clazz, BiConsumer<T1, T2> consumer) throws PatternException {
         if (clazz == value.getClass()) {
@@ -79,6 +103,14 @@ public class DeconstructPattern {
         defaultConsumer.run();
     }
 
+    public static <V, T1, T2, T3> void foreach(Collection<V> data, TriConsumer<T1, T2, T3> consumer) throws PatternException {
+        for (V value : data) {
+            Object[] args = checkExtractMethods(value, 3);
+
+            consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+        }
+    }
+
     public static <V, C, T1, T2, T3> void matches(V value,
                                           Class<C> clazz, TriConsumer<T1, T2, T3> consumer) throws PatternException {
         if (clazz == value.getClass()) {
@@ -100,6 +132,14 @@ public class DeconstructPattern {
         }
 
         defaultConsumer.run();
+    }
+
+    public static <V, T1, T2, T3, T4> void foreach(Collection<V> data, QuarConsumer<T1, T2, T3, T4> consumer) throws PatternException {
+        for (V value : data) {
+            Object[] args = checkExtractMethods(value, 4);
+
+            consumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
+        }
     }
 
     public static <V, C, T1, T2, T3, T4> void matches(V value,
@@ -1811,7 +1851,6 @@ public class DeconstructPattern {
                 result = resolveParameters(parameters);
                 flag = true;
 
-                /* TODO: Permit work with few extract methods */
                 break;
             }
         }

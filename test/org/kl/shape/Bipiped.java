@@ -1,11 +1,21 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.ShortRef;
+import org.kl.meta.Extract;
+import org.kl.type.ShortRef;
 
 public class Bipiped extends Figure {
     private short width  = 15;
     private short height = 10;
+
+    public Bipiped() {
+        this.width = 15;
+        this.height = 10;
+    }
+
+    public Bipiped(short width, short height) {
+        this.width = width;
+        this.height = height;
+    }
 
     @Override
     public int square() {

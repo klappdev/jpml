@@ -1,7 +1,7 @@
 package org.kl.shape;
 
-import org.kl.attr.Extract;
-import org.kl.ref.DoubleRef;
+import org.kl.meta.Extract;
+import org.kl.type.DoubleRef;
 
 public class Triangle extends Figure {
     private double width  = 5;
