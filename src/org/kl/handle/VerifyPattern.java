@@ -91,7 +91,7 @@ public class VerifyPattern {
     }
 
     public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz, Consumer<T1> firstConsumer,
+                                           Class<T1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<T2> secondClazz, Consumer<T2> secondConsumer) {
         Class<?> valueClass = value.getClass();
 

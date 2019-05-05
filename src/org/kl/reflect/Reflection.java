@@ -37,4 +37,8 @@ public class Reflection {
 
         return flag;
     }
+
+    public static boolean checkTypes(Class<?> inClass, Class<?> outClazz) {
+        return inClass == outClazz || Reflection.isPrimitive(inClass, outClazz);
+    }
 }
