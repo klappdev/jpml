@@ -7,11 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2d3967a-d96d-43a3-9fef-664a8a2a8200" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/kl/handle/ConstantPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/handle/ConstantPattern.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/kl/handle/VerifyPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/handle/VerifyPattern.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/kl/reflect/Reflection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/reflect/Reflection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/org/kl/ConstantPatternTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/org/kl/ConstantPatternTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/kl/handle/TuplePattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/kl/handle/TuplePattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/org/kl/TuplePatternTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/org/kl/TuplePatternTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -45,29 +42,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="VerifyPatternTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/org/kl/VerifyPatternTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="VerifyPattern.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/kl/handle/VerifyPattern.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="93" column="66" selection-start-line="93" selection-start-column="66" selection-end-line="93" selection-end-column="66" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="ConstantPatternTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/org/kl/ConstantPatternTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="272">
+              <caret line="16" column="10" lean-forward="true" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -75,11 +54,35 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConstantPattern.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ConstantPattern.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/kl/handle/ConstantPattern.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" selection-start-line="26" selection-end-line="26" />
+            <state relative-caret-position="272">
+              <caret line="16" column="5" lean-forward="true" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TuplePatternTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/org/kl/TuplePatternTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="423">
+              <caret line="35" column="30" selection-start-line="35" selection-start-column="30" selection-end-line="35" selection-end-column="30" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TuplePattern.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TuplePattern.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="321">
+              <caret line="39" column="91" selection-start-line="39" selection-start-column="91" selection-end-line="39" selection-end-column="91" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -173,9 +176,7 @@
         <option value="$PROJECT_DIR$/src/org/kl/handle/TypeGuardPattern.java" />
         <option value="$PROJECT_DIR$/src/org/kl/handle/GuardPattern.java" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/src/org/kl/handle/TuplePattern.java" />
         <option value="$PROJECT_DIR$/src/org/kl/handle/PositionPattern.java" />
-        <option value="$PROJECT_DIR$/test/org/kl/TuplePatternTest.java" />
         <option value="$PROJECT_DIR$/test/org/kl/PositionPatternTest.java" />
         <option value="$PROJECT_DIR$/src/org/kl/bean/bean.java" />
         <option value="$PROJECT_DIR$/src/org/kl/bean/Item.java" />
@@ -192,6 +193,8 @@
         <option value="$PROJECT_DIR$/src/org/kl/reflect/Reflection.java" />
         <option value="$PROJECT_DIR$/test/org/kl/ConstantPatternTest.java" />
         <option value="$PROJECT_DIR$/src/org/kl/handle/ConstantPattern.java" />
+        <option value="$PROJECT_DIR$/test/org/kl/TuplePatternTest.java" />
+        <option value="$PROJECT_DIR$/src/org/kl/handle/TuplePattern.java" />
       </list>
     </option>
   </component>
@@ -227,7 +230,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectId" id="1kW7lyXVdkMwJUdBNDEdMnSBJRH" />
+  <component name="ProjectId" id="1kW7zQE0EwdBKmG3MFmycbCzSMj" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -326,7 +329,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.ConstantPatternTest">
+  <component name="RunManager" selected="JUnit.TuplePatternTest">
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
@@ -365,22 +368,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GuardPatternTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="jpml" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.kl.bean.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.kl" />
-      <option name="MAIN_CLASS_NAME" value="org.kl.GuardPatternTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="PropertyPatternTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="jpml" />
       <extension name="coverage">
@@ -396,6 +383,22 @@
       <option name="VM_PARAMETERS" value="-ea " />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TuplePatternTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jpml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.kl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.kl" />
+      <option name="MAIN_CLASS_NAME" value="org.kl.TuplePatternTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -436,14 +439,15 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.GuardPatternTest" />
       <item itemvalue="JUnit.VerifyPatternTest" />
       <item itemvalue="JUnit.DeconstructPatternTest" />
       <item itemvalue="JUnit.PropertyPatternTest" />
       <item itemvalue="JUnit.ConstantPatternTest" />
+      <item itemvalue="JUnit.TuplePatternTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TuplePatternTest" />
         <item itemvalue="JUnit.ConstantPatternTest" />
         <item itemvalue="JUnit.PropertyPatternTest" />
         <item itemvalue="JUnit.DeconstructPatternTest" />
@@ -498,26 +502,11 @@
       <workItem from="1556720981274" duration="5976000" />
       <workItem from="1556871998910" duration="4524000" />
       <workItem from="1556907503014" duration="7667000" />
-      <workItem from="1557039069618" duration="3989000" />
+      <workItem from="1557039069618" duration="5437000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="ConstantPatternTest - 2019.05.05 at 10h 16m 01s.xml">
-      <configuration name="ConstantPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ConstantPatternTest - 2019.05.05 at 10h 16m 09s.xml">
-      <configuration name="ConstantPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ConstantPatternTest - 2019.05.05 at 10h 27m 25s.xml">
-      <configuration name="ConstantPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ConstantPatternTest - 2019.05.05 at 10h 28m 01s.xml">
-      <configuration name="ConstantPatternTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ConstantPatternTest - 2019.05.05 at 10h 28m 21s.xml">
-      <configuration name="ConstantPatternTest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="ConstantPatternTest - 2019.05.05 at 10h 28m 40s.xml">
       <configuration name="ConstantPatternTest" configurationId="JUnit" />
     </history-entry>
@@ -533,9 +522,24 @@
     <history-entry file="ConstantPatternTest - 2019.05.05 at 10h 58m 45s.xml">
       <configuration name="ConstantPatternTest" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="TuplePatternTest - 2019.05.05 at 11h 19m 59s.xml">
+      <configuration name="TuplePatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TuplePatternTest - 2019.05.05 at 11h 20m 19s.xml">
+      <configuration name="TuplePatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TuplePatternTest - 2019.05.05 at 11h 28m 26s.xml">
+      <configuration name="TuplePatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TuplePatternTest - 2019.05.05 at 11h 28m 51s.xml">
+      <configuration name="TuplePatternTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TuplePatternTest - 2019.05.05 at 11h 29m 12s.xml">
+      <configuration name="TuplePatternTest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="192846000" />
+    <option name="totallyTimeSpent" value="194294000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -564,7 +568,7 @@
       <window_info anchor="bottom" id="Terminal" order="1" sideWeight="0.49924356" weight="0.3294893" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="0" />
-      <window_info active="true" content_ui="combo" id="Project" order="6" sideWeight="0.46952224" visible="true" weight="0.28744328" />
+      <window_info content_ui="combo" id="Project" order="6" sideWeight="0.46952224" visible="true" weight="0.28744328" />
       <window_info anchor="right" id="Database" order="9" weight="0.32980332" />
       <window_info id="Structure" order="3" sideWeight="0.53047776" side_tool="true" weight="0.28744328" />
       <window_info anchor="right" id="Ant Build" order="7" weight="0.25" />
@@ -581,38 +585,6 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="6" weight="0.3294893" />
     </layout>
-    <layout-to-restore>
-      <window_info id="Designer" order="0" />
-      <window_info anchor="right" id="Palette" order="4" />
-      <window_info id="Image Layers" order="5" />
-      <window_info anchor="bottom" id="Run" order="7" sideWeight="0.49848714" weight="0.44481054" />
-      <window_info anchor="bottom" id="Cvs" order="10" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="7" weight="0.25" />
-      <window_info id="UI Designer" order="1" />
-      <window_info id="Favorites" order="4" sideWeight="0.50082374" side_tool="true" weight="0.22314675" />
-      <window_info anchor="bottom" id="Database Changes" order="0" show_stripe_button="false" />
-      <window_info id="Capture Tool" order="2" />
-      <window_info anchor="right" id="Capture Analysis" order="0" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="5" type="SLIDING" weight="0.4" />
-      <window_info anchor="bottom" id="Event Log" order="2" sideWeight="0.5015129" side_tool="true" weight="0.44481054" />
-      <window_info anchor="bottom" id="Messages" order="4" sideWeight="0.49924356" weight="0.34596375" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="8" weight="0.25" />
-      <window_info anchor="right" id="Module Dependencies" order="6" weight="0.32980332" />
-      <window_info anchor="bottom" id="Dependency Viewer" order="8" show_stripe_button="false" weight="0.3294893" />
-      <window_info anchor="bottom" id="Version Control" order="3" sideWeight="0.49924356" weight="0.3294893" />
-      <window_info anchor="right" id="Maven Projects" order="3" weight="0.32980332" />
-      <window_info anchor="bottom" id="Terminal" order="1" sideWeight="0.49924356" weight="0.3294893" />
-      <window_info active="true" content_ui="combo" id="Project" order="6" sideWeight="0.46952224" visible="true" weight="0.28744328" />
-      <window_info anchor="right" id="Database" order="9" weight="0.32980332" />
-      <window_info anchor="bottom" id="Message" order="5" />
-      <window_info anchor="bottom" id="TODO" order="12" sideWeight="0.49924356" weight="0.3294893" />
-      <window_info anchor="right" id="Palette&#9;" order="1" />
-      <window_info anchor="right" id="Theme Preview" order="2" />
-      <window_info id="Structure" order="3" sideWeight="0.53047776" side_tool="true" weight="0.28744328" />
-      <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
-      <window_info anchor="bottom" id="Find" order="6" weight="0.3294893" />
-      <window_info anchor="bottom" id="Debug" order="9" weight="0.4" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -755,21 +727,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TuplePattern.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="33" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/kl/handle/PositionPattern.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="33" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/kl/TuplePatternTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="33" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
@@ -982,16 +940,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/org/kl/ConstantPatternTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/lang/Class.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-783">
@@ -999,10 +947,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/kl/ConstantPatternTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="10" lean-forward="true" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/kl/handle/ConstantPattern.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="272">
+          <caret line="16" column="5" lean-forward="true" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/org/kl/TuplePatternTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="423">
+          <caret line="35" column="30" selection-start-line="35" selection-start-column="30" selection-end-line="35" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/kl/handle/TuplePattern.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="39" column="91" selection-start-line="39" selection-start-column="91" selection-end-line="39" selection-end-column="91" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
