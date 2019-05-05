@@ -136,28 +136,6 @@ Using this library developer can write in the following way.
    );
 ```
 
-Using this library developer can write in the following way.
-
-```Java
-
-   import org.kl.state.Default;
-   import org.kl.state.Null;
-   import static org.kl.handle.TypeGuardPattern.matches;
-
-   matches(data,           
-      Integer.class, i  -> i != 0,
-                     i  -> { System.out.println(i * i); },
-      Byte.class,    b  -> b > - 1,
-                     b  -> { System.out.println(b * b); },
-      Long.class,    l  -> l < 5,
-                     l  -> { System.out.println(l * l); },
-      String.class,  s  -> !s.empty(),
-                     s  -> { System.out.println(s * s); },
-      Null.class,    () -> { System.out.println("Null value "); },
-      Default.class, () -> { System.out.println("Default value: " + data); }
-   );
-```
-
 *Deconstruction pattern* allow match type and deconstruct object at the parts.
 
 ```Java
@@ -307,21 +285,20 @@ Using this library developer can write in the following way.
    import static org.kl.handle.PositionPattern.of;
 
    matches(data,           
-      Circle.class,  of(5, 5),   -> { System.out.println("small circle"); },
-      Circle.class,  of(15, 15), -> { System.out.println("middle circle"); },
-      Null.class,    ()          -> { System.out.println("Null value "); },
-      Default.class, ()          -> { System.out.println("Default value: " + data); }
+      Circle.class,  of(5),   () -> { System.out.println("small circle"); },
+      Circle.class,  of(15),  () -> { System.out.println("middle circle"); },
+      Null.class,    ()       () -> { System.out.println("Null value "); },
+      Default.class, ()       () -> { System.out.println("Default value: " + data); }
    );
 ```
 
 If developer does not want check some fields class that fields must <br/>
-to be marked with annotation @Exclude.
+to be marked with annotation @Exclude. Excluded fields must to be declared last.
 
 ```Java
    class Circle {
-      private int x;
-      private int y;
-	  
+      private int radius;
+      	  
       @Exclude
       private int temp;
    }

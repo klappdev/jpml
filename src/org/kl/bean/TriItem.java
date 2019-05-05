@@ -17,6 +17,15 @@ public final class TriItem<T1, T2, T3> {
         this.thirdValue  = null;
     }
 
+    public TriItem(T1 firstValue, T2 secondValue, T3 thirdValue) {
+        this.firstName   = null;
+        this.firstValue  = firstValue;
+        this.secondName  = null;
+        this.secondValue = secondValue;
+        this.thirdName   = null;
+        this.thirdValue  = thirdValue;
+    }
+
     public TriItem(String firstName, T1 firstValue, String secondName, T2 secondValue,
                    String thirdName, T3 thirdValue) {
         this.firstName   = firstName;

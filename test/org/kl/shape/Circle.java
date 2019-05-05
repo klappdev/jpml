@@ -1,10 +1,14 @@
 package org.kl.shape;
 
+import org.kl.meta.Exclude;
 import org.kl.meta.Extract;
 import org.kl.type.IntRef;
 
 public class Circle extends Figure {
     private int radius;
+
+    @Exclude
+    private int temp;
 
     public Circle() {
         this.radius = 5;

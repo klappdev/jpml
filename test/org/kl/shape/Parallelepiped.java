@@ -1,5 +1,6 @@
 package org.kl.shape;
 
+import org.kl.meta.Exclude;
 import org.kl.meta.Extract;
 import org.kl.type.ShortRef;
 
@@ -7,6 +8,9 @@ public class Parallelepiped extends Figure {
     private short width;
     private short longitude;
     private short height;
+
+    @Exclude
+    private int temp;
 
     public Parallelepiped() {
         this.width = 5;

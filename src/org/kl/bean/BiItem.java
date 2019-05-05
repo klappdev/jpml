@@ -13,10 +13,17 @@ public final class BiItem<T1, T2> {
         this.secondValue = null;
     }
 
+    public BiItem(T1 firstValue, T2 secondValue) {
+        this.firstName  = null;
+        this.firstValue = firstValue;
+        this.secondName  = null;
+        this.secondValue = secondValue;
+    }
+
     public BiItem(String firstName, T1 firstValue, String secondName, T2 secondValue) {
         this.firstName  = firstName;
         this.firstValue = firstValue;
-        this.secondName = secondName;
+        this.secondName  = secondName;
         this.secondValue = secondValue;
     }
 

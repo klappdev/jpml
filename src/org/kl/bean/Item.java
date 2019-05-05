@@ -9,6 +9,11 @@ public final class Item<T> {
         this.value = null;
     }
 
+    public Item(T value) {
+        this.name  = null;
+        this.value = value;
+    }
+
     public Item(String name, T value) {
         this.name  = name;
         this.value = value;
