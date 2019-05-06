@@ -22,7 +22,6 @@ public class VerifyPatternTest {
                 Byte.class,  b  -> { System.out.println(b * b); }
         );
 
-        /* 1.1 */
         matches(value1,
                 byte.class,  b -> { System.out.println("pc1: " + b * b * b); }
         );
@@ -34,7 +33,6 @@ public class VerifyPatternTest {
                 Short.class, s -> { System.out.println(s * s); }
         );
 
-        /* 2.1 */
         matches(value2,
                 byte.class,  b -> { System.out.println("pc2: " + b * b * b); },
                 short.class, s -> { System.out.println("pc2: " + s * s * s); }
@@ -48,7 +46,6 @@ public class VerifyPatternTest {
                 Integer.class, i -> { System.out.println(i * i); }
         );
 
-        /* 3.1 */
         matches(value3,
                 byte.class,    b -> { System.out.println("pc3: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc3: " + s * s * s); },
@@ -64,7 +61,6 @@ public class VerifyPatternTest {
                 Long.class,    l -> { System.out.println(l * l); }
         );
 
-        /* 4.1 */
         matches(value4,
                 byte.class,    b -> { System.out.println("pc4: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc4: " + s * s * s); },
@@ -73,7 +69,7 @@ public class VerifyPatternTest {
         );
 
         /* 5 */
-        float value5 = 45;
+        float value5 = 45.0F;
         matches(value5,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
@@ -82,7 +78,6 @@ public class VerifyPatternTest {
                 Float.class,   f -> { System.out.println(f * f); }
         );
 
-        /* 5.1 */
         matches(value5,
                 byte.class,    b -> { System.out.println("pc5: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc5: " + s * s * s); },
@@ -102,7 +97,6 @@ public class VerifyPatternTest {
                 Double.class,  d -> { System.out.println(d * d); }
         );
 
-        /* 6.1 */
         matches(value6,
                 byte.class,    b -> { System.out.println("pc6: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc6: " + s * s * s); },
@@ -121,118 +115,117 @@ public class VerifyPatternTest {
         );
     }
 
-    @Disabled
     @Test
     public void matchesStatementWithDefaultTest() {
         String data = "unknown";
 
         /* 1 */
         matches(data,
-                Byte.class,    b  -> { System.out.println(b * b); },
-                Default.class, () -> { System.out.println("Default value 1 type"); }
+                Byte.class,    b  -> System.out.println(b * b),
+                Default.class, () -> System.out.println("Default value 1 type")
         );
 
         byte value1 = 1;
         matches(value1,
-                byte.class,     b  -> { System.out.println("pc1: " + b * b); },
-                Default.class, () -> { System.out.println("Default value 1 type"); }
+                byte.class,    b  -> System.out.println("pc1: " + b * b),
+                Default.class, () -> System.out.println("Default value 1 type")
         );
 
         /* 2 */
         matches(data,
-                Byte.class,  b -> { System.out.println(b * b); },
-                Short.class, s -> { System.out.println(s * s); },
-                Default.class, () -> { System.out.println("Default value 2 types"); }
+                Byte.class,  b -> System.out.println(b * b),
+                Short.class, s -> System.out.println(s * s),
+                Default.class, () -> System.out.println("Default value 2 types")
         );
 
         short value2 = 2;
         matches(value2,
-                byte.class,  b -> { System.out.println("pc2: " + b * b); },
-                short.class, s -> { System.out.println("pc2: " + s * s); },
-                Default.class, () -> { System.out.println("Default value 2 types"); }
+                byte.class,  b -> System.out.println("pc2: " + b * b),
+                short.class, s -> System.out.println("pc2: " + s * s),
+                Default.class, () -> System.out.println("Default value 2 types")
         );
 
         /* 3 */
         matches(data,
-                Byte.class,    b  -> { System.out.println(b * b); },
-                Short.class,   s  -> { System.out.println(s * s); },
-                Integer.class, i  -> { System.out.println(i * i); },
-                Default.class, () -> { System.out.println("Default value 3 types"); }
+                Byte.class,    b  -> System.out.println(b * b),
+                Short.class,   s  -> System.out.println(s * s),
+                Integer.class, i  -> System.out.println(i * i),
+                Default.class, () -> System.out.println("Default value 3 types")
         );
 
         int value3 = 3;
         matches(value3,
-                byte.class,    b  -> { System.out.println("pc3: " + b * b); },
-                short.class,   s  -> { System.out.println("pc3: " + s * s); },
-                int.class,     i  -> { System.out.println("pc3: " + i * i); },
-                Default.class, () -> { System.out.println("Default value 3 types"); }
+                byte.class,    b  -> System.out.println("pc3: " + b * b),
+                short.class,   s  -> System.out.println("pc3: " + s * s),
+                int.class,     i  -> System.out.println("pc3: " + i * i),
+                Default.class, () -> System.out.println("Default value 3 types")
         );
 
         /* 4 */
         matches(data,
-                Byte.class,    b  -> { System.out.println(b * b); },
-                Short.class,   s  -> { System.out.println(s * s); },
-                Integer.class, i  -> { System.out.println(i * i); },
-                Long.class,    l  -> { System.out.println(l * l); },
-                Default.class, () -> { System.out.println("Default value 4 types"); }
+                Byte.class,    b  -> System.out.println(b * b),
+                Short.class,   s  -> System.out.println(s * s),
+                Integer.class, i  -> System.out.println(i * i),
+                Long.class,    l  -> System.out.println(l * l),
+                Default.class, () -> System.out.println("Default value 4 types")
         );
 
         long value4 = 4;
         matches(value4,
-                byte.class,    b  -> { System.out.println("pc4: " + b * b); },
-                short.class,   s  -> { System.out.println("pc4: " + s * s); },
-                int.class,     i  -> { System.out.println("pc4: " + i * i); },
-                long.class,    l  -> { System.out.println("pc4: " + l * l); },
-                Default.class, () -> { System.out.println("Default value 4 types"); }
+                byte.class,    b  -> System.out.println("pc4: " + b * b),
+                short.class,   s  -> System.out.println("pc4: " + s * s),
+                int.class,     i  -> System.out.println("pc4: " + i * i),
+                long.class,    l  -> System.out.println("pc4: " + l * l),
+                Default.class, () -> System.out.println("Default value 4 types")
         );
 
         /* 5 */
         matches(data,
-                Byte.class,    b -> { System.out.println(b * b); },
-                Short.class,   s -> { System.out.println(s * s); },
-                Integer.class, i -> { System.out.println(i * i); },
-                Long.class,    l -> { System.out.println(l * l); },
-                Float.class,   f -> { System.out.println(f * f); },
-                Default.class, () -> { System.out.println("Default value 5 types"); }
+                Byte.class,    b -> System.out.println(b * b),
+                Short.class,   s -> System.out.println(s * s),
+                Integer.class, i -> System.out.println(i * i),
+                Long.class,    l -> System.out.println(l * l),
+                Float.class,   f -> System.out.println(f * f),
+                Default.class, () -> System.out.println("Default value 5 types")
         );
 
         float value5 = 5;
         matches(value5,
-                byte.class,    b -> { System.out.println("pc5: " + b * b); },
-                short.class,   s -> { System.out.println("pc5: " + s * s); },
-                int.class,     i -> { System.out.println("pc5: " + i * i); },
-                long.class,    l -> { System.out.println("pc5: " + l * l); },
-                float.class,   f -> { System.out.println("pc5: " + f * f); },
-                Default.class, () -> { System.out.println("Default value 5 types"); }
+                byte.class,    b -> System.out.println("pc5: " + b * b),
+                short.class,   s -> System.out.println("pc5: " + s * s),
+                int.class,     i -> System.out.println("pc5: " + i * i),
+                long.class,    l -> System.out.println("pc5: " + l * l),
+                float.class,   f -> System.out.println("pc5: " + f * f),
+                Default.class, () -> System.out.println("Default value 5 types")
         );
 
         /* 6 */
         matches(data,
-                Byte.class,    b -> { System.out.println(b * b); },
-                Short.class,   s -> { System.out.println(s * s); },
-                Integer.class, i -> { System.out.println(i * i); },
-                Long.class,    l -> { System.out.println(l * l); },
-                Float.class,   f -> { System.out.println(f * f); },
-                Double.class,  d -> { System.out.println(d * d); },
-                Default.class, () -> { System.out.println("Default value 6 types"); }
+                Byte.class,    b -> System.out.println(b * b),
+                Short.class,   s -> System.out.println(s * s),
+                Integer.class, i -> System.out.println(i * i),
+                Long.class,    l -> System.out.println(l * l),
+                Float.class,   f -> System.out.println(f * f),
+                Double.class,  d -> System.out.println(d * d),
+                Default.class, () -> System.out.println("Default value 6 types")
         );
 
         double value6 = 6;
         matches(value6,
-                byte.class,    b -> { System.out.println("pc6: " + b * b * b); },
-                short.class,   s -> { System.out.println("pc6: " + s * s * s); },
-                int.class,     i -> { System.out.println("pc6: " + i * i * i); },
-                long.class,    l -> { System.out.println("pc6: " + l * l * l); },
-                float.class,   f -> { System.out.println("pc6: " + f * f * f); },
-                double.class,  d -> { System.out.println("pc6: " + d * d * d); },
-                Default.class, () -> { System.out.println("Default value 6 types"); }
+                byte.class,    b -> System.out.println("pc6: " + b * b * b),
+                short.class,   s -> System.out.println("pc6: " + s * s * s),
+                int.class,     i -> System.out.println("pc6: " + i * i * i),
+                long.class,    l -> System.out.println("pc6: " + l * l * l),
+                float.class,   f -> System.out.println("pc6: " + f * f * f),
+                double.class,  d -> System.out.println("pc6: " + d * d * d),
+                Default.class, () -> System.out.println("Default value 6 types")
         );
 
         /* 7 */
         matches(data,
-                Rectangle.class, r  -> { System.out.println("rect:   " + r.square()); },
-                Circle.class,    c  -> { System.out.println("circle: " + c.square()); },
-                Default.class,   () -> { System.out.println("Default shape"); }
+                Rectangle.class, r  -> System.out.println("rect:   " + r.square()),
+                Circle.class,    c  -> System.out.println("circle: " + c.square()),
+                Default.class,   () -> System.out.println("Default shape")
         );
     }
 
@@ -640,6 +633,7 @@ public class VerifyPatternTest {
         assertEquals(square, 5);
     }
 
+    @Disabled
     @Test
     public void matchesExpressionWithNullDefaultTest() {
         /* 1 */

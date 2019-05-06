@@ -41,4 +41,44 @@ public class Reflection {
     public static boolean checkTypes(Class<?> inClass, Class<?> outClazz) {
         return inClass == outClazz || Reflection.isPrimitive(inClass, outClazz);
     }
+
+    public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClazz, Class<?> secondOutClazz) {
+        return (inClass == firstOutClazz  || Reflection.isPrimitive(inClass, firstOutClazz)) ||
+               (inClass == secondOutClazz || Reflection.isPrimitive(inClass, secondOutClazz));
+    }
+
+    public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClazz,
+                                     Class<?> secondOutClazz, Class<?> thirdOutClazz) {
+        return (inClass == firstOutClazz  || Reflection.isPrimitive(inClass, firstOutClazz))  ||
+               (inClass == secondOutClazz || Reflection.isPrimitive(inClass, secondOutClazz)) ||
+               (inClass == thirdOutClazz  || Reflection.isPrimitive(inClass, thirdOutClazz));
+    }
+
+    public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClazz, Class<?> secondOutClazz,
+                                     Class<?> thirdOutClazz, Class<?> fourthOutClazz) {
+        return (inClass == firstOutClazz  || Reflection.isPrimitive(inClass, firstOutClazz))  ||
+               (inClass == secondOutClazz || Reflection.isPrimitive(inClass, secondOutClazz)) ||
+               (inClass == thirdOutClazz  || Reflection.isPrimitive(inClass, thirdOutClazz))  ||
+               (inClass == fourthOutClazz || Reflection.isPrimitive(inClass, fourthOutClazz));
+    }
+
+    public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClazz, Class<?> secondOutClazz,
+                                     Class<?> thirdOutClazz, Class<?> fourthOutClazz, Class<?> fifthOutClazz) {
+        return (inClass == firstOutClazz  || Reflection.isPrimitive(inClass, firstOutClazz))  ||
+               (inClass == secondOutClazz || Reflection.isPrimitive(inClass, secondOutClazz)) ||
+               (inClass == thirdOutClazz  || Reflection.isPrimitive(inClass, thirdOutClazz))  ||
+               (inClass == fourthOutClazz || Reflection.isPrimitive(inClass, fourthOutClazz)) ||
+               (inClass == fifthOutClazz  || Reflection.isPrimitive(inClass, fifthOutClazz));
+    }
+
+    public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClazz, Class<?> secondOutClazz,
+                                     Class<?> thirdOutClazz, Class<?> fourthOutClazz,
+                                     Class<?> fifthOutClazz, Class<?> sixthOutClazz) {
+        return (inClass == firstOutClazz  || Reflection.isPrimitive(inClass, firstOutClazz))  ||
+               (inClass == secondOutClazz || Reflection.isPrimitive(inClass, secondOutClazz)) ||
+               (inClass == thirdOutClazz  || Reflection.isPrimitive(inClass, thirdOutClazz))  ||
+               (inClass == fourthOutClazz || Reflection.isPrimitive(inClass, fourthOutClazz)) ||
+               (inClass == fifthOutClazz  || Reflection.isPrimitive(inClass, fifthOutClazz))  ||
+               (inClass == sixthOutClazz  || Reflection.isPrimitive(inClass, sixthOutClazz));
+    }
 }

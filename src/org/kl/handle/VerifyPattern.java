@@ -47,10 +47,9 @@ public class VerifyPattern {
 
         if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
             consumer.accept((T) value);
-            return;
+        } else {
+            defaultConsumer.run();
         }
-
-        defaultConsumer.run();
     }
 
     @SuppressWarnings("unused")
@@ -118,20 +117,18 @@ public class VerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz, Consumer<T1> firstConsumer,
+                                           Class<T1> firstClazz,  Consumer<T1> firstConsumer,
                                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
                                            Class<Default> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-            return;
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-            return;
+        } else {
+            defaultConsumer.run();
         }
-
-        defaultConsumer.run();
     }
 
     @SuppressWarnings("unused")
@@ -218,16 +215,13 @@ public class VerifyPattern {
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-            return;
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-            return;
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
-            return;
+        } else {
+            defaultConsumer.run();
         }
-
-        defaultConsumer.run();
     }
 
     @SuppressWarnings("unused")
@@ -324,19 +318,15 @@ public class VerifyPattern {
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-            return;
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-            return;
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
-            return;
         } else if (forthClazz == valueClass || Reflection.isPrimitive(forthClazz, valueClass)) {
             forthConsumer.accept((T4) value);
-            return;
+        } else {
+            defaultConsumer.run();
         }
-
-        defaultConsumer.run();
     }
 
     @SuppressWarnings("unused")
@@ -445,22 +435,17 @@ public class VerifyPattern {
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-            return;
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-            return;
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
-            return;
         } else if (forthClazz == valueClass || Reflection.isPrimitive(forthClazz, valueClass)) {
             forthConsumer.accept((T4) value);
-            return;
         } else if (fifthClazz == valueClass || Reflection.isPrimitive(fifthClazz, valueClass)) {
             fifthConsumer.accept((T5) value);
-            return;
+        } else {
+            defaultConsumer.run();
         }
-
-        defaultConsumer.run();
     }
 
     @SuppressWarnings("unused")
@@ -580,25 +565,19 @@ public class VerifyPattern {
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
             firstConsumer.accept((T1) value);
-            return;
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondConsumer.accept((T2) value);
-            return;
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
-            return;
         } else if (forthClazz == valueClass || Reflection.isPrimitive(forthClazz, valueClass)) {
             forthConsumer.accept((T4) value);
-            return;
         } else if (fifthClazz == valueClass || Reflection.isPrimitive(fifthClazz, valueClass)) {
             fifthConsumer.accept((T5) value);
-            return;
         } else if (sixthClazz == valueClass || Reflection.isPrimitive(sixthClazz, valueClass)) {
             sixthConsumer.accept((T6) value);
-            return;
+        } else {
+            defaultConsumer.run();
         }
-
-        defaultConsumer.run();
     }
 
     @SuppressWarnings("unused")

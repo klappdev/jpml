@@ -3,22 +3,21 @@ Java pattern matching library base on lambdas.
 
 Many languages support pattern matching at the language level. <br/>
 Java language does not support at the moment pattern matching  <br/>
-but there is hope that in the future everything will change.
+but there is hope that in the future everything will be change.
 
 Using Java 8 features, we can emulate some of the features pattern matching.<br/>
-Library support such statement and expression patterns.<br/>
+In general, patterns can be divided into three types: constant, type, var.<br/>
+The library supports both statement and expression.<br/>
 
 *Constant pattern* allow test for equality with constants.
 
 ```Java
-   final Person man = ...;
-   final Person woman = ...;
    switch (data) {
-      case man          -> System.out.println("man");
-      case woman        -> System.out.println("woman");
-      case new Person() -> System.out.println("child");        
-      case null         -> System.out.println("Null value ");
-      default           -> System.out.println("Default value: " + data);
+      case new Person("man")    -> System.out.println("man");
+      case new Person("woman")  -> System.out.println("woman");
+      case new Person("child") 	-> System.out.println("child");        
+      case null                 -> System.out.println("Null value ");
+      default                   -> System.out.println("Default value: " + data);
    };
 ```
 
@@ -30,14 +29,12 @@ Using this library developer can write in the following way.
    import org.kl.state.Null;
    import static org.kl.handle.ConstantPattern.matches;
 
-   final Person man = ...;
-   final Person woman = ...;
    matches(data,
-      man,           () ->  System.out.println("man");
-      woman,         () ->  System.out.println("woman");
-      new Person(),  () ->  System.out.println("child");        
-      Null.class,    () -> { System.out.println("Null value "); },
-      Default.class, () -> { System.out.println("Default value: " + data); }
+      new Person("man"),    () ->  System.out.println("man");
+      new Person("woman"),  () ->  System.out.println("woman");
+      new Person("child"),  () ->  System.out.println("child");        
+      Null.class,           () -> { System.out.println("Null value "); },
+      Default.class,        () -> { System.out.println("Default value: " + data); }
    );
 ```
 
