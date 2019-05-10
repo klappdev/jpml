@@ -11,6 +11,98 @@ import java.util.function.Supplier;
 
 public class GuardPattern {
 
+    public static Predicate<Byte>    lt(byte value)   { return t -> t < value; }
+    public static Predicate<Short>   lt(short value)  { return t -> t < value; }
+    public static Predicate<Integer> lt(int value)    { return t -> t < value; }
+    public static Predicate<Long>    lt(long value)   { return t -> t < value; }
+    public static Predicate<Float>   lt(float value)  { return t -> t < value; }
+    public static Predicate<Double>  lt(double value) { return t -> t < value; }
+
+    public static Predicate<Byte>    lessThan(byte value)   { return t -> t < value; }
+    public static Predicate<Short>   lessThan(short value)  { return t -> t < value; }
+    public static Predicate<Integer> lessThan(int value)    { return t -> t < value; }
+    public static Predicate<Long>    lessThan(long value)   { return t -> t < value; }
+    public static Predicate<Float>   lessThan(float value)  { return t -> t < value; }
+    public static Predicate<Double>  lessThan(double value) { return t -> t < value; }
+
+    public static Predicate<Byte>    le(byte value)   { return t -> t <= value; }
+    public static Predicate<Short>   le(short value)  { return t -> t <= value; }
+    public static Predicate<Integer> le(int value)    { return t -> t <= value; }
+    public static Predicate<Long>    le(long value)   { return t -> t <= value; }
+    public static Predicate<Float>   le(float value)  { return t -> t <= value; }
+    public static Predicate<Double>  le(double value) { return t -> t <= value; }
+
+    public static Predicate<Byte>    lessThanOrEqual(byte value)   { return t -> t <= value; }
+    public static Predicate<Short>   lessThanOrEqual(short value)  { return t -> t <= value; }
+    public static Predicate<Integer> lessThanOrEqual(int value)    { return t -> t <= value; }
+    public static Predicate<Long>    lessThanOrEqual(long value)   { return t -> t <= value; }
+    public static Predicate<Float>   lessThanOrEqual(float value)  { return t -> t <= value; }
+    public static Predicate<Double>  lessThanOrEqual(double value) { return t -> t <= value; }
+
+    public static Predicate<Byte>    gt(byte value)   { return t -> t > value; }
+    public static Predicate<Short>   gt(short value)  { return t -> t > value; }
+    public static Predicate<Integer> gt(int value)    { return t -> t > value; }
+    public static Predicate<Long>    gt(long value)   { return t -> t > value; }
+    public static Predicate<Float>   gt(float value)  { return t -> t > value; }
+    public static Predicate<Double>  gt(double value) { return t -> t > value; }
+
+    public static Predicate<Byte>    greaterThan(byte value)   { return t -> t > value; }
+    public static Predicate<Short>   greaterThan(short value)  { return t -> t > value; }
+    public static Predicate<Integer> greaterThan(int value)    { return t -> t > value; }
+    public static Predicate<Long>    greaterThan(long value)   { return t -> t > value; }
+    public static Predicate<Float>   greaterThan(float value)  { return t -> t > value; }
+    public static Predicate<Double>  greaterThan(double value) { return t -> t > value; }
+
+    public static Predicate<Byte>    ge(byte value)   { return t -> t >= value; }
+    public static Predicate<Short>   ge(short value)  { return t -> t >= value; }
+    public static Predicate<Integer> ge(int value)    { return t -> t >= value; }
+    public static Predicate<Long>    ge(long value)   { return t -> t >= value; }
+    public static Predicate<Float>   ge(float value)  { return t -> t >= value; }
+    public static Predicate<Double>  ge(double value) { return t -> t >= value; }
+
+    public static Predicate<Byte>    greaterThanOrEqual(byte value)   { return t -> t >= value; }
+    public static Predicate<Short>   greaterThanOrEqual(short value)  { return t -> t >= value; }
+    public static Predicate<Integer> greaterThanOrEqual(int value)    { return t -> t >= value; }
+    public static Predicate<Long>    greaterThanOrEqual(long value)   { return t -> t >= value; }
+    public static Predicate<Float>   greaterThanOrEqual(float value)  { return t -> t >= value; }
+    public static Predicate<Double>  greaterThanOrEqual(double value) { return t -> t >= value; }
+
+    public static Predicate<Byte>    eq(byte value)   { return t -> t == value; }
+    public static Predicate<Short>   eq(short value)  { return t -> t == value; }
+    public static Predicate<Integer> eq(int value)    { return t -> t == value; }
+    public static Predicate<Long>    eq(long value)   { return t -> t == value; }
+    public static Predicate<Float>   eq(float value)  { return t -> t == value; }
+    public static Predicate<Double>  eq(double value) { return t -> t == value; }
+    public static Predicate<Character> eq(char value)    { return t -> t == value; }
+    public static Predicate<Boolean>   eq(boolean value) { return t -> t == value; }
+
+    public static Predicate<Byte>    equal(byte value)   { return t -> t == value; }
+    public static Predicate<Short>   equal(short value)  { return t -> t == value; }
+    public static Predicate<Integer> equal(int value)    { return t -> t == value; }
+    public static Predicate<Long>    equal(long value)   { return t -> t == value; }
+    public static Predicate<Float>   equal(float value)  { return t -> t == value; }
+    public static Predicate<Double>  equal(double value) { return t -> t == value; }
+    public static Predicate<Character> equal(char value)    { return t -> t == value; }
+    public static Predicate<Boolean>   equal(boolean value) { return t -> t == value; }
+
+    public static Predicate<Byte>    ne(byte value)   { return t -> t != value; }
+    public static Predicate<Short>   ne(short value)  { return t -> t != value; }
+    public static Predicate<Integer> ne(int value)    { return t -> t != value; }
+    public static Predicate<Long>    ne(long value)   { return t -> t != value; }
+    public static Predicate<Float>   ne(float value)  { return t -> t != value; }
+    public static Predicate<Double>  ne(double value) { return t -> t != value; }
+    public static Predicate<Character> ne(char value)    { return t -> t != value; }
+    public static Predicate<Boolean>   ne(boolean value) { return t -> t != value; }
+
+    public static Predicate<Byte>    notEqual(byte value)   { return t -> t != value; }
+    public static Predicate<Short>   notEqual(short value)  { return t -> t != value; }
+    public static Predicate<Integer> notEqual(int value)    { return t -> t != value; }
+    public static Predicate<Long>    notEqual(long value)   { return t -> t != value; }
+    public static Predicate<Float>   notEqual(float value)  { return t -> t != value; }
+    public static Predicate<Double>  notEqual(double value) { return t -> t != value; }
+    public static Predicate<Character> notEqual(char value)    { return t -> t != value; }
+    public static Predicate<Boolean>   notEqual(boolean value) { return t -> t != value; }
+
     public static <V, T> void matches(V value,
                                       Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer) {
         Class<?> valueClass = value.getClass();

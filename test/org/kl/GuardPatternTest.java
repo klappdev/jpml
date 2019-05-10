@@ -2,6 +2,7 @@ package org.kl;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.kl.handle.GuardPattern;
 import org.kl.shape.Circle;
 import org.kl.shape.Figure;
 import org.kl.shape.Rectangle;
@@ -11,11 +12,10 @@ import org.kl.state.Null;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.kl.handle.GuardPattern.matches;
+import static org.kl.handle.GuardPattern.*;
 
 public class GuardPatternTest {
 
-    @Disabled
     @Test
     public void matchesStatementTest() {
         /* 1 */
@@ -23,6 +23,14 @@ public class GuardPatternTest {
         matches(value1,
                 Byte.class, b -> b > - 1,
                             b -> { System.out.println(b * b); }
+        );
+
+        matches(value1,
+                Byte.class, gt((byte) -1), b -> { System.out.println(b * b); }
+        );
+
+        matches(value1,
+                Byte.class, greaterThan((byte) -1), b -> { System.out.println(b * b); }
         );
 
         matches(value1,
@@ -40,23 +48,19 @@ public class GuardPatternTest {
         );
 
         matches(value2,
-                short.class, s1 -> s1 > 15,
-                             s1 -> { System.out.println("pc1: " + s1 * s1); },
-                short.class, s2 -> s2 >= 5,
-                             s2 -> { System.out.println("pc2: " + s2 * s2); }
+                Short.class, gt((short) 15), s1 -> { System.out.println("br1: " + s1 * s1); },
+                Short.class, ge((short) 5),  s2 -> { System.out.println("br2: " + s2 * s2); }
         );
 
         matches(value2,
-                Byte.class,  b1 -> b1 > 15,
-                             b1 -> { System.out.println("br1: " + b1 * b1); },
-                Short.class, s2 -> s2 >= 5,
-                             s2 -> { System.out.println("br2: " + s2 * s2); }
+                Short.class, greaterThan((short) 15), s1 -> { System.out.println("br1: " + s1 * s1); },
+                Short.class, greaterThanOrEqual((short) 5),  s2 -> { System.out.println("br2: " + s2 * s2); }
         );
 
         /* 3 */
         int value3 = 15;
         matches(value3,
-                Short.class,   s1 -> s1 > -1,
+                Short.class,   s1 -> s1 == -1,
                                s1 -> { System.out.println("br1: " + s1 * s1); },
                 Integer.class, i1 -> i1 > 20,
                                i1 -> { System.out.println("br2: " + i1 * i1); },
@@ -65,21 +69,15 @@ public class GuardPatternTest {
         );
 
         matches(value3,
-                short.class, s1 -> s1 > -1,
-                             s1 -> { System.out.println("pc1: " + s1 * s1); },
-                int.class,   i1 -> i1 > 10,
-                             i1 -> { System.out.println("pc2: " + i1 * i1); },
-                int.class,   i2 -> i2 >= 20,
-                             i2 -> { System.out.println("pc3: " + i2 * i2); }
+                short.class, eq((short)-1), s1 -> { System.out.println("pc1: " + s1 * s1); },
+                int.class,   gt(10),        i1 -> { System.out.println("pc2: " + i1 * i1); },
+                int.class,   ge(20),        i2 -> { System.out.println("pc3: " + i2 * i2); }
         );
 
         matches(value3,
-                Byte.class,    b1 -> b1 > -1,
-                               b1 -> { System.out.println("br1: " + b1 * b1); },
-                Short.class,   s1 -> s1 > 20,
-                               s1 -> { System.out.println("br2: " + s1 * s1); },
-                Integer.class, i1 -> i1 >= 5,
-                               i1 -> { System.out.println("br3: " + i1 * i1); }
+                short.class, equal((short)-1), s1 -> { System.out.println("pc1: " + s1 * s1); },
+                int.class,   greaterThan(10),  i1 -> { System.out.println("pc2: " + i1 * i1); },
+                int.class,   greaterThan(20),  i2 -> { System.out.println("pc3: " + i2 * i2); }
         );
 
         /* 4 */
@@ -96,25 +94,17 @@ public class GuardPatternTest {
         );
 
         matches(value4,
-                short.class,   s -> s > -1,
-                               s -> { System.out.println("pc1: " + s * s); },
-                int.class,     i -> i > 20,
-                               i -> { System.out.println("pc2: " + i * i); },
-                long.class,    l1 -> l1 < 10,
-                               l1 -> { System.out.println("pc3: " + l1 * l1); },
-                long.class,    l2 -> l2 >= 5,
-                               l2 -> { System.out.println("pc4: " + l2 * l2); }
+                short.class,   gt((short)-1), s ->  { System.out.println("pc1: " + s * s); },
+                int.class,     gt(20),        i ->  { System.out.println("pc2: " + i * i); },
+                long.class,    lt(10L),       l1 -> { System.out.println("pc3: " + l1 * l1); },
+                long.class,    ge(5L),        l2 -> { System.out.println("pc4: " + l2 * l2); }
         );
 
         matches(value4,
-                Byte.class,    b -> b > -1,
-                               b -> { System.out.println("br1: " + b * b); },
-                Short.class,   s -> s > -1,
-                               s -> { System.out.println("br2: " + s * s); },
-                Integer.class, i -> i > -1,
-                               i -> { System.out.println("br3: " + i * i); },
-                Long.class,    l -> l != 0,
-                               l -> { System.out.println("br4: " + l * l); }
+                short.class,   greaterThan((short)-1), s ->  { System.out.println("pc1: " + s * s); },
+                int.class,     greaterThan(20),        i ->  { System.out.println("pc2: " + i * i); },
+                long.class,    lessThan(10L),          l1 -> { System.out.println("pc3: " + l1 * l1); },
+                long.class,    greaterThanOrEqual(5L), l2 -> { System.out.println("pc4: " + l2 * l2); }
         );
 
         /* 5 */
@@ -133,29 +123,19 @@ public class GuardPatternTest {
         );
 
         matches(value5,
-                short.class,   s -> s > -1,
-                               s -> { System.out.println("pc1: " + s * s); },
-                int.class,     i -> i > 20,
-                               i -> { System.out.println("pc2: " + i * i); },
-                long.class,    l -> l > 10,
-                               l -> { System.out.println("pc3: " + l * l); },
-                float.class,   f1 -> f1 >= 40,
-                               f1 -> { System.out.println("pc4: " + f1 * f1); },
-                float.class,   f2 -> f2 >= 5,
-                               f2 -> { System.out.println("pc5: " + f2 * f2); }
+                short.class,   gt((short)-1), s ->  { System.out.println("pc1: " + s * s); },
+                int.class,     gt(20),        i ->  { System.out.println("pc2: " + i * i); },
+                long.class,    gt(10L),       l ->  { System.out.println("pc3: " + l * l); },
+                float.class,   ge(40F),       f1 -> { System.out.println("pc4: " + f1 * f1); },
+                float.class,   ge(5F),        f2 -> { System.out.println("pc5: " + f2 * f2); }
         );
 
         matches(value5,
-                Byte.class,    b -> b > -1,
-                               b -> { System.out.println("br1: " + b * b); },
-                Short.class,   s -> s > -1,
-                               s -> { System.out.println("br2: " + s * s); },
-                Integer.class, i -> i > -1,
-                               i -> { System.out.println("br3: " + i * i); },
-                Long.class,    l -> l != -1,
-                               l -> { System.out.println("br4: " + l * l); },
-                Float.class,   f -> f != 0,
-                               f -> { System.out.println("br5: " + f * f); }
+                Short.class,   greaterThan((short)-1),  s ->  { System.out.println("pc1: " + s * s); },
+                Integer.class, greaterThan(20),         i ->  { System.out.println("pc2: " + i * i); },
+                Long.class,    greaterThan(10L),        l ->  { System.out.println("pc3: " + l * l); },
+                Float.class,   greaterThanOrEqual(40F), f1 -> { System.out.println("pc4: " + f1 * f1); },
+                Float.class,   greaterThanOrEqual(5F),  f2 -> { System.out.println("pc5: " + f2 * f2); }
         );
 
         /* 6 */
@@ -175,44 +155,12 @@ public class GuardPatternTest {
                                d2 -> { System.out.println("br6: " + d2 * d2); }
         );
 
-        matches(value6,
-                short.class,   s -> s > -1,
-                               s -> { System.out.println("pc1: " + s * s); },
-                int.class,     i -> i > 20,
-                               i -> { System.out.println("pc2: " + i * i); },
-                long.class,    l -> l > 10,
-                               l -> { System.out.println("pc3: " + l * l); },
-                float.class,   f -> f >= 5,
-                               f -> { System.out.println("pc4: " + f * f); },
-                double.class,  d1 -> d1 >= 40,
-                               d1 -> { System.out.println("pc5: " + d1 * d1); },
-                double.class,  d2 -> d2 >= 5,
-                               d2 -> { System.out.println("pc6: " + d2 * d2); }
-        );
-
-        matches(value6,
-                Byte.class,    b -> b > -1,
-                               b -> { System.out.println("br1: " + b * b); },
-                Short.class,   s -> s > -1,
-                               s -> { System.out.println("br2: " + s * s); },
-                Integer.class, i -> i > -1,
-                               i -> { System.out.println("br3: " + i * i); },
-                Long.class,    l -> l != -1,
-                               l -> { System.out.println("br4: " + l * l); },
-                Float.class,   f -> f != -1,
-                               f -> { System.out.println("br5: " + f * f); },
-                Double.class,  d -> d != 0,
-                               d -> { System.out.println("br6: " + d * d); }
-        );
-
         /* 7 */
         Figure figure = new Rectangle();
 
         matches(figure,
-                Rectangle.class, r -> r != null,
-                                 r -> { System.out.println("rect:   " + r.square()); },
-                Circle.class,    c -> c != null,
-                                 c -> { System.out.println("circle: " + c.square()); }
+                Rectangle.class, Objects::nonNull, r -> { System.out.println("rect:   " + r.square()); },
+                Circle.class,    Objects::nonNull, c -> { System.out.println("circle: " + c.square()); }
         );
     }
 
@@ -950,6 +898,7 @@ public class GuardPatternTest {
         assertEquals(square, 50);
     }
 
+    @Disabled
     @Test
     public void matchesExpressionWithNullDefaultTest() {
         /* 1 */

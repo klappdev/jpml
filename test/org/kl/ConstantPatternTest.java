@@ -19,7 +19,6 @@ import static org.kl.handle.ConstantPattern.matches;
 
 public class ConstantPatternTest {
 
-    @Disabled
     @Test
     public void matchesStatementTest() throws PatternException {
         /* 1 */
@@ -162,6 +161,7 @@ public class ConstantPatternTest {
         );
     }
 
+    @Disabled
     @Test
     public void matchesStatementWithVarTest() throws PatternException {
         /* 1 */

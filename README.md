@@ -98,7 +98,7 @@ Using this library developer can write in the following way.
       Default.class, () -> { System.out.println("Default value: " + data); }
    );
 ```
-*Guard pattern* allow match type and check condition for truthfulness at one time.
+*Guard pattern* allow match type and check condition for the truth at one time.
 
 ```Java
     switch (data) {
@@ -120,14 +120,28 @@ Using this library developer can write in the following way.
    import static org.kl.handle.GuardPattern.matches;
 
    matches(data,           
-      Integer.class, i  -> i != 0,
-                     i  -> { System.out.println(i * i); },
-      Byte.class,    b  -> b > - 1,
-                     b  -> { System.out.println(b * b); },
-      Long.class,    l  -> l < 5,
-                     l  -> { System.out.println(l * l); },
-      String.class,  s  -> !s.empty(),
-                     s  -> { System.out.println(s * s); },
+      Integer.class, i  -> i != 0,  i  -> { System.out.println(i * i); },
+      Byte.class,    b  -> b > -1,  b  -> { System.out.println(b * b); },
+      Long.class,    l  -> l == 5,  l  -> { System.out.println(l * l); },
+      Null.class,    () -> { System.out.println("Null value "); },
+      Default.class, () -> { System.out.println("Default value: " + data); }
+   );
+```
+
+For simplify writing a condition, you can use such functions to compare: <br/>
+lessThan/lt, greaterThan/gt, lessThanOrEqual/le, greaterThanOrEqual/ge,  <br/>
+equal/eq, notEqual/ne.
+
+```Java
+
+   import org.kl.state.Default;
+   import org.kl.state.Null;
+   import static org.kl.handle.GuardPattern.*;
+
+   matches(data,           
+      Integer.class, ne(0),  i  -> { System.out.println(i * i); },
+      Byte.class,    gt(-1), b  -> { System.out.println(b * b); },
+      Long.class,    eq(5),  l  -> { System.out.println(l * l); },
       Null.class,    () -> { System.out.println("Null value "); },
       Default.class, () -> { System.out.println("Default value: " + data); }
    );
