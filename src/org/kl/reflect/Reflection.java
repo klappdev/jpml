@@ -65,27 +65,25 @@ public class Reflection {
     }
 
     public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClass, Class<?> secondOutClass) {
-        return (inClass == firstOutClass  || isPrimitive(inClass, firstOutClass)) &&
+        return checkTypes(inClass, firstOutClass) &&
                (inClass == secondOutClass || isPrimitive(inClass, secondOutClass));
     }
 
     public static boolean checkBiTypes(Class<?> leftClass, Class<?> rightClass,
                                        Class<?> firstLeftClass,  Class<?> firstRightClass,
                                        Class<?> secondLeftClass, Class<?> secondRightClass) {
-        return (leftClass  == firstLeftClass   || isPrimitive(leftClass,  firstLeftClass))  &&
+        return checkBiTypes(leftClass, rightClass, firstLeftClass,  firstRightClass) &&
                (leftClass  == secondLeftClass  || isPrimitive(leftClass,  secondLeftClass)) &&
-               (rightClass == firstRightClass  || isPrimitive(rightClass, firstRightClass)) &&
                (rightClass == secondRightClass || isPrimitive(rightClass, secondRightClass));
     }
 
     public static boolean checkTrioTypes(Class<?> leftClass, Class<?> middleClass, Class<?> rightClass,
                                          Class<?> firstLeftClass,  Class<?> firstMiddleClass,  Class<?> firstRightClass,
                                          Class<?> secondLeftClass, Class<?> secondMiddleClass, Class<?> secondRightClass) {
-        return (leftClass   == firstLeftClass    || isPrimitive(leftClass,  firstLeftClass))     &&
+        return checkTrioTypes(leftClass, middleClass, rightClass,
+                              firstLeftClass,  firstMiddleClass,  firstRightClass) &&
                (leftClass   == secondLeftClass   || isPrimitive(leftClass,  secondLeftClass))    &&
-               (middleClass == firstMiddleClass  || isPrimitive(middleClass, firstMiddleClass))  &&
                (middleClass == secondMiddleClass || isPrimitive(middleClass, secondMiddleClass)) &&
-               (rightClass  == firstRightClass   || isPrimitive(rightClass, firstRightClass))    &&
                (rightClass  == secondRightClass  || isPrimitive(rightClass, secondRightClass)) ;
     }
 
@@ -93,20 +91,17 @@ public class Reflection {
     boolean checkQuarTypes(Class<?> leftClass, Class<?> bottomClass, Class<?> rightClass, Class<?> topClass,
             Class<?> firstLeftClass,  Class<?> firstBottomClass,  Class<?> firstRightClass,  Class<?> firstTopClass,
             Class<?> secondLeftClass, Class<?> secondBottomClass, Class<?> secondRightClass, Class<?> secondTopClass) {
-        return (leftClass   == firstLeftClass    || isPrimitive(leftClass,  firstLeftClass))     &&
+        return checkQuarTypes(leftClass, bottomClass, rightClass, topClass,
+                              firstLeftClass,  firstBottomClass,  firstRightClass,  firstTopClass) &&
                (leftClass   == secondLeftClass   || isPrimitive(leftClass,  secondLeftClass))    &&
-               (bottomClass == firstBottomClass  || isPrimitive(bottomClass, firstBottomClass))  &&
                (bottomClass == secondBottomClass || isPrimitive(bottomClass, secondBottomClass)) &&
-               (rightClass  == firstRightClass   || isPrimitive(rightClass, firstRightClass))    &&
                (rightClass  == secondRightClass  || isPrimitive(rightClass, secondRightClass))   &&
-               (topClass    == firstTopClass     || isPrimitive(topClass, firstTopClass))        &&
                (topClass    == secondTopClass    || isPrimitive(topClass, secondTopClass));
     }
 
     public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClass,
                                      Class<?> secondOutClass, Class<?> thirdOutClass) {
-        return (inClass == firstOutClass  || isPrimitive(inClass, firstOutClass))  &&
-               (inClass == secondOutClass || isPrimitive(inClass, secondOutClass)) &&
+        return checkTypes(inClass, firstOutClass, secondOutClass) &&
                (inClass == thirdOutClass  || isPrimitive(inClass, thirdOutClass));
     }
 
@@ -114,11 +109,10 @@ public class Reflection {
                                        Class<?> firstLeftClass,  Class<?> firstRightClass,
                                        Class<?> secondLeftClass, Class<?> secondRightClass,
                                        Class<?> thirdLeftClass,  Class<?> thirdRightClass) {
-        return (leftClass  == firstLeftClass   || isPrimitive(leftClass,  firstLeftClass))  &&
-               (leftClass  == secondLeftClass  || isPrimitive(leftClass,  secondLeftClass)) &&
+        return checkBiTypes(leftClass, rightClass,
+                            firstLeftClass,  firstRightClass,
+                            secondLeftClass, secondRightClass) &&
                (leftClass  == thirdLeftClass   || isPrimitive(leftClass,  thirdLeftClass))  &&
-               (rightClass == firstRightClass  || isPrimitive(rightClass, firstRightClass)) &&
-               (rightClass == secondRightClass || isPrimitive(rightClass, secondRightClass))&&
                (rightClass == thirdRightClass  || isPrimitive(rightClass, thirdRightClass));
     }
 
@@ -126,14 +120,11 @@ public class Reflection {
                                          Class<?> firstLeftClass,  Class<?> firstMiddleClass,  Class<?> firstRightClass,
                                          Class<?> secondLeftClass, Class<?> secondMiddleClass, Class<?> secondRightClass,
                                          Class<?> thirdLeftClass,  Class<?> thirdMiddleClass,  Class<?> thirdRightClass) {
-        return (leftClass   == firstLeftClass    || isPrimitive(leftClass,  firstLeftClass))     &&
-               (leftClass   == secondLeftClass   || isPrimitive(leftClass,  secondLeftClass))    &&
+        return checkTrioTypes(leftClass, middleClass, rightClass,
+                              firstLeftClass,  firstMiddleClass,  firstRightClass,
+                              secondLeftClass, secondMiddleClass, secondRightClass) &&
                (leftClass   == thirdLeftClass    || isPrimitive(leftClass,  thirdLeftClass))     &&
-               (middleClass == firstMiddleClass  || isPrimitive(middleClass, firstMiddleClass))  &&
-               (middleClass == secondMiddleClass || isPrimitive(middleClass, secondMiddleClass)) &&
                (middleClass == thirdMiddleClass  || isPrimitive(middleClass, thirdMiddleClass))  &&
-               (rightClass  == firstRightClass   || isPrimitive(rightClass, firstRightClass))    &&
-               (rightClass  == secondRightClass  || isPrimitive(rightClass, secondRightClass))   &&
                (rightClass  == thirdRightClass   || isPrimitive(rightClass, thirdRightClass));
     }
 
@@ -142,25 +133,18 @@ public class Reflection {
             Class<?> firstLeftClass,  Class<?> firstBottomClass,  Class<?> firstRightClass,  Class<?> firstTopClass,
             Class<?> secondLeftClass, Class<?> secondBottomClass, Class<?> secondRightClass, Class<?> secondTopClass,
             Class<?> thirdLeftClass,  Class<?> thirdBottomClass,  Class<?> thirdRightClass,  Class<?> thirdTopClass) {
-        return (leftClass   == firstLeftClass    || isPrimitive(leftClass,  firstLeftClass))     &&
-               (leftClass   == secondLeftClass   || isPrimitive(leftClass,  secondLeftClass))    &&
+        return checkQuarTypes(leftClass, bottomClass, rightClass, topClass,
+                              firstLeftClass,  firstBottomClass,  firstRightClass,  firstTopClass,
+                              secondLeftClass, secondBottomClass, secondRightClass, secondTopClass) &&
                (leftClass   == thirdLeftClass    || isPrimitive(leftClass,  thirdLeftClass))     &&
-               (bottomClass == firstBottomClass  || isPrimitive(bottomClass, firstBottomClass))  &&
-               (bottomClass == secondBottomClass || isPrimitive(bottomClass, secondBottomClass)) &&
                (bottomClass == thirdBottomClass  || isPrimitive(bottomClass, thirdBottomClass))  &&
-               (rightClass  == firstRightClass   || isPrimitive(rightClass, firstRightClass))    &&
-               (rightClass  == secondRightClass  || isPrimitive(rightClass, secondRightClass))   &&
                (rightClass  == thirdRightClass   || isPrimitive(rightClass, thirdRightClass))    &&
-               (topClass    == firstTopClass     || isPrimitive(topClass, firstTopClass))        &&
-               (topClass    == secondTopClass    || isPrimitive(topClass, secondTopClass))       &&
                (topClass    == thirdTopClass     || isPrimitive(topClass, thirdTopClass));
     }
 
     public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClass, Class<?> secondOutClass,
                                      Class<?> thirdOutClass, Class<?> fourthOutClass) {
-        return (inClass == firstOutClass  || isPrimitive(inClass, firstOutClass))  &&
-               (inClass == secondOutClass || isPrimitive(inClass, secondOutClass)) &&
-               (inClass == thirdOutClass  || isPrimitive(inClass, thirdOutClass))  &&
+        return checkTypes(inClass, firstOutClass, secondOutClass, thirdOutClass) &&
                (inClass == fourthOutClass || isPrimitive(inClass, fourthOutClass));
     }
 
@@ -169,13 +153,11 @@ public class Reflection {
                                        Class<?> secondLeftClass, Class<?> secondRightClass,
                                        Class<?> thirdLeftClass,  Class<?> thirdRightClass,
                                        Class<?> fourthLeftClass, Class<?> fourthRightClass) {
-        return (leftClass  == firstLeftClass   || isPrimitive(leftClass,  firstLeftClass))  &&
-               (leftClass  == secondLeftClass  || isPrimitive(leftClass,  secondLeftClass)) &&
-               (leftClass  == thirdLeftClass   || isPrimitive(leftClass,  thirdLeftClass))  &&
+        return checkBiTypes(leftClass, rightClass,
+                            firstLeftClass,  firstRightClass,
+                            secondLeftClass, secondRightClass,
+                            thirdLeftClass,  thirdRightClass) &&
                (leftClass  == fourthLeftClass  || isPrimitive(leftClass,  fourthLeftClass)) &&
-               (rightClass == firstRightClass  || isPrimitive(rightClass, firstRightClass)) &&
-               (rightClass == secondRightClass || isPrimitive(rightClass, secondRightClass))&&
-               (rightClass == thirdRightClass  || isPrimitive(rightClass, thirdRightClass)) &&
                (rightClass == fourthRightClass || isPrimitive(rightClass, fourthRightClass));
     }
 
@@ -184,17 +166,12 @@ public class Reflection {
                                          Class<?> secondLeftClass, Class<?> secondMiddleClass, Class<?> secondRightClass,
                                          Class<?> thirdLeftClass,  Class<?> thirdMiddleClass,  Class<?> thirdRightClass,
                                          Class<?> fourthLeftClass, Class<?> fourthMiddleClass, Class<?> fourthRightClass) {
-        return (leftClass   == firstLeftClass    || isPrimitive(leftClass,  firstLeftClass))     &&
-               (leftClass   == secondLeftClass   || isPrimitive(leftClass,  secondLeftClass))    &&
-               (leftClass   == thirdLeftClass    || isPrimitive(leftClass,  thirdLeftClass))     &&
+        return checkTrioTypes(leftClass, middleClass, rightClass,
+                              firstLeftClass,  firstMiddleClass,  firstRightClass,
+                              secondLeftClass, secondMiddleClass, secondRightClass,
+                              thirdLeftClass,  thirdMiddleClass,  thirdRightClass) &&
                (leftClass   == fourthLeftClass   || isPrimitive(leftClass,  fourthLeftClass))    &&
-               (middleClass == firstMiddleClass  || isPrimitive(middleClass, firstMiddleClass))  &&
-               (middleClass == secondMiddleClass || isPrimitive(middleClass, secondMiddleClass)) &&
-               (middleClass == thirdMiddleClass  || isPrimitive(middleClass, thirdMiddleClass))  &&
                (middleClass == fourthMiddleClass || isPrimitive(middleClass, fourthMiddleClass)) &&
-               (rightClass  == firstRightClass   || isPrimitive(rightClass, firstRightClass))    &&
-               (rightClass  == secondRightClass  || isPrimitive(rightClass, secondRightClass))   &&
-               (rightClass  == thirdRightClass   || isPrimitive(rightClass, thirdRightClass))    &&
                (rightClass  == fourthRightClass  || isPrimitive(rightClass, fourthRightClass));
     }
 
@@ -204,30 +181,21 @@ public class Reflection {
             Class<?> secondLeftClass, Class<?> secondBottomClass, Class<?> secondRightClass, Class<?> secondTopClass,
             Class<?> thirdLeftClass,  Class<?> thirdBottomClass,  Class<?> thirdRightClass,  Class<?> thirdTopClass,
             Class<?> fourthLeftClass, Class<?> fourthBottomClass, Class<?> fourthRightClass, Class<?> fourthTopClass) {
-        return (leftClass   == firstLeftClass    || isPrimitive(leftClass,  firstLeftClass))     &&
-               (leftClass   == secondLeftClass   || isPrimitive(leftClass,  secondLeftClass))    &&
-               (leftClass   == thirdLeftClass    || isPrimitive(leftClass,  thirdLeftClass))     &&
+        return checkQuarTypes(leftClass, bottomClass, rightClass, topClass,
+                              firstLeftClass,  firstBottomClass,  firstRightClass,  firstTopClass,
+                              secondLeftClass, secondBottomClass, secondRightClass, secondTopClass,
+                              thirdLeftClass,  thirdBottomClass,  thirdRightClass,  thirdTopClass) &&
                (leftClass   == fourthLeftClass   || isPrimitive(leftClass,  fourthLeftClass))    &&
-               (bottomClass == firstBottomClass  || isPrimitive(bottomClass, firstBottomClass))  &&
-               (bottomClass == secondBottomClass || isPrimitive(bottomClass, secondBottomClass)) &&
-               (bottomClass == thirdBottomClass  || isPrimitive(bottomClass, thirdBottomClass))  &&
                (bottomClass == fourthBottomClass || isPrimitive(bottomClass, fourthBottomClass)) &&
-               (rightClass  == firstRightClass   || isPrimitive(rightClass, firstRightClass))    &&
-               (rightClass  == secondRightClass  || isPrimitive(rightClass, secondRightClass))   &&
-               (rightClass  == thirdRightClass   || isPrimitive(rightClass, thirdRightClass))    &&
                (rightClass  == fourthRightClass  || isPrimitive(rightClass, fourthRightClass))   &&
-               (topClass    == firstTopClass     || isPrimitive(topClass, firstTopClass))        &&
-               (topClass    == secondTopClass    || isPrimitive(topClass, secondTopClass))       &&
-               (topClass    == thirdTopClass     || isPrimitive(topClass, thirdTopClass))        &&
                (topClass    == fourthTopClass    || isPrimitive(topClass, fourthTopClass));
     }
 
     public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClass, Class<?> secondOutClass,
                                      Class<?> thirdOutClass, Class<?> fourthOutClass, Class<?> fifthOutClass) {
-        return (inClass == firstOutClass  || isPrimitive(inClass, firstOutClass))  &&
-               (inClass == secondOutClass || isPrimitive(inClass, secondOutClass)) &&
-               (inClass == thirdOutClass  || isPrimitive(inClass, thirdOutClass))  &&
-               (inClass == fourthOutClass || isPrimitive(inClass, fourthOutClass)) &&
+        return checkTypes(inClass,
+                          firstOutClass, secondOutClass,
+                          thirdOutClass, fourthOutClass) &&
                (inClass == fifthOutClass  || isPrimitive(inClass, fifthOutClass));
     }
 
@@ -237,15 +205,12 @@ public class Reflection {
                                        Class<?> thirdLeftClass,  Class<?> thirdRightClass,
                                        Class<?> fourthLeftClass, Class<?> fourthRightClass,
                                        Class<?> fifthLeftClass,  Class<?> fifthRightClass) {
-        return (leftClass  == firstLeftClass   || isPrimitive(leftClass,  firstLeftClass))   &&
-               (leftClass  == secondLeftClass  || isPrimitive(leftClass,  secondLeftClass))  &&
-               (leftClass  == thirdLeftClass   || isPrimitive(leftClass,  thirdLeftClass))   &&
-               (leftClass  == fourthLeftClass  || isPrimitive(leftClass,  fourthLeftClass))  &&
+        return checkBiTypes(leftClass, rightClass,
+                            firstLeftClass,  firstRightClass,
+                            secondLeftClass, secondRightClass,
+                            thirdLeftClass,  thirdRightClass,
+                            fourthLeftClass, fourthRightClass) &&
                (leftClass  == fifthLeftClass   || isPrimitive(leftClass,  fifthLeftClass))   &&
-               (rightClass == firstRightClass  || isPrimitive(rightClass, firstRightClass))  &&
-               (rightClass == secondRightClass || isPrimitive(rightClass, secondRightClass)) &&
-               (rightClass == thirdRightClass  || isPrimitive(rightClass, thirdRightClass))  &&
-               (rightClass == fourthRightClass || isPrimitive(rightClass, fourthRightClass)) &&
                (rightClass == fifthRightClass  || isPrimitive(rightClass, fifthRightClass));
     }
 
@@ -255,20 +220,13 @@ public class Reflection {
                                          Class<?> thirdLeftClass,  Class<?> thirdMiddleClass,  Class<?> thirdRightClass,
                                          Class<?> fourthLeftClass, Class<?> fourthMiddleClass, Class<?> fourthRightClass,
                                          Class<?> fifthLeftClass,  Class<?> fifthMiddleClass,  Class<?> fifthRightClass) {
-        return (leftClass   == firstLeftClass    || isPrimitive(leftClass,  firstLeftClass))     &&
-               (leftClass   == secondLeftClass   || isPrimitive(leftClass,  secondLeftClass))    &&
-               (leftClass   == thirdLeftClass    || isPrimitive(leftClass,  thirdLeftClass))     &&
-               (leftClass   == fourthLeftClass   || isPrimitive(leftClass,  fourthLeftClass))    &&
+        return checkTrioTypes(leftClass, middleClass, rightClass,
+                              firstLeftClass,  firstMiddleClass,  firstRightClass,
+                              secondLeftClass, secondMiddleClass, secondRightClass,
+                              thirdLeftClass,  thirdMiddleClass,  thirdRightClass,
+                              fourthLeftClass, fourthMiddleClass, fourthRightClass) &&
                (leftClass   == fifthLeftClass    || isPrimitive(leftClass,  fifthMiddleClass))   &&
-               (middleClass == firstMiddleClass  || isPrimitive(middleClass, firstMiddleClass))  &&
-               (middleClass == secondMiddleClass || isPrimitive(middleClass, secondMiddleClass)) &&
-               (middleClass == thirdMiddleClass  || isPrimitive(middleClass, thirdMiddleClass))  &&
-               (middleClass == fourthMiddleClass || isPrimitive(middleClass, fourthMiddleClass)) &&
                (middleClass == fifthMiddleClass  || isPrimitive(middleClass, fifthMiddleClass))  &&
-               (rightClass  == firstRightClass   || isPrimitive(rightClass, firstRightClass))    &&
-               (rightClass  == secondRightClass  || isPrimitive(rightClass, secondRightClass))   &&
-               (rightClass  == thirdRightClass   || isPrimitive(rightClass, thirdRightClass))    &&
-               (rightClass  == fourthRightClass  || isPrimitive(rightClass, fourthRightClass))   &&
                (rightClass  == fifthRightClass   || isPrimitive(rightClass, fifthRightClass));
     }
 
@@ -293,11 +251,9 @@ public class Reflection {
     public static boolean checkTypes(Class<?> inClass, Class<?> firstOutClass, Class<?> secondOutClass,
                                      Class<?> thirdOutClass, Class<?> fourthOutClass,
                                      Class<?> fifthOutClass, Class<?> sixthOutClass) {
-        return (inClass == firstOutClass  || isPrimitive(inClass, firstOutClass))  &&
-               (inClass == secondOutClass || isPrimitive(inClass, secondOutClass)) &&
-               (inClass == thirdOutClass  || isPrimitive(inClass, thirdOutClass))  &&
-               (inClass == fourthOutClass || isPrimitive(inClass, fourthOutClass)) &&
-               (inClass == fifthOutClass  || isPrimitive(inClass, fifthOutClass))  &&
+        return checkTypes(inClass,
+                firstOutClass,  secondOutClass,
+                thirdOutClass, fourthOutClass, fifthOutClass) &&
                (inClass == sixthOutClass  || isPrimitive(inClass, sixthOutClass));
     }
 
@@ -308,17 +264,13 @@ public class Reflection {
                                        Class<?> fourthLeftClass, Class<?> fourthRightClass,
                                        Class<?> fifthLeftClass,  Class<?> fifthRightClass,
                                        Class<?> sixthLeftClass,  Class<?> sixthRightClass) {
-        return (leftClass  == firstLeftClass   || isPrimitive(leftClass,  firstLeftClass))   &&
-               (leftClass  == secondLeftClass  || isPrimitive(leftClass,  secondLeftClass))  &&
-               (leftClass  == thirdLeftClass   || isPrimitive(leftClass,  thirdLeftClass))   &&
-               (leftClass  == fourthLeftClass  || isPrimitive(leftClass,  fourthLeftClass))  &&
-               (leftClass  == fifthLeftClass   || isPrimitive(leftClass,  fifthLeftClass))   &&
+        return checkBiTypes(leftClass, rightClass,
+                            firstLeftClass,  firstRightClass,
+                            secondLeftClass, secondRightClass,
+                            thirdLeftClass,  thirdRightClass,
+                            fourthLeftClass, fourthRightClass,
+                            fifthLeftClass,  fifthRightClass) &&
                (leftClass  == sixthLeftClass   || isPrimitive(leftClass,  sixthLeftClass))   &&
-               (rightClass == firstRightClass  || isPrimitive(rightClass, firstRightClass))  &&
-               (rightClass == secondRightClass || isPrimitive(rightClass, secondRightClass)) &&
-               (rightClass == thirdRightClass  || isPrimitive(rightClass, thirdRightClass))  &&
-               (rightClass == fourthRightClass || isPrimitive(rightClass, fourthRightClass)) &&
-               (rightClass == fifthRightClass  || isPrimitive(rightClass, fifthRightClass))  &&
                (rightClass == sixthRightClass  || isPrimitive(rightClass, sixthRightClass));
     }
 
@@ -329,23 +281,14 @@ public class Reflection {
                                          Class<?> fourthLeftClass, Class<?> fourthMiddleClass, Class<?> fourthRightClass,
                                          Class<?> fifthLeftClass,  Class<?> fifthMiddleClass,  Class<?> fifthRightClass,
                                          Class<?> sixthLeftClass,  Class<?> sixthMiddleClass,  Class<?> sixthRightClass) {
-        return (leftClass   == firstLeftClass    || isPrimitive(leftClass,  firstLeftClass))     &&
-               (leftClass   == secondLeftClass   || isPrimitive(leftClass,  secondLeftClass))    &&
-               (leftClass   == thirdLeftClass    || isPrimitive(leftClass,  thirdLeftClass))     &&
-               (leftClass   == fourthLeftClass   || isPrimitive(leftClass,  fourthLeftClass))    &&
-               (leftClass   == fifthLeftClass    || isPrimitive(leftClass,  fifthMiddleClass))   &&
+        return checkTrioTypes(leftClass, middleClass, rightClass,
+                              firstLeftClass,  firstMiddleClass,  firstRightClass,
+                              secondLeftClass, secondMiddleClass, secondRightClass,
+                              thirdLeftClass,  thirdMiddleClass,  thirdRightClass,
+                              fourthLeftClass, fourthMiddleClass, fourthRightClass,
+                              fifthLeftClass,  fifthMiddleClass,  fifthRightClass) &&
                (leftClass   == sixthLeftClass    || isPrimitive(leftClass,  sixthLeftClass))     &&
-               (middleClass == firstMiddleClass  || isPrimitive(middleClass, firstMiddleClass))  &&
-               (middleClass == secondMiddleClass || isPrimitive(middleClass, secondMiddleClass)) &&
-               (middleClass == thirdMiddleClass  || isPrimitive(middleClass, thirdMiddleClass))  &&
-               (middleClass == fourthMiddleClass || isPrimitive(middleClass, fourthMiddleClass)) &&
-               (middleClass == fifthMiddleClass  || isPrimitive(middleClass, fifthMiddleClass))  &&
                (middleClass == sixthMiddleClass  || isPrimitive(middleClass, sixthMiddleClass))  &&
-               (rightClass  == firstRightClass   || isPrimitive(rightClass, firstRightClass))    &&
-               (rightClass  == secondRightClass  || isPrimitive(rightClass, secondRightClass))   &&
-               (rightClass  == thirdRightClass   || isPrimitive(rightClass, thirdRightClass))    &&
-               (rightClass  == fourthRightClass  || isPrimitive(rightClass, fourthRightClass))   &&
-               (rightClass  == fifthRightClass   || isPrimitive(rightClass, fifthRightClass))    &&
                (rightClass  == sixthRightClass   || isPrimitive(rightClass, sixthRightClass));
     }
 
