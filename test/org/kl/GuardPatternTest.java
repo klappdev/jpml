@@ -2,13 +2,15 @@ package org.kl;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.kl.handle.GuardPattern;
 import org.kl.shape.Circle;
 import org.kl.shape.Figure;
 import org.kl.shape.Rectangle;
 import org.kl.state.Default;
 import org.kl.state.Null;
+import org.kl.state.Var;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,6 +18,7 @@ import static org.kl.handle.GuardPattern.*;
 
 public class GuardPatternTest {
 
+    @Disabled
     @Test
     public void matchesStatementTest() {
         /* 1 */
@@ -319,6 +322,144 @@ public class GuardPatternTest {
 
     @Disabled
     @Test
+    public void matchesStatementWithVarTest() {
+        String data = "unknown";
+
+        /* 1 */
+        matches(data,
+                Byte.class, b -> b > -1, b -> { System.out.println("br1: " + b * b); },
+                Var.class, any -> System.out.println("Var value 1 type")
+        );
+
+        /* 2 */
+        matches(data,
+                Short.class, s1 -> s1 > 15, s1 -> { System.out.println("br1: " + s1 * s1); },
+                Short.class, s2 -> s2 >= 5, s2 -> { System.out.println("br2: " + s2 * s2); },
+                Var.class, any -> System.out.println("Var value 2 type")
+        );
+
+        /* 3 */
+        matches(data,
+                Short.class,   s1 -> s1 > -1, s1 -> { System.out.println("br1: " + s1 * s1); },
+                Integer.class, i1 -> i1 > 20, i1 -> { System.out.println("br2: " + i1 * i1); },
+                Integer.class, i2 -> i2 >= 5, i2 -> { System.out.println("br3: " + i2 * i2); },
+                Var.class, any -> System.out.println("Var value 3 type")
+        );
+
+        /* 4 */
+        matches(data,
+                Short.class,   s -> s > -1,    s -> { System.out.println("br1: " + s * s); },
+                Integer.class, i -> i > 20,    i -> { System.out.println("br2: " + i * i); },
+                Long.class,    l1 -> l1 != -1, l1 -> { System.out.println("br3: " + l1 * l1); },
+                Long.class,    l2 -> l2 >= 5,  l2 -> { System.out.println("br4: " + l2 * l2); },
+                Var.class, any -> System.out.println("Var value 4 type")
+        );
+
+        /* 5 */
+        matches(data,
+                Short.class,   s -> s > -1,   s -> { System.out.println("br1: " + s * s); },
+                Integer.class, i -> i > 20,   i -> { System.out.println("br2: " + i * i); },
+                Long.class,    l -> l != -1,  l -> { System.out.println("br3: " + l * l); },
+                Float.class,   f1 -> f1 >= 5, f1 -> { System.out.println("br4: " + f1 * f1); },
+                Float.class,   f2 -> f2 < 50, f2 -> { System.out.println("br5: " + f2 * f2); },
+                Var.class, any -> System.out.println("Var value 5 type")
+        );
+
+        /* 6 */
+        matches(data,
+                Short.class,   s -> s > -1,   s -> { System.out.println("br1: " + s * s); },
+                Integer.class, i -> i > 20,   i -> { System.out.println("br2: " + i * i); },
+                Long.class,    l -> l != -1,  l -> { System.out.println("br3: " + l * l); },
+                Float.class,   f -> f >= 5,   f -> { System.out.println("br4: " + f * f); },
+                Double.class,  d1 -> d1 >= 5, d1 -> { System.out.println("br5: " + d1 * d1); },
+                Double.class,  d2 -> d2 < 50, d2 -> { System.out.println("br6: " + d2 * d2); },
+                Var.class, any -> System.out.println("Var value 6 type")
+        );
+
+        /* 7 */
+        matches(data,
+                Rectangle.class, Objects::nonNull, r -> { System.out.println("rect:   " + r.square()); },
+                Circle.class,    Objects::nonNull, c -> { System.out.println("circle: " + c.square()); },
+                Var.class, any -> System.out.println("Var figure")
+        );
+    }
+
+    @Disabled
+    @Test
+    public void matchesStatementWithVarDefaultTest() {
+        String data = "unknown";
+
+        ArrayList<String> list = new ArrayList<String>() {{
+            add("new"); add("delete"); add("unknown");
+        }};
+
+        /* 1 */
+        matches(data,
+                Byte.class,  b  -> b > -1,
+                             b -> System.out.println("br1: " + b * b),
+                Var.class,   v -> list.contains(data),
+                               () -> System.out.println("Var value 1 type "),
+                Default.class, () -> System.out.println("Default value  1 type")
+        );
+
+        /* 2 */
+        matches(data,
+                Short.class, s1 -> s1 > 15, s1 -> { System.out.println("br1: " + s1 * s1); },
+                Short.class, s2 -> s2 >= 5, s2 -> { System.out.println("br2: " + s2 * s2); },
+                Var.class,     v -> list.contains(data),
+                               () -> System.out.println("Var value with 2 type"),
+                Default.class, () -> System.out.println("Default value  2 type")
+        );
+
+        /* 3 */
+        matches(data,
+                Short.class,   s1 -> s1 > -1, s1 -> { System.out.println("br1: " + s1 * s1); },
+                Integer.class, i1 -> i1 > 20, i1 -> { System.out.println("br2: " + i1 * i1); },
+                Integer.class, i2 -> i2 >= 5, i2 -> { System.out.println("br3: " + i2 * i2); },
+                Var.class,     v -> list.contains(data),
+                               () -> System.out.println("Var value with 4 type"),
+                Default.class, () -> System.out.println("Default value  4 type")
+        );
+
+        /* 4 */
+        matches(data,
+                Short.class,   s -> s > -1,    s -> { System.out.println("br1: " + s * s); },
+                Integer.class, i -> i > 20,    i -> { System.out.println("br2: " + i * i); },
+                Long.class,    l1 -> l1 != -1, l1 -> { System.out.println("br3: " + l1 * l1); },
+                Long.class,    l2 -> l2 >= 5,  l2 -> { System.out.println("br4: " + l2 * l2); },
+                Var.class,     v -> list.contains(data),
+                               () -> System.out.println("Var value with 4 type"),
+                Default.class, () -> System.out.println("Default value  4 type")
+        );
+
+        /* 5 */
+        matches(data,
+                Short.class,   s -> s > -1,   s -> { System.out.println("br1: " + s * s); },
+                Integer.class, i -> i > 20,   i -> { System.out.println("br2: " + i * i); },
+                Long.class,    l -> l != -1,  l -> { System.out.println("br3: " + l * l); },
+                Float.class,   f1 -> f1 >= 5, f1 -> { System.out.println("br4: " + f1 * f1); },
+                Float.class,   f2 -> f2 < 50, f2 -> { System.out.println("br5: " + f2 * f2); },
+                Var.class,     v -> list.contains(data),
+                               () -> System.out.println("Var value with 5 type"),
+                Default.class, () -> System.out.println("Default value  5 type")
+        );
+
+        /* 6 */
+        matches(data,
+                Short.class,   s -> s > -1,   s -> { System.out.println("br1: " + s * s); },
+                Integer.class, i -> i > 20,   i -> { System.out.println("br2: " + i * i); },
+                Long.class,    l -> l != -1,  l -> { System.out.println("br3: " + l * l); },
+                Float.class,   f -> f >= 5,   f -> { System.out.println("br4: " + f * f); },
+                Double.class,  d1 -> d1 >= 5, d1 -> { System.out.println("br5: " + d1 * d1); },
+                Double.class,  d2 -> d2 < 50, d2 -> { System.out.println("br6: " + d2 * d2); },
+                Var.class,     v -> list.contains(data),
+                               () -> System.out.println("Var value with 6 type"),
+                Default.class, () -> System.out.println("Default value  6 type")
+        );
+ 	}
+
+    @Disabled
+    @Test
     public void matchesStatementWithNullDefaultTest() {
         String data = "unknown";
 
@@ -480,7 +621,7 @@ public class GuardPatternTest {
 
         /* 7 */
         matches(data,
-                Rectangle.class, r -> r != null,
+                Rectangle.class, Objects::nonNull,
                                  r  -> { System.out.println("rect:   " + r.square()); },
                 Circle.class,    c -> c instanceof Figure,
                                  c  -> { System.out.println("circle: " + c.square()); },
@@ -488,6 +629,154 @@ public class GuardPatternTest {
                 Default.class,   () -> { System.out.println("Default shape"); }
         );
     }
+
+    @Disabled
+    @Test
+    public void matchesStatementWithNullVarTest() {
+        /* 1 */
+        matches(null,
+                Byte.class, b -> b != 0, b -> System.out.println(b * b),
+                Null.class, () -> System.out.println("Null value 1 type"),
+                Var.class, any -> System.out.println("Var  value 1 type")
+        );
+
+        /* 2 */
+        matches(null,
+                Byte.class,  b -> b != 0, b -> System.out.println(b * b),
+                Short.class, s -> s > 5,  s -> System.out.println(s * s),
+                Null.class, () -> System.out.println("Null value 2 type"),
+                Var.class, any -> System.out.println("Var  value 2 types")
+        );
+
+        /* 3 */
+        matches(null,
+                Byte.class,    b -> b != 0, b  -> System.out.println(b * b),
+                Short.class,   s -> s > 5,  s  -> System.out.println(s * s),
+                Integer.class, i -> i < 25, i  -> System.out.println(i * i),
+                Null.class,    () -> System.out.println("Null value 3 type"),
+                Var.class,    any -> System.out.println("Var value 3 types")
+        );
+
+        /* 4 */
+        matches(null,
+                Byte.class,    b -> b != 0, b -> System.out.println(b * b),
+                Short.class,   s -> s > 1,  s -> System.out.println(s * s),
+                Integer.class, i -> i > 2,  i -> System.out.println(i * i),
+                Long.class,    l -> l < 10, l -> System.out.println(l * l),
+                Null.class,    () -> System.out.println("Null value 4 type"),
+                Var.class,    any -> System.out.println("Var value 4 types")
+        );
+
+        /* 5 */
+        matches(null,
+                Byte.class,    b -> b != 0, b  -> System.out.println(b * b),
+                Short.class,   s -> s > 1,  s -> System.out.println(s * s),
+                Integer.class, i -> i > 2,  i  -> System.out.println(i * i),
+                Long.class,    l -> l < 10, l  -> System.out.println(l * l),
+                Float.class,   f -> f == 5, f -> System.out.println(f * f),
+                Null.class,    () -> System.out.println("Null value 5 type"),
+                Var.class,    any -> System.out.println("Var  value 5 types")
+        );
+
+        /* 6 */
+        matches(null,
+                Byte.class,    b -> b != 0,  b -> System.out.println(b * b),
+                Short.class,   s -> s > 1,   s -> System.out.println(s * s),
+                Integer.class, i -> i > 2,   i -> System.out.println(i * i),
+                Long.class,    l -> l < 10,  l -> System.out.println(l * l),
+                Float.class,   f -> f == 5,  f -> System.out.println(f * f),
+                Double.class,  d -> d <= 15, d -> System.out.println(d * d),
+                Null.class,    () -> System.out.println("Null value 6 type"),
+                Var.class,    any -> System.out.println("Var  value 6 types")
+        );
+
+        /* 7 */
+        matches(null,
+                Rectangle.class, Objects::nonNull,         r -> System.out.println("rect:   " + r.square()),
+                Circle.class,    Figure.class::isInstance, c -> System.out.println("circle: " + c.square()),
+                Null.class,      () -> System.out.println("Null value shape"),
+                Default.class,   () -> System.out.println("Var shape")
+        );
+    }
+
+    @Disabled
+    @Test
+    public void matchesStatementWithNullVarDefaultTest() {
+        String data = "unknown";
+
+        ArrayList<String> list = new ArrayList<String>() {{
+            add("new"); add("delete"); add("unknown");
+        }};
+
+        /* 1 */
+        matches(null,
+                Byte.class,  b -> b != 0, b -> System.out.println(b * b),
+                Null.class, () -> System.out.println("Null value 1 type"),
+                Var.class,   v -> list.contains(data),
+                            () -> System.out.println("Var value 1 type "),
+                Default.class, () -> System.out.println("Default value  1 type")
+        );
+
+        /* 2 */
+        matches(null,
+                Byte.class,  b -> b != 0, b -> System.out.println(b * b),
+                Short.class, s -> s > 5,  s -> System.out.println(s * s),
+                Null.class, () -> System.out.println("Null value 2 type"),
+                Var.class,   v -> list.contains(data),
+                            () -> System.out.println("Var value 2 type "),
+                Default.class, () -> System.out.println("Default value  2 type")
+        );
+
+        /* 3 */
+        matches(null,
+                Byte.class,    b -> b != 0, b  -> System.out.println(b * b),
+                Short.class,   s -> s > 5,  s  -> System.out.println(s * s),
+                Integer.class, i -> i < 25, i  -> System.out.println(i * i),
+                Null.class,    () -> System.out.println("Null value 3 type"),
+                Var.class,     v  -> list.contains(data),
+                               () -> System.out.println("Var value 3 type "),
+                Default.class, () -> System.out.println("Default value 3 type")
+        );
+
+        /* 4 */
+        matches(null,
+                Byte.class,    b -> b != 0, b -> System.out.println(b * b),
+                Short.class,   s -> s > 1,  s -> System.out.println(s * s),
+                Integer.class, i -> i > 2,  i -> System.out.println(i * i),
+                Long.class,    l -> l < 10, l -> System.out.println(l * l),
+                Null.class,    () -> System.out.println("Null value 4 type"),
+                Var.class,     v  -> list.contains(data),
+                               () -> System.out.println("Var value 4 type "),
+                Default.class, () -> System.out.println("Default value 4 type")
+        );
+
+        /* 5 */
+        matches(null,
+                Byte.class,    b -> b != 0, b  -> System.out.println(b * b),
+                Short.class,   s -> s > 1,  s -> System.out.println(s * s),
+                Integer.class, i -> i > 2,  i  -> System.out.println(i * i),
+                Long.class,    l -> l < 10, l  -> System.out.println(l * l),
+                Float.class,   f -> f == 5, f -> System.out.println(f * f),
+                Null.class,    () -> System.out.println("Null value 5 type"),
+                Var.class,     v  -> list.contains(data),
+                               () -> System.out.println("Var value 5 type "),
+                Default.class, () -> System.out.println("Default value 5 type")
+        );
+
+        /* 6 */
+        matches(null,
+                Byte.class,    b -> b != 0,  b -> System.out.println(b * b),
+                Short.class,   s -> s > 1,   s -> System.out.println(s * s),
+                Integer.class, i -> i > 2,   i -> System.out.println(i * i),
+                Long.class,    l -> l < 10,  l -> System.out.println(l * l),
+                Float.class,   f -> f == 5,  f -> System.out.println(f * f),
+                Double.class,  d -> d <= 15, d -> System.out.println(d * d),
+                Null.class,    () -> System.out.println("Null value 6 type"),
+                Var.class,     v  -> list.contains(data),
+                               () -> System.out.println("Var value 6 type "),
+                Default.class, () -> System.out.println("Default value 6 type")
+        );
+	}
 
     @Disabled
     @Test
@@ -900,6 +1189,162 @@ public class GuardPatternTest {
 
     @Disabled
     @Test
+    public void matchesExpressionWithVarTest() {
+        int data = 0;
+
+        /* 1 */
+        int result1 = matches(data,
+                Byte.class,  b -> b >= 1, b -> { int result = 2 * (b + b); return result; },
+                Var.class, any -> { System.out.println("Var value 1 types"); return 0; }
+        );
+
+        assertEquals(result1, 0);
+
+
+        /* 2 */
+        int result2 = matches(data,
+                Short.class,  s1 -> s1 < 20,  s1 -> { int result = 2 * (s1 + s1);  return result; },
+                Short.class,  s2 -> s2 >= 10, s2 -> { int result = 3 * (s2 + s2);  return result; },
+                Var.class, any -> { System.out.println("Var value 2 types"); return 1; }
+        );
+
+        assertEquals(result2, 1);
+
+        /* 3 */
+        int result3 = matches(data,
+                Byte.class,    b -> b != -1,  b  -> { int result = 2 * (b + b);  return result; },
+                Integer.class, i1 -> i1 > 20, i1 -> { int result = 2 * (i1 + i1);  return result; },
+                Integer.class, i2 -> i2 > 10, i2 -> { int result = 3 * (i2 + i2);  return result; },
+                Var.class, any -> { System.out.println("Var value 3 types"); return 2; }
+        );
+
+        assertEquals(result3, 2);
+
+        /* 4 */
+        int result4 = matches(data,
+                Byte.class,    b -> b != -1,   b  -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s > 5,     s  -> { int result = 2 * (s + s);  return result; },
+                Long.class,    l1 -> l1 > 25,  l1 -> { int result = (int) (3 * (l1 + l1));  return result; },
+                Long.class,    l2 -> l2 > 15,  l2 -> { int result = (int) (4 * (l2 + l2));  return result; },
+                Var.class, any -> { System.out.println("Var value 4 types"); return 4; }
+        );
+
+        assertEquals(result4, 4);
+
+        /* 5 */
+        int result5 = matches(data,
+                Byte.class,    b -> b != -1,   b -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s > 5,     s -> { int result = 2 * (s + s);  return result; },
+                Long.class,    l -> l != 10,   l -> { int result = (int) (2 * (l + l));  return result; },
+                Float.class,   f1 -> f1 > 25,  f1 -> { int result = (int) (3 * (f1 + f1));  return result; },
+                Float.class,   f2 -> f2 > 15,  f2 -> { int result = (int) (4 * (f2 + f2));  return result; },
+                Var.class, any -> { System.out.println("Var value 5 types"); return 5; }
+        );
+
+        assertEquals(result5, 5);
+
+        /* 6 */
+        String result6 = matches(data,
+                Byte.class,    b -> b != -1,  b -> { int result = 2 * (b + b);  return String.valueOf(result); },
+                Short.class,   s -> s > 5,    s -> { int result = 2 * (s + s);  return String.valueOf(result); },
+                Long.class,    l -> l != 10,  l -> { int result = (int) (2 * (l + l));  return String.valueOf(result); },
+                Float.class,   f -> f >= 25,  f -> { int result = (int) (4 * (f + f));  return String.valueOf(result); },
+                String.class,  s1 -> !s1.isEmpty(),      s1 -> s1,
+                String.class,  s2 -> s2.equals("test"),  s2 -> s2 + s2,
+                Var.class,    any -> { System.out.println("Var value 6 types"); return "6"; }
+        );
+
+        assertEquals(result6, "6");
+    }
+
+    @Disabled
+    @Test
+    public void matchesExpressionWithVarDefaultTest() {
+        String data = "unknown";
+
+        ArrayList<String> list = new ArrayList<String>() {{
+            add("new"); add("delete"); add("unknown");
+        }};
+
+        /* 1 */
+        int result1 = matches(data,
+                Byte.class,  b -> b >= 1, b -> { int result = 2 * (b + b); return result; },
+                Var.class,   v -> list.contains(data),
+                            () -> { System.out.println("Var value with 1 type"); return -1; },
+                Default.class, () -> { System.out.println("Default value 1 type"); return 0; }
+        );
+
+        assertEquals(result1, -1);
+
+
+        /* 2 */
+        int result2 = matches(data,
+                Short.class,  s1 -> s1 < 20,  s1 -> { int result = 2 * (s1 + s1);  return result; },
+                Short.class,  never(),        s2 -> { int result = 3 * (s2 + s2);  return result; },
+                Var.class,      v -> list.contains(data),
+                               () -> { System.out.println("Var value with 2 type"); return -1; },
+                Default.class, () -> { System.out.println("Default value 2 type"); return 0; }
+        );
+
+        assertEquals(result2, -1);
+
+        /* 3 */
+        int result3 = matches(data,
+                Byte.class,    b -> b != -1,  b  -> { int result = 2 * (b + b);  return result; },
+                Integer.class, never(),       i1 -> { int result = 2 * (i1 + i1);  return result; },
+                Integer.class, always(),      i2 -> { int result = 3 * (i2 + i2);  return result; },
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 3 type"); return -1; },
+                Default.class, () -> { System.out.println("Default value  3 type"); return 0; }
+        );
+
+        assertEquals(result3, -1);
+
+        /* 4 */
+        int result4 = matches(data,
+                Byte.class,    b -> b != -1,   b  -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s > 5,     s  -> { int result = 2 * (s + s);  return result; },
+                Long.class,    no(),           l1 -> { int result = (int) (3 * (l1 + l1));  return result; },
+                Long.class,    yes(),          l2 -> { int result = (int) (4 * (l2 + l2));  return result; },
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 4 type"); return -1; },
+                Default.class, () -> { System.out.println("Default value  4 type"); return 0; }
+        );
+
+        assertEquals(result4, -1);
+
+        /* 5 */
+        int result5 = matches(data,
+                Byte.class,    b -> b != -1,   b -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s > 5,     s -> { int result = 2 * (s + s);  return result; },
+                Long.class,    l -> l != 10,   l -> { int result = (int) (2 * (l + l));  return result; },
+                Float.class,   f1 -> f1 > 25,  f1 -> { int result = (int) (3 * (f1 + f1));  return result; },
+                Float.class,   f2 -> f2 > 15,  f2 -> { int result = (int) (4 * (f2 + f2));  return result; },
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 5 type"); return -1; },
+                Default.class, () -> { System.out.println("Default value  5 type"); return 0; }
+        );
+
+        assertEquals(result5, -1);
+
+        /* 6 */
+        String result6 = matches(data,
+                Byte.class,    b -> b != -1,  b -> { int result = 2 * (b + b);  return String.valueOf(result); },
+                Short.class,   s -> s > 5,    s -> { int result = 2 * (s + s);  return String.valueOf(result); },
+                Long.class,    l -> l != 10,  l -> { int result = (int) (2 * (l + l));  return String.valueOf(result); },
+                Float.class,   f -> f >= 25,  f -> { int result = (int) (4 * (f + f));  return String.valueOf(result); },
+                String.class,  s1 -> !s1.isEmpty(),      s1 -> s1,
+                String.class,  s2 -> s2.equals("test"),  s2 -> s2 + s2,
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 6 type"); return "unknown"; },
+                Default.class, () -> { System.out.println("Default value  6 type"); return "0"; }
+        );
+
+        assertEquals(result6, "unknown");
+    }
+
+    @Disabled
+    @Test
     public void matchesExpressionWithNullDefaultTest() {
         /* 1 */
         int result1 = matches(null,
@@ -1091,5 +1536,168 @@ public class GuardPatternTest {
         );
 
         assertEquals(square, -1);
+    }
+
+    @Disabled
+    @Test
+    public void matchesExpressionWithNullVarTest() {
+        /* 1 */
+        int result1 = matches(null,
+                Byte.class,  b -> b != 0, b -> { int result = 2 * (b + b);   return result; },
+                Null.class, () -> { System.out.println("Null value 1 type"); return -1; },
+                Var.class, any -> { System.out.println("Var value 1 types"); return  0; }
+        );
+
+        assertEquals(result1, -1);
+
+        /* 2 */
+        int result2 = matches(null,
+                Byte.class,   b -> b != 0, b -> { int result = 2 * (b + b);  return result;  },
+                Short.class,  s -> s > 5,  s  -> { int result = 2 * (s + s);  return result; },
+                Null.class,  () -> { System.out.println("Null value 2 type");     return -1; },
+                Var.class,  any -> { System.out.println("Var value 2 types"); return  1;     }
+        );
+
+        assertEquals(result2, -1);
+
+        /* 3 */
+        int result3 = matches(null,
+                Byte.class,    b -> b != 0,  b -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s == 2,  s -> { int result = 2 * (s + s);  return result; },
+                Integer.class, i -> i < 5,   i  -> { int result = 2 * (i + i);  return result; },
+                Null.class,    () -> { System.out.println("Null value 3 type");     return -1; },
+                Var.class,    any -> { System.out.println("Default value 3 types"); return  2; }
+        );
+
+        assertEquals(result3, -1);
+
+        /* 4 */
+        int result4 = matches(null,
+                Byte.class,    b -> b != 0,  b -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s == 2,  s -> { int result = 2 * (s + s);  return result; },
+                Integer.class, i -> i < 5,   i -> { int result = 2 * (i + i);  return result; },
+                Long.class,    l -> l >= 4,  l -> { int result = (int) (2 * (l + l));  return result; },
+                Null.class,    () -> { System.out.println("Null value 4 type");     return -1; },
+                Var.class,  any -> { System.out.println("Default value 4 types"); return  4; }
+        );
+
+        assertEquals(result4, -1);
+
+        /* 5 */
+        int result5 = matches(null,
+                Byte.class,    b -> b != 0, b -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s == 2, s -> { int result = 2 * (s + s);  return result; },
+                Integer.class, i -> i < 5,  i -> { int result = 2 * (i + i);  return result; },
+                Long.class,    l -> l >= 4, l -> { int result = (int) (2 * (l + l));  return result; },
+                Float.class,   f -> f <= 5, f -> { int result = (int) (2 * (f + f));  return result;},
+                Null.class,    () -> { System.out.println("Null value 5 type");     return -1; },
+                Var.class,  any -> { System.out.println("Default value 5 types"); return  5; }
+        );
+        assertEquals(result5, -1);
+
+        /* 6 */
+        int result6 = matches(null,
+                Byte.class,    b -> b != 0,  b -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s == 2,  s -> { int result = 2 * (s + s);  return result; },
+                Integer.class, i -> i < 5,   i -> { int result = 2 * (i + i);  return result; },
+                Long.class,    l -> l >= 4,  l -> { int result = (int) (2 * (l + l));  return result; },
+                Float.class,   f -> f <= 5,  f -> { int result = (int) (2 * (f + f));  return result; },
+                Double.class,  d -> d >= 6,  d -> { int result = (int) (2 * (d + d));  return result; },
+                Null.class,    () -> { System.out.println("Null value 6 type");     return -1; },
+                Var.class,  any -> { System.out.println("Default value 6 types"); return  6; }
+        );
+
+        assertEquals(result6, -1);
+    }
+
+    @Test
+    public void matchesExpressionWithNullVarDefaultTest() {
+        String data = "unknown";
+
+        ArrayList<String> list = new ArrayList<String>() {{
+            add("new"); add("delete"); add("unknown");
+        }};
+
+        /* 1 */
+        int result1 = matches(null,
+                Byte.class,    b  -> b >= 1, b -> { int result = 2 * (b + b); return result; },
+                Null.class,    () -> { System.out.println("Null value 1 type");     return -1; },
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 1 type"); return +1; },
+                Default.class, () -> { System.out.println("Default value 1 type"); return 0; }
+        );
+
+        assertEquals(result1, -1);
+
+
+        /* 2 */
+        int result2 = matches(null,
+                Short.class,  s1 -> s1 < 20,  s1 -> { int result = 2 * (s1 + s1);  return result; },
+                Short.class,  never(),        s2 -> { int result = 3 * (s2 + s2);  return result; },
+                Null.class,    () -> { System.out.println("Null value 2 type");     return -1; },
+                Var.class,      v -> list.contains(data),
+                               () -> { System.out.println("Var value with 2 type"); return +1; },
+                Default.class, () -> { System.out.println("Default value 2 type"); return 0; }
+        );
+
+        assertEquals(result2, -1);
+
+        /* 3 */
+        int result3 = matches(null,
+                Byte.class,    b -> b != -1,   b -> { int result = 2 * (b + b);  return result; },
+                Short.class,   always(),       s -> { int result = 2 * (s + s);  return result; },
+                Integer.class, never(),        i -> { int result = 3 * (i + i);  return result; },
+                Null.class,    () -> { System.out.println("Null value 3 type");     return -1; },
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 3 type"); return +1; },
+                Default.class, () -> { System.out.println("Default value  3 type"); return 0; }
+        );
+
+        assertEquals(result3, -1);
+
+        /* 4 */
+        int result4 = matches(null,
+                Byte.class,    b -> b != -1,   b  -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s > 5,     s  -> { int result = 2 * (s + s);  return result; },
+                Long.class,    no(),           l1 -> { int result = (int) (3 * (l1 + l1));  return result; },
+                Long.class,    yes(),          l2 -> { int result = (int) (4 * (l2 + l2));  return result; },
+                Null.class,    () -> { System.out.println("Null value 4 type");     return -1; },
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 4 type"); return +1; },
+                Default.class, () -> { System.out.println("Default value  4 type"); return 0; }
+        );
+
+        assertEquals(result4, -1);
+
+        /* 5 */
+        int result5 = matches(null,
+                Byte.class,    b -> b != -1,   b -> { int result = 2 * (b + b);  return result; },
+                Short.class,   s -> s > 5,     s -> { int result = 2 * (s + s);  return result; },
+                Long.class,    l -> l != 10,   l -> { int result = (int) (2 * (l + l));  return result; },
+                Float.class,   f1 -> f1 > 25,  f1 -> { int result = (int) (3 * (f1 + f1));  return result; },
+                Float.class,   f2 -> f2 > 15,  f2 -> { int result = (int) (4 * (f2 + f2));  return result; },
+                Null.class,    () -> { System.out.println("Null value 5 type");     return -1; },
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 5 type"); return +1; },
+                Default.class, () -> { System.out.println("Default value  5 type"); return 0; }
+        );
+
+        assertEquals(result5, -1);
+
+        /* 6 */
+        String result6 = matches(null,
+                Byte.class,    b -> b != -1,  b -> { int result = 2 * (b + b);  return String.valueOf(result); },
+                Short.class,   s -> s > 5,    s -> { int result = 2 * (s + s);  return String.valueOf(result); },
+                Long.class,    l -> l != 10,  l -> { int result = (int) (2 * (l + l));  return String.valueOf(result); },
+                Float.class,   f -> f >= 25,  f -> { int result = (int) (4 * (f + f));  return String.valueOf(result); },
+                String.class,  s1 -> !s1.isEmpty(),      s1 -> s1,
+                String.class,  s2 -> s2.equals("test"),  s2 -> s2 + s2,
+                Null.class,    () -> { System.out.println("Null value 6 type");     return "nil"; },
+                Var.class,     v  -> list.contains(data),
+                               () -> { System.out.println("Var value with 6 type"); return "unknown"; },
+                Default.class, () -> { System.out.println("Default value  6 type"); return "0"; }
+        );
+
+        assertEquals(result6, "nil");
     }
 }

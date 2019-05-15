@@ -128,9 +128,10 @@ Using this library developer can write in the following way.
    );
 ```
 
-For simplify writing a condition, you can use such functions to compare: <br/>
+For simplify writing a condition, developer can use such functions to compare: <br/>
 lessThan/lt, greaterThan/gt, lessThanOrEqual/le, greaterThanOrEqual/ge,  <br/>
-equal/eq, notEqual/ne.
+equal/eq, notEqual/ne. Also for omit condition could use such functions:<br/>
+always/yes, never/no. 
 
 ```Java
 
