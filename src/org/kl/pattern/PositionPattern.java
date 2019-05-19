@@ -5,7 +5,7 @@
  * class in order of declaration. Maximum number of branches
  * for match three with three value fields.
  */
-package org.kl.handle;
+package org.kl.pattern;
 
 import org.kl.bean.BiItem;
 import org.kl.bean.Item;

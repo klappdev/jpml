@@ -35,4 +35,16 @@ public class Parallelepiped extends Figure {
         longitude.set(this.longitude);
         height.set(this.height);
     }
+
+    public short width() {
+        return width;
+    }
+
+    public short longitude() {
+        return longitude;
+    }
+
+    public short height() {
+        return height;
+    }
 }

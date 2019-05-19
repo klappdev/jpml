@@ -4,12 +4,12 @@
  * Type test pattern allow match type and then extract
  * value. Maximum number of branches for match six.
  */
-package org.kl.handle;
+package org.kl.pattern;
 
 import org.kl.lambda.Purchaser;
 import org.kl.lambda.Routine;
 import org.kl.reflect.Reflection;
-import org.kl.state.Default;
+import org.kl.state.Else;
 import org.kl.state.Null;
 import org.kl.state.Var;
 
@@ -40,7 +40,7 @@ public class VerifyPattern {
     @SuppressWarnings("unused")
     public static <V, T> void matches(V value,
                                       Class<T> clazz, Consumer<T> consumer,
-                                      Class<Default> defaultClass, Runnable defaultConsumer) {
+                                      Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
@@ -67,7 +67,7 @@ public class VerifyPattern {
     public static <V, T> void matches(V value,
                                       Class<T> clazz, Consumer<T> consumer,
                                       Class<Null> nullClass, Runnable nullConsumer,
-                                      Class<Default> defaultClass, Runnable defaultConsumer) {
+                                      Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -101,7 +101,7 @@ public class VerifyPattern {
     @SuppressWarnings("unused")
     public static <V, T, R> R matches(V value,
                                       Class<T> clazz, Function<T, R> function,
-                                      Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, clazz, function);
 
         if (result != null) {
@@ -128,7 +128,7 @@ public class VerifyPattern {
     public static <V, T, R> R matches(V value,
                                       Class<T> clazz, Function<T, R> function,
                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                      Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -162,9 +162,9 @@ public class VerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz,  Consumer<T1> firstConsumer,
+                                           Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                           Class<Default> defaultClass, Runnable defaultConsumer) {
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -197,7 +197,7 @@ public class VerifyPattern {
                                            Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
                                            Class<Null> nullClass, Runnable nullConsumer,
-                                           Class<Default> defaultClass, Runnable defaultConsumer) {
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -239,7 +239,7 @@ public class VerifyPattern {
     public static <V, T1, T2, R> R matches(V value,
                                            Class<T1> firstClazz, Function<T1, R> firstFunction,
                                            Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                           Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstFunction, secondClazz, secondFunction);
 
         if (result != null) {
@@ -268,7 +268,7 @@ public class VerifyPattern {
                                            Class<T1> firstClazz, Function<T1, R> firstFunction,
                                            Class<T2> secondClazz, Function<T2, R> secondFunction,
                                            Class<Null> nullClass, Supplier<R> nullSupplier,
-                                           Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -312,7 +312,7 @@ public class VerifyPattern {
                                                Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
                                                Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                               Class<Default> defaultClass, Runnable defaultConsumer) {
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -351,7 +351,7 @@ public class VerifyPattern {
                                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
                                                Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
                                                Class<Null> nullClass, Runnable nullConsumer,
-                                               Class<Default> defaultClass, Runnable defaultConsumer) {
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -399,7 +399,7 @@ public class VerifyPattern {
                                                Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                Class<T2> secondClazz, Function<T2, R> secondFunction,
                                                Class<T3> thirdClazz, Function<T3, R> thirdFunction,
-                                               Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstFunction, secondClazz, secondFunction,
                                   thirdClazz, thirdFunction);
         if (result != null) {
@@ -427,11 +427,11 @@ public class VerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, R> R matches(V value,
-                                               Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                               Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                               Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
+                                               Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                                Class<Null> nullClass, Supplier<R> nullSupplier,
-                                               Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -481,7 +481,7 @@ public class VerifyPattern {
                                                    Class<T2> secondClazz, Consumer<T2> secondConsumer,
                                                    Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
                                                    Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                                   Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -526,7 +526,7 @@ public class VerifyPattern {
                                                    Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
                                                    Class<T4> forthClazz, Consumer<T4> forthConsumer,
                                                    Class<Null> nullClass, Runnable nullConsumer,
-                                                   Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -581,7 +581,7 @@ public class VerifyPattern {
                                                    Class<T2> secondClazz, Function<T2, R> secondFunction,
                                                    Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                                    Class<T4> forthClazz, Function<T4, R> forthFunction,
-                                                   Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstFunction, secondClazz, secondFunction,
                                   thirdClazz, thirdFunction, forthClazz,  forthFunction);
         if (result != null) {
@@ -610,12 +610,12 @@ public class VerifyPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                                   Class<T1> firstClazz,  Function<T1, R> firstFunction,
+                                                   Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                    Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                                   Class<T3> thirdClazz,  Function<T3, R> thirdFunction,
-                                                   Class<T4> forthClazz,  Function<T4, R> forthFunction,
+                                                   Class<T3> thirdClazz, Function<T3, R> thirdFunction,
+                                                   Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                    Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                   Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -672,7 +672,7 @@ public class VerifyPattern {
                                                        Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
                                                        Class<T4> forthClazz, Consumer<T4> forthConsumer,
                                                        Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
-                                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -723,7 +723,7 @@ public class VerifyPattern {
                                                        Class<T4> forthClazz, Consumer<T4> forthConsumer,
                                                        Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
                                                        Class<Null> nullClass, Runnable nullConsumer,
-                                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -784,7 +784,7 @@ public class VerifyPattern {
                                                        Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                                        Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                        Class<T5> fifthClazz, Function<T5, R> fifthFunction,
-                                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstFunction, secondClazz, secondFunction,
                                   thirdClazz, thirdFunction, forthClazz,  forthFunction,
                                   fifthClazz, fifthFunction);
@@ -822,7 +822,7 @@ public class VerifyPattern {
                                                        Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                        Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                        Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -885,7 +885,7 @@ public class VerifyPattern {
                                                            Class<T4> forthClazz, Consumer<T4> forthConsumer,
                                                            Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
                                                            Class<T6> sixthClazz, Consumer<T6> sixthConsumer,
-                                                           Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -942,7 +942,7 @@ public class VerifyPattern {
                                                            Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
                                                            Class<T6> sixthClazz, Consumer<T6> sixthConsumer,
                                                            Class<Null> nullClass, Runnable nullConsumer,
-                                                           Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -1010,7 +1010,7 @@ public class VerifyPattern {
                                                            Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                            Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                            Class<T6> sixthClazz, Function<T6, R> sixthFunction,
-                                                           Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstFunction, secondClazz, secondFunction,
                                   thirdClazz, thirdFunction, forthClazz,  forthFunction,
                                   fifthClazz, fifthFunction, sixthClazz,  sixthFunction);
@@ -1050,7 +1050,7 @@ public class VerifyPattern {
                                                            Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                            Class<T6> sixthClazz, Function<T6, R> sixthFunction,
                                                            Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                           Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {

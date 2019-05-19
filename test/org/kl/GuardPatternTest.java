@@ -5,16 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.kl.shape.Circle;
 import org.kl.shape.Figure;
 import org.kl.shape.Rectangle;
-import org.kl.state.Default;
+import org.kl.state.Else;
 import org.kl.state.Null;
 import org.kl.state.Var;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.kl.handle.GuardPattern.*;
+import static org.kl.pattern.GuardPattern.*;
 
 public class GuardPatternTest {
 
@@ -176,13 +175,13 @@ public class GuardPatternTest {
         matches(data,
                 Byte.class, b -> b > - 1,
                             b -> { System.out.println("br1: " + b * b); },
-                Default.class, () -> { System.out.println("Default value 1 type"); }
+                Else.class, () -> { System.out.println("Else value 1 type"); }
         );
 
         matches(data,
                 byte.class, b -> b > - 1,
                             b -> { System.out.println("pc1: " + b * b); },
-                Default.class, () -> { System.out.println("Default value 1 type"); }
+                Else.class, () -> { System.out.println("Else value 1 type"); }
         );
 
         /* 2 */
@@ -191,7 +190,7 @@ public class GuardPatternTest {
                              s1 -> { System.out.println("br1: " + s1 * s1); },
                 Short.class, s2 -> s2 >= 5,
                              s2 -> { System.out.println("br2: " + s2 * s2); },
-                Default.class, () -> { System.out.println("Default value 2 type"); }
+                Else.class, () -> { System.out.println("Else value 2 type"); }
         );
 
         matches(data,
@@ -199,7 +198,7 @@ public class GuardPatternTest {
                              s1 -> { System.out.println("pc1: " + s1 * s1); },
                 short.class, s2 -> s2 >= 5,
                              s2 -> { System.out.println("pc2: " + s2 * s2); },
-                Default.class, () -> { System.out.println("Default value 2 type"); }
+                Else.class, () -> { System.out.println("Else value 2 type"); }
         );
 
         /* 3 */
@@ -210,7 +209,7 @@ public class GuardPatternTest {
                                i1 -> { System.out.println("br2: " + i1 * i1); },
                 Integer.class, i2 -> i2 >= 5,
                                i2 -> { System.out.println("br3: " + i2 * i2); },
-                Default.class, () -> { System.out.println("Default value 3 type"); }
+                Else.class, () -> { System.out.println("Else value 3 type"); }
         );
 
         matches(data,
@@ -220,7 +219,7 @@ public class GuardPatternTest {
                              i1 -> { System.out.println("pc2: " + i1 * i1); },
                 int.class,   i2 -> i2 >= 20,
                              i2 -> { System.out.println("pc3: " + i2 * i2); },
-                Default.class, () -> { System.out.println("Default value 3 type"); }
+                Else.class, () -> { System.out.println("Else value 3 type"); }
         );
 
         /* 4 */
@@ -233,7 +232,7 @@ public class GuardPatternTest {
                                l1 -> { System.out.println("br3: " + l1 * l1); },
                 Long.class,    l2 -> l2 >= 5,
                                l2 -> { System.out.println("br4: " + l2 * l2); },
-                Default.class, () -> { System.out.println("Default value 4 type"); }
+                Else.class, () -> { System.out.println("Else value 4 type"); }
         );
 
         matches(data,
@@ -245,7 +244,7 @@ public class GuardPatternTest {
                                l1 -> { System.out.println("pc3: " + l1 * l1); },
                 long.class,    l2 -> l2 >= 5,
                                l2 -> { System.out.println("pc4: " + l2 * l2); },
-                Default.class, () -> { System.out.println("Default value 4 type"); }
+                Else.class, () -> { System.out.println("Else value 4 type"); }
         );
 
         /* 5 */
@@ -260,7 +259,7 @@ public class GuardPatternTest {
                                f1 -> { System.out.println("br4: " + f1 * f1); },
                 Float.class,   f2 -> f2 < 50,
                                f2 -> { System.out.println("br5: " + f2 * f2); },
-                Default.class, () -> { System.out.println("Default value 5 type"); }
+                Else.class, () -> { System.out.println("Else value 5 type"); }
         );
 
         matches(data,
@@ -274,7 +273,7 @@ public class GuardPatternTest {
                                f1 -> { System.out.println("pc4: " + f1 * f1); },
                 float.class,   f2 -> f2 >= 5,
                                f2 -> { System.out.println("pc5: " + f2 * f2); },
-                Default.class, () -> { System.out.println("Default value 5 type"); }
+                Else.class, () -> { System.out.println("Else value 5 type"); }
         );
 
         /* 6 */
@@ -291,7 +290,7 @@ public class GuardPatternTest {
                                d1 -> { System.out.println("br5: " + d1 * d1); },
                 Double.class,  d2 -> d2 < 50,
                                d2 -> { System.out.println("br6: " + d2 * d2); },
-                Default.class, () -> { System.out.println("Default value 6 type"); }
+                Else.class, () -> { System.out.println("Else value 6 type"); }
         );
 
         matches(data,
@@ -307,7 +306,7 @@ public class GuardPatternTest {
                                d1 -> { System.out.println("pc5: " + d1 * d1); },
                 double.class,  d2 -> d2 >= 5,
                                d2 -> { System.out.println("pc6: " + d2 * d2); },
-                Default.class, () -> { System.out.println("Default value 6 type"); }
+                Else.class, () -> { System.out.println("Else value 6 type"); }
         );
 
         /* 7 */
@@ -316,7 +315,7 @@ public class GuardPatternTest {
                                  r -> { System.out.println("rect:   " + r.square()); },
                 Circle.class,    Objects::nonNull,
                                  c -> { System.out.println("circle: " + c.square()); },
-                Default.class,   () -> { System.out.println("Default figure"); }
+                Else.class,   () -> { System.out.println("Else figure"); }
         );
     }
 
@@ -399,7 +398,7 @@ public class GuardPatternTest {
                              b -> System.out.println("br1: " + b * b),
                 Var.class,   v -> list.contains(data),
                                () -> System.out.println("Var value 1 type "),
-                Default.class, () -> System.out.println("Default value  1 type")
+                Else.class, () -> System.out.println("Else value  1 type")
         );
 
         /* 2 */
@@ -408,7 +407,7 @@ public class GuardPatternTest {
                 Short.class, s2 -> s2 >= 5, s2 -> { System.out.println("br2: " + s2 * s2); },
                 Var.class,     v -> list.contains(data),
                                () -> System.out.println("Var value with 2 type"),
-                Default.class, () -> System.out.println("Default value  2 type")
+                Else.class, () -> System.out.println("Else value  2 type")
         );
 
         /* 3 */
@@ -418,7 +417,7 @@ public class GuardPatternTest {
                 Integer.class, i2 -> i2 >= 5, i2 -> { System.out.println("br3: " + i2 * i2); },
                 Var.class,     v -> list.contains(data),
                                () -> System.out.println("Var value with 4 type"),
-                Default.class, () -> System.out.println("Default value  4 type")
+                Else.class, () -> System.out.println("Else value  4 type")
         );
 
         /* 4 */
@@ -429,7 +428,7 @@ public class GuardPatternTest {
                 Long.class,    l2 -> l2 >= 5,  l2 -> { System.out.println("br4: " + l2 * l2); },
                 Var.class,     v -> list.contains(data),
                                () -> System.out.println("Var value with 4 type"),
-                Default.class, () -> System.out.println("Default value  4 type")
+                Else.class, () -> System.out.println("Else value  4 type")
         );
 
         /* 5 */
@@ -441,7 +440,7 @@ public class GuardPatternTest {
                 Float.class,   f2 -> f2 < 50, f2 -> { System.out.println("br5: " + f2 * f2); },
                 Var.class,     v -> list.contains(data),
                                () -> System.out.println("Var value with 5 type"),
-                Default.class, () -> System.out.println("Default value  5 type")
+                Else.class, () -> System.out.println("Else value  5 type")
         );
 
         /* 6 */
@@ -454,7 +453,7 @@ public class GuardPatternTest {
                 Double.class,  d2 -> d2 < 50, d2 -> { System.out.println("br6: " + d2 * d2); },
                 Var.class,     v -> list.contains(data),
                                () -> System.out.println("Var value with 6 type"),
-                Default.class, () -> System.out.println("Default value  6 type")
+                Else.class, () -> System.out.println("Else value  6 type")
         );
  	}
 
@@ -468,7 +467,7 @@ public class GuardPatternTest {
                 Byte.class,  b -> b !=  0,
                              b -> { System.out.println(b * b); },
                 Null.class,    () -> { System.out.println("Null value 1 type"); },
-                Default.class, () -> { System.out.println("Default value 1 type"); }
+                Else.class, () -> { System.out.println("Else value 1 type"); }
         );
 
         byte value1 = 1;
@@ -476,7 +475,7 @@ public class GuardPatternTest {
                 byte.class,  b -> b !=  0,
                              b -> { System.out.println(b * b); },
                 Null.class,    () -> { System.out.println("Null value 1 type"); },
-                Default.class, () -> { System.out.println("Default value 1 type"); }
+                Else.class, () -> { System.out.println("Else value 1 type"); }
         );
 
         /* 2 */
@@ -486,7 +485,7 @@ public class GuardPatternTest {
                 Short.class, s -> s > 5,
                              s -> System.out.println(s * s),
                 Null.class,    () -> System.out.println("Null value 2 type"),
-                Default.class, () -> System.out.println("Default value 2 types")
+                Else.class, () -> System.out.println("Else value 2 types")
         );
 
         short value2 = 2;
@@ -496,7 +495,7 @@ public class GuardPatternTest {
                 Short.class, s -> s > 1,
                              s -> System.out.println(s * s),
                 Null.class,    () -> System.out.println("Null value 2 type"),
-                Default.class, () -> System.out.println("Default value 2 types")
+                Else.class, () -> System.out.println("Else value 2 types")
         );
 
         /* 3 */
@@ -508,7 +507,7 @@ public class GuardPatternTest {
                 Integer.class, i -> i < 25,
                                i  -> { System.out.println(i * i); },
                 Null.class,    () -> { System.out.println("Null value 3 type"); },
-                Default.class, () -> { System.out.println("Default value 3 types"); }
+                Else.class, () -> { System.out.println("Else value 3 types"); }
         );
 
         int value3 = 3;
@@ -520,7 +519,7 @@ public class GuardPatternTest {
                 int.class,     i -> i < 25,
                                i  -> { System.out.println(i * i); },
                 Null.class,    () -> { System.out.println("Null value 3 type"); },
-                Default.class, () -> { System.out.println("Default value 3 types"); }
+                Else.class, () -> { System.out.println("Else value 3 types"); }
         );
 
         /* 4 */
@@ -534,7 +533,7 @@ public class GuardPatternTest {
                 Long.class,    l -> l < 10,
                                l  -> { System.out.println(l * l); },
                 Null.class,    () -> { System.out.println("Null value 4 type"); },
-                Default.class, () -> { System.out.println("Default value 4 types"); }
+                Else.class, () -> { System.out.println("Else value 4 types"); }
         );
 
         long value4 = 4;
@@ -548,7 +547,7 @@ public class GuardPatternTest {
                 long.class,    l -> l < 10,
                                l  -> { System.out.println(l * l); },
                 Null.class,    () -> { System.out.println("Null value 4 type"); },
-                Default.class, () -> { System.out.println("Default value 4 types"); }
+                Else.class, () -> { System.out.println("Else value 4 types"); }
         );
 
         /* 5 */
@@ -564,7 +563,7 @@ public class GuardPatternTest {
                 Float.class,   f -> f == 5,
                                f -> { System.out.println(f * f); },
                 Null.class,    () -> { System.out.println("Null value 5 type"); },
-                Default.class, () -> { System.out.println("Default value 5 types"); }
+                Else.class, () -> { System.out.println("Else value 5 types"); }
         );
 
         float value5 = 5;
@@ -580,7 +579,7 @@ public class GuardPatternTest {
                 float.class,   f -> f == 5,
                                f -> { System.out.println(f * f); },
                 Null.class,    () -> { System.out.println("Null value 5 type"); },
-                Default.class, () -> { System.out.println("Default value 5 types"); }
+                Else.class, () -> { System.out.println("Else value 5 types"); }
         );
 
         /* 6 */
@@ -598,7 +597,7 @@ public class GuardPatternTest {
                 Double.class,  d -> d <= 15,
                                d -> { System.out.println(d * d); },
                 Null.class,    () -> { System.out.println("Null value 6 type"); },
-                Default.class, () -> { System.out.println("Default value 6 types"); }
+                Else.class, () -> { System.out.println("Else value 6 types"); }
         );
 
         double value6 = 6;
@@ -616,7 +615,7 @@ public class GuardPatternTest {
                 Double.class,  d -> d <= 15,
                                d -> { System.out.println(d * d); },
                 Null.class,    () -> { System.out.println("Null value 6 type"); },
-                Default.class, () -> { System.out.println("Default value 6 types"); }
+                Else.class, () -> { System.out.println("Else value 6 types"); }
         );
 
         /* 7 */
@@ -626,7 +625,7 @@ public class GuardPatternTest {
                 Circle.class,    c -> c instanceof Figure,
                                  c  -> { System.out.println("circle: " + c.square()); },
                 Null.class,      () -> { System.out.println("Null value shape"); },
-                Default.class,   () -> { System.out.println("Default shape"); }
+                Else.class,   () -> { System.out.println("Else shape"); }
         );
     }
 
@@ -695,7 +694,7 @@ public class GuardPatternTest {
                 Rectangle.class, Objects::nonNull,         r -> System.out.println("rect:   " + r.square()),
                 Circle.class,    Figure.class::isInstance, c -> System.out.println("circle: " + c.square()),
                 Null.class,      () -> System.out.println("Null value shape"),
-                Default.class,   () -> System.out.println("Var shape")
+                Else.class,   () -> System.out.println("Var shape")
         );
     }
 
@@ -714,7 +713,7 @@ public class GuardPatternTest {
                 Null.class, () -> System.out.println("Null value 1 type"),
                 Var.class,   v -> list.contains(data),
                             () -> System.out.println("Var value 1 type "),
-                Default.class, () -> System.out.println("Default value  1 type")
+                Else.class, () -> System.out.println("Else value  1 type")
         );
 
         /* 2 */
@@ -724,7 +723,7 @@ public class GuardPatternTest {
                 Null.class, () -> System.out.println("Null value 2 type"),
                 Var.class,   v -> list.contains(data),
                             () -> System.out.println("Var value 2 type "),
-                Default.class, () -> System.out.println("Default value  2 type")
+                Else.class, () -> System.out.println("Else value  2 type")
         );
 
         /* 3 */
@@ -735,7 +734,7 @@ public class GuardPatternTest {
                 Null.class,    () -> System.out.println("Null value 3 type"),
                 Var.class,     v  -> list.contains(data),
                                () -> System.out.println("Var value 3 type "),
-                Default.class, () -> System.out.println("Default value 3 type")
+                Else.class, () -> System.out.println("Else value 3 type")
         );
 
         /* 4 */
@@ -747,7 +746,7 @@ public class GuardPatternTest {
                 Null.class,    () -> System.out.println("Null value 4 type"),
                 Var.class,     v  -> list.contains(data),
                                () -> System.out.println("Var value 4 type "),
-                Default.class, () -> System.out.println("Default value 4 type")
+                Else.class, () -> System.out.println("Else value 4 type")
         );
 
         /* 5 */
@@ -760,7 +759,7 @@ public class GuardPatternTest {
                 Null.class,    () -> System.out.println("Null value 5 type"),
                 Var.class,     v  -> list.contains(data),
                                () -> System.out.println("Var value 5 type "),
-                Default.class, () -> System.out.println("Default value 5 type")
+                Else.class, () -> System.out.println("Else value 5 type")
         );
 
         /* 6 */
@@ -774,7 +773,7 @@ public class GuardPatternTest {
                 Null.class,    () -> System.out.println("Null value 6 type"),
                 Var.class,     v  -> list.contains(data),
                                () -> System.out.println("Var value 6 type "),
-                Default.class, () -> System.out.println("Default value 6 type")
+                Else.class, () -> System.out.println("Else value 6 type")
         );
 	}
 
@@ -1008,7 +1007,7 @@ public class GuardPatternTest {
         int result1 = matches(data,
                 Byte.class,  b -> b >= 1,
                              b -> { int result = 2 * (b + b); return result; },
-                Default.class, () -> { System.out.println("Default value 1 types"); return 0; }
+                Else.class, () -> { System.out.println("Else value 1 types"); return 0; }
         );
 
         assertEquals(result1, 0);
@@ -1018,7 +1017,7 @@ public class GuardPatternTest {
         result1 = matches(value1,
                 byte.class, b -> b >= 3,
                             b -> { int result = 2 * (b + b); return result; },
-                Default.class, () -> { System.out.println("Default value 1 types"); return 0; }
+                Else.class, () -> { System.out.println("Else value 1 types"); return 0; }
         );
 
         assertEquals(result1, 20);
@@ -1029,7 +1028,7 @@ public class GuardPatternTest {
                               s1 -> { int result = 2 * (s1 + s1);  return result; },
                 Short.class,  s2 -> s2 >= 10,
                               s2 -> { int result = 3 * (s2 + s2);  return result; },
-                Default.class, () -> { System.out.println("Default value 2 types"); return 1; }
+                Else.class, () -> { System.out.println("Else value 2 types"); return 1; }
         );
 
         assertEquals(result2, 1);
@@ -1040,7 +1039,7 @@ public class GuardPatternTest {
                              s1 -> { int result = 3 * (s1 + s1);  return result; },
                 short.class, s2 -> s2 != 5,
                              s2 -> { int result = 2 * (s2 + s2);  return result; },
-                Default.class, () -> { System.out.println("Default value 2 types"); return 0; }
+                Else.class, () -> { System.out.println("Else value 2 types"); return 0; }
         );
 
         assertEquals(result2, 40);
@@ -1053,7 +1052,7 @@ public class GuardPatternTest {
                                i1 -> { int result = 2 * (i1 + i1);  return result; },
                 Integer.class, i2 -> i2 > 10,
                                i2 -> { int result = 3 * (i2 + i2);  return result; },
-                Default.class, () -> { System.out.println("Default value 3 types"); return 2; }
+                Else.class, () -> { System.out.println("Else value 3 types"); return 2; }
         );
 
         assertEquals(result3, 2);
@@ -1066,7 +1065,7 @@ public class GuardPatternTest {
                                i1 -> { int result = 2 * (i1 + i1);  return result; },
                 int.class,     i2 -> i2 > 20,
                                i2 -> { int result = 3 * (i2 + i2);  return result; },
-                Default.class, () -> { System.out.println("Default value 3 types"); return 0; }
+                Else.class, () -> { System.out.println("Else value 3 types"); return 0; }
         );
 
         assertEquals(result3, 60);
@@ -1081,7 +1080,7 @@ public class GuardPatternTest {
                                l1 -> { int result = (int) (3 * (l1 + l1));  return result; },
                 Long.class,    l2 -> l2 > 15,
                                l2 -> { int result = (int) (4 * (l2 + l2));  return result; },
-                Default.class, () -> { System.out.println("Default value 4 types"); return 4; }
+                Else.class, () -> { System.out.println("Else value 4 types"); return 4; }
         );
 
         assertEquals(result4, 4);
@@ -1096,7 +1095,7 @@ public class GuardPatternTest {
                                l1 -> { int result = (int) (3 * (l1 + l1));  return result; },
                 long.class,    l2 -> l2 > 15,
                                l2 -> { int result = (int) (4 * (l2 + l2));  return result; },
-                Default.class, () -> { System.out.println("Default value 4 types"); return 0; }
+                Else.class, () -> { System.out.println("Else value 4 types"); return 0; }
         );
 
         assertEquals(result4, 160);
@@ -1113,7 +1112,7 @@ public class GuardPatternTest {
                                f1 -> { int result = (int) (3 * (f1 + f1));  return result; },
                 Float.class,   f2 -> f2 > 15,
                                f2 -> { int result = (int) (4 * (f2 + f2));  return result; },
-                Default.class, () -> { System.out.println("Default value 5 types"); return 5; }
+                Else.class, () -> { System.out.println("Else value 5 types"); return 5; }
         );
 
         assertEquals(result5, 5);
@@ -1130,7 +1129,7 @@ public class GuardPatternTest {
                                f1 -> { int result = (int) (3 * (f1 + f1));  return result; },
                 float.class,   f2 -> f2 > 15,
                                f2 -> { int result = (int) (4 * (f2 + f2));  return result; },
-                Default.class, () -> { System.out.println("Default value 5 types"); return 0; }
+                Else.class, () -> { System.out.println("Else value 5 types"); return 0; }
         );
 
         assertEquals(result5, 4 * (value5 + value5));
@@ -1149,7 +1148,7 @@ public class GuardPatternTest {
                                s1 -> s1,
                 String.class,  s2 -> s2.equals("test"),
                                s2 -> s2 + s2,
-                Default.class, () -> { System.out.println("Default value 6 types"); return "6"; }
+                Else.class, () -> { System.out.println("Else value 6 types"); return "6"; }
         );
 
         assertEquals(result6, "6");
@@ -1168,7 +1167,7 @@ public class GuardPatternTest {
                                s1 -> s1,
                 String.class,  s2 -> s2.equals("test"),
                                s2 -> s2 + s2,
-                Default.class, () -> { System.out.println("Default value 6 types"); return "0"; }
+                Else.class, () -> { System.out.println("Else value 6 types"); return "0"; }
         );
 
         assertEquals(result6, value6 + value6);
@@ -1181,7 +1180,7 @@ public class GuardPatternTest {
                                  r -> { int result = r.square(); return result; },
                 Circle.class,    c -> c instanceof Figure,
                                  c -> { int result = c.square(); return result; },
-                Default.class,   () -> { System.out.println("Default shape"); return 5; }
+                Else.class,   () -> { System.out.println("Else shape"); return 5; }
         );
 
         assertEquals(square, 50);
@@ -1271,7 +1270,7 @@ public class GuardPatternTest {
                 Byte.class,  b -> b >= 1, b -> { int result = 2 * (b + b); return result; },
                 Var.class,   v -> list.contains(data),
                             () -> { System.out.println("Var value with 1 type"); return -1; },
-                Default.class, () -> { System.out.println("Default value 1 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value 1 type"); return 0; }
         );
 
         assertEquals(result1, -1);
@@ -1283,7 +1282,7 @@ public class GuardPatternTest {
                 Short.class,  never(),        s2 -> { int result = 3 * (s2 + s2);  return result; },
                 Var.class,      v -> list.contains(data),
                                () -> { System.out.println("Var value with 2 type"); return -1; },
-                Default.class, () -> { System.out.println("Default value 2 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value 2 type"); return 0; }
         );
 
         assertEquals(result2, -1);
@@ -1295,7 +1294,7 @@ public class GuardPatternTest {
                 Integer.class, always(),      i2 -> { int result = 3 * (i2 + i2);  return result; },
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 3 type"); return -1; },
-                Default.class, () -> { System.out.println("Default value  3 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value  3 type"); return 0; }
         );
 
         assertEquals(result3, -1);
@@ -1308,7 +1307,7 @@ public class GuardPatternTest {
                 Long.class,    yes(),          l2 -> { int result = (int) (4 * (l2 + l2));  return result; },
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 4 type"); return -1; },
-                Default.class, () -> { System.out.println("Default value  4 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value  4 type"); return 0; }
         );
 
         assertEquals(result4, -1);
@@ -1322,7 +1321,7 @@ public class GuardPatternTest {
                 Float.class,   f2 -> f2 > 15,  f2 -> { int result = (int) (4 * (f2 + f2));  return result; },
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 5 type"); return -1; },
-                Default.class, () -> { System.out.println("Default value  5 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value  5 type"); return 0; }
         );
 
         assertEquals(result5, -1);
@@ -1337,7 +1336,7 @@ public class GuardPatternTest {
                 String.class,  s2 -> s2.equals("test"),  s2 -> s2 + s2,
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 6 type"); return "unknown"; },
-                Default.class, () -> { System.out.println("Default value  6 type"); return "0"; }
+                Else.class, () -> { System.out.println("Else value  6 type"); return "0"; }
         );
 
         assertEquals(result6, "unknown");
@@ -1351,7 +1350,7 @@ public class GuardPatternTest {
                 Byte.class,    b -> b != 0,
                                b -> { int result = 2 * (b + b);  return result; },
                 Null.class,    () -> { System.out.println("Null value 1 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 1 types"); return  0; }
+                Else.class, () -> { System.out.println("Else value 1 types"); return  0; }
         );
 
         assertEquals(result1, -1);
@@ -1361,7 +1360,7 @@ public class GuardPatternTest {
                 byte.class,    b -> b != 0,
                                b -> { int result = 2 * (b + b);  return result; },
                 Null.class,    () -> { System.out.println("Null value 1 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 1 types"); return  0; }
+                Else.class, () -> { System.out.println("Else value 1 types"); return  0; }
         );
 
         assertEquals(result1, 4);
@@ -1373,7 +1372,7 @@ public class GuardPatternTest {
                 Short.class,   s -> s > 5,
                                s  -> { int result = 2 * (s + s);  return result; },
                 Null.class,    () -> { System.out.println("Null value 2 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 2 types"); return  1; }
+                Else.class, () -> { System.out.println("Else value 2 types"); return  1; }
         );
 
         assertEquals(result2, -1);
@@ -1385,7 +1384,7 @@ public class GuardPatternTest {
                 short.class,   s -> s == 2,
                                s  -> { int result = 2 * (s + s);  return result; },
                 Null.class,    () -> { System.out.println("Null value 2 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 2 types"); return  0; }
+                Else.class, () -> { System.out.println("Else value 2 types"); return  0; }
         );
 
         assertEquals(result2, 8);
@@ -1399,7 +1398,7 @@ public class GuardPatternTest {
                 Integer.class, i -> i < 5,
                                i  -> { int result = 2 * (i + i);  return result; },
                 Null.class,    () -> { System.out.println("Null value 3 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 3 types"); return  2; }
+                Else.class, () -> { System.out.println("Else value 3 types"); return  2; }
         );
 
         assertEquals(result3, -1);
@@ -1413,7 +1412,7 @@ public class GuardPatternTest {
                 int.class,     i -> i < 5,
                                i  -> { int result = 2 * (i + i);  return result; },
                 Null.class,    () -> { System.out.println("Null value 3 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 3 types"); return  0; }
+                Else.class, () -> { System.out.println("Else value 3 types"); return  0; }
         );
 
         assertEquals(result3, 12);
@@ -1429,7 +1428,7 @@ public class GuardPatternTest {
                 Long.class,    l -> l >= 4,
                                l -> { int result = (int) (2 * (l + l));  return result; },
                 Null.class,    () -> { System.out.println("Null value 4 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 4 types"); return  4; }
+                Else.class, () -> { System.out.println("Else value 4 types"); return  4; }
         );
 
         assertEquals(result4, -1);
@@ -1445,7 +1444,7 @@ public class GuardPatternTest {
                 long.class,    l -> l >= 4,
                                l -> { int result = (int) (2 * (l + l));  return result; },
                 Null.class,    () -> { System.out.println("Null value 4 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 4 types"); return  0; }
+                Else.class, () -> { System.out.println("Else value 4 types"); return  0; }
         );
 
         assertEquals(result4, 16);
@@ -1463,7 +1462,7 @@ public class GuardPatternTest {
                 Float.class,   f -> f <= 5,
                                f -> { int result = (int) (2 * (f + f));  return result;},
                 Null.class,    () -> { System.out.println("Null value 5 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 5 types"); return  5; }
+                Else.class, () -> { System.out.println("Else value 5 types"); return  5; }
         );
         assertEquals(result5, -1);
 
@@ -1480,7 +1479,7 @@ public class GuardPatternTest {
                 float.class,   f -> f <= 5,
                                f -> { int result = (int) (2 * (f + f));  return result;},
                 Null.class,    () -> { System.out.println("Null value 5 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 5 types"); return  0; }
+                Else.class, () -> { System.out.println("Else value 5 types"); return  0; }
         );
 
         assertEquals(result5, 20);
@@ -1500,7 +1499,7 @@ public class GuardPatternTest {
                 Double.class,  d -> d >= 6,
                                d -> { int result = (int) (2 * (d + d));  return result; },
                 Null.class,    () -> { System.out.println("Null value 6 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 6 types"); return  6; }
+                Else.class, () -> { System.out.println("Else value 6 types"); return  6; }
         );
 
         assertEquals(result6, -1);
@@ -1520,7 +1519,7 @@ public class GuardPatternTest {
                 double.class,  d -> d >= 6,
                                d -> { int result = (int) (2 * (d + d));  return result; },
                 Null.class,    () -> { System.out.println("Null value 6 type");     return -1; },
-                Default.class, () -> { System.out.println("Default value 6 types"); return  0; }
+                Else.class, () -> { System.out.println("Else value 6 types"); return  0; }
         );
 
         assertEquals(result6, 24);
@@ -1532,7 +1531,7 @@ public class GuardPatternTest {
                 Circle.class,    c -> c != null,
                                  c -> { int result = c.square(); return result; },
                 Null.class,      () -> { System.out.println("Null value 7 type"); return -1; },
-                Default.class,   () -> { System.out.println("Default shape"); return 5; }
+                Else.class,   () -> { System.out.println("Else shape"); return 5; }
         );
 
         assertEquals(square, -1);
@@ -1566,7 +1565,7 @@ public class GuardPatternTest {
                 Short.class,   s -> s == 2,  s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> i < 5,   i  -> { int result = 2 * (i + i);  return result; },
                 Null.class,    () -> { System.out.println("Null value 3 type");     return -1; },
-                Var.class,    any -> { System.out.println("Default value 3 types"); return  2; }
+                Var.class,    any -> { System.out.println("Else value 3 types"); return  2; }
         );
 
         assertEquals(result3, -1);
@@ -1578,7 +1577,7 @@ public class GuardPatternTest {
                 Integer.class, i -> i < 5,   i -> { int result = 2 * (i + i);  return result; },
                 Long.class,    l -> l >= 4,  l -> { int result = (int) (2 * (l + l));  return result; },
                 Null.class,    () -> { System.out.println("Null value 4 type");     return -1; },
-                Var.class,  any -> { System.out.println("Default value 4 types"); return  4; }
+                Var.class,  any -> { System.out.println("Else value 4 types"); return  4; }
         );
 
         assertEquals(result4, -1);
@@ -1591,7 +1590,7 @@ public class GuardPatternTest {
                 Long.class,    l -> l >= 4, l -> { int result = (int) (2 * (l + l));  return result; },
                 Float.class,   f -> f <= 5, f -> { int result = (int) (2 * (f + f));  return result;},
                 Null.class,    () -> { System.out.println("Null value 5 type");     return -1; },
-                Var.class,  any -> { System.out.println("Default value 5 types"); return  5; }
+                Var.class,  any -> { System.out.println("Else value 5 types"); return  5; }
         );
         assertEquals(result5, -1);
 
@@ -1604,7 +1603,7 @@ public class GuardPatternTest {
                 Float.class,   f -> f <= 5,  f -> { int result = (int) (2 * (f + f));  return result; },
                 Double.class,  d -> d >= 6,  d -> { int result = (int) (2 * (d + d));  return result; },
                 Null.class,    () -> { System.out.println("Null value 6 type");     return -1; },
-                Var.class,  any -> { System.out.println("Default value 6 types"); return  6; }
+                Var.class,  any -> { System.out.println("Else value 6 types"); return  6; }
         );
 
         assertEquals(result6, -1);
@@ -1624,7 +1623,7 @@ public class GuardPatternTest {
                 Null.class,    () -> { System.out.println("Null value 1 type");     return -1; },
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 1 type"); return +1; },
-                Default.class, () -> { System.out.println("Default value 1 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value 1 type"); return 0; }
         );
 
         assertEquals(result1, -1);
@@ -1637,7 +1636,7 @@ public class GuardPatternTest {
                 Null.class,    () -> { System.out.println("Null value 2 type");     return -1; },
                 Var.class,      v -> list.contains(data),
                                () -> { System.out.println("Var value with 2 type"); return +1; },
-                Default.class, () -> { System.out.println("Default value 2 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value 2 type"); return 0; }
         );
 
         assertEquals(result2, -1);
@@ -1650,7 +1649,7 @@ public class GuardPatternTest {
                 Null.class,    () -> { System.out.println("Null value 3 type");     return -1; },
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 3 type"); return +1; },
-                Default.class, () -> { System.out.println("Default value  3 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value  3 type"); return 0; }
         );
 
         assertEquals(result3, -1);
@@ -1664,7 +1663,7 @@ public class GuardPatternTest {
                 Null.class,    () -> { System.out.println("Null value 4 type");     return -1; },
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 4 type"); return +1; },
-                Default.class, () -> { System.out.println("Default value  4 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value  4 type"); return 0; }
         );
 
         assertEquals(result4, -1);
@@ -1679,7 +1678,7 @@ public class GuardPatternTest {
                 Null.class,    () -> { System.out.println("Null value 5 type");     return -1; },
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 5 type"); return +1; },
-                Default.class, () -> { System.out.println("Default value  5 type"); return 0; }
+                Else.class, () -> { System.out.println("Else value  5 type"); return 0; }
         );
 
         assertEquals(result5, -1);
@@ -1695,7 +1694,7 @@ public class GuardPatternTest {
                 Null.class,    () -> { System.out.println("Null value 6 type");     return "nil"; },
                 Var.class,     v  -> list.contains(data),
                                () -> { System.out.println("Var value with 6 type"); return "unknown"; },
-                Default.class, () -> { System.out.println("Default value  6 type"); return "0"; }
+                Else.class, () -> { System.out.println("Else value  6 type"); return "0"; }
         );
 
         assertEquals(result6, "nil");

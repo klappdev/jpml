@@ -5,7 +5,7 @@
  * with constants. Maximum number of branches for match six
  * with fourth pieces.
  */
-package org.kl.handle;
+package org.kl.pattern;
 
 import org.kl.error.PatternException;
 import org.kl.reflect.Reflection;

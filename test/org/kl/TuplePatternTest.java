@@ -5,7 +5,7 @@ import org.kl.error.PatternException;
 import org.kl.state.Side;
 
 import static java.lang.System.*;
-import static org.kl.handle.TuplePattern.matches;
+import static org.kl.pattern.TuplePattern.matches;
 
 public class TuplePatternTest {
 

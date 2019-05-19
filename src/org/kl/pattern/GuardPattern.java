@@ -4,10 +4,10 @@
  * Guard pattern allow match type and check condition for the
  * truth at one time. Maximum number of branches for match six.
  */
-package org.kl.handle;
+package org.kl.pattern;
 
 import org.kl.reflect.Reflection;
-import org.kl.state.Default;
+import org.kl.state.Else;
 import org.kl.state.Null;
 import org.kl.state.Var;
 
@@ -127,7 +127,7 @@ public class GuardPattern {
     @SuppressWarnings("unused")
     public static <V, T> void matches(V value,
                                       Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
-                                      Class<Default> defaultClass, Runnable defaultConsumer) {
+                                      Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
@@ -160,7 +160,7 @@ public class GuardPattern {
     public static <V, T> void matches(V value,
                                       Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
                                       Class<Null> nullClass, Runnable nullConsumer,
-                                      Class<Default> defaultClass, Runnable defaultConsumer) {
+                                      Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -182,9 +182,9 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
-                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                       Class<Var> varClazz,  Predicate<V>  varPredicate, Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -205,8 +205,8 @@ public class GuardPattern {
     public static <V, T> void matches(V value,
                                       Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
                                       Class<Null> nullClass, Runnable nullConsumer,
-                                      Class<Var> varClass,   Predicate<V>  varPredicate, Runnable varConsumer,
-                                      Class<Default> defaultClass, Runnable defaultConsumer) {
+                                      Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
+                                      Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -232,7 +232,7 @@ public class GuardPattern {
     @SuppressWarnings("unused")
     public static <V, T, R> R matches(V value,
                                       Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
-                                      Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, clazz, predicate, function);
 
         if (result != null) {
@@ -259,7 +259,7 @@ public class GuardPattern {
     public static <V, T, R> R matches(V value,
                                       Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
                                       Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                      Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, clazz, predicate, function);
 
         if (result != null) {
@@ -277,7 +277,7 @@ public class GuardPattern {
     public static <V, T, R> R matches(V value,
                                       Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                      Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -301,8 +301,8 @@ public class GuardPattern {
     public static <V, T, R> R matches(V value,
                                       Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
                                       Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                      Class<Var>  varClass,  Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                      Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                      Class<Var>  varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -333,9 +333,9 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
-                                   Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                   Class<Default> defaultClass, Runnable defaultConsumer) {
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -381,10 +381,10 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
-                                      Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                      Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                      Class<Null> nullClass, Runnable nullConsumer,
-                                      Class<Default> defaultClass, Runnable defaultConsumer) {
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                           Class<Null> nullClass, Runnable nullConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -411,11 +411,11 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
-                                      Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                      Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                      Class<Null> nullClass, Runnable nullConsumer,
-                                      Class<Var> varClass,   Predicate<V>  varPredicate, Runnable varConsumer,
-                                      Class<Default> defaultClass, Runnable defaultConsumer) {
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                           Class<Null> nullClass, Runnable nullConsumer,
+                                           Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -428,10 +428,10 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
                                            Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                           Class<Var> varClazz,   Predicate<V> varPredicate, Runnable varConsumer,
-                                           Class<Default> defaultClass, Runnable defaultConsumer) {
+                                           Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -478,9 +478,9 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstPredicate, firstFunction,
                                   secondClazz, secondPredicate, secondFunction);
         if (result != null) {
@@ -506,10 +506,10 @@ public class GuardPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, R> R matches(V value,
-                                  Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                  Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                  Class<Var> varClass,   Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                  Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
                                   secondClazz, secondPredicate, secondFunction);
 
@@ -526,10 +526,10 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, R> R matches(V value,
-                                      Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                      Class<T2> secondClazz, Predicate<T2> secondPredicate,  Function<T2, R> secondFunction,
-                                      Class<Null> nullClass, Supplier<R> nullSupplier,
-                                      Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<Null> nullClass, Supplier<R> nullSupplier,
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -556,11 +556,11 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, R> R matches(V value,
-                                      Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                      Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                      Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                      Class<Var> varClass,   Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                      Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<Null> nullClass, Supplier<R>  nullSupplier,
+                                           Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -600,10 +600,10 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -664,11 +664,11 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<Null> nullClass, Runnable nullConsumer,
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -698,12 +698,12 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Var> varClass,   Predicate<V>  varPredicate, Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<Null> nullClass, Runnable nullConsumer,
+                                               Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -717,11 +717,11 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<Var> varClazz,   Predicate<V>  varPredicate,    Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -781,10 +781,10 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
                                   thirdClazz, thirdPredicate, thirdFunction);
         if (result != null) {
@@ -812,11 +812,11 @@ public class GuardPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, T3, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<Var> varClass,   Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
                                   secondClazz, secondPredicate, secondFunction,
                                   thirdClazz,  thirdPredicate,  thirdFunction);
@@ -834,11 +834,11 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<Null> nullClass, Supplier<R> nullSupplier,
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -868,12 +868,12 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                       Class<Var> varClass,   Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<Null> nullClass, Supplier<R>  nullSupplier,
+                                               Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -922,11 +922,11 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                   Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1002,12 +1002,12 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                   Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                   Class<Null> nullClass, Runnable nullConsumer,
+                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -1040,13 +1040,13 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Var> varClass,   Predicate<V>  varPredicate, Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                   Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                   Class<Null> nullClass, Runnable nullConsumer,
+                                                   Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
+                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -1061,12 +1061,12 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<Var> varClazz,   Predicate<V>  varPredicate,    Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                   Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                   Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
+                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1140,11 +1140,11 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                   Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
                                   thirdClazz, thirdPredicate, thirdFunction, forthClazz,  forthPredicate,  forthFunction);
         if (result != null) {
@@ -1174,12 +1174,12 @@ public class GuardPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<Var> varClass,   Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                   Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                   Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
+                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
                                   secondClazz, secondPredicate, secondFunction,
                                   thirdClazz,  thirdPredicate,  thirdFunction,
@@ -1197,12 +1197,12 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                   Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                   Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -1235,13 +1235,13 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                       Class<Var> varClass,   Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                   Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                   Class<Null> nullClass, Supplier<R>  nullSupplier,
+                                                   Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -1340,12 +1340,12 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1436,13 +1436,13 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                       Class<Null> nullClass, Runnable nullConsumer,
+                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -1478,14 +1478,14 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Var> varClass,   Predicate<V>  varPredicate, Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                       Class<Null> nullClass, Runnable nullConsumer,
+                                                       Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
+                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -1501,13 +1501,13 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<Var> varClazz,   Predicate<V>  varPredicate,    Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                       Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
+                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1554,12 +1554,12 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                       Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
                                   thirdClazz, thirdPredicate, thirdFunction, forthClazz,  forthPredicate,  forthFunction,
                                   fifthClazz, fifthPredicate, fifthFunction);
@@ -1592,13 +1592,13 @@ public class GuardPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<Var> varClass,   Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                       Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                       Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
+                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
                                   secondClazz, secondPredicate, secondFunction,
                                   thirdClazz,  thirdPredicate,  thirdFunction,
@@ -1617,13 +1617,13 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                       Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                       Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -1659,14 +1659,14 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                       Class<Var> varClass,   Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                       Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                       Class<Null> nullClass, Supplier<R>  nullSupplier,
+                                                       Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -1781,13 +1781,13 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Consumer<T6> sixthConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1893,14 +1893,14 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Consumer<T6> sixthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                           Class<Null> nullClass, Runnable nullConsumer,
+                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -1939,15 +1939,15 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Consumer<T6> sixthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Var> varClass,   Predicate<V>  varPredicate, Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                           Class<Null> nullClass, Runnable nullConsumer,
+                                                           Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
+                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
@@ -1964,14 +1964,14 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Consumer<T6> sixthConsumer,
-                                       Class<Var> varClazz,   Predicate<V>  varPredicate,    Runnable varConsumer,
-                                       Class<Default> defaultClass, Runnable defaultConsumer) {
+                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                           Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
+                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -2025,13 +2025,13 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Function<T6, R> sixthFunction,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                           Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
                                   thirdClazz, thirdPredicate, thirdFunction, forthClazz,  forthPredicate,  forthFunction,
                                   fifthClazz, fifthPredicate, fifthFunction, sixthClazz,  sixthPredicate,  sixthFunction);
@@ -2066,14 +2066,14 @@ public class GuardPattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Function<T6, R> sixthFunction,
-                                       Class<Var> varClass,   Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                           Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                           Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
+                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
                                   secondClazz, secondPredicate, secondFunction,
                                   thirdClazz,  thirdPredicate,  thirdFunction,
@@ -2093,14 +2093,14 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Function<T6, R> sixthFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                           Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                           Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -2139,15 +2139,15 @@ public class GuardPattern {
 
     @SuppressWarnings("unused")
     public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Function<T6, R> sixthFunction,
-                                       Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                       Class<Var> varClass,   Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                       Class<Default> defaultClass, Supplier<R> defaultSupplier) {
+                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                           Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                           Class<Null> nullClass, Supplier<R>  nullSupplier,
+                                                           Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {

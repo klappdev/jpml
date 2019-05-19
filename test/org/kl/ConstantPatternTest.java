@@ -6,7 +6,7 @@ import org.kl.error.PatternException;
 import org.kl.shape.Circle;
 import org.kl.shape.Figure;
 import org.kl.shape.Unpiped;
-import org.kl.state.Default;
+import org.kl.state.Else;
 import org.kl.state.Null;
 import org.kl.state.Var;
 
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.kl.handle.ConstantPattern.matches;
+import static org.kl.pattern.ConstantPattern.matches;
 
 public class ConstantPatternTest {
 
@@ -107,7 +107,7 @@ public class ConstantPatternTest {
         byte value1 = 10;
         matches(value1,
                 (byte) 5,      () -> System.out.println("brunch 1 - " + value1),
-                Default.class, () -> System.out.println("Default value 1 type")
+                Else.class, () -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
@@ -115,7 +115,7 @@ public class ConstantPatternTest {
         matches(value2,
                 (short) 5,     () -> System.out.println("brunch 1 - " + value2),
                 (short) 10,    () -> System.out.println("brunch 2 - " + value2),
-                Default.class, () -> System.out.println("Default value 2 type")
+                Else.class, () -> System.out.println("Else value 2 type")
         );
 
         /* 3 */
@@ -124,7 +124,7 @@ public class ConstantPatternTest {
                 5,  ()  -> System.out.println("brunch 1 - " + value3),
                 10, ()  -> System.out.println("brunch 2 - " + value3),
                 15, ()  -> System.out.println("brunch 3 - " + value3),
-                Default.class, () -> System.out.println("Default value 3 type")
+                Else.class, () -> System.out.println("Else value 3 type")
         );
 
         /* 4 */
@@ -134,7 +134,7 @@ public class ConstantPatternTest {
                 10L, ()  -> System.out.println("brunch 2 - " + value4),
                 15L, ()  -> System.out.println("brunch 3 - " + value4),
                 20L, ()  -> System.out.println("brunch 4 - " + value4),
-                Default.class, () -> System.out.println("Default value 4 type")
+                Else.class, () -> System.out.println("Else value 4 type")
         );
 
         /* 5 */
@@ -145,7 +145,7 @@ public class ConstantPatternTest {
                 15.0F, ()  -> System.out.println("brunch 3 - " + value5),
                 20.0F, ()  -> System.out.println("brunch 4 - " + value5),
                 25.0F, ()  -> System.out.println("brunch 5 - " + value5),
-                Default.class, () -> System.out.println("Default value 5 type")
+                Else.class, () -> System.out.println("Else value 5 type")
         );
 
         /* 6 */
@@ -157,7 +157,7 @@ public class ConstantPatternTest {
                 20.0D, ()  -> System.out.println("brunch 4 - " + value6),
                 25.0D, ()  -> System.out.println("brunch 5 - " + value6),
                 30.0D, ()  -> System.out.println("brunch 6 - " + value6),
-                Default.class, () -> System.out.println("Default value 6 type")
+                Else.class, () -> System.out.println("Else value 6 type")
         );
     }
 
@@ -168,7 +168,7 @@ public class ConstantPatternTest {
         byte value1 = 10;
         matches(value1,
                 (byte) 5,  ()  -> System.out.println("brunch 1 - " + value1),
-                Var.class, any -> System.out.println("Default value 1 type")
+                Var.class, any -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
@@ -176,7 +176,7 @@ public class ConstantPatternTest {
         matches(value2,
                 (short) 5,  ()  -> System.out.println("brunch 1 - " + value2),
                 (short) 10, ()  -> System.out.println("brunch 2 - " + value2),
-                Var.class,  any -> System.out.println("Default value 2 type")
+                Var.class,  any -> System.out.println("Else value 2 type")
         );
 
         /* 3 */
@@ -185,7 +185,7 @@ public class ConstantPatternTest {
                 5,  ()  -> System.out.println("brunch 1 - " + value3),
                 10, ()  -> System.out.println("brunch 2 - " + value3),
                 15, ()  -> System.out.println("brunch 3 - " + value3),
-                Var.class,  any -> System.out.println("Default value 3 type")
+                Var.class,  any -> System.out.println("Else value 3 type")
         );
 
         /* 4 */
@@ -195,7 +195,7 @@ public class ConstantPatternTest {
                 10L, ()  -> System.out.println("brunch 2 - " + value4),
                 15L, ()  -> System.out.println("brunch 3 - " + value4),
                 20L, ()  -> System.out.println("brunch 4 - " + value4),
-                Var.class,  any -> System.out.println("Default value 4 type")
+                Var.class,  any -> System.out.println("Else value 4 type")
         );
 
         /* 5 */
@@ -206,7 +206,7 @@ public class ConstantPatternTest {
                 15.0F, ()  -> System.out.println("brunch 3 - " + value5),
                 20.0F, ()  -> System.out.println("brunch 4 - " + value5),
                 25.0F, ()  -> System.out.println("brunch 5 - " + value5),
-                Var.class,  any -> System.out.println("Default value 5 type")
+                Var.class,  any -> System.out.println("Else value 5 type")
         );
 
         /* 6 */
@@ -218,7 +218,7 @@ public class ConstantPatternTest {
                 20.0D, ()  -> System.out.println("brunch 4 - " + value6),
                 25.0D, ()  -> System.out.println("brunch 5 - " + value6),
                 30.0D, ()  -> System.out.println("brunch 6 - " + value6),
-                Var.class,  any -> System.out.println("Default value 6 type")
+                Var.class,  any -> System.out.println("Else value 6 type")
         );
     }
 
@@ -229,7 +229,7 @@ public class ConstantPatternTest {
         matches(null,
                 (byte) 5,      () -> System.out.println("brunch 1"),
                 Null.class,    () -> System.out.println("Null    value 1 type"),
-                Default.class, () -> System.out.println("Default value 1 type")
+                Else.class, () -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
@@ -237,7 +237,7 @@ public class ConstantPatternTest {
                 (short) 5,     () -> System.out.println("brunch 1"),
                 (short) 10,    () -> System.out.println("brunch 2"),
                 Null.class,    () -> System.out.println("Null    value 2 type"),
-                Default.class, () -> System.out.println("Default value 2 type")
+                Else.class, () -> System.out.println("Else value 2 type")
         );
 
         /* 3 */
@@ -246,7 +246,7 @@ public class ConstantPatternTest {
                 10, ()  -> System.out.println("brunch 2"),
                 15, ()  -> System.out.println("brunch 3"),
                 Null.class,    () -> System.out.println("Null    value 3 type"),
-                Default.class, () -> System.out.println("Default value 3 type")
+                Else.class, () -> System.out.println("Else value 3 type")
         );
 
         /* 4*/
@@ -256,7 +256,7 @@ public class ConstantPatternTest {
                 15L, ()  -> System.out.println("brunch 3"),
                 20L, ()  -> System.out.println("brunch 4"),
                 Null.class,    () -> System.out.println("Null    value 4 type"),
-                Default.class, () -> System.out.println("Default value 4 type")
+                Else.class, () -> System.out.println("Else value 4 type")
         );
 
         /* 5 */
@@ -267,7 +267,7 @@ public class ConstantPatternTest {
                 20.0F, ()  -> System.out.println("brunch 4"),
                 25.0F, ()  -> System.out.println("brunch 5"),
                 Null.class,    () -> System.out.println("Null    value 5 type"),
-                Default.class, () -> System.out.println("Default value 5 type")
+                Else.class, () -> System.out.println("Else value 5 type")
         );
 
         /* 6 */
@@ -279,7 +279,7 @@ public class ConstantPatternTest {
                 25.0D, ()  -> System.out.println("brunch 5"),
                 30.0D, ()  -> System.out.println("brunch 6"),
                 Null.class,    () -> System.out.println("Null    value 6 type"),
-                Default.class, () -> System.out.println("Default value 6 type")
+                Else.class, () -> System.out.println("Else value 6 type")
         );
     }
 
@@ -418,7 +418,7 @@ public class ConstantPatternTest {
         byte value1  = 10;
         byte result1 = matches(value1,
                 (byte) 5,      () -> (byte) (2 * (value1)),
-                Default.class, (Supplier<Byte>) () -> (byte) 0
+                Else.class, (Supplier<Byte>) () -> (byte) 0
         );
 
         assertEquals(result1, 0);
@@ -428,7 +428,7 @@ public class ConstantPatternTest {
         short result2 = matches(value2,
                 (short) 5,  () -> (short) (2 * (value2)),
                 (short) 10, () -> (short) (2 * (value2)),
-                Default.class, (Supplier<Short>) () -> (short) 0
+                Else.class, (Supplier<Short>) () -> (short) 0
         );
 
         assertEquals(result2, 0);
@@ -439,7 +439,7 @@ public class ConstantPatternTest {
                 5,  () -> 2 * (value3),
                 10, () -> 2 * (value3),
                 15, () -> 2 * (value3),
-                Default.class, (Supplier<Integer>) () -> 0
+                Else.class, (Supplier<Integer>) () -> 0
         );
 
         assertEquals(result3, 0);
@@ -451,7 +451,7 @@ public class ConstantPatternTest {
                 10L, () -> 2 * (value4),
                 15L, () -> 2 * (value4),
                 20L, () -> 2 * (value4),
-                Default.class, (Supplier<Long>) () -> (long) 0
+                Else.class, (Supplier<Long>) () -> (long) 0
         );
 
         assertEquals(result4, 0);
@@ -464,7 +464,7 @@ public class ConstantPatternTest {
                 15.0F, () -> 2 * (value5),
                 20.0F, () -> 2 * (value5),
                 25.0F, () -> 2 * (value5),
-                Default.class, (Supplier<Float>) () -> (float) 0
+                Else.class, (Supplier<Float>) () -> (float) 0
         );
 
         assertEquals(result5, 0);
@@ -478,7 +478,7 @@ public class ConstantPatternTest {
                 20.0D, () -> 2 * (value6),
                 25.0D, () -> 2 * (value6),
                 30.0D, () -> 2 * (value6),
-                Default.class, () -> (double) 0
+                Else.class, () -> (double) 0
         );
 
         assertEquals(result6, 0);
@@ -564,7 +564,7 @@ public class ConstantPatternTest {
         byte result1 = matches(null,
                 (byte) 5,      () -> (byte) 1,
                 Null.class,    () -> (byte) -1,
-                Default.class, (Supplier<Byte>) () -> (byte) 0
+                Else.class, (Supplier<Byte>) () -> (byte) 0
         );
 
         assertEquals(result1, -1);
@@ -574,7 +574,7 @@ public class ConstantPatternTest {
                 (short) 5,  () -> (short) 1,
                 (short) 10, () -> (short) 2,
                 Null.class, () -> (short) -1,
-                Default.class, (Supplier<Short>) () -> (short) 0
+                Else.class, (Supplier<Short>) () -> (short) 0
         );
 
         assertEquals(result2, -1);
@@ -585,7 +585,7 @@ public class ConstantPatternTest {
                 10, () -> 2,
                 15, () -> 3,
                 Null.class, () -> -1,
-                Default.class, (Supplier<Integer>) () -> 0
+                Else.class, (Supplier<Integer>) () -> 0
         );
 
         assertEquals(result3, -1);
@@ -597,7 +597,7 @@ public class ConstantPatternTest {
                 15L, () -> (long) 3,
                 20L, () -> (long) 4,
                 Null.class, () -> (long) -1,
-                Default.class, (Supplier<Long>) () -> (long) 0
+                Else.class, (Supplier<Long>) () -> (long) 0
         );
 
         assertEquals(result4, -1);
@@ -610,7 +610,7 @@ public class ConstantPatternTest {
                 20.0F, () -> (float) 4,
                 25.0F, () -> (float) 5,
                 Null.class, () -> (float) -1,
-                Default.class, (Supplier<Float>) () -> (float) 0
+                Else.class, (Supplier<Float>) () -> (float) 0
         );
 
         assertEquals(result5, -1);
@@ -624,7 +624,7 @@ public class ConstantPatternTest {
                 25.0D, () -> (double) 5,
                 30.0D, () -> (double) 6,
                 Null.class,    () -> (double) -1,
-                Default.class, () -> (double)  0
+                Else.class, () -> (double)  0
         );
 
         assertEquals(result6, -1);

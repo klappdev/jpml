@@ -27,4 +27,12 @@ public class Bipiped extends Figure {
         width.set(this.width);
         height.set(this.height);
     }
+
+    public short width() {
+        return width;
+    }
+
+    public short height() {
+        return height;
+    }
 }

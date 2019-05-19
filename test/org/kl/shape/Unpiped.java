@@ -50,4 +50,6 @@ public class Unpiped extends Figure {
     public String toString() {
         return "Unpiped{radius=" + radius + "}";
     }
+
+    public double radius() { return radius; }
 }

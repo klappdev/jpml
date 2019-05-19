@@ -37,4 +37,16 @@ public class Tripiped extends Figure {
         longitude.set(this.longitude);
         height.set(this.height);
     }
+
+    public float width() {
+        return width;
+    }
+
+    public float longitude() {
+        return longitude;
+    }
+
+    public float height() {
+        return height;
+    }
 }

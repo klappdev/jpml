@@ -4,7 +4,15 @@ import org.kl.meta.Extract;
 import org.kl.type.IntRef;
 
 public class Quadrate extends Figure {
-    private int width = 10;
+    private int width;
+
+    public Quadrate() {
+        this.width = 10;
+    }
+
+    public Quadrate(int width) {
+        this.width = width;
+    }
 
     @Override
     public int square() {

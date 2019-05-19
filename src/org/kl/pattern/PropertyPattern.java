@@ -5,12 +5,11 @@
  * Maximum number of branches for match three with three
  * value params.
  */
-package org.kl.handle;
+package org.kl.pattern;
 
 import org.kl.bean.Item;
 import org.kl.bean.BiItem;
 import org.kl.bean.TriItem;
-import org.kl.bean.QuarItem;
 import org.kl.error.PatternException;
 
 import java.lang.reflect.Field;
@@ -19,8 +18,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-import org.kl.lambda.QuarConsumer;
 import org.kl.lambda.TriConsumer;
 
 public class PropertyPattern {
@@ -31,6 +30,29 @@ public class PropertyPattern {
 
             consumer.accept((T) args[0]);
         }
+    }
+
+    public static <V, T> void foreach(Collection<V> data, Function<V, T> function,
+                                      Consumer<T> consumer) {
+        for (V value : data) {
+            T arg = function.apply(value);
+
+            consumer.accept(arg);
+        }
+    }
+
+    public static <V, T> void let(V data, Item<T> item,
+                                  Consumer<T> consumer) throws PatternException {
+        Object[] args = prepareFields(data, item.getName());
+
+        consumer.accept((T) args[0]);
+    }
+
+    public static <V, T> void let(V data, Function<V, T> function,
+                                  Consumer<T> consumer) {
+        T arg = function.apply(data);
+
+        consumer.accept(arg);
     }
 
     public static <T> Item<T> of(String field) {
@@ -63,11 +85,36 @@ public class PropertyPattern {
         }
     }
 
+    public static <V, T1, T2> void foreach(Collection<V> data, Function<V, T1> firstFunction,
+                                           Function<V, T2> secondFunction, BiConsumer<T1, T2> consumer) {
+        for (V value : data) {
+            T1 firstArg  = firstFunction.apply(value);
+            T2 secondArg = secondFunction.apply(value);
+
+            consumer.accept(firstArg, secondArg);
+        }
+    }
+
     @SuppressWarnings("unused")
     public static <K, V, T1, T2> void foreach(Map<K, V> data, BiItem<T1, T2> item, BiConsumer<T1, T2> consumer) {
         for (Map.Entry<K, V> entry : data.entrySet()) {
             consumer.accept((T1) entry.getKey(), (T2) entry.getValue());
         }
+    }
+
+    public static <V, T1, T2> void let(V data, BiItem<T1, T2> item,
+                                       BiConsumer<T1, T2> consumer) throws PatternException {
+        Object[] args = prepareFields(data, item.getFirstName(), item.getSecondName());
+
+        consumer.accept((T1) args[0], (T2) args[1]);
+    }
+
+    public static <V, T1, T2> void let(V data, Function<V, T1> firstFunction,
+                                       Function<V, T2> secondFunction, BiConsumer<T1, T2> consumer) {
+        T1 firstArg  = firstFunction.apply(data);
+        T2 secondArg = secondFunction.apply(data);
+
+        consumer.accept(firstArg, secondArg);
     }
 
     public static <T1, T2> BiItem<T1, T2> of(String firstField, String secondField) {
@@ -98,6 +145,35 @@ public class PropertyPattern {
 
             consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
         }
+    }
+
+    public static <V, T1, T2, T3> void foreach(Collection<V> data,
+                                               Function<V, T1> firstFunction, Function<V, T2> secondFunction,
+                                               Function<V, T3> thirdFunction, TriConsumer<T1, T2, T3> consumer) {
+        for (V value : data) {
+            T1 firstArg  = firstFunction.apply(value);
+            T2 secondArg = secondFunction.apply(value);
+            T3 thirdArg  = thirdFunction.apply(value);
+
+            consumer.accept(firstArg, secondArg, thirdArg);
+        }
+    }
+
+    public static <V, T1, T2, T3> void let(V data, TriItem<T1, T2, T3> item,
+                                           TriConsumer<T1, T2, T3> consumer) throws PatternException {
+        Object[] args = prepareFields(data, item.getFirstName(), item.getSecondName(), item.getThirdName());
+
+        consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
+    }
+
+    public static <V, T1, T2, T3> void let(V data,
+                                           Function<V, T1> firstFunction, Function<V, T2> secondFunction,
+                                           Function<V, T3> thirdFunction, TriConsumer<T1, T2, T3> consumer) {
+        T1 firstArg  = firstFunction.apply(data);
+        T2 secondArg = secondFunction.apply(data);
+        T3 thirdArg  = thirdFunction.apply(data);
+
+        consumer.accept(firstArg, secondArg, thirdArg);
     }
 
     public static <T1, T2, T3> TriItem<T1, T2, T3> of(String firstField, String secondField, String thirdField) {

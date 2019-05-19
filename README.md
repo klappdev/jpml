@@ -25,16 +25,16 @@ Using this library developer can write in the following way.
 
 ```Java
 
-   import org.kl.state.Default;
+   import org.kl.state.Else;
    import org.kl.state.Null;
-   import static org.kl.handle.ConstantPattern.matches;
+   import static org.kl.pattern.ConstantPattern.matches;
 
    matches(data,
       new Person("man"),    () ->  System.out.println("man");
       new Person("woman"),  () ->  System.out.println("woman");
       new Person("child"),  () ->  System.out.println("child");        
-      Null.class,           () -> { System.out.println("Null value "); },
-      Default.class,        () -> { System.out.println("Default value: " + data); }
+      Null.class,           () ->  System.out.println("Null value "),
+      Else.class,           () ->  System.out.println("Default value: " + data)
    );
 ```
 
@@ -54,17 +54,17 @@ Using this library developer can write in the following way.
 
 ```Java
 
-   import org.kl.state.Default;
+   import org.kl.state.Else;
    import org.kl.state.Null;
-   import static org.kl.handle.TuplePattern.matches;
+   import static org.kl.pattern.TuplePattern.matches;
 
    matches(side, width,
       "top",    25,  () -> System.out.println("top");
       "bottom", 30,  () -> System.out.println("bottom");
       "left",   15,  () -> System.out.println("left");        
       "right",  15,  () -> System.out.println("right");         
-      Null.class,    () -> { System.out.println("Null value"); },
-      Default.class, () -> { System.out.println("Default value"); }
+      Null.class,    () -> System.out.println("Null value"),
+      Else.class,    () -> System.out.println("Default value")
    );
 ```
 
@@ -85,9 +85,9 @@ Using this library developer can write in the following way.
 
 ```Java
 
-   import org.kl.state.Default;
+   import org.kl.state.Else;
    import org.kl.state.Null;
-   import static org.kl.handle.VerifyPattern.matches;
+   import static org.kl.pattern.VerifyPattern.matches;
 
    matches(data,
       Integer.class, i  -> { System.out.println(i * i); },
@@ -95,7 +95,7 @@ Using this library developer can write in the following way.
       Long.class,    l  -> { System.out.println(l * l); },
       String.class,  s  -> { System.out.println(s * s); },
       Null.class,    () -> { System.out.println("Null value "); },
-      Default.class, () -> { System.out.println("Default value: " + data); }
+      Else.class,    () -> { System.out.println("Default value: " + data); }
    );
 ```
 *Guard pattern* allow match type and check condition for the truth at one time.
@@ -115,16 +115,16 @@ Using this library developer can write in the following way.
 
 ```Java
 
-   import org.kl.state.Default;
+   import org.kl.state.Else;
    import org.kl.state.Null;
-   import static org.kl.handle.GuardPattern.matches;
+   import static org.kl.pattern.GuardPattern.matches;
 
    matches(data,           
       Integer.class, i  -> i != 0,  i  -> { System.out.println(i * i); },
       Byte.class,    b  -> b > -1,  b  -> { System.out.println(b * b); },
       Long.class,    l  -> l == 5,  l  -> { System.out.println(l * l); },
       Null.class,    () -> { System.out.println("Null value "); },
-      Default.class, () -> { System.out.println("Default value: " + data); }
+      Else.class,    () -> { System.out.println("Default value: " + data); }
    );
 ```
 
@@ -134,17 +134,12 @@ equal/eq, notEqual/ne. Also for omit condition could use such functions:<br/>
 always/yes, never/no. 
 
 ```Java
-
-   import org.kl.state.Default;
-   import org.kl.state.Null;
-   import static org.kl.handle.GuardPattern.*;
-
    matches(data,           
       Integer.class, ne(0),  i  -> { System.out.println(i * i); },
       Byte.class,    gt(-1), b  -> { System.out.println(b * b); },
       Long.class,    eq(5),  l  -> { System.out.println(l * l); },
       Null.class,    () -> { System.out.println("Null value "); },
-      Default.class, () -> { System.out.println("Default value: " + data); }
+      Else.class,    () -> { System.out.println("Default value: " + data); }
    );
 ```
 
@@ -152,6 +147,8 @@ always/yes, never/no.
 
 ```Java
    Figure figure = new Rectangle();
+ 
+   let (int w, int h) = figure;
  
    switch (figure) {
       case Rectangle(int w, int h) -> System.out.println("square: " + (w * h));
@@ -167,16 +164,21 @@ always/yes, never/no.
 Using this library developer can write in the following way.
 
 ```Java
-   import org.kl.state.Default;
-   import static org.kl.handle.DeconstructPattern.matches;
-   import static org.kl.handle.DeconstructPattern.foreach;
+   import org.kl.state.Else;
+   import static org.kl.pattern.DeconstructPattern.matches;
+   import static org.kl.pattern.DeconstructPattern.foreach;
+   import static org.kl.pattern.DeconstructPattern.let;
 
    Figure figure = new Rectangle();
 
+   let(figure, (int w, int h) -> {
+      System.out.println("border: " + w + " " + h));
+   });
+
    matches(figure,
-      Rectangle.class, (int w, int h) -> { System.out.println("square: " + (w * h)); },
-      Circle.class,    (int r)        -> { System.out.println("square: " + (2 * Math.PI * r)); },
-      Default.class,   ()             -> { System.out.println("Default square: " + 0); }
+      Rectangle.class, (int w, int h) -> System.out.println("square: " + (w * h)),
+      Circle.class,    (int r)        -> System.out.println("square: " + (2 * Math.PI * r)),
+      Else.class,      ()             -> System.out.println("Default square: " + 0)
    );
    
    foreach(listRectangles, (int w, int h) -> {
@@ -187,16 +189,16 @@ Using this library developer can write in the following way.
 Using Java 11 feature, we can deduce types deconstruct parameters.
 
 ```Java
-   import org.kl.state.Default;
-   import static org.kl.handle.DeconstructPattern.matches;
-   import static org.kl.handle.DeconstructPattern.foreach;
-
    Figure figure = new Rectangle();
+   
+   let(figure, (var w, var h) -> {
+      System.out.println("border: " + w + " " + h));
+   });
 
    matches(figure,
-      Rectangle.class, (var w, var h) -> { System.out.println("square: " + (w * h)); },
-      Circle.class,    (var r)        -> { System.out.println("square: " + (2 * Math.PI * r)); },
-      Default.class,   ()             -> { System.out.println("Default square: " + 0); }
+      Rectangle.class, (var w, var h) -> System.out.println("square: " + (w * h)),
+      Circle.class,    (var r)        -> System.out.println("square: " + (2 * Math.PI * r)),
+      Else.class,      ()             -> System.out.println("Default square: " + 0)
    );
    
    foreach(listRectangles, (var w, var h) -> {
@@ -221,6 +223,8 @@ pass by reference we must to use wrappers such IntRef, FloatRef and etc.
 
 ```Java
     Figure figure = new Rectangle();
+    
+    let (w: int w, h:int h) = figure;
  
     switch (figure) {
       case Rectangle(w: int w == 5,  h: int h == 10) -> System.out.println("sqr: " + (w * h));
@@ -237,39 +241,64 @@ pass by reference we must to use wrappers such IntRef, FloatRef and etc.
 Using this library developer can write in the following way.
 
 ```Java
-   import org.kl.state.Default;
-   import static org.kl.handle.PropertyPattern.matches;
-   import static org.kl.handle.PropertyPattern.foreach;
-   import static org.kl.handle.PropertyPattern.of;
+   import org.kl.state.Else;
+   import static org.kl.pattern.PropertyPattern.matches;
+   import static org.kl.pattern.PropertyPattern.foreach;
+   import static org.kl.pattern.PropertyPattern.let;
+   import static org.kl.pattern.PropertyPattern.of;   
 
    Figure figure = new Rectangle();
 
+   let(figure, of("w", "h"), (int w, int h) -> {
+      System.out.println("border: " + w + " " + h));
+   });
+
    matches(figure,
-      Rectangle.class, of("w", 5,  "h", 10), (int w, int h) -> { System.out.println("sqr: " + (w * h)); },
-      Rectangle.class, of("w", 10, "h", 15), (int w, int h) -> { System.out.println("sqr: " + (w * h)); },
-      Circle.class,    of("r"), (int r)  -> { System.out.println("sqr: " + (2 * Math.PI * r)); },
-      Default.class,   ()                -> { System.out.println("Default sqr: " + 0); }
+      Rect.class,    of("w", 5,  "h", 10), (int w, int h) -> System.out.println("sqr: " + (w * h)),
+      Rect.class,    of("w", 10, "h", 15), (int w, int h) -> System.out.println("sqr: " + (w * h)),
+      Circle.class,  of("r"), (int r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
+      Else.class,    ()                -> System.out.println("Default sqr: " + 0)
    );
    
    foreach(listRectangles, of("x", "y"), (int w, int h) -> {
       System.out.println("square: " + (w * h));
    });
 ```
+Also for simplify naming parameters could use another way.
+
+```Java
+
+   Figure figure = new Rect();
+
+   let(figure, Rect::w, Rect::h, (int w, int h) -> {
+      System.out.println("border: " + w + " " + h));
+   });
+
+   matches(figure,
+      Rect.class,    Rect::w, Rect::h, (int w, int h) -> System.out.println("sqr: " + (w * h)),
+      Circle.class,  Circle::r, (int r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
+      Else.class,    ()                  -> System.out.println("Default sqr: " + 0)
+   );
+   
+   foreach(listRectangles, Rect::w, Rect::h, (int w, int h) -> {
+      System.out.println("square: " + (w * h));
+   });
+```
+
 Using Java 11 feature, we can deduce types property parameters.
 
 ```Java
-   import org.kl.state.Default;
-   import static org.kl.handle.PropertyPattern.matches;
-   import static org.kl.handle.PropertyPattern.foreach;
-   import static org.kl.handle.PropertyPattern.of;
-
    Figure figure = new Rectangle();
+   
+   let(figure, Rect::w, Rect::h, (var w, var h) -> {
+      System.out.println("border: " + w + " " + h));
+   });
 
    matches(figure,
-      Rectangle.class, of("w", 5,  "h", 10), (var w, var h) -> { System.out.println("sqr: " + (w * h)); },
-      Rectangle.class, of("w", 10, "h", 15), (var w, var h) -> { System.out.println("sqr: " + (w * h)); },
-      Circle.class,    of("r"), (var r)  -> { System.out.println("sqr: " + (2 * Math.PI * r)); },
-      Default.class,   ()                -> { System.out.println("Default sqr: " + 0); }
+      Rectangle.class, of("w", 5,  "h", 10), (var w, var h) -> System.out.println("sqr: " + (w * h)),
+      Rectangle.class, of("w", 10, "h", 15), (var w, var h) -> System.out.println("sqr: " + (w * h)),
+      Circle.class,    of("r"), (var r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
+      Else.class,      ()                -> System.out.println("Default sqr: " + 0)
    );
    
    foreach(listRectangles, of("x", "y"), (var w, var h) -> {
@@ -281,26 +310,26 @@ Using Java 11 feature, we can deduce types property parameters.
 
 ```Java
     switch (data) {
-      case Circle(5, 5)   -> System.out.println("small circle");
-      case Circle(15, 15) -> System.out.println("middle circle");
-      case null           -> System.out.println("Null value ");
-      default             -> System.out.println("Default value: " + data);
+      case Circle(5)   -> System.out.println("small circle");
+      case Circle(15)  -> System.out.println("middle circle");
+      case null        -> System.out.println("Null value ");
+      default          -> System.out.println("Default value: " + data);
    };
 ```
 
 Using this library developer can write in the following way.
 
 ```Java
-   import org.kl.state.Default;
+   import org.kl.state.Else;
    import org.kl.state.Null;
-   import static org.kl.handle.PositionPattern.matches;
-   import static org.kl.handle.PositionPattern.of;
+   import static org.kl.pattern.PositionPattern.matches;
+   import static org.kl.pattern.PositionPattern.of;
 
    matches(data,           
-      Circle.class,  of(5),   () -> { System.out.println("small circle"); },
-      Circle.class,  of(15),  () -> { System.out.println("middle circle"); },
-      Null.class,    ()       () -> { System.out.println("Null value "); },
-      Default.class, ()       () -> { System.out.println("Default value: " + data); }
+      Circle.class,  of(5),  () -> { System.out.println("small circle"); },
+      Circle.class,  of(15), () -> { System.out.println("middle circle"); },
+      Null.class,            () -> { System.out.println("Null value "); },
+      Else.class,            () -> { System.out.println("Default value: " + data); }
    );
 ```
 
@@ -315,6 +344,42 @@ to be marked with annotation @Exclude. Excluded fields must to be declared last.
       private int temp;
    }
 ```
+*Common pattern* contains general constructions which could be useful.
+
+```Java
+    Rectangle rect = new Rectangle();
+    
+    with(rect) {
+        setWidth(5);
+        setHeight(10);
+    }
+
+    when {
+        side == Side.LEFT  -> System.out.println("left  value"),
+        side == Side.RIGHT -> System.out.println("right value")
+    }
+```
+
+Using this library developer can write in the following way.
+
+```Java
+   import static org.kl.pattern.CommonPattern.with;
+   import static org.kl.pattern.CommonPattern.when;
+
+   Rectangle rect = new Rectangle();
+   
+   with(rect, it -> {
+       it.setWidth(5);
+       it.setHeight(10);
+   });
+   
+   when(
+       side == Side.LEFT,  () -> System.out.println("left  value"),
+       side == Side.RIGHT, () -> System.out.println("right value")
+   );
+```
 
 Requirements:<br/>
 JDK: Java 8
+
+

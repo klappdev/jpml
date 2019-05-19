@@ -4,16 +4,20 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
 import org.kl.error.PatternException;
+import org.kl.lambda.Purchaser;
 import org.kl.shape.*;
-import org.kl.state.Default;
+import org.kl.state.Else;
+import org.kl.state.Null;
+import org.kl.state.Var;
 
 import java.util.*;
 
 import static java.lang.System.out;
-import static org.kl.handle.DeconstructPattern.matches;
-import static org.kl.handle.DeconstructPattern.foreach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.kl.pattern.DeconstructPattern.foreach;
+import static org.kl.pattern.DeconstructPattern.let;
+import static org.kl.pattern.DeconstructPattern.matches;
 
 public class DeconstructPatternTest {
     private static Set<Circle>     listCircles;
@@ -450,6 +454,28 @@ public class DeconstructPatternTest {
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
                 Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); }
         );
+
+        /* 1 - 3 - 2 */
+        figure = new Bipiped();
+
+        matches(figure,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); }
+        );
+
+        /* 2 - 3 - 1 */
+        figure = new Bipiped();
+
+        matches(figure,
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); }
+        );
     }
 
     @Disabled
@@ -460,13 +486,13 @@ public class DeconstructPatternTest {
         /* 1 */
         matches(data,
                 Circle.class,  (Integer r) -> { out.println("Circle square: " + ((int)(2 * Math.PI * r))); },
-                Default.class, () -> { System.out.println("Default value 1 type"); }
+                Else.class, () -> { out.println("Else value 1 type"); }
         );
 
         /* 2 */
         matches(data,
                 Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
-                Default.class,   () -> { System.out.println("Default value 2 type"); }
+                Else.class,   () -> { out.println("Else value 2 type"); }
         );
 
         /* 3 */
@@ -474,35 +500,35 @@ public class DeconstructPatternTest {
                 Parallelepiped.class, (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 3 type"); }
+                Else.class,   () -> { out.println("Else value 3 type"); }
         );
 
         /* 1 - 1 */
         matches(data,
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
-                Default.class,  () -> { System.out.println("Default value 1-1 type"); }
+                Else.class,  () -> { out.println("Else value 1-1 type"); }
         );
 
         /* 1 - 2 */
         matches(data,
                 Circle.class,    (Integer r)            -> { out.println("Circle    square: " + ((int)(2 * Math.PI * r))); },
                 Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
-                Default.class,  () -> { System.out.println("Default value 1-2 type"); }
+                Else.class,  () -> { out.println("Else value 1-2 type"); }
         );
 
         /* 2 - 1 */
         matches(data,
                 Triangle.class, (Double w, Double h) -> { out.println("Triangle square: " + (w * h)); },
                 Quadrate.class, (Integer a)          -> { out.println("Quadrate square: " + (a * a)); },
-                Default.class,  () -> { System.out.println("Default value 2-1 type"); }
+                Else.class,  () -> { out.println("Else value 2-1 type"); }
         );
 
         /* 2 - 2 */
         matches(data,
                 Triangle.class,  (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
                 Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
-                Default.class,  () -> { System.out.println("Default value 2-2 type"); }
+                Else.class,  () -> { out.println("Else value 2-2 type"); }
         );
 
         /* 1 - 3 */
@@ -511,7 +537,7 @@ public class DeconstructPatternTest {
                 Parallelepiped.class, (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,  () -> { System.out.println("Default value 1-3 type"); }
+                Else.class,  () -> { out.println("Else value 1-3 type"); }
         );
 
         /* 3 - 1 */
@@ -520,7 +546,7 @@ public class DeconstructPatternTest {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
                 },
                 Circle.class,         (Integer r) -> { out.println("Circle    square: " + ((int)(2 * Math.PI * r))); },
-                Default.class,  () -> { System.out.println("Default value 3-1 type"); }
+                Else.class,  () -> { out.println("Else value 3-1 type"); }
         );
 
         /* 3 - 3 */
@@ -531,7 +557,7 @@ public class DeconstructPatternTest {
                 Tripiped.class,       (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,  () -> { System.out.println("Default value 3-3 type"); }
+                Else.class,  () -> { out.println("Else value 3-3 type"); }
         );
 
         /* 2 - 3 */
@@ -540,7 +566,7 @@ public class DeconstructPatternTest {
                 Tripiped.class,  (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,  () -> { System.out.println("Default value 2-3 type"); }
+                Else.class,  () -> { out.println("Else value 2-3 type"); }
         );
 
         /* 3 - 2 */
@@ -549,7 +575,7 @@ public class DeconstructPatternTest {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
-                Default.class,  () -> { System.out.println("Default value 3-2 type"); }
+                Else.class,  () -> { out.println("Else value 3-2 type"); }
         );
 
         /* 1 - 1 - 1 */
@@ -557,7 +583,7 @@ public class DeconstructPatternTest {
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
                 Unpiped.class,  (Double u)  -> { out.println("Unpiped  square: " + (u * u)); },
-                Default.class,  () -> { System.out.println("Default value 1-1-1 type"); }
+                Else.class,  () -> { out.println("Else value 1-1-1 type"); }
         );
 
         /* 1 - 1 - 2 */
@@ -565,7 +591,7 @@ public class DeconstructPatternTest {
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
-                Default.class,  () -> { System.out.println("Default value 1-1-2 type"); }
+                Else.class,  () -> { out.println("Else value 1-1-2 type"); }
         );
 
         /* 1 - 2 - 2 */
@@ -573,7 +599,7 @@ public class DeconstructPatternTest {
                 Circle.class,    (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
                 Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
                 Triangle.class,  (Double  w, Double  h) -> { out.println("Triangle  square: " + (w * h)); },
-                Default.class,   () -> { System.out.println("Default value 1-2-2 type"); }
+                Else.class,   () -> { out.println("Else value 1-2-2 type"); }
         );
 
         /* 2 - 2 - 2 */
@@ -581,7 +607,7 @@ public class DeconstructPatternTest {
                 Bipiped.class,   (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
                 Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
                 Triangle.class,  (Double  w, Double  h) -> { out.println("Triangle  square: " + (w * h)); },
-                Default.class,   () -> { System.out.println("Default value 2-2-2 type"); }
+                Else.class,   () -> { out.println("Else value 2-2-2 type"); }
         );
 
         /* 2 - 1 - 1 */
@@ -589,7 +615,7 @@ public class DeconstructPatternTest {
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
-                Default.class,   () -> { System.out.println("Default value 2-1-1 type"); }
+                Else.class,   () -> { out.println("Else value 2-1-1 type"); }
         );
 
         /* 2 - 2 - 1 */
@@ -597,7 +623,7 @@ public class DeconstructPatternTest {
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
                 Bipiped.class,  (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
-                Default.class,   () -> { System.out.println("Default value 2-2-1 type"); }
+                Else.class,   () -> { out.println("Else value 2-2-1 type"); }
         );
 
         /* 2 - 1 - 2 */
@@ -605,7 +631,7 @@ public class DeconstructPatternTest {
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
                 Bipiped.class,  (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
-                Default.class,   () -> { System.out.println("Default value 2-1-2 type"); }
+                Else.class,   () -> { out.println("Else value 2-1-2 type"); }
         );
 
         /* 1 - 2 - 1 */
@@ -613,7 +639,7 @@ public class DeconstructPatternTest {
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
-                Default.class,   () -> { System.out.println("Default value 1-2-1 type"); }
+                Else.class,   () -> { out.println("Else value 1-2-1 type"); }
         );
 
         /* 1 - 1 - 3 */
@@ -623,7 +649,7 @@ public class DeconstructPatternTest {
                 Tripiped.class, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 1-1-3 type"); }
+                Else.class,   () -> { out.println("Else value 1-1-3 type"); }
         );
 
         /* 1 - 3 - 3 */
@@ -635,7 +661,7 @@ public class DeconstructPatternTest {
                 Tripiped.class,  (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 1-3-3 type"); }
+                Else.class,   () -> { out.println("Else value 1-3-3 type"); }
         );
 
         /* 3 - 3 - 3 */
@@ -649,7 +675,7 @@ public class DeconstructPatternTest {
                 Tripiped.class,  (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 3-3-3 type"); }
+                Else.class,   () -> { out.println("Else value 3-3-3 type"); }
         );
 
         /* 3 - 1 - 1 */
@@ -659,7 +685,7 @@ public class DeconstructPatternTest {
                 },
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
-                Default.class,   () -> { System.out.println("Default value 3-1-1 type"); }
+                Else.class,   () -> { out.println("Else value 3-1-1 type"); }
         );
 
         /* 3 - 3 - 1 */
@@ -671,7 +697,7 @@ public class DeconstructPatternTest {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
                 },
                 Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
-                Default.class,   () -> { System.out.println("Default value 3-3-1 type"); }
+                Else.class,   () -> { out.println("Else value 3-3-1 type"); }
         );
 
         /* 3 - 1 - 3 */
@@ -683,7 +709,7 @@ public class DeconstructPatternTest {
                 Parallelepiped.class, (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 3-1-3 type"); }
+                Else.class,   () -> { out.println("Else value 3-1-3 type"); }
         );
 
         /* 1 - 3 - 1 */
@@ -693,7 +719,7 @@ public class DeconstructPatternTest {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
-                Default.class,   () -> { System.out.println("Default value 1-3-1 type"); }
+                Else.class,   () -> { out.println("Else value 1-3-1 type"); }
         );
 
         /* 2 - 2 - 3 */
@@ -703,7 +729,7 @@ public class DeconstructPatternTest {
                 Tripiped.class, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 2-2-3 type"); }
+                Else.class,   () -> { out.println("Else value 2-2-3 type"); }
         );
 
         /* 2 - 3 - 3 */
@@ -715,7 +741,7 @@ public class DeconstructPatternTest {
                 Tripiped.class, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 2-3-3 type"); }
+                Else.class,   () -> { out.println("Else value 2-3-3 type"); }
         );
 
         /* 3 - 2 - 2 */
@@ -725,7 +751,7 @@ public class DeconstructPatternTest {
                 },
                 Triangle.class, (Double w,  Double h) -> { out.println("Triangle  square: " + (w * h)); },
                 Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
-                Default.class,   () -> { System.out.println("Default value 3-2-2 type"); }
+                Else.class,   () -> { out.println("Else value 3-2-2 type"); }
         );
 
         /* 3 - 3 - 2 */
@@ -737,7 +763,7 @@ public class DeconstructPatternTest {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
-                Default.class,   () -> { System.out.println("Default value 3-3-2 type"); }
+                Else.class,   () -> { out.println("Else value 3-3-2 type"); }
         );
 
         /* 3 - 2 - 3 */
@@ -749,7 +775,7 @@ public class DeconstructPatternTest {
                 Tripiped.class, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 3-2-3 type"); }
+                Else.class,   () -> { out.println("Else value 3-2-3 type"); }
         );
 
         /* 2 - 3 - 2 */
@@ -759,7 +785,7 @@ public class DeconstructPatternTest {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
                 },
                 Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
-                Default.class,   () -> { System.out.println("Default value 2-3-2 type"); }
+                Else.class,   () -> { out.println("Else value 2-3-2 type"); }
         );
 
         /* 1 - 2 - 3 */
@@ -769,7 +795,7 @@ public class DeconstructPatternTest {
                 Parallelepiped.class, (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 1-2-3 type"); }
+                Else.class,   () -> { out.println("Else value 1-2-3 type"); }
         );
 
         /* 3 - 2 - 1 */
@@ -779,7 +805,7 @@ public class DeconstructPatternTest {
                 },
                 Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
-                Default.class,   () -> { System.out.println("Default value 3-2-1 type"); }
+                Else.class,   () -> { out.println("Else value 3-2-1 type"); }
         );
 
         /* 2 - 1 - 3 */
@@ -789,7 +815,7 @@ public class DeconstructPatternTest {
                 Parallelepiped.class, (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
                 },
-                Default.class,   () -> { System.out.println("Default value 2-1-3 type"); }
+                Else.class,   () -> { out.println("Else value 2-1-3 type"); }
         );
 
         /* 3 - 1 - 2 */
@@ -799,30 +825,1385 @@ public class DeconstructPatternTest {
                 },
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
                 Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
-                Default.class,  () -> { System.out.println("Default value 3-1-2 type"); }
+                Else.class,  () -> { out.println("Else value 3-1-2 type"); }
+        );
+
+        /* 1 - 3 - 2 */
+        matches(data,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Else.class,  () -> { out.println("Else value 1-3-2 type"); }
+        );
+
+        /* 2 - 3 - 1 */
+        matches(data,
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Else.class,  () -> { out.println("Else value 2-3-1 type"); }
+        );
+    }
+
+    @Disabled
+    @Test
+    public void matchesStatementWithNullDefaultTest() throws PatternException {
+        /* 1 */
+        matches(null,
+                Circle.class,  (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
+                Null.class,    () -> out.println("Null    value 1 type"),
+                Else.class, () -> out.println("Else value 1 type")
+        );
+
+        /* 2 */
+        matches(null,
+                Rectangle.class, (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h)),
+                Null.class,      () -> out.println("Null    value 2 type"),
+                Else.class,   () -> out.println("Else value 2 type")
+        );
+
+        /* 3 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h)),
+                Null.class,           () -> out.println("Null    value 3 type"),
+                Else.class,        () -> out.println("Else value 3 type")
+        );
+
+        /* 1 - 1 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class,     () -> out.println("Null    value 1-1 type"),
+                Else.class,  () -> out.println("Else value 1-1 type")
+        );
+
+        /* 1 - 2 */
+        matches(null,
+                Circle.class,    (Integer r)            -> out.println("Circle    square: " + ((int)(2 * Math.PI * r))),
+                Rectangle.class, (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h)),
+                Null.class,     () -> out.println("Null    value 1-2 type"),
+                Else.class,  () -> out.println("Else value 1-2 type")
+        );
+
+        /* 2 - 1 */
+        matches(null,
+                Triangle.class, (Double w, Double h) -> { out.println("Triangle square: " + (w * h)); },
+                Quadrate.class, (Integer a)          -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class,     () -> out.println("Null    value 2-1 type"),
+                Else.class,  () -> out.println("Else value 2-1 type")
+        );
+
+        /* 2 - 2 */
+        matches(null,
+                Triangle.class,  (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Null.class,     () -> out.println("Null    value 2-2 type"),
+                Else.class,  () -> out.println("Else value 2-2 type")
+        );
+
+        /* 1 - 3 */
+        matches(null,
+                Circle.class,         (Integer r) -> { out.println("Circle    square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,     () -> out.println("Null    value 1-3 type"),
+                Else.class,  () -> out.println("Else value 1-3 type")
+        );
+
+        /* 3 - 1 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,         (Integer r) -> { out.println("Circle    square: " + ((int)(2 * Math.PI * r))); },
+                Null.class,     () -> out.println("Null    value 3-1 type"),
+                Else.class,  () -> out.println("Else value 3-1 type")
+        );
+
+        /* 3 - 3 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,       (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,     () -> out.println("Null    value 3-3 type"),
+                Else.class,  () -> out.println("Else value 3-3 type")
+        );
+
+        /* 2 - 3 */
+        matches(null,
+                Triangle.class,  (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,     () -> out.println("Null    value 2-3 type"),
+                Else.class,  () -> out.println("Else value 2-3 type")
+        );
+
+        /* 3 - 2 */
+        matches(null,
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class,     () -> out.println("Null    value 3-2 type"),
+                Else.class,  () -> out.println("Else value 3-2 type")
+        );
+
+        /* 1 - 1 - 1 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Unpiped.class,  (Double u)  -> { out.println("Unpiped  square: " + (u * u)); },
+                Null.class,     () -> out.println("Null    value 1-1-1 type"),
+                Else.class,  () -> out.println("Else value 1-1-1 type")
+        );
+
+        /* 1 - 1 - 2 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class,     () -> out.println("Null    value 1-1-2 type"),
+                Else.class,  () -> out.println("Else value 1-1-2 type")
+        );
+
+        /* 1 - 2 - 2 */
+        matches(null,
+                Circle.class,    (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Triangle.class,  (Double  w, Double  h) -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class,      () -> out.println("Null    value 1-2-2 type"),
+                Else.class,   () -> out.println("Else value 1-2-2 type")
+        );
+
+        /* 2 - 2 - 2 */
+        matches(null,
+                Bipiped.class,   (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Triangle.class,  (Double  w, Double  h) -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class,      () -> out.println("Null    value 2-2-2 type"),
+                Else.class,   () -> out.println("Else value 2-2-2 type")
+        );
+
+        /* 2 - 1 - 1 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class,      () -> out.println("Null    value 2-1-1 type"),
+                Else.class,   () -> out.println("Else value 2-1-1 type")
+        );
+
+        /* 2 - 2 - 1 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class,      () -> out.println("Null    value 2-2-1 type"),
+                Else.class,   () -> out.println("Else value 2-2-1 type")
+        );
+
+        /* 2 - 1 - 2 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Bipiped.class,  (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Null.class,      () -> out.println("Null    value 2-1-2 type"),
+                Else.class,   () -> out.println("Else value 2-1-2 type")
+        );
+
+        /* 1 - 2 - 1 */
+        matches(null,
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class,      () -> out.println("Null    value 1-2-1 type"),
+                Else.class,   () -> out.println("Else value 1-2-1 type")
+        );
+
+        /* 1 - 1 - 3 */
+        matches(null,
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 1-1-3 type"),
+                Else.class,   () -> out.println("Else value 1-1-3 type")
+        );
+
+        /* 1 - 3 - 3 */
+        matches(null,
+                Quadrate.class,  (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 1-3-3 type"),
+                Else.class,   () -> out.println("Else value 1-3-3 type")
+        );
+
+        /* 3 - 3 - 3 */
+        matches(null,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 3-3-3 type"),
+                Else.class,   () -> out.println("Else value 3-3-3 type")
+        );
+
+        /* 3 - 1 - 1 */
+        matches(null,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class,      () -> out.println("Null    value 3-1-1 type"),
+                Else.class,   () -> out.println("Else value 3-1-1 type")
+        );
+
+        /* 3 - 3 - 1 */
+        matches(null,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class,      () -> out.println("Null    value 3-3-1 type"),
+                Else.class,   () -> out.println("Else value 3-3-1 type")
+        );
+
+        /* 3 - 1 - 3 */
+        matches(null,
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 3-1-3 type"),
+                Else.class,   () -> out.println("Else value 3-1-3 type")
+        );
+
+        /* 1 - 3 - 1 */
+        matches(null,
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class,      () -> out.println("Null    value 1-3-1 type"),
+                Else.class,   () -> out.println("Else value 1-3-1 type")
+        );
+
+        /* 2 - 2 - 3 */
+        matches(null,
+                Triangle.class, (Double w,  Double h) -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 2-2-3 type"),
+                Else.class,   () -> out.println("Else value 2-2-3 type")
+        );
+
+        /* 2 - 3 - 3 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 2-3-3 type"),
+                Else.class,   () -> out.println("Else value 2-3-3 type")
+        );
+
+        /* 3 - 2 - 2 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h) -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Null.class,      () -> out.println("Null    value 3-2-2 type"),
+                Else.class,   () -> out.println("Else value 3-2-2 type")
+        );
+
+        /* 3 - 3 - 2 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class,      () -> out.println("Null    value 3-3-2 type"),
+                Else.class,   () -> out.println("Else value 3-3-2 type")
+        );
+
+        /* 3 - 2 - 3 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 3-2-3 type"),
+                Else.class,   () -> out.println("Else value 3-2-3 type")
+        );
+
+        /* 2 - 3 - 2 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Null.class,      () -> out.println("Null    value 2-3-2 type"),
+                Else.class,   () -> out.println("Else value 2-3-2 type")
+        );
+
+        /* 1 - 2 - 3 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 1-2-3 type"),
+                Else.class,   () -> out.println("Else value 1-2-3 type")
+        );
+
+        /* 3 - 2 - 1 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class,      () -> out.println("Null    value 3-2-1 type"),
+                Else.class,   () -> out.println("Else value 3-2-1 type")
+        );
+
+        /* 2 - 1 - 3 */
+        matches(null,
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class,      () -> out.println("Null    value 2-1-3 type"),
+                Else.class,   () -> out.println("Else value 2-1-3 type")
+        );
+
+        /* 3 - 1 - 2 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Null.class,     () -> out.println("Null    value 3-1-2 type"),
+                Else.class,  () -> out.println("Else value 3-1-2 type")
+        );
+
+        /* 1 - 3 - 2 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Null.class,     () -> out.println("Null    value 1-3-2 type"),
+                Else.class,     () -> out.println("Else value 1-3-2 type")
+        );
+
+        /* 2 - 3 - 1 */
+        matches(null,
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class,     () -> out.println("Null    value 2-3-1 type"),
+                Else.class,     () -> out.println("Else value 2-3-1 type")
+        );
+    }
+
+    @Disabled
+    @Test
+    public void matchesStatementWithVarTest() throws PatternException {
+        String data = "unknown";
+
+        /* 1 */
+        matches(data,
+                Circle.class, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
+                Var.class, (Purchaser<String>) any -> out.println("Var value 1 type")
+        );
+
+        /* 2 */
+        matches(data,
+                Rectangle.class, (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h)),
+                Var.class, (Purchaser<String>) any -> out.println("Var value 2 type")
+        );
+
+        /* 3 */
+        matches(data,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 3 type"); }
+        );
+
+        /* 1 - 1 */
+        matches(data,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 1-1 type"); }
+        );
+
+        /* 1 - 2 */
+        matches(data,
+                Circle.class,    (Integer r)            -> { out.println("Circle    square: " + ((int)(2 * Math.PI * r))); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 1-2 type"); }
+        );
+
+        /* 2 - 1 */
+        matches(data,
+                Triangle.class, (Double w, Double h) -> { out.println("Triangle square: " + (w * h)); },
+                Quadrate.class, (Integer a)          -> { out.println("Quadrate square: " + (a * a)); },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 2-1 type"); }
+        );
+
+        /* 2 - 2 */
+        matches(data,
+                Triangle.class,  (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 2-2 type"); }
+        );
+
+        /* 1 - 3 */
+        matches(data,
+                Circle.class,         (Integer r) -> { out.println("Circle    square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 1-3 type"); }
+        );
+
+        /* 3 - 1 */
+        matches(data,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,         (Integer r) -> { out.println("Circle    square: " + ((int)(2 * Math.PI * r))); },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 3-1 type"); }
+        );
+
+        /* 3 - 3 */
+        matches(data,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,       (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 3-3 type"); }
+        );
+
+        /* 2 - 3 */
+        matches(data,
+                Triangle.class,  (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 2-3 type"); }
+        );
+
+        /* 3 - 2 */
+        matches(data,
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Var.class, (Purchaser<String>) any -> { out.println("Var value 3-2 type"); }
+        );
+
+        /* 1 - 1 - 1 */
+        matches(data,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Unpiped.class,  (Double u)  -> { out.println("Unpiped  square: " + (u * u)); },
+                Var.class, any -> { out.println("Var value 1-1-1 type"); }
+        );
+
+        /* 1 - 1 - 2 */
+        matches(data,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Var.class, any -> { out.println("Var value 1-1-2 type"); }
+        );
+
+        /* 1 - 2 - 2 */
+        matches(data,
+                Circle.class,    (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Triangle.class,  (Double  w, Double  h) -> { out.println("Triangle  square: " + (w * h)); },
+                Var.class, any -> { out.println("Var value 1-2-2 type"); }
+        );
+
+        /* 2 - 2 - 2 */
+        matches(data,
+                Bipiped.class,   (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Triangle.class,  (Double  w, Double  h) -> { out.println("Triangle  square: " + (w * h)); },
+                Var.class, any -> { out.println("Var value 2-2-2 type"); }
+        );
+
+        /* 2 - 1 - 1 */
+        matches(data,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Var.class, any -> { out.println("Var value 2-1-1 type"); }
+        );
+
+        /* 2 - 2 - 1 */
+        matches(data,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Var.class, any -> { out.println("Var value 2-2-1 type"); }
+        );
+
+        /* 2 - 1 - 2 */
+        matches(data,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Bipiped.class,  (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Var.class, any -> { out.println("Var value 2-1-2 type"); }
+        );
+
+        /* 1 - 2 - 1 */
+        matches(data,
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Var.class, any -> { out.println("Var value 1-2-1 type"); }
+        );
+
+        /* 1 - 1 - 3 */
+        matches(data,
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 1-1-3 type"); }
+        );
+
+        /* 1 - 3 - 3 */
+        matches(data,
+                Quadrate.class,  (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 1-3-3 type"); }
+        );
+
+        /* 3 - 3 - 3 */
+        matches(data,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 3-3-3 type"); }
+        );
+
+        /* 3 - 1 - 1 */
+        matches(data,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Var.class, any -> { out.println("Var value 3-1-1 type"); }
+        );
+
+        /* 3 - 3 - 1 */
+        matches(data,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Var.class, any -> { out.println("Var value 3-3-1 type"); }
+        );
+
+        /* 3 - 1 - 3 */
+        matches(data,
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 3-1-3 type"); }
+        );
+
+        /* 1 - 3 - 1 */
+        matches(data,
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Var.class, any -> { out.println("Var value 1-3-1 type"); }
+        );
+
+        /* 2 - 2 - 3 */
+        matches(data,
+                Triangle.class, (Double w,  Double h) -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 2-2-3 type"); }
+        );
+
+        /* 2 - 3 - 3 */
+        matches(data,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 2-3-3 type"); }
+        );
+
+        /* 3 - 2 - 2 */
+        matches(data,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h) -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Var.class, any -> { out.println("Var value 3-2-2 type"); }
+        );
+
+        /* 3 - 3 - 2 */
+        matches(new Bipiped(),
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Var.class, any -> { out.println("Var value 3-3-2 type"); }
+        );
+
+        /* 3 - 2 - 3 */
+        matches(data,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 3-2-3 type"); }
+        );
+
+        /* 2 - 3 - 2 */
+        matches(data,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Var.class, any -> { out.println("Var value 2-3-2 type"); }
+        );
+
+        /* 1 - 2 - 3 */
+        matches(data,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 1-2-3 type"); }
+        );
+
+        /* 3 - 2 - 1 */
+        matches(data,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Var.class, any -> { out.println("Var value 3-2-1 type"); }
+        );
+
+        /* 2 - 1 - 3 */
+        matches(data,
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Var.class, any -> { out.println("Var value 2-1-3 type"); }
+        );
+
+        /* 3 - 1 - 2 */
+        matches(data,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Var.class, any -> { out.println("Var value 3-1-2 type"); }
+        );
+
+        /* 1 - 3 - 2 */
+        matches(data,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Var.class, any -> { out.println("Var value 1-3-2 type"); }
+        );
+
+        /* 2 - 3 - 1 */
+        matches(data,
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Var.class, any -> { out.println("Var value 2-3-1 type"); }
+        );
+    }
+
+    @Disabled
+    @Test
+    public void matchesStatementWithNullVarTest() throws PatternException {
+        String data = "unknown";
+
+        /* 1 */
+        matches(null,
+                Circle.class, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
+                Null.class, () -> out.println("Null value 1 type"),
+                Var.class, any -> out.println("Var  value 1 type")
+        );
+
+        /* 2 */
+        matches(null,
+                Rectangle.class, (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h)),
+                Null.class, () -> out.println("Null value 2 type"),
+                Var.class, any -> out.println("Var  value 2 type")
+        );
+
+        /* 3 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h));
+                },
+                Null.class, () -> out.println("Null value 3 type"),
+                Var.class, any -> out.println("Var  value 3 type")
+        );
+
+        /* 1 - 1 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class, () -> out.println("Null value 1-1 type"),
+                Var.class, any -> out.println("Var  value 1-1 type")
+        );
+
+        /* 1 - 2 */
+        matches(null,
+                Circle.class,    (Integer r) -> out.println("Circle    square: " + ((int)(2 * Math.PI * r))),
+                Rectangle.class, (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h)),
+                Null.class, () -> out.println("Null value 1-2 type"),
+                Var.class, any -> out.println("Var  value 1-2 type")
+        );
+
+        /* 2 - 1 */
+        matches(null,
+                Triangle.class, (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
+                Quadrate.class, (Integer a)          -> out.println("Quadrate square: " + (a * a)),
+                Null.class, () -> out.println("Null value 2-1 type"),
+                Var.class, any -> out.println("Var  value 2-1 type")
+        );
+
+        /* 2 - 2 */
+        matches(null,
+                Triangle.class,  (Double w,  Double h)  -> out.println("Triangle  square: " + (w * h)),
+                Rectangle.class, (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h)),
+                Null.class, () -> out.println("Null value 2-2 type"),
+                Var.class, any -> out.println("Var  value 2-2 type")
+        );
+
+        /* 1 - 3 */
+        matches(null,
+                Circle.class,         (Integer r) -> out.println("Circle    square: " + ((int)(2 * Math.PI * r))),
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 1-3 type"),
+                Var.class, any -> out.println("Var  value 1-3 type")
+        );
+
+        /* 3 - 1 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class, (Integer r) -> out.println("Circle    square: " + ((int)(2 * Math.PI * r))),
+                Null.class, () -> out.println("Null value 3-1 type"),
+                Var.class, any -> out.println("Var  value 3-1 type")
+        );
+
+        /* 3 - 3 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,       (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 3-3 type"),
+                Var.class, any -> out.println("Var  value 3-3 type")
+        );
+
+        /* 2 - 3 */
+        matches(null,
+                Triangle.class,  (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 2-3 type"),
+                Var.class, any -> out.println("Var  value 2-3 type")
+        );
+
+        /* 3 - 2 */
+        matches(null,
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 3-2 type"),
+                Var.class, any -> out.println("Var  value 3-2 type")
+        );
+
+        /* 1 - 1 - 1 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Unpiped.class,  (Double u)  -> { out.println("Unpiped  square: " + (u * u)); },
+                Null.class, () -> out.println("Null value 1-1-1 type"),
+                Var.class, any -> out.println("Var  value 1-1-1 type")
+        );
+
+        /* 1 - 1 - 2 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 1-1-2 type"),
+                Var.class, any -> out.println("Var  value 1-1-2 type")
+        );
+
+        /* 1 - 2 - 2 */
+        matches(null,
+                Circle.class,    (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Triangle.class,  (Double  w, Double  h) -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 1-2-2 type"),
+                Var.class, any -> out.println("Var  value 1-2-2 type")
+        );
+
+        /* 2 - 2 - 2 */
+        matches(null,
+                Bipiped.class,   (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Rectangle.class, (Integer w, Integer h) -> { out.println("Rectangle square: " + (w * h)); },
+                Triangle.class,  (Double  w, Double  h) -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 2-2-2 type"),
+                Var.class, any -> out.println("Var  value 2-2-2 type")
+        );
+
+        /* 2 - 1 - 1 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class, () -> out.println("Null value 2-1-1 type"),
+                Var.class, any -> out.println("Var  value 2-1-1 type")
+        );
+
+        /* 2 - 2 - 1 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class, () -> out.println("Null value 2-2-1 type"),
+                Var.class, any -> out.println("Var  value 2-2-1 type")
+        );
+
+        /* 2 - 1 - 2 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Bipiped.class,  (Short   w, Short   h) -> { out.println("Bipiped  square:  " + (w * h)); },
+                Null.class, () -> out.println("Null value 2-1-2 type"),
+                Var.class, any -> out.println("Var  value 2-1-2 type")
+        );
+
+        /* 1 - 2 - 1 */
+        matches(null,
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class, () -> out.println("Null value 1-2-1 type"),
+                Var.class, any -> out.println("Var  value 1-2-1 type")
+        );
+
+        /* 1 - 1 - 3 */
+        matches(null,
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 1-1-3 type"),
+                Var.class, any -> out.println("Var  value 1-1-3 type")
+        );
+
+        /* 1 - 3 - 3 */
+        matches(null,
+                Quadrate.class,  (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 1-3-3 type"),
+                Var.class, any -> out.println("Var  value 1-3-3 type")
+        );
+
+        /* 3 - 3 - 3 */
+        matches(null,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 3-3-3 type"),
+                Var.class, any -> out.println("Var  value 3-3-3 type")
+        );
+
+        /* 3 - 1 - 1 */
+        matches(null,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class, () -> out.println("Null value 3-1-1 type"),
+                Var.class, any -> out.println("Var  value 3-1-1 type")
+        );
+
+        /* 3 - 3 - 1 */
+        matches(null,
+                Tripiped.class,  (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Null.class, () -> out.println("Null value 3-3-1 type"),
+                Var.class, any -> out.println("Var  value 3-3-1 type")
+        );
+
+        /* 3 - 1 - 3 */
+        matches(null,
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 3-1-3 type"),
+                Var.class, any -> out.println("Var  value 3-1-3 type")
+        );
+
+        /* 1 - 3 - 1 */
+        matches((null),
+                Quadrate.class, (Integer a) -> { out.println("Quadrate square: " + (a * a)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class, () -> out.println("Null value 1-3-1 type"),
+                Var.class, any -> out.println("Var  value 1-3-1 type")
+        );
+
+        /* 2 - 2 - 3 */
+        matches(null,
+                Triangle.class, (Double w,  Double h) -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 2-2-3 type"),
+                Var.class, any -> out.println("Var  value 2-2-3 type")
+        );
+
+        /* 2 - 3 - 3 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 2-3-3 type"),
+                Var.class, any -> out.println("Var  value 2-3-3 type")
+        );
+
+        /* 3 - 2 - 2 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h) -> { out.println("Triangle  square: " + (w * h)); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 3-2-2 type"),
+                Var.class, any -> out.println("Var  value 3-2-2 type")
+        );
+
+        /* 3 - 3 - 2 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 3-3-2 type"),
+                Var.class, any -> out.println("Var  value 3-3-2 type")
+        );
+
+        /* 3 - 2 - 3 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Tripiped.class, (Float w, Float l, Float h) -> {
+                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 3-2-3 type"),
+                Var.class, any -> out.println("Var  value 3-2-3 type")
+        );
+
+        /* 2 - 3 - 2 */
+        matches(null,
+                Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 2-3-2 type"),
+                Var.class, any -> out.println("Var  value 2-3-2 type")
+        );
+
+        /* 1 - 2 - 3 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 2-3-2 type"),
+                Var.class, any -> out.println("Var  value 2-3-2 type")
+        );
+
+        /* 3 - 2 - 1 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class, () -> out.println("Null value 3-2-1 type"),
+                Var.class, any -> out.println("Var  value 3-2-1 type")
+        );
+
+        /* 2 - 1 - 3 */
+        matches(null,
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Null.class, () -> out.println("Null value 2-1-3 type"),
+                Var.class, any -> out.println("Var  value 2-1-3 type")
+        );
+
+        /* 3 - 1 - 2 */
+        matches(null,
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 3-1-2 type"),
+                Var.class, any -> out.println("Var  value 3-1-2 type")
+        );
+
+        /* 1 - 3 - 2 */
+        matches(null,
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Null.class, () -> out.println("Null value 1-3-2 type"),
+                Var.class, any -> out.println("Var  value 1-3-2 type")
+        );
+
+        /* 2 - 3 - 1 */
+        matches(null,
+                Bipiped.class,  (Short  w,  Short  h) -> { out.println("Bipiped   square: " + (w * h)); },
+                Parallelepiped.class, (Short w, Short l, Short h) -> {
+                    out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h ));
+                },
+                Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
+                Null.class, () -> out.println("Null value 2-3-1 type"),
+                Var.class, any -> out.println("Var  value 2-3-1 type")
         );
     }
 
     @Test
+    public void matchesExpressionTest() throws PatternException {
+        Figure figure;
+
+        /* 1 */
+        figure = new Circle(10);
+
+        int result = matches(figure,
+                Circle.class, (Integer r) -> 2 * (r + r)
+        );
+
+        assertEquals(result, 40);
+
+        /* 2 */
+        figure = new Rectangle(5, 10);
+
+        result = matches(figure,
+                Rectangle.class, (Integer w, Integer h) -> w * h
+        );
+
+        assertEquals(result, 25);
+
+        /* 3 */
+        figure = new Parallelepiped((short)5, (short)5, (short)5);
+
+        result = matches(figure,
+                Parallelepiped.class, (Short w, Short l, Short h) -> w * l * h
+        );
+
+        assertEquals(result, 125);
+
+        /* 1 - 1 */
+        figure = new Quadrate(15);
+
+        result = matches(figure,
+                Circle.class,   (Integer r) -> 2 * (r + r),
+                Quadrate.class, (Integer a) -> a * a
+        );
+
+        assertEquals(result, 225);
+
+        /* 1 - 2 */
+        figure = new Rectangle(10, 12);
+
+        result = matches(figure,
+                Circle.class,    (Integer r)            -> 2 * (r + r),
+                Rectangle.class, (Integer w, Integer h) -> w * h
+        );
+
+        assertEquals(result, 120);
+
+        /* 2 - 1 */
+        figure = new Triangle(5D, 15D);
+
+        result = matches(figure,
+                Triangle.class, (Double w, Double h) -> (int) (w * h),
+                Quadrate.class, (Integer a)          -> a * a
+        );
+
+        assertEquals(result, 75);
+
+        /* 2 - 2 */
+        figure = new Rectangle(10, 12);
+
+        result = matches(figure,
+                Triangle.class,  (Double w,  Double h)  -> (int) (w * h),
+                Rectangle.class, (Integer w, Integer h) -> w * h
+        );
+
+        assertEquals(result, 120);
+
+        /* 1 - 3 */
+        figure = new Parallelepiped((short)5, (short)10, (short)5);
+
+        result = matches(figure,
+                Circle.class,         (Integer r) -> 2 * (r + r),
+                Parallelepiped.class, (Short w, Short l, Short h) -> (int) (w * l * h)
+        );
+
+        assertEquals(result, 250);
+
+        /* 3 - 1 */
+        figure = new Circle(5);
+
+        result = matches(figure,
+                Parallelepiped.class, (Short w, Short l, Short h) -> (int) (w * l * h),
+                Circle.class,         (Integer r)                 -> 2 * (r + r)
+        );
+
+        assertEquals(result, 20);
+
+        /* 3 - 3 */
+        figure = new Tripiped(5, 5, 5);
+
+        result = matches(figure,
+                Parallelepiped.class, (Short w, Short l, Short h) -> (int) (w * l * h),
+                Tripiped.class,       (Float w, Float l, Float h) -> (int) (w * l * h)
+        );
+
+        assertEquals(result, 125);
+
+        /* 2 - 3 */
+        figure = new Triangle(5, 5);
+
+        result = matches(figure,
+                Triangle.class,  (Double w,  Double h)       -> (int) (w * h),
+                Tripiped.class,  (Float w, Float l, Float h) -> (int) (w * l * h)
+        );
+
+        assertEquals(result, 25);
+
+        /* 3 - 2 */
+        figure = new Tripiped(5, 5, 5);
+
+        result = matches(figure,
+                Tripiped.class, (Float w, Float l, Float h) -> (int) (w * l * h),
+                Triangle.class, (Double w,  Double h)       -> (int) (w * h)
+        );
+
+        assertEquals(result, 125);
+    }
+
+    @Disabled
+    @Test
     public void foreachLoopTest() throws PatternException {
         /* 1 */
         foreach(listCircles, (Integer r) -> {
-            System.out.println("Circle square: " + (2 * Math.PI * r));
+            out.println("Circle square: " + (2 * Math.PI * r));
         });
 
         /* 2 */
         foreach(listRectangles, (Integer w, Integer h) -> {
-            System.out.println("Rect square: " + (w * h));
+            out.println("Rect square: " + (w * h));
         });
 
         /* 3 */
         foreach(listTripipeds, (Float f, Float s, Float t) -> {
-            System.out.println("Tripiped square: " + (f * s * t));
+            out.println("Tripiped square: " + (f * s * t));
         });
 
-        /* 5 */
+        /* 4 */
         foreach(map, (Integer k, String v) -> {
-            System.out.println("map entry: " + k  + " - " + v);
+            out.println("map entry: " + k  + " - " + v);
+        });
+    }
+
+    @Disabled
+    @Test
+    public void letOperationTest() throws PatternException {
+        /* 1 */
+        Circle circle = new Circle(5);
+
+        let(circle, (Integer r) -> {
+            out.println("radius: " + r);
+        });
+
+        /* 2 */
+        Rectangle rect = new Rectangle(15, 25);
+
+        let(rect, (Integer w, Integer h) -> {
+            out.println("border: " + w + " " + h);
+        });
+
+        /* 3 */
+        Tripiped tripiped = new Tripiped(5, 10, 15);
+
+        let(tripiped, (Float f, Float s, Float t) -> {
+            out.println("border: " + f + " " + s + " " + t);
         });
     }
 }

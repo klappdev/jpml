@@ -8,8 +8,8 @@ import org.kl.shape.Parallelepiped;
 import org.kl.shape.Rectangle;
 
 import static java.lang.System.*;
-import static org.kl.handle.PositionPattern.matches;
-import static org.kl.handle.PositionPattern.of;
+import static org.kl.pattern.PositionPattern.matches;
+import static org.kl.pattern.PositionPattern.of;
 
 
 public class PositionPatternTest {

@@ -4,8 +4,18 @@ import org.kl.meta.Extract;
 import org.kl.type.DoubleRef;
 
 public class Triangle extends Figure {
-    private double width  = 5;
-    private double height = 10;
+    private double width;
+    private double height;
+
+    public Triangle() {
+        this.width  = 5;
+        this.height = 10;
+    }
+
+    public Triangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
 
     @Override
     public int square() {
