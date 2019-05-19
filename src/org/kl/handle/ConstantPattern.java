@@ -1,3 +1,9 @@
+/*
+ * JPML - Java pattern matching library.
+ *
+ * Constant pattern allow test for equality with constants.
+ * Maximum number of branches for match six.
+ */
 package org.kl.handle;
 
 import org.kl.error.PatternException;

@@ -17,7 +17,6 @@ public class PropertyPatternTest {
     private static Set<Unpiped> listUpipeds;
     private static List<Bipiped> listBipipeds;
     private static Queue<Parallelepiped> listParallelepipeds;
-    private static List<Quartangle> listQuartangles;
     private static Map<Integer, String> map;
 
     @BeforeAll
@@ -40,12 +39,6 @@ public class PropertyPatternTest {
             add(new Parallelepiped((short)15, (short)20, (short)25));
         }};
 
-        listQuartangles = new LinkedList<Quartangle>() {{
-            add(new Quartangle((byte)'1', (byte)'2', (byte)'3', (byte)'4'));
-            add(new Quartangle((byte)'3', (byte)'4', (byte)'5', (byte)'6'));
-            add(new Quartangle((byte)'5', (byte)'6', (byte)'7', (byte)'8'));
-        }};
-
         map = new HashMap<Integer, String>() {{
             put(1, "one");
             put(2, "two");
@@ -59,7 +52,6 @@ public class PropertyPatternTest {
         listUpipeds.clear();
         listBipipeds.clear();
         listParallelepipeds.clear();
-        listQuartangles.clear();
         map.clear();
     }
 
@@ -131,11 +123,6 @@ public class PropertyPatternTest {
         });
 
         /* 4 */
-        foreach(listQuartangles, of("a", "b", "c", "d"), (Byte a, Byte b, Byte c, Byte d) -> {
-            System.out.println("Quartangle square: " + (a * b * c * d));
-        });
-
-        /* 5 */
         foreach(map, of("key", "value"), (Integer k, String v) -> {
             System.out.println("map entry: " + k  + " - " + v);
         });

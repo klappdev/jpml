@@ -1,3 +1,9 @@
+/*
+ * JPML - Java pattern matching library.
+ *
+ * Guard pattern allow match type and check condition for the
+ * truth at one time. Maximum number of branches for match six.
+ */
 package org.kl.handle;
 
 import org.kl.reflect.Reflection;

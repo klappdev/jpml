@@ -1,3 +1,9 @@
+/*
+ * JPML - Java pattern matching library.
+ *
+ * Type test pattern allow match type and then extract
+ * value. Maximum number of branches for match six.
+ */
 package org.kl.handle;
 
 import org.kl.lambda.Purchaser;

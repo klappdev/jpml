@@ -1,3 +1,10 @@
+/*
+ * JPML - Java pattern matching library.
+ *
+ * Tuple pattern allow test for equality multiple pieces
+ * with constants. Maximum number of branches for match six
+ * with fourth pieces.
+ */
 package org.kl.handle;
 
 import org.kl.error.PatternException;

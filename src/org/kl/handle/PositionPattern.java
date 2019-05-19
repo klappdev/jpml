@@ -1,3 +1,10 @@
+/*
+ * JPML - Java pattern matching library.
+ *
+ * Position pattern allow match type and check value fields
+ * class in order of declaration. Maximum number of branches
+ * for match three with three value fields.
+ */
 package org.kl.handle;
 
 import org.kl.bean.BiItem;

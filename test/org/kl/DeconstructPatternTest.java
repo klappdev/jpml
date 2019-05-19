@@ -92,15 +92,6 @@ public class DeconstructPatternTest {
                 }
         );
 
-        /* 4 */
-        figure = new Quartangle();
-
-        matches(figure,
-                Quartangle.class, (Byte a, Byte b, Byte c, Byte d) -> {
-                    out.println("Quartangle square: " + (a * b * c * d));
-                }
-        );
-
         /* 1 - 1 */
         figure = new Quadrate();
 
@@ -183,82 +174,6 @@ public class DeconstructPatternTest {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
                 },
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); }
-        );
-
-        /* 1 - 4 */
-        figure = new Quartangle();
-
-        matches(figure,
-                Circle.class,     (Integer r) -> { out.println("Circle  square: " + ((int)(2 * Math.PI * r))); },
-                Quartangle.class, (Byte a, Byte b, Byte c, Byte d) -> {
-                    out.println("Quartangle square: " + (a * b * c * d));
-                }
-        );
-
-        /* 4 - 1 */
-        figure = new Circle();
-
-        matches(figure,
-                Quartangle.class, (Byte a, Byte b, Byte c, Byte d) -> {
-                    out.println("Quartangle square: " + (a * b * c * d));
-                },
-                Circle.class,     (Integer r) -> { out.println("Circle  square: " + ((int)(2 * Math.PI * r))); }
-        );
-
-        /* 4 - 4 */
-        figure = new Quarpiped();
-
-        matches(figure,
-                Quartangle.class, (Byte a, Byte b, Byte c, Byte d) -> {
-                    out.println("Quartangle square: " + (a * b * c * d));
-                },
-                Quarpiped.class,  (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                }
-        );
-
-        /* 2 - 4 */
-        figure = new Triangle();
-
-        matches(figure,
-                Triangle.class,   (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
-                Quarpiped.class,  (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                }
-        );
-
-        /* 4 - 2 */
-        figure = new Quarpiped();
-
-        matches(figure,
-                Quarpiped.class,  (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                },
-                Triangle.class,   (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); }
-        );
-
-        /* 3 - 4 */
-        figure = new Quarpiped();
-
-        matches(figure,
-                Tripiped.class,  (Float w, Float l, Float h) -> {
-                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
-                },
-                Quarpiped.class, (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                }
-        );
-
-        /* 4 - 3 */
-        figure = new Tripiped();
-
-        matches(figure,
-                Quarpiped.class, (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                },
-                Tripiped.class,  (Float w, Float l, Float h) -> {
-                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
-                }
         );
 
         /* 1 - 1 - 1 */
@@ -562,14 +477,6 @@ public class DeconstructPatternTest {
                 Default.class,   () -> { System.out.println("Default value 3 type"); }
         );
 
-        /* 4 */
-        matches(data,
-                Quartangle.class, (Byte a, Byte b, Byte c, Byte d) -> {
-                    out.println("Quartangle square: " + (a * b * c * d));
-                },
-                Default.class,   () -> { System.out.println("Default value 4 type"); }
-        );
-
         /* 1 - 1 */
         matches(data,
                 Circle.class,   (Integer r) -> { out.println("Circle   square: " + ((int)(2 * Math.PI * r))); },
@@ -643,76 +550,6 @@ public class DeconstructPatternTest {
                 },
                 Triangle.class, (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
                 Default.class,  () -> { System.out.println("Default value 3-2 type"); }
-        );
-
-        /* 1 - 4 */
-        matches(data,
-                Circle.class,     (Integer r) -> { out.println("Circle  square: " + ((int)(2 * Math.PI * r))); },
-                Quartangle.class, (Byte a, Byte b, Byte c, Byte d) -> {
-                    out.println("Quartangle square: " + (a * b * c * d));
-                },
-                Default.class,  () -> { System.out.println("Default value 1-4 type"); }
-
-        );
-
-        /* 4 - 1 */
-        matches(data,
-                Quartangle.class, (Byte a, Byte b, Byte c, Byte d) -> {
-                    out.println("Quartangle square: " + (a * b * c * d));
-                },
-                Circle.class,     (Integer r) -> { out.println("Circle  square: " + ((int)(2 * Math.PI * r))); },
-                Default.class,  () -> { System.out.println("Default value 4-1 type"); }
-        );
-
-        /* 4 - 4 */
-        matches(data,
-                Quartangle.class, (Byte a, Byte b, Byte c, Byte d) -> {
-                    out.println("Quartangle square: " + (a * b * c * d));
-                },
-                Quarpiped.class,  (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                },
-                Default.class,  () -> { System.out.println("Default value 4-4 type"); }
-        );
-
-        /* 2 - 4 */
-        matches(data,
-                Triangle.class,   (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
-                Quarpiped.class,  (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                },
-                Default.class,  () -> { System.out.println("Default value 2-4 type"); }
-        );
-
-        /* 4 - 2 */
-        matches(data,
-                Quarpiped.class,  (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                },
-                Triangle.class,   (Double w,  Double h)  -> { out.println("Triangle  square: " + (w * h)); },
-                Default.class,  () -> { System.out.println("Default value 4-2 type"); }
-        );
-
-        /* 3 - 4 */
-        matches(data,
-                Tripiped.class,  (Float w, Float l, Float h) -> {
-                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
-                },
-                Quarpiped.class, (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                },
-                Default.class,  () -> { System.out.println("Default value 3-4 type"); }
-        );
-
-        /* 4 - 3 */
-        matches(data,
-                Quarpiped.class, (Character a, Character b, Character c, Character d) -> {
-                    out.println("Quarpiped  square: " + (a * b * c * d));
-                },
-                Tripiped.class,  (Float w, Float l, Float h) -> {
-                    out.println("Tripiped square: " + 2 * (w * l + l * h + w * h ));
-                },
-                Default.class,  () -> { System.out.println("Default value 4-3 type"); }
         );
 
         /* 1 - 1 - 1 */
@@ -981,11 +818,6 @@ public class DeconstructPatternTest {
         /* 3 */
         foreach(listTripipeds, (Float f, Float s, Float t) -> {
             System.out.println("Tripiped square: " + (f * s * t));
-        });
-
-        /* 4 */
-        foreach(listQuarpiped, (Character a, Character b, Character c, Character d) -> {
-            System.out.println("Quarpiped square: " + (a * b * c * d));
         });
 
         /* 5 */

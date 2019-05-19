@@ -1,3 +1,10 @@
+/*
+ * JPML - Java pattern matching library.
+ *
+ * Property pattern allow match type and access to fields class.
+ * Maximum number of branches for match three with three
+ * value params.
+ */
 package org.kl.handle;
 
 import org.kl.bean.Item;
@@ -117,30 +124,7 @@ public class PropertyPattern {
         }
     }
 
-    public static <T1, T2, T3, T4> QuarItem<T1, T2, T3, T4> of(String firstField, String secondField,
-                                                               String thirdField, String fourthField) {
-        return new QuarItem<>(firstField, secondField, thirdField, fourthField);
-    }
-
-    public static <T1, T2, T3, T4> QuarItem<T1, T2, T3, T4> of(String firstField, T1 firstValue,
-                                                               String secondField, T2 secondValue,
-                                                               String thirdField, T3 thirdValue,
-                                                               String fourthField, T4 fourthValue) {
-        return new QuarItem<>(firstField, firstValue, secondField, secondValue,
-                              thirdField, thirdValue, fourthField, fourthValue);
-    }
-
-    public static <V, T1, T2, T3, T4> void foreach(Collection<V> data, QuarItem<T1, T2, T3, T4> item,
-                                                   QuarConsumer<T1, T2, T3, T4> consumer) throws PatternException {
-        for (V value : data) {
-            Object[] args = prepareFields(value, item.getFirstName(), item.getSecondName(),
-                                                 item.getThirdName(), item.getFourthName());
-
-            consumer.accept((T1) args[0], (T2) args[1], (T3) args[2], (T4) args[3]);
-        }
-    }
-
-    private static <V, C> Object[] prepareFields(V value, String... names) throws PatternException {
+    private static <V> Object[] prepareFields(V value, String... names) throws PatternException {
         return  prepareFields(value, value.getClass(), names);
     }
 
