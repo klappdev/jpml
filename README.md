@@ -344,6 +344,35 @@ to be marked with annotation @Exclude. Excluded fields must to be declared last.
       private int temp;
    }
 ```
+
+*Static pattern* allow match type and deconstruct object using factory methods.
+
+```Java
+   Optional some = ...;
+  
+   switch (some) {
+      case Optional.empty()   -> System.out.println("empty value");
+      case Optional.of(var v) -> System.out.println("value: " + v);
+      default                 -> System.out.println("Default value");
+   };
+```
+
+Using this library developer can write in the following way.
+
+```Java
+   import org.kl.state.Else;
+   import static org.kl.pattern.StaticPattern.matches;
+   import static org.kl.pattern.StaticPattern.of;
+
+   Optional some = ...;
+
+   matches(figure,
+      Optinal.class, of("empty"), ()      -> System.out.println("empty value"),
+      Optinal.class, of("of")   , (var v) -> System.out.println("value: " + v),
+      Else.class,                 ()      -> System.out.println("Default value")
+   );   
+```
+
 *Common pattern* contains general constructions which could be useful.
 
 ```Java
