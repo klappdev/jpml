@@ -11,7 +11,9 @@ import org.kl.error.PatternException;
 import org.kl.reflect.Reflection;
 import org.kl.state.Else;
 
-public class TuplePattern {
+public final class TuplePattern {
+
+    private TuplePattern() {}
 
     public static <V1, V2>
     void matches(V1 leftValue, V2 rightValue,

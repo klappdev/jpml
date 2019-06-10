@@ -9,7 +9,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class CommonPattern {
+public final class CommonPattern {
+
+    private CommonPattern() {}
 
     public static <T> void with(T instance, Consumer<T> consumer) {
         consumer.accept(instance);

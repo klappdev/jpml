@@ -1,7 +1,7 @@
 package org.kl;
 
 import org.junit.jupiter.api.Test;
-import org.kl.bean.Optional;
+import org.kl.util.Optional;
 import static org.kl.pattern.StaticPattern.matches;
 import static org.kl.pattern.StaticPattern.of;
 

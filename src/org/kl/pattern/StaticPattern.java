@@ -1,3 +1,10 @@
+/*
+ * JPML - Java pattern matching library.
+ *
+ * Static pattern allow match type and deconstruct object
+ * using factory methods. Maximum number of branches for
+ * match three with three value params.
+ */
 package org.kl.pattern;
 
 import org.kl.error.PatternException;
@@ -7,9 +14,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-public class StaticPattern {
+public final class StaticPattern {
+
+    private StaticPattern() {}
 
     public static String of(String name) {
         return name;

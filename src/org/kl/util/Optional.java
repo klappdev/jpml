@@ -1,4 +1,4 @@
-package org.kl.bean;
+package org.kl.util;
 
 import org.kl.meta.Extract;
 import org.kl.type.IntRef;

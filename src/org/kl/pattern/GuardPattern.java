@@ -13,7 +13,9 @@ import org.kl.state.Var;
 
 import java.util.function.*;
 
-public class GuardPattern {
+public final class GuardPattern {
+
+    private GuardPattern() {}
 
     public static Predicate<Byte>    lt(byte value)   { return t -> t < value; }
     public static Predicate<Short>   lt(short value)  { return t -> t < value; }

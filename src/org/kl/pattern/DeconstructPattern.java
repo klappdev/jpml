@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.*;
 
-public class DeconstructPattern {
+public final class DeconstructPattern {
+
+    private DeconstructPattern() {}
 
     public static <V, T>
     void foreach(Collection<V> data, Consumer<T> branch) throws PatternException {

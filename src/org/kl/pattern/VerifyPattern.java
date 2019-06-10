@@ -17,7 +17,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class VerifyPattern {
+public final class VerifyPattern {
+
+    private VerifyPattern() {}
 
     @SuppressWarnings("unused")
     private static <T> Consumer<Object> acceptType(Class<T> clazz, Consumer<? super T> consumer) {

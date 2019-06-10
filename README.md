@@ -348,12 +348,12 @@ to be marked with annotation @Exclude. Excluded fields must to be declared last.
 *Static pattern* allow match type and deconstruct object using factory methods.
 
 ```Java
-   Optional some = ...;
+   Expected some = ...;
   
    switch (some) {
-      case Optional.empty()   -> System.out.println("empty value");
-      case Optional.of(var v) -> System.out.println("value: " + v);
-      default                 -> System.out.println("Default value");
+	case Expected.value(var v) -> System.out.println("value: " + v);
+	case Expected.error(var e) -> System.out.println("error: " + e);
+	default                    -> System.out.println("Default value");
    };
 ```
 
@@ -367,9 +367,38 @@ Using this library developer can write in the following way.
    Optional some = ...;
 
    matches(figure,
-      Optinal.class, of("empty"), ()      -> System.out.println("empty value"),
-      Optinal.class, of("of")   , (var v) -> System.out.println("value: " + v),
-      Else.class,                 ()      -> System.out.println("Default value")
+      Expected.class, of("value"), (var v) -> System.out.println("value: " + v),
+      Expected.class, of("error"), (var e) -> System.out.println("error: " + e),
+      Else.class, () -> System.out.println("Default value")
+   );    
+```
+
+*Sequence pattern* allow processing on data sequence.
+
+```Java
+   List<Integer> list = ...;
+  
+   switch (list) {
+      case empty()     -> System.out.println("Empty value");
+      case head(var h) -> System.out.println("list head: " + h);
+      case tail(var t) -> System.out.println("list tail: " + t);      
+      default          -> System.out.println("Default value");
+   };
+```
+
+Using this library developer can write in the following way.
+
+```Java
+   import org.kl.state.Else;
+   import static org.kl.pattern.SequencePattern.matches;
+
+   List<Integer> list = ...;
+
+   matches(figure,
+      empty() ()      -> System.out.println("Empty value"),
+      head(), (var h) -> System.out.println("list head: " + h),
+      tail(), (var t) -> System.out.println("list tail: " + t),      
+      Else.class, ()  -> System.out.println("Default value")
    );   
 ```
 

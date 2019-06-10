@@ -22,7 +22,10 @@ import java.util.function.Function;
 
 import org.kl.lambda.TriConsumer;
 
-public class PropertyPattern {
+public final class PropertyPattern {
+
+    private PropertyPattern() {}
+
     public static <V, T> void foreach(Collection<V> data, Item<T> item,
                                       Consumer<T> consumer) throws PatternException {
         for (V value : data) {

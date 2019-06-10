@@ -16,10 +16,24 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class ConstantPattern {
+public final class ConstantPattern {
+    private static ConstantPattern instance;
 
-    public static <V> void matches(V value,
-                                   V data, Runnable firstBranch) throws PatternException {
+    private static Object value;
+
+    private ConstantPattern() {}
+
+    public static <V> ConstantPattern matches(V other) {
+        value = other;
+
+        if (instance == null) {
+            instance = new ConstantPattern();
+        }
+
+        return instance;
+    }
+
+    public static <V> void matches(V value, V data, Runnable firstBranch) throws PatternException {
         if (!Reflection.checkTypes(data.getClass(), value.getClass())) {
             throw new PatternException("Type in brunches must to be equals");
         }
@@ -27,6 +41,10 @@ public class ConstantPattern {
         if (value.equals(data)) {
             firstBranch.run();
         }
+    }
+
+    public <V> void as(V data, Runnable firstBranch) throws PatternException {
+        matches(value, data, firstBranch);
     }
 
     @SuppressWarnings("unused")

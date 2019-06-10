@@ -16,7 +16,9 @@ import org.kl.meta.Exclude;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public class PositionPattern {
+public final class PositionPattern {
+
+    private PositionPattern() {}
 
     public static <T> Item<T> of(T value) {
         return new Item<>(value);

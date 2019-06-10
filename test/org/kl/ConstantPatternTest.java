@@ -22,12 +22,22 @@ public class ConstantPatternTest {
     @Test
     public void matchesStatementTest() throws PatternException {
         /* 1 */
+
+
         byte value1 = 5;
+        matches(value1).as(
+                (byte) 5, ()  -> System.out.println("safe brunch 1 - " + value1)
+        );
+
         matches(value1,
                 (byte) 5, ()  -> System.out.println("brunch 1 - " + value1)
         );
 
         Figure figure1 = new Circle(5);
+        matches(figure1).as(
+                new Circle(5), ()  -> System.out.println("safe brunch 1 - " + figure1)
+        );
+
         matches(figure1,
                 new Circle(5), ()  -> System.out.println("brunch 1 - " + figure1)
         );
