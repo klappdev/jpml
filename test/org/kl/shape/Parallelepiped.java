@@ -9,8 +9,10 @@ public class Parallelepiped extends Figure {
     private short longitude;
     private short height;
 
-    @Exclude
-    private int temp;
+    @Exclude private int temp;
+    @Exclude private static short staticWidth = 5;
+    @Exclude private static short staticLongitude = 5;
+    @Exclude private static short staticHeight = 10;
 
     public Parallelepiped() {
         this.width = 5;
@@ -34,6 +36,13 @@ public class Parallelepiped extends Figure {
         width.set(this.width);
         longitude.set(this.longitude);
         height.set(this.height);
+    }
+
+    @Extract
+    public static void unapply(ShortRef width, ShortRef longitude, ShortRef height) {
+        width.set(staticWidth);
+        longitude.set(staticLongitude);
+        height.set(staticHeight);
     }
 
     public short width() {

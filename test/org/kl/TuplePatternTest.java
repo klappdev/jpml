@@ -13,7 +13,7 @@ public class TuplePatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementTest() throws PatternException {
+    public void matchesStatementTest()  {
         /* 1 */
         byte width1 = 10;
         String side1 = "top";
@@ -195,7 +195,7 @@ public class TuplePatternTest {
     }
 
     @Test
-    public void matchesStatementWithDefaultTest() throws PatternException {
+    public void matchesStatementWithDefaultTest()  {
         /* 1 */
         byte width1 = 15;
         String side1 = "bottom";

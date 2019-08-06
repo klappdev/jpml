@@ -1,24 +1,297 @@
 package org.kl.reflect;
 
+import org.kl.bean.BiExtractor;
+import org.kl.bean.Extractor;
+import org.kl.bean.TriExtractor;
+import org.kl.error.PatternException;
+import org.kl.lambda.TriConsumer;
+import org.kl.meta.Extract;
+import org.kl.type.*;
+import sun.misc.SharedSecrets;
+import sun.reflect.ConstantPool;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 public class Reflection {
+    private static MethodHandles.Lookup lookup = MethodHandles.lookup();
+    private static MethodHandle methodHandle;
+    private static HashMap<Class<?>, Extraction> cacheExtractors = new HashMap<>();
 
-    public static boolean isPrimitive(Class<?> clazz) {
-        boolean flag = false;
+    public static Object[] invokeUnreferenceExtractor(Consumer<?> consumer, int countParameters) {
+        return invokeUnreferenceExtractor(consumer.getClass(), countParameters);
+    }
 
-        if ((clazz == byte.class   || clazz == Byte.class)      ||
-            (clazz == short.class  || clazz == Short.class)     ||
-            (clazz == int.class    || clazz == Integer.class)   ||
-            (clazz == long.class   || clazz == Long.class)      ||
-            (clazz == float.class  || clazz == Float.class)     ||
-            (clazz == double.class || clazz == Double.class)    ||
-            (clazz == char.class   || clazz == Character.class) ||
-            (clazz == boolean.class || clazz == Boolean.class)) {
-            flag = true;
+    public static Object[] invokeUnreferenceExtractor(BiConsumer<?, ?> consumer, int countParameters) {
+        return invokeUnreferenceExtractor(consumer.getClass(), countParameters);
+    }
+
+    public static Object[] invokeUnreferenceExtractor(TriConsumer<?, ?, ?> consumer, int countParameters) {
+        return invokeUnreferenceExtractor(consumer.getClass(), countParameters);
+    }
+
+    private static Object[] invokeUnreferenceExtractor(Class<?> clazz, int countParameters) {
+        Object[] result;
+        Object[] parameters;
+
+        try {
+            Method method = unreferenceExtractor(clazz, countParameters);
+            parameters = prepareParameters(method.getParameterTypes());
+
+            methodHandle = MethodHandles.lookup().unreflect(method);
+            methodHandle.invokeWithArguments(parameters);
+
+            result = resolveParameters(parameters);
+        } catch (Throwable e) {
+            throw new PatternException("Can't invoke extract method: " + e.getMessage());
         }
 
-        return flag;
+        return result;
     }
-    
+
+    @SuppressWarnings("sunapi")
+    private static Method unreferenceExtractor(Class<?> clazz, int countParameters) {
+        ConstantPool pool = SharedSecrets.getJavaLangAccess().getConstantPool(clazz);
+        int size = pool.getSize();
+
+        for (int i = 1; i < size; i++) {
+            try {
+                Member member = pool.getMethodAt(i);
+
+                if (member instanceof Method && ((Method) member).isAnnotationPresent(Extract.class)) {
+                    Method extractMethod = ((Method) member);
+
+                    System.err.println("\nunreference: " + extractMethod);
+
+                    verifySignatureExtractor(extractMethod);
+                    verifyParametersExtractor(extractMethod, countParameters);
+
+                    return extractMethod;
+                }
+            } catch (IllegalArgumentException e) {
+                /* skip non method entry */
+            }
+        }
+
+        throw new PatternException("Method is not marked as extract");
+    }
+
+    public static <V> Object[] invokeExtractor(V value, int countParameters) {
+        Extraction data = cacheExtractors.computeIfAbsent(value.getClass(),
+                                                          routine -> new Extraction(lookup, routine));
+        switch (countParameters) {
+            case 1: return invokeUnExtractor(value, data);
+            case 2: return invokeBiExtractor(value, data);
+            case 3: return invokeTriExtractor(value, data);
+            default: throw new PatternException("Extract method must not has more than 3 parameters");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <V> Object[] invokeExtractor(V value, String name, int countParameters) {
+        Extraction data = cacheExtractors.computeIfAbsent(value.getClass(),
+                                                          routine -> new Extraction(lookup, routine));
+        switch (countParameters) {
+            case 1: return invokeUnExtractor(value, name, data);
+            case 2: return invokeBiExtractor(value, name, data);
+            case 3: return invokeTriExtractor(value, name, data);
+            default: throw new PatternException("Extract method must not has more than 3 parameters");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> Object[] invokeUnExtractor(V value, String name, Extraction data) {
+        Object[] result = new Object[1];
+
+        for (Extractor extractor : data.getExtractors()) {
+            if (extractor.getName().equals(name)) {
+                Object parameter = extractor.getParameter();
+
+                extractor.getConsumer().accept(value, parameter);
+                result[0] = resolveParameter(parameter);
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> Object[] invokeUnExtractor(V value, Extraction data) {
+        Object[] result = new Object[1];
+
+        for (Extractor extractor : data.getExtractors()) {
+            Object parameter = extractor.getParameter();
+
+            extractor.getConsumer().accept(value, parameter);
+            result[0] = resolveParameter(parameter);
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> Object[] invokeBiExtractor(V value, String name, Extraction data) {
+        Object[] result = new Object[2];
+
+        for (BiExtractor biExtractor : data.getBiExtractors()) {
+            if (biExtractor.getName().equals(name)) {
+                Object[] parameters = biExtractor.getParameters();
+
+                biExtractor.getConsumer().accept(value, parameters[0], parameters[1]);
+                result = resolveParameters(parameters);
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> Object[] invokeBiExtractor(V value, Extraction data) {
+        Object[] result = new Object[2];
+
+        for (BiExtractor biExtractor : data.getBiExtractors()) {
+            Object[] parameters = biExtractor.getParameters();
+
+            biExtractor.getConsumer().accept(value, parameters[0], parameters[1]);
+            result = resolveParameters(parameters);
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> Object[] invokeTriExtractor(V value, String name, Extraction data) {
+        Object[] result = new Object[3];
+
+        for (TriExtractor triExtractor : data.getTriExtractors()) {
+            if (triExtractor.getName().equals(name)) {
+                Object[] parameters = triExtractor.getParameters();
+
+                triExtractor.getConsumer().accept(value, parameters[0], parameters[1], parameters[2]);
+                result = resolveParameters(parameters);
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> Object[] invokeTriExtractor(V value, Extraction data) {
+        Object[] result = new Object[3];
+
+        for (TriExtractor triExtractor : data.getTriExtractors()) {
+            Object[] parameters = triExtractor.getParameters();
+
+            triExtractor.getConsumer().accept(value, parameters[0], parameters[1], parameters[2]);
+            result = resolveParameters(parameters);
+        }
+
+        return result;
+    }
+
+    /*package-private*/ static void verifySignatureExtractor(Method method) {
+        if (method.getReturnType() != void.class) {
+            throw new PatternException("Extract method must not has return value");
+        }
+
+        if (!Modifier.isPublic(method.getModifiers())) {
+            throw new PatternException("Extract method must to be public");
+        }
+    }
+
+    /*package-private*/ static void verifyParametersExtractor(Method method) {
+        Arrays.stream(method.getParameterTypes())
+              .forEach(Reflection::verifyParameterExtractor);
+    }
+
+    private static void verifyParametersExtractor(Method method, int countParameters) {
+        if (method.getParameterCount() != countParameters) {
+            throw new PatternException("Extract method must to have one or more parameters");
+        }
+
+        Arrays.stream(method.getParameterTypes())
+              .forEach(Reflection::verifyParameterExtractor);
+    }
+
+    private static void verifyParameterExtractor(Class<?> clazz) {
+        if (clazz.isArray()) {
+            throw new PatternException("Parameter extract method must not be array");
+        }
+
+        if (isPrimitive(clazz)) {
+            throw new PatternException("Can not pass primitives or wrappers by reference.\n" +
+                                       "Use instead IntRef, FloatRef and etc.");
+        }
+    }
+
+    /*package-private*/ static Object[] prepareParameters(Class<?>[] parameterTypes) {
+        Object[] parameters = new Object[parameterTypes.length];
+
+        for (int i = 0; i < parameterTypes.length; i++) {
+            try {
+                parameters[i] = parameterTypes[i].newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new PatternException("Can not resolve parameters extract method: " + e.getMessage());
+            }
+        }
+
+        return parameters;
+    }
+
+    private static Object[] resolveParameters(Object[] args) {
+        Object[] result = new Object[args.length];
+
+        for (int i = 0; i < args.length; i++) {
+            result[i] = resolveParameter(args[i]);
+        }
+
+        return result;
+    }
+
+    private static Object resolveParameter(Object arg) {
+        Object result;
+
+        if (arg instanceof ByteRef) {
+            result = ((ByteRef) arg).get();
+
+        } else if (arg instanceof ShortRef) {
+            result = ((ShortRef) arg).get();
+
+        } else  if (arg instanceof IntRef) {
+            result = ((IntRef) arg).get();
+
+        } else if (arg instanceof LongRef) {
+            result = ((LongRef) arg).get();
+
+        } else if (arg instanceof FloatRef) {
+            result = ((FloatRef) arg).get();
+
+        } else if (arg instanceof DoubleRef) {
+            result = ((DoubleRef) arg).get();
+
+        } else if (arg instanceof CharRef) {
+            result = ((CharRef) arg).get();
+
+        } else if (arg instanceof BooleanRef) {
+            result = ((BooleanRef) arg).get();
+
+        } else {
+            result = arg;
+        }
+
+        return result;
+    }
+
     public static boolean isPrimitive(Class<?> inClass, Class<?> outClass) {
         boolean flag = false;
 
@@ -33,6 +306,23 @@ public class Reflection {
                 (inClass == boolean.class && outClass == Boolean.class)) {
                 flag = true;
             }
+        }
+
+        return flag;
+    }
+
+    private static boolean isPrimitive(Class<?> clazz) {
+        boolean flag = false;
+
+        if ((clazz == byte.class   || clazz == Byte.class)          ||
+                (clazz == short.class  || clazz == Short.class)     ||
+                (clazz == int.class    || clazz == Integer.class)   ||
+                (clazz == long.class   || clazz == Long.class)      ||
+                (clazz == float.class  || clazz == Float.class)     ||
+                (clazz == double.class || clazz == Double.class)    ||
+                (clazz == char.class   || clazz == Character.class) ||
+                (clazz == boolean.class || clazz == Boolean.class)) {
+            flag = true;
         }
 
         return flag;

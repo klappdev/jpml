@@ -25,7 +25,7 @@ public final class PositionPattern {
     }
 
     public static <V, C, T> void matches(V value, Class<C> clazz,
-                                         Item<T> item, Runnable branch) throws PatternException {
+                                         Item<T> item, Runnable branch)  {
         if (clazz == value.getClass()) {
             Object[] args = prepareFields(value, clazz);
 
@@ -46,7 +46,7 @@ public final class PositionPattern {
     }
 
     public static <V, C, T1, T2> void matches(V value, Class<C> clazz,
-                                              BiItem<T1, T2> item, Runnable branch) throws PatternException {
+                                              BiItem<T1, T2> item, Runnable branch)  {
         if (clazz == value.getClass()) {
             Object[] args = prepareFields(value, clazz);
 
@@ -67,7 +67,7 @@ public final class PositionPattern {
     }
 
     public static <V, C, T1, T2, T3> void matches(V value, Class<C> clazz,
-                                                  TriItem<T1, T2, T3> item, Runnable branch) throws PatternException {
+                                                  TriItem<T1, T2, T3> item, Runnable branch)  {
         if (clazz == value.getClass()) {
             Object[] args = prepareFields(value, clazz);
 
@@ -84,7 +84,7 @@ public final class PositionPattern {
         }
     }
 
-    private static <V, C> Object[] prepareFields(V value, Class<C> clazz) throws PatternException {
+    private static <V, C> Object[] prepareFields(V value, Class<C> clazz) {
         Field[]  fields = clazz.getDeclaredFields();
         Object[] list = new Object[fields.length];
 

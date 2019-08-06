@@ -17,7 +17,7 @@ public final class TuplePattern {
 
     public static <V1, V2>
     void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData, V2 firstRightData, Runnable firstBranch) throws PatternException {
+                 V1 firstLeftData, V2 firstRightData, Runnable firstBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -32,7 +32,7 @@ public final class TuplePattern {
     public static <V1, V2>
     void matches(V1 leftValue, V2 rightValue,
                  V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -48,7 +48,7 @@ public final class TuplePattern {
 
     public static <V1, V2, V3>
     void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch) throws PatternException {
+                 V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -63,7 +63,7 @@ public final class TuplePattern {
     public static <V1, V2, V3>
     void matches(V1 leftValue, V2 middleValue, V3 rightValue,
                  V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -80,7 +80,7 @@ public final class TuplePattern {
     public static <V1, V2, V3, V4>
     void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
                  V1 firstLeftData,  V2 firstBottomData,
-                 V3 firstRightData, V4 firstTopData, Runnable firstBranch) throws PatternException {
+                 V3 firstRightData, V4 firstTopData, Runnable firstBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -99,7 +99,7 @@ public final class TuplePattern {
     void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
                  V1 firstLeftData,  V2 firstBottomData,
                  V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -119,7 +119,7 @@ public final class TuplePattern {
     public static <V1, V2>
     void matches(V1 leftValue, V2 rightValue,
                  V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch) throws PatternException {
+                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass())) {
@@ -138,7 +138,7 @@ public final class TuplePattern {
     void matches(V1 leftValue, V2 rightValue,
                  V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
                  V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass())) {
@@ -159,7 +159,7 @@ public final class TuplePattern {
     public static <V1, V2, V3>
     void matches(V1 leftValue, V2 middleValue, V3 rightValue,
                  V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch) throws PatternException {
+                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
@@ -178,7 +178,7 @@ public final class TuplePattern {
     void matches(V1 leftValue, V2 middleValue, V3 rightValue,
                  V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
                  V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
@@ -201,7 +201,7 @@ public final class TuplePattern {
                  V1 firstLeftData,   V2 firstBottomData,
                  V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
                  V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch) throws PatternException {
+                 V3 secondRightData, V4 secondTopData, Runnable secondBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -227,7 +227,7 @@ public final class TuplePattern {
                  V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
                  V1 secondLeftData,  V2 secondBottomData,
                  V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -254,7 +254,7 @@ public final class TuplePattern {
     public static <V1, V2> void matches(V1 leftValue, V2 rightValue,
                                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
                                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                                V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch) throws PatternException {
+                                V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass(),
@@ -277,7 +277,7 @@ public final class TuplePattern {
                  V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
                  V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                  V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -304,7 +304,7 @@ public final class TuplePattern {
     void matches(V1 leftValue, V2 middleValue, V3 rightValue,
                  V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
                  V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch) throws PatternException {
+                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -327,7 +327,7 @@ public final class TuplePattern {
                  V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
                  V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                  V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -357,7 +357,7 @@ public final class TuplePattern {
                  V1 secondLeftData,  V2 secondBottomData,
                  V3 secondRightData, V4 secondTopData, Runnable secondBranch,
                  V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch) throws PatternException {
+                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -390,7 +390,7 @@ public final class TuplePattern {
                  V3 secondRightData, V4 secondTopData, Runnable secondBranch,
                  V1 thirdLeftData,   V2 thirdBottomData,
                  V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -424,7 +424,7 @@ public final class TuplePattern {
                                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
                                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch) throws PatternException {
+                                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass(),
@@ -450,7 +450,7 @@ public final class TuplePattern {
                                         V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                                         V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
                                         V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                                        Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                                        Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -482,7 +482,7 @@ public final class TuplePattern {
                  V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
                  V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                  V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch) throws PatternException {
+                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -509,7 +509,7 @@ public final class TuplePattern {
                  V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                  V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
                  V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                         firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                         secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -545,7 +545,7 @@ public final class TuplePattern {
                  V1 thirdLeftData,   V2 thirdBottomData,
                  V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
                  V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch) throws PatternException {
+                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(), rightValue.getClass(), topValue.getClass(),
                 firstLeftData.getClass(),  firstBottomData.getClass(),  firstRightData.getClass(),  firstTopData.getClass(),
                 secondLeftData.getClass(), secondBottomData.getClass(), secondRightData.getClass(), secondTopData.getClass(),
@@ -580,7 +580,7 @@ public final class TuplePattern {
                  V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
                  V1 fourthLeftData,  V2 fourthBottomData,
                  V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -622,7 +622,7 @@ public final class TuplePattern {
                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch) throws PatternException {
+                V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -653,7 +653,7 @@ public final class TuplePattern {
                  V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
                  V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
                  V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -690,7 +690,7 @@ public final class TuplePattern {
                  V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                  V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
                  V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch) throws PatternException {
+                 V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -721,7 +721,7 @@ public final class TuplePattern {
                  V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
                  V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
                  V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -763,7 +763,7 @@ public final class TuplePattern {
                  V1 fourthLeftData,  V2 fourthBottomData,
                  V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
                  V1 fifthLeftData,   V2 fifthBottomData,
-                 V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch) throws PatternException {
+                 V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -810,7 +810,7 @@ public final class TuplePattern {
                  V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
                  V1 fifthLeftData,   V2 fifthBottomData,
                  V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -858,7 +858,7 @@ public final class TuplePattern {
                                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
                                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
                                 V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-                                V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch) throws PatternException {
+                                V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass(),
@@ -893,7 +893,7 @@ public final class TuplePattern {
                  V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
                  V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
                  V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -935,7 +935,7 @@ public final class TuplePattern {
                  V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
                  V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
                  V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-                 V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch) throws PatternException {
+                 V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -970,7 +970,7 @@ public final class TuplePattern {
                  V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
                  V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
                  V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -1018,7 +1018,7 @@ public final class TuplePattern {
                  V1 fifthLeftData,   V2 fifthBottomData,
                  V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
                  V1 sixthLeftData,   V2 sixthBottomData,
-                 V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch) throws PatternException {
+                 V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(), rightValue.getClass(), topValue.getClass(),
                 firstLeftData.getClass(),  firstBottomData.getClass(),  firstRightData.getClass(),  firstTopData.getClass(),
                 secondLeftData.getClass(), secondBottomData.getClass(), secondRightData.getClass(), secondTopData.getClass(),
@@ -1065,7 +1065,7 @@ public final class TuplePattern {
                  V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
                  V1 sixthLeftData,   V2 sixthBottomData,
                  V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) throws PatternException {
+                 Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),   firstBottomData.getClass(),

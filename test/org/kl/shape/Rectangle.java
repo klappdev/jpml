@@ -7,6 +7,9 @@ public class Rectangle extends Figure {
     private int width;
     private int height;
 
+    private static int staticWidth  = 5;
+    private static int staticHeight = 10;
+
     public Rectangle() {
         this.width  = 5;
         this.height = 10;
@@ -26,6 +29,12 @@ public class Rectangle extends Figure {
     public void deconstruct(IntRef width, IntRef height) {
         width.set(this.width);
         height.set(this.height);
+    }
+
+    @Extract
+    public static void unapply(IntRef width, IntRef height) {
+        width.set(staticWidth);
+        height.set(staticHeight);
     }
 
     public void setHeight(int height) {

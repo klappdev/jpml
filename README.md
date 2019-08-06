@@ -348,30 +348,52 @@ to be marked with annotation @Exclude. Excluded fields must to be declared last.
 *Static pattern* allow match type and deconstruct object using factory methods.
 
 ```Java
-   Expected some = ...;
-  
+   
    switch (some) {
-	case Expected.value(var v) -> System.out.println("value: " + v);
-	case Expected.error(var e) -> System.out.println("error: " + e);
-	default                    -> System.out.println("Default value");
+      case Rect.as(int w, int h) -> System.out.println("square: " + (w * h));
+      case Circle.as(int r)      -> System.out.println("square: " + (2 * Math.PI * r));
+      default                    -> System.out.println("Default square: " + 0);
    };
 ```
 
 Using this library developer can write in the following way.
 
 ```Java
-   import org.kl.state.Else;
    import static org.kl.pattern.StaticPattern.matches;
    import static org.kl.pattern.StaticPattern.of;
 
-   Optional some = ...;
-
    matches(figure,
-      Expected.class, of("value"), (var v) -> System.out.println("value: " + v),
-      Expected.class, of("error"), (var e) -> System.out.println("error: " + e),
-      Else.class, () -> System.out.println("Default value")
+      Rect.class,   of("unapply"), (int w, int h) -> out.println("square: " + (w * h)),
+      Circle.class, of("unapply"), (int r)        -> out.println("square: " + (2 * Math.PI * r)),
+      Else.class, ()                              -> System.out.println("Default square: " + 0)
    );    
 ```
+Also for simplify naming deconstruct method could use another way.
+
+```Java
+   matches(figure,
+      Rect.class,   Rect::unapply, (int w, int h) -> out.println("square: " + (w * h)),
+      Circle.class, Circle::unapply, (int r)      -> out.println("square: " + (2 * Math.PI * r)),
+      Else.class,   ()                            -> System.out.println("Default square: " + 0)
+   );
+```
+
+Also this pattern give simplify work with Optional<<V>>, Expected<T, E>.
+	
+```Java
+   import org.kl.util.Expected;
+   import java.util.Optional;
+
+   matches(value,
+      Optional::empty, () -> out.println("empty"),
+      Optional::get,    v -> out.println("value: " + v)
+   );
+   
+   matches(value,
+      Optional::error, e -> out.println("get error: " + e),
+      Optional::value, v -> out.println("get value: " + v)
+   );
+```	
 
 *Sequence pattern* allow processing on data sequence.
 
@@ -379,10 +401,13 @@ Using this library developer can write in the following way.
    List<Integer> list = ...;
   
    switch (list) {
-      case empty()     -> System.out.println("Empty value");
-      case head(var h) -> System.out.println("list head: " + h);
-      case tail(var t) -> System.out.println("list tail: " + t);      
-      default          -> System.out.println("Default value");
+      case empty()       -> System.out.println("Empty value");
+      case head(var h)   -> System.out.println("list head: " + h);
+      case middle(var m) -> out.println("middle list:" + m),
+      case tail(var t)   -> out.println("tail list:  " + t),
+      case at(1, var i)  -> out.println("at list:    " + i),
+      case edges(var f, var l) -> out.println("edges: " + f + " - " + l)      
+      default            -> System.out.println("Default value");
    };
 ```
 
@@ -395,9 +420,12 @@ Using this library developer can write in the following way.
    List<Integer> list = ...;
 
    matches(figure,
-      empty() ()      -> System.out.println("Empty value"),
-      head(), (var h) -> System.out.println("list head: " + h),
-      tail(), (var t) -> System.out.println("list tail: " + t),      
+      empty()   ()      -> System.out.println("Empty value"),
+      head(),   (var h) -> System.out.println("list head: " + h),
+      middle(), (var m) -> out.println("middle list:" + m),
+      tail(),   (var t) -> out.println("tail list:  " + t),
+      at(1),    (var i) -> out.println("at list:    " + i),
+      edges(),  (var f, var l) -> out.println("edges: " + f + " - " + l)
       Else.class, ()  -> System.out.println("Default value")
    );   
 ```
@@ -438,6 +466,6 @@ Using this library developer can write in the following way.
 ```
 
 Requirements:<br/>
-JDK: Java 8
+JDK: Java 8, 11
 
 

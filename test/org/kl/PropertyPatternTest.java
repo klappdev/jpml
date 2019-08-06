@@ -57,7 +57,7 @@ public class PropertyPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementTest() throws PatternException {
+    public void matchesStatementTest()  {
         Figure figure;
 
         /* 1 */
@@ -107,7 +107,7 @@ public class PropertyPatternTest {
 
     @Disabled
     @Test
-    public void foreachLoopTest() throws PatternException {
+    public void foreachLoopTest()  {
         /* 1 */
         foreach(listUpipeds, of("radius"), (Double r) -> {
             System.out.println("Upiped square I: " + (2 * Math.PI * r));
@@ -142,7 +142,7 @@ public class PropertyPatternTest {
     }
 
     @Test
-    public void letOperationTest() throws PatternException {
+    public void letOperationTest()  {
         /* 1 */
         Unpiped unpiped = new Unpiped(5);
 

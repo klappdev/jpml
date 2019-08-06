@@ -70,7 +70,7 @@ public class DeconstructPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementTest() throws PatternException {
+    public void matchesStatementTest()  {
         Figure figure;
 
         /* 1 */
@@ -480,7 +480,7 @@ public class DeconstructPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementWithDefaultTest() throws PatternException {
+    public void matchesStatementWithDefaultTest()  {
         String data = "unknown";
 
         /* 1 */
@@ -851,7 +851,7 @@ public class DeconstructPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementWithNullDefaultTest() throws PatternException {
+    public void matchesStatementWithNullDefaultTest()  {
         /* 1 */
         matches(null,
                 Circle.class,  (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
@@ -1257,7 +1257,7 @@ public class DeconstructPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementWithVarTest() throws PatternException {
+    public void matchesStatementWithVarTest()  {
         String data = "unknown";
 
         /* 1 */
@@ -1628,7 +1628,7 @@ public class DeconstructPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementWithNullVarTest() throws PatternException {
+    public void matchesStatementWithNullVarTest()  {
         String data = "unknown";
 
         /* 1 */
@@ -2037,7 +2037,7 @@ public class DeconstructPatternTest {
     }
 
     @Test
-    public void matchesExpressionTest() throws PatternException {
+    public void matchesExpressionTest()  {
         Figure figure;
 
         /* 1 */
@@ -2160,7 +2160,7 @@ public class DeconstructPatternTest {
 
     @Disabled
     @Test
-    public void foreachLoopTest() throws PatternException {
+    public void foreachLoopTest()  {
         /* 1 */
         foreach(listCircles, (Integer r) -> {
             out.println("Circle square: " + (2 * Math.PI * r));
@@ -2184,7 +2184,7 @@ public class DeconstructPatternTest {
 
     @Disabled
     @Test
-    public void letOperationTest() throws PatternException {
+    public void letOperationTest()  {
         /* 1 */
         Circle circle = new Circle(5);
 

@@ -1008,7 +1008,7 @@ public final class SequencePattern {
     }
 
     public <E> void as(Provider<Edge<E>> supplier, BiConsumer<E, E> branch) {
-            branch.accept(supplier.take().getFirst(), supplier.take().getLast());
+        branch.accept(supplier.take().getFirst(), supplier.take().getLast());
     }
 
     public static <K, V> void matches(Map<K, V> data, Provider<Edge<Map.Entry<K, V>>> supplier,

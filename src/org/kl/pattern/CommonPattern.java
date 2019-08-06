@@ -1,9 +1,6 @@
 package org.kl.pattern;
 
-import org.kl.error.PatternException;
-import org.kl.reflect.Reflection;
 import org.kl.state.Else;
-import org.kl.type.*;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -412,64 +409,5 @@ public final class CommonPattern {
         }
 
         return defaultBranch.get();
-    }
-
-    /*package-private*/ static Object[] prepareParameters(Class<?>[] parameterTypes) throws PatternException {
-        Object[] parameters = new Object[parameterTypes.length];
-
-        for (int i = 0; i < parameterTypes.length; i++) {
-            if (parameterTypes[i].isArray()) {
-                throw new PatternException("Parameter extract method must not be array");
-            }
-
-            if (Reflection.isPrimitive(parameterTypes[i])) {
-                throw new PatternException("Can not pass primitives or wrappers by reference.\n" +
-                        "Use instead IntRef, FloatRef and etc.");
-            }
-
-            try {
-                parameters[i] = parameterTypes[i].newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new PatternException("Can not resolveParameters parameters extract method: " + e.getMessage());
-            }
-        }
-
-        return parameters;
-    }
-
-    /*package-private*/ static Object[] resolveParameters(Object[] args) {
-        Object[] result = new Object[args.length];
-
-        for (int i = 0; i < args.length; i++) {
-            if (args[i] instanceof ByteRef) {
-                result[i] = ((ByteRef) args[i]).get();
-
-            } else if (args[i] instanceof ShortRef) {
-                result[i] = ((ShortRef) args[i]).get();
-
-            } else  if (args[i] instanceof IntRef) {
-                result[i] = ((IntRef) args[i]).get();
-
-            } else if (args[i] instanceof LongRef) {
-                result[i] = ((LongRef) args[i]).get();
-
-            } else if (args[i] instanceof FloatRef) {
-                result[i] = ((FloatRef) args[i]).get();
-
-            } else if (args[i] instanceof DoubleRef) {
-                result[i] = ((DoubleRef) args[i]).get();
-
-            } else if (args[i] instanceof CharRef) {
-                result[i] = ((CharRef) args[i]).get();
-
-            } else if (args[i] instanceof BooleanRef) {
-                result[i] = ((BooleanRef) args[i]).get();
-
-            } else {
-                result[i] = args[i];
-            }
-        }
-
-        return result;
     }
 }

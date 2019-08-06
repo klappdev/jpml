@@ -7,6 +7,9 @@ public class Triangle extends Figure {
     private double width;
     private double height;
 
+    private static int staticWidth  = 5;
+    private static int staticHeight = 10;
+
     public Triangle() {
         this.width  = 5;
         this.height = 10;
@@ -26,5 +29,11 @@ public class Triangle extends Figure {
     public void deconstruct(DoubleRef width, DoubleRef height) {
         width.set(this.width);
         height.set(this.height);
+    }
+
+    @Extract
+    public static void unapply(DoubleRef width, DoubleRef height) {
+        width.set(staticWidth);
+        height.set(staticHeight);
     }
 }

@@ -27,7 +27,7 @@ public final class PropertyPattern {
     private PropertyPattern() {}
 
     public static <V, T> void foreach(Collection<V> data, Item<T> item,
-                                      Consumer<T> consumer) throws PatternException {
+                                      Consumer<T> consumer)  {
         for (V value : data) {
             Object[] args = prepareFields(value, item.getName());
 
@@ -45,7 +45,7 @@ public final class PropertyPattern {
     }
 
     public static <V, T> void let(V data, Item<T> item,
-                                  Consumer<T> consumer) throws PatternException {
+                                  Consumer<T> consumer)  {
         Object[] args = prepareFields(data, item.getName());
 
         consumer.accept((T) args[0]);
@@ -67,7 +67,7 @@ public final class PropertyPattern {
     }
 
     public static <V, C, T> void matches(V value, Class<C> clazz,
-                                         Item<T> item, Consumer<T> consumer) throws PatternException {
+                                         Item<T> item, Consumer<T> consumer)  {
         if (clazz == value.getClass()) {
             Object[] args = prepareFields(value, clazz, item.getName());
 
@@ -80,7 +80,7 @@ public final class PropertyPattern {
     }
 
     public static <V, T1, T2> void foreach(Collection<V> data, BiItem<T1, T2> item,
-                                           BiConsumer<T1, T2> consumer) throws PatternException {
+                                           BiConsumer<T1, T2> consumer)  {
         for (V value : data) {
             Object[] args = prepareFields(value, item.getFirstName(), item.getSecondName());
 
@@ -106,7 +106,7 @@ public final class PropertyPattern {
     }
 
     public static <V, T1, T2> void let(V data, BiItem<T1, T2> item,
-                                       BiConsumer<T1, T2> consumer) throws PatternException {
+                                       BiConsumer<T1, T2> consumer)  {
         Object[] args = prepareFields(data, item.getFirstName(), item.getSecondName());
 
         consumer.accept((T1) args[0], (T2) args[1]);
@@ -129,7 +129,7 @@ public final class PropertyPattern {
     }
 
     public static <V, C, T1, T2> void matches(V value, Class<C> clazz, BiItem<T1, T2> item,
-                                              BiConsumer<T1, T2> consumer) throws PatternException {
+                                              BiConsumer<T1, T2> consumer)  {
         if (clazz == value.getClass()) {
             Object[] args = prepareFields(value, clazz, item.getFirstName(), item.getSecondName());
 
@@ -142,7 +142,7 @@ public final class PropertyPattern {
     }
 
     public static <V, T1, T2, T3> void foreach(Collection<V> data, TriItem<T1, T2, T3> item,
-                                               TriConsumer<T1, T2, T3> consumer) throws PatternException {
+                                               TriConsumer<T1, T2, T3> consumer)  {
         for (V value : data) {
             Object[] args = prepareFields(value, item.getFirstName(), item.getSecondName(), item.getThirdName());
 
@@ -163,7 +163,7 @@ public final class PropertyPattern {
     }
 
     public static <V, T1, T2, T3> void let(V data, TriItem<T1, T2, T3> item,
-                                           TriConsumer<T1, T2, T3> consumer) throws PatternException {
+                                           TriConsumer<T1, T2, T3> consumer)  {
         Object[] args = prepareFields(data, item.getFirstName(), item.getSecondName(), item.getThirdName());
 
         consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
@@ -190,7 +190,7 @@ public final class PropertyPattern {
     }
 
     public static <V, C, T1, T2, T3> void matches(V value, Class<C> clazz, TriItem<T1, T2, T3> item,
-                                                  TriConsumer<T1, T2, T3> consumer) throws PatternException {
+                                                  TriConsumer<T1, T2, T3> consumer)  {
         if (clazz == value.getClass()) {
             Object[] args = prepareFields(value, clazz, item.getFirstName(), item.getSecondName(), item.getThirdName());
 
@@ -203,11 +203,11 @@ public final class PropertyPattern {
         }
     }
 
-    private static <V> Object[] prepareFields(V value, String... names) throws PatternException {
+    private static <V> Object[] prepareFields(V value, String... names)  {
         return  prepareFields(value, value.getClass(), names);
     }
 
-    private static <V, C> Object[] prepareFields(V value, Class<C> clazz, String... names) throws PatternException {
+    private static <V, C> Object[] prepareFields(V value, Class<C> clazz, String... names)  {
         Object[] list = new Object[names.length];
 
         for (int i = 0; i < names.length; i++) {

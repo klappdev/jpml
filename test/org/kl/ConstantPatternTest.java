@@ -20,7 +20,7 @@ import static org.kl.pattern.ConstantPattern.matches;
 public class ConstantPatternTest {
 
     @Test
-    public void matchesStatementTest() throws PatternException {
+    public void matchesStatementTest()  {
         /* 1 */
 
 
@@ -112,7 +112,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementWithDefaultTest() throws PatternException {
+    public void matchesStatementWithDefaultTest()  {
         /* 1 */
         byte value1 = 10;
         matches(value1,
@@ -173,7 +173,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementWithVarTest() throws PatternException {
+    public void matchesStatementWithVarTest()  {
         /* 1 */
         byte value1 = 10;
         matches(value1,
@@ -234,7 +234,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementWithNullDefaultTest() throws PatternException {
+    public void matchesStatementWithNullDefaultTest()  {
         /* 1 */
         matches(null,
                 (byte) 5,      () -> System.out.println("brunch 1"),
@@ -295,7 +295,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesStatementWithNullVarTest() throws PatternException {
+    public void matchesStatementWithNullVarTest()  {
         /* 1 */
         matches(null,
                 (byte) 5,   () -> System.out.println("brunch 1"),
@@ -356,7 +356,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesExpressionTest() throws PatternException {
+    public void matchesExpressionTest()  {
         /* 1 */
         byte value1  = 5;
         byte result1 = matches(value1,
@@ -423,7 +423,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesExpressionWithDefaultTest() throws PatternException {
+    public void matchesExpressionWithDefaultTest()  {
         /* 1 */
         byte value1  = 10;
         byte result1 = matches(value1,
@@ -496,7 +496,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesExpressionWithVarTest() throws PatternException {
+    public void matchesExpressionWithVarTest()  {
         /* 1 */
         byte value1 = 10;
         byte result1 = matches(value1,
@@ -569,7 +569,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesExpressionWithNullDefaultTest() throws PatternException {
+    public void matchesExpressionWithNullDefaultTest()  {
         /* 1 */
         byte result1 = matches(null,
                 (byte) 5,      () -> (byte) 1,
@@ -642,7 +642,7 @@ public class ConstantPatternTest {
 
     @Disabled
     @Test
-    public void matchesExpressionWithNullVarTest() throws PatternException {
+    public void matchesExpressionWithNullVarTest()  {
         /* 1 */
         byte result1 = matches(null,
                 (byte) 5,   () -> (byte) 1,

@@ -6,6 +6,8 @@ import org.kl.type.IntRef;
 public class Quadrate extends Figure {
     private int width;
 
+    private static int staticWidth = 5;
+
     public Quadrate() {
         this.width = 10;
     }
@@ -22,5 +24,10 @@ public class Quadrate extends Figure {
     @Extract
     public void deconstruct(IntRef width) {
         width.set(this.width);
+    }
+
+    @Extract
+    public static void unapply(IntRef width) {
+        width.set(staticWidth);
     }
 }

@@ -15,7 +15,7 @@ import static org.kl.pattern.PositionPattern.of;
 public class PositionPatternTest {
 
     @Test
-    public void matchesStatementTest() throws PatternException {
+    public void matchesStatementTest()  {
         Figure figure;
 
         /* 1 */
