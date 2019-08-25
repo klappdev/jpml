@@ -7,6 +7,7 @@
  */
 package org.kl.pattern;
 
+import org.kl.error.PatternException;
 import org.kl.lambda.TriConsumer;
 import org.kl.lambda.TriFunction;
 import org.kl.reflect.Reflection;
@@ -94,7 +95,7 @@ public final class StaticPattern {
             return firstBranch.apply((T) args[0]);
         }
 
-        return null;
+        throw new PatternException("Expression must to have only one branch");
     }
 
     public static <V, C, T1, T2, R>
@@ -105,7 +106,17 @@ public final class StaticPattern {
             return firstBranch.apply((T2) args[0]);
         }
 
-        return null;
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C, T, R>
+    R as(Class<C> clazz, String name, Function<T, R> firstBranch)  {
+        return matches(data, clazz, name, firstBranch);
+    }
+
+    public <C, T1, T2, R>
+    R as(Class<C> clazz, Consumer<T1> consumer, Function<T2, R> firstBranch) {
+        return matches(data, clazz, consumer, firstBranch);
     }
 
     public static <V, C, T1, T2>
@@ -144,7 +155,7 @@ public final class StaticPattern {
             return firstBranch.apply((T1) args[0], (T2) args[1]);
         }
 
-        return null;
+        throw new PatternException("Expression must to have only one branch");
     }
 
     public static <V, C, T1, T2, T3, T4, R>
@@ -155,7 +166,17 @@ public final class StaticPattern {
             return firstBranch.apply((T3) args[0], (T4) args[1]);
         }
 
-        return null;
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C, T1, T2, R>
+    R as(Class<C> clazz, String name, BiFunction<T1, T2, R> firstBranch)  {
+        return matches(data, clazz, name, firstBranch);
+    }
+
+    public <C, T1, T2, T3, T4, R>
+    R as(Class<C> clazz, BiConsumer<T1, T2> consumer, BiFunction<T3, T4, R> firstBranch) {
+        return matches(data, clazz, consumer, firstBranch);
     }
 
     public static <V, C, T1, T2, T3>
@@ -194,7 +215,7 @@ public final class StaticPattern {
             return firstBranch.apply((T1) args[0], (T2) args[1], (T3) args[2]);
         }
 
-        return null;
+        throw new PatternException("Expression must to have only one branch");
     }
 
     public static <V, C, T1, T2, T3, T4, T5, T6, R>
@@ -205,7 +226,17 @@ public final class StaticPattern {
             return firstBranch.apply((T4) args[0], (T5) args[1], (T6) args[2]);
         }
 
-        return null;
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C, T1, T2, T3, R>
+    R as(Class<C> clazz, String name, TriFunction<T1, T2, T3, R> firstBranch)  {
+        return matches(data, clazz, name, firstBranch);
+    }
+
+    public <C, T1, T2, T3, T4, T5, T6, R>
+    R as(Class<C> clazz, TriConsumer<T1, T2, T3> consumer, TriFunction<T4, T5, T6, R> firstBranch) {
+        return matches(data, clazz, consumer, firstBranch);
     }
 
     public static <V, C1, C2, T1, T2>
@@ -216,9 +247,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 1);
 
             firstBranch.accept((T1) args[0]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 1);
 
             secondBranch.accept((T2) args[0]);
@@ -292,7 +321,26 @@ public final class StaticPattern {
             return secondBranch.apply((T2) args[0]);
         }
 
-        return null;
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, R>
+    R matches(V value,
+              Class<C1> firstClazz,  Consumer<T1> firstConsumer,  Function<T2, R> firstBranch,
+              Class<C2> secondClazz, Consumer<T3> secondConsumer, Function<T4, R> secondBranch)  {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 1);
+
+            return firstBranch.apply((T2) args[0]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 1);
+
+            return secondBranch.apply((T4) args[0]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
     }
 
     public static <V, T, R>
@@ -322,6 +370,40 @@ public final class StaticPattern {
         }
     }
 
+    public <C1, C2, T1, T2, T3, R>
+    R as(Class<C1> firstClazz,  String firstName,  Function<T1, R> firstBranch,
+         Class<C2> secondClazz, String secondName, Function<T2, R> secondBranch)  {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, R>
+    R as(Class<C1> firstClazz,  Consumer<T1> firstConsumer,  Function<T2, R> firstBranch,
+         Class<C2> secondClazz, Consumer<T3> secondConsumer, Function<T4, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <V, T, R>
+    R as(Supplier<Optional<V>> supplier,    Supplier<R> firstBranch,
+         Function<Optional<V>, T> function, Function<T, R> secondBranch)  {
+        return matches((Optional<V>) optionalData,
+                       supplier, firstBranch,
+                       function,secondBranch);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T, E extends Throwable, R>
+    R as(Function<Expected<T, E>, E> firstFunction,  Function<E, R> firstBranch,
+         Function<Expected<T, E>, T> secondFunction, Function<T, R> secondBranch) {
+        return matches((Expected<T, E>) expectedData,
+                       firstFunction, firstBranch,
+                       secondFunction,secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3>
     void matches(V value,
                  Class<C1> firstClazz,  String firstName,  Consumer<T1> firstBranch,
@@ -330,9 +412,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 1);
 
             firstBranch.accept((T1) args[0]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 2);
 
             secondBranch.accept((T2) args[0], (T3) args[1]);
@@ -347,9 +427,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 1);
 
             firstBranch.accept((T2) args[0]);
-        }
-
-        if (secondClazz == data.getClass()) {
+        } else if (secondClazz == data.getClass()) {
             Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 2);
 
             secondBranch.accept((T5) args[0], (T6) args[1]);
@@ -372,6 +450,60 @@ public final class StaticPattern {
                 secondClazz,secondConsumer,secondBranch);
     }
 
+    public static <V, C1, C2, T1, T2, T3, R>
+    R matches(V value,
+              Class<C1> firstClazz,  String firstName,  Function<T1, R> firstBranch,
+              Class<C2> secondClazz, String secondName, BiFunction<T2, T3, R> secondBranch)  {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, firstName, 1);
+
+            return firstBranch.apply((T1) args[0]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, secondName, 2);
+
+            return secondBranch.apply((T2) args[0], (T3) args[1]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, R>
+    R matches(V data,
+              Class<C1> firstClazz,  Consumer<T1> firstConsumer,  Function<T2, R> firstBranch,
+              Class<C2> secondClazz, BiConsumer<T3, T4> secondConsumer, BiFunction<T5, T6, R> secondBranch) {
+        if (firstClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 1);
+
+            return firstBranch.apply((T2) args[0]);
+        }
+
+        if (secondClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 2);
+
+            return secondBranch.apply((T5) args[0], (T6) args[1]);
+        }
+
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C1, C2, T1, T2, T3, R>
+    R as(Class<C1> firstClazz,  String firstName,  Function<T1, R> firstBranch,
+         Class<C2> secondClazz, String secondName, BiFunction<T2, T3, R> secondBranch)  {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, R>
+    R as(Class<C1> firstClazz,  Consumer<T1> firstConsumer,  Function<T2, R> firstBranch,
+         Class<C2> secondClazz, BiConsumer<T3, T4> secondConsumer, BiFunction<T5, T6, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3>
     void matches(V value,
                  Class<C1> firstClazz,  String firstName,  BiConsumer<T1, T2> firstBranch,
@@ -380,9 +512,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 2);
 
             firstBranch.accept((T1) args[0], (T2) args[1]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 1);
 
             secondBranch.accept((T3) args[0]);
@@ -397,9 +527,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 2);
 
             firstBranch.accept((T3) args[0], (T4) args[1]);
-        }
-
-        if (secondClazz == data.getClass()) {
+        } else if (secondClazz == data.getClass()) {
             Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 1);
 
             secondBranch.accept((T6) args[0]);
@@ -422,6 +550,60 @@ public final class StaticPattern {
                 secondClazz,secondConsumer,secondBranch);
     }
 
+    public static <V, C1, C2, T1, T2, T3, R>
+    R matches(V value,
+              Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
+              Class<C2> secondClazz, String secondName, Function<T3, R> secondBranch) {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, firstName, 2);
+
+            return firstBranch.apply((T1) args[0], (T2) args[1]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, secondName, 1);
+
+            return secondBranch.apply((T3) args[0]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, R>
+    R matches(V data,
+              Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,  BiFunction<T3, T4, R> firstBranch,
+              Class<C2> secondClazz, Consumer<T5> secondConsumer, Function<T6, R> secondBranch) {
+        if (firstClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 2);
+
+            return firstBranch.apply((T3) args[0], (T4) args[1]);
+        }
+
+        if (secondClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 1);
+
+            return secondBranch.apply((T6) args[0]);
+        }
+
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C1, C2, T1, T2, T3, R>
+    R as(Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
+         Class<C2> secondClazz, String secondName, Function<T3, R> secondBranch)  {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, R>
+    R as(Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,  BiFunction<T3, T4, R> firstBranch,
+         Class<C2> secondClazz, Consumer<T5> secondConsumer, Function<T6, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4>
     void matches(V value,
                  Class<C1> firstClazz,  String firstName,  BiConsumer<T1, T2> firstBranch,
@@ -430,9 +612,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 2);
 
             firstBranch.accept((T1) args[0], (T2) args[1]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 2);
 
             secondBranch.accept((T3) args[0], (T4) args[1]);
@@ -447,9 +627,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 2);
 
             firstBranch.accept((T3) args[0], (T4) args[1]);
-        }
-
-        if (secondClazz == data.getClass()) {
+        } else if (secondClazz == data.getClass()) {
             Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 2);
 
             secondBranch.accept((T7) args[0], (T8) args[1]);
@@ -472,6 +650,60 @@ public final class StaticPattern {
                 secondClazz,secondConsumer,secondBranch);
     }
 
+    public static <V, C1, C2, T1, T2, T3, T4, R>
+    R matches(V value,
+              Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
+              Class<C2> secondClazz, String secondName, BiFunction<T3, T4, R> secondBranch) {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, firstName, 2);
+
+            return firstBranch.apply((T1) args[0], (T2) args[1]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, secondName, 2);
+
+            return secondBranch.apply((T3) args[0], (T4) args[1]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, R>
+    R matches(V data,
+              Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,  BiFunction<T3, T4, R> firstBranch,
+              Class<C2> secondClazz, BiConsumer<T5, T6> secondConsumer, BiFunction<T7, T8, R> secondBranch) {
+        if (firstClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 2);
+
+            return firstBranch.apply((T3) args[0], (T4) args[1]);
+        }
+
+        if (secondClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 2);
+
+            return secondBranch.apply((T7) args[0], (T8) args[1]);
+        }
+
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C1, C2, T1, T2, T3, T4, R>
+    R as(Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
+         Class<C2> secondClazz, String secondName, BiFunction<T3, T4, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, R>
+    R as(Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer,  BiFunction<T3, T4, R> firstBranch,
+         Class<C2> secondClazz, BiConsumer<T5, T6> secondConsumer, BiFunction<T7, T8, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4>
     void matches(V value,
                  Class<C1> firstClazz,  String firstName,  Consumer<T1> firstBranch,
@@ -480,9 +712,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 1);
 
             firstBranch.accept((T1) args[0]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 3);
 
             secondBranch.accept((T2) args[0], (T3) args[1], (T4) args[2]);
@@ -497,9 +727,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 1);
 
             firstBranch.accept((T2) args[0]);
-        }
-
-        if (secondClazz == data.getClass()) {
+        } else if (secondClazz == data.getClass()) {
             Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 3);
 
             secondBranch.accept((T6) args[0], (T7) args[1], (T8) args[2]);
@@ -522,6 +750,60 @@ public final class StaticPattern {
                 secondClazz,secondConsumer,secondBranch);
     }
 
+    public static <V, C1, C2, T1, T2, T3, T4, R>
+    R matches(V value,
+              Class<C1> firstClazz,  String firstName,  Function<T1, R> firstBranch,
+              Class<C2> secondClazz, String secondName, TriFunction<T2, T3, T4, R> secondBranch) {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, firstName, 1);
+
+            return firstBranch.apply((T1) args[0]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, secondName, 3);
+
+            return secondBranch.apply((T2) args[0], (T3) args[1], (T4) args[2]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, R>
+    R matches(V data,
+              Class<C1> firstClazz,  Consumer<T1> firstConsumer,  Function<T2, R> firstBranch,
+              Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondConsumer, TriFunction<T6, T7, T8, R> secondBranch) {
+        if (firstClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 1);
+
+            return firstBranch.apply((T2) args[0]);
+        }
+
+        if (secondClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 3);
+
+            return secondBranch.apply((T6) args[0], (T7) args[1], (T8) args[2]);
+        }
+
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C1, C2, T1, T2, T3, T4, R>
+    R as(Class<C1> firstClazz,  String firstName,  Function<T1, R> firstBranch,
+         Class<C2> secondClazz, String secondName, TriFunction<T2, T3, T4, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, R>
+    R as(Class<C1> firstClazz,  Consumer<T1> firstConsumer,  Function<T2, R> firstBranch,
+         Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondConsumer, TriFunction<T6, T7, T8, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4>
     void matches(V value,
                  Class<C1> firstClazz,  String firstName,  TriConsumer<T1, T2, T3> firstBranch,
@@ -530,9 +812,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 3);
 
             firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 1);
 
             secondBranch.accept((T4) args[0]);
@@ -547,9 +827,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 3);
 
             firstBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
-        }
-
-        if (secondClazz == data.getClass()) {
+        } else if (secondClazz == data.getClass()) {
             Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 1);
 
             secondBranch.accept((T8) args[0]);
@@ -572,6 +850,60 @@ public final class StaticPattern {
                 secondClazz,secondConsumer,secondBranch);
     }
 
+    public static <V, C1, C2, T1, T2, T3, T4, R>
+    R matches(V value,
+              Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+              Class<C2> secondClazz, String secondName, Function<T4, R> secondBranch) {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, firstName, 3);
+
+            return firstBranch.apply((T1) args[0], (T2) args[1], (T3) args[2]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, secondName, 1);
+
+            return secondBranch.apply((T4) args[0]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, R>
+    R matches(V data,
+              Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer, TriFunction<T4, T5, T6, R> firstBranch,
+              Class<C2> secondClazz, Consumer<T7> secondConsumer, Function<T8, R> secondBranch) {
+        if (firstClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 3);
+
+            return firstBranch.apply((T4) args[0], (T5) args[1], (T6) args[2]);
+        }
+
+        if (secondClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 1);
+
+            return secondBranch.apply((T8) args[0]);
+        }
+
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C1, C2, T1, T2, T3, T4, R>
+    R as(Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+         Class<C2> secondClazz, String secondName, Function<T4, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, R>
+    R as(Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer, TriFunction<T4, T5, T6, R> firstBranch,
+         Class<C2> secondClazz, Consumer<T7> secondConsumer, Function<T8, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6>
     void matches(V value,
                  Class<C1> firstClazz,  String firstName,  TriConsumer<T1, T2, T3> firstBranch,
@@ -580,9 +912,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 3);
 
             firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 3);
 
             secondBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
@@ -597,9 +927,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 3);
 
             firstBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
-        }
-
-        if (secondClazz == data.getClass()) {
+        } else if (secondClazz == data.getClass()) {
             Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 3);
 
             secondBranch.accept((T10) args[0], (T11) args[1], (T12) args[2]);
@@ -622,6 +950,60 @@ public final class StaticPattern {
                 secondClazz,secondConsumer,secondBranch);
     }
 
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, R>
+    R matches(V value,
+              Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+              Class<C2> secondClazz, String secondName, TriFunction<T4, T5, T6, R> secondBranch) {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, firstName, 3);
+
+            return firstBranch.apply((T1) args[0], (T2) args[1], (T3) args[2]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, secondName, 3);
+
+            return secondBranch.apply((T4) args[0], (T5) args[1], (T6) args[2]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R>
+    R matches(V data,
+              Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,  TriFunction<T4, T5, T6, R> firstBranch,
+              Class<C2> secondClazz, TriConsumer<T7, T8, T9> secondConsumer, TriFunction<T10, T11, T12, R> secondBranch) {
+        if (firstClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 3);
+
+            return firstBranch.apply((T4) args[0], (T5) args[1], (T6) args[2]);
+        }
+
+        if (secondClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 3);
+
+            return secondBranch.apply((T10) args[0], (T11) args[1], (T12) args[2]);
+        }
+
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, R>
+    R as(Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+         Class<C2> secondClazz, String secondName, TriFunction<T4, T5, T6, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R>
+    R as(Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer,  TriFunction<T4, T5, T6, R> firstBranch,
+         Class<C2> secondClazz, TriConsumer<T7, T8, T9> secondConsumer, TriFunction<T10, T11, T12, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5>
     void matches(V value,
                  Class<C1> firstClazz,  String firstName,  BiConsumer<T1, T2> firstBranch,
@@ -630,9 +1012,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 2);
 
             firstBranch.accept((T1) args[0], (T2) args[1]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 3);
 
             secondBranch.accept((T3) args[0], (T4) args[1], (T5) args[2]);
@@ -647,9 +1027,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 2);
 
             firstBranch.accept((T3) args[0], (T4) args[1]);
-        }
-
-        if (secondClazz == data.getClass()) {
+        } else if (secondClazz == data.getClass()) {
             Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 3);
 
             secondBranch.accept((T8) args[0], (T9) args[1], (T10) args[2]);
@@ -673,6 +1051,60 @@ public final class StaticPattern {
                 secondClazz,secondConsumer,secondBranch);
     }
 
+    public static <V, C1, C2, T1, T2, T3, T4, T5, R>
+    R matches(V value,
+              Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
+              Class<C2> secondClazz, String secondName, TriFunction<T3, T4, T5, R> secondBranch) {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, firstName, 2);
+
+            return firstBranch.apply((T1) args[0], (T2) args[1]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, secondName, 3);
+
+            return secondBranch.apply((T3) args[0], (T4) args[1], (T5) args[2]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R>
+    R matches(V data,
+              Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer, BiFunction<T3, T4, R> firstBranch,
+              Class<C2> secondClazz, TriConsumer<T5, T6, T7> secondConsumer, TriFunction<T8, T9, T10, R> secondBranch) {
+        if (firstClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 2);
+
+            return firstBranch.apply((T3) args[0], (T4) args[1]);
+        }
+
+        if (secondClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 3);
+
+            return secondBranch.apply((T8) args[0], (T9) args[1], (T10) args[2]);
+        }
+
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, R>
+    R as(Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
+         Class<C2> secondClazz, String secondName, TriFunction<T3, T4, T5, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R>
+    R as(Class<C1> firstClazz,  BiConsumer<T1, T2> firstConsumer, BiFunction<T3, T4, R> firstBranch,
+         Class<C2> secondClazz, TriConsumer<T5, T6, T7> secondConsumer, TriFunction<T8, T9, T10, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5>
     void matches(V value,
                  Class<C1> firstClazz,  String firstName,  TriConsumer<T1, T2, T3> firstBranch,
@@ -681,9 +1113,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeExtractor(value, firstName, 3);
 
             firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
-        }
-
-        if (secondClazz == value.getClass()) {
+        } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, secondName, 2);
 
             secondBranch.accept((T4) args[0], (T5) args[1]);
@@ -698,9 +1128,7 @@ public final class StaticPattern {
             Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 3);
 
             firstBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
-        }
-
-        if (secondClazz == data.getClass()) {
+        } else if (secondClazz == data.getClass()) {
             Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 2);
 
             secondBranch.accept((T9) args[0], (T10) args[1]);
@@ -723,7 +1151,57 @@ public final class StaticPattern {
                 secondClazz,secondConsumer,secondBranch);
     }
 
-    private static <T1, T2> boolean compareValues(T1 first, T2 second) {
-        return first != null && !first.equals(second);
+    public static <V, C1, C2, T1, T2, T3, T4, T5, R>
+    R matches(V value,
+              Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+              Class<C2> secondClazz, String secondName, BiFunction<T4, T5, R> secondBranch) {
+        if (firstClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, firstName, 3);
+
+            return firstBranch.apply((T1) args[0], (T2) args[1], (T3) args[2]);
+        }
+
+        if (secondClazz == value.getClass()) {
+            Object[] args = Reflection.invokeExtractor(value, secondName, 2);
+
+            return secondBranch.apply((T4) args[0], (T5) args[1]);
+        }
+
+        throw new PatternException("Expression must to have only two branches");
+    }
+
+    public static <V, C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R>
+    R matches(V data,
+              Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer, TriFunction<T4, T5, T6, R> firstBranch,
+              Class<C2> secondClazz, BiConsumer<T7, T8> secondConsumer, BiFunction<T9, T10, R> secondBranch) {
+        if (firstClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(firstConsumer, 3);
+
+            return firstBranch.apply((T4) args[0], (T5) args[1], (T6) args[2]);
+        }
+
+        if (secondClazz == data.getClass()) {
+            Object[] args = Reflection.invokeUnreferenceExtractor(secondConsumer, 2);
+
+            return secondBranch.apply((T9) args[0], (T10) args[1]);
+        }
+
+        throw new PatternException("Expression must to have only one branch");
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, R>
+    R as(Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+         Class<C2> secondClazz, String secondName, BiFunction<T4, T5, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstName, firstBranch,
+                       secondClazz,secondName,secondBranch);
+    }
+
+    public <C1, C2, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R>
+    R as(Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstConsumer, TriFunction<T4, T5, T6, R> firstBranch,
+         Class<C2> secondClazz, BiConsumer<T7, T8> secondConsumer, BiFunction<T9, T10, R> secondBranch) {
+        return matches(data,
+                       firstClazz, firstConsumer, firstBranch,
+                       secondClazz,secondConsumer,secondBranch);
     }
 }

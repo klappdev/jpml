@@ -38,6 +38,19 @@ Using this library developer can write in the following way.
    );
 ```
 
+Also for split predicate and branches can write in the another way.
+
+```Java
+   matches(data).as(
+      new Person("man"),    () ->  System.out.println("man");
+      new Person("woman"),  () ->  System.out.println("woman");
+      new Person("child"),  () ->  System.out.println("child");        
+      Null.class,           () ->  System.out.println("Null value "),
+      Else.class,           () ->  System.out.println("Default value: " + data)
+   );
+```
+
+
 *Tuple pattern* allow test for equality multiple pieces with constants.
 
 ```Java
@@ -98,6 +111,7 @@ Using this library developer can write in the following way.
       Else.class,    () -> { System.out.println("Default value: " + data); }
    );
 ```
+
 *Guard pattern* allow match type and check condition for the truth at one time.
 
 ```Java
@@ -131,10 +145,10 @@ Using this library developer can write in the following way.
 For simplify writing a condition, developer can use such functions to compare: <br/>
 lessThan/lt, greaterThan/gt, lessThanOrEqual/le, greaterThanOrEqual/ge,  <br/>
 equal/eq, notEqual/ne. Also for omit condition could use such functions:<br/>
-always/yes, never/no. 
+always/yes, never/no. Also could apply with another form. 
 
 ```Java
-   matches(data,           
+   matches(data).as(           
       Integer.class, ne(0),  i  -> { System.out.println(i * i); },
       Byte.class,    gt(-1), b  -> { System.out.println(b * b); },
       Long.class,    eq(5),  l  -> { System.out.println(l * l); },
@@ -186,7 +200,7 @@ Using this library developer can write in the following way.
    });
 ```
 
-Using Java 11 feature, we can deduce types deconstruct parameters.
+Using Java 11 feature, we can deduce types deconstruct parameters. Also could apply with another form. 
 
 ```Java
    Figure figure = new Rectangle();
@@ -195,7 +209,7 @@ Using Java 11 feature, we can deduce types deconstruct parameters.
       System.out.println("border: " + w + " " + h));
    });
 
-   matches(figure,
+   matches(figure).as(
       Rectangle.class, (var w, var h) -> System.out.println("square: " + (w * h)),
       Circle.class,    (var r)        -> System.out.println("square: " + (2 * Math.PI * r)),
       Else.class,      ()             -> System.out.println("Default square: " + 0)
@@ -264,44 +278,25 @@ Using this library developer can write in the following way.
       System.out.println("square: " + (w * h));
    });
 ```
-Also for simplify naming parameters could use another way.
+
+For simplify naming parameters could use another way. Using Java 11 feature, we can deduce types
+property parameters. Also could apply with another form. 
 
 ```Java
 
    Figure figure = new Rect();
 
-   let(figure, Rect::w, Rect::h, (int w, int h) -> {
-      System.out.println("border: " + w + " " + h));
-   });
-
-   matches(figure,
-      Rect.class,    Rect::w, Rect::h, (int w, int h) -> System.out.println("sqr: " + (w * h)),
-      Circle.class,  Circle::r, (int r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
-      Else.class,    ()                  -> System.out.println("Default sqr: " + 0)
-   );
-   
-   foreach(listRectangles, Rect::w, Rect::h, (int w, int h) -> {
-      System.out.println("square: " + (w * h));
-   });
-```
-
-Using Java 11 feature, we can deduce types property parameters.
-
-```Java
-   Figure figure = new Rectangle();
-   
    let(figure, Rect::w, Rect::h, (var w, var h) -> {
       System.out.println("border: " + w + " " + h));
    });
 
-   matches(figure,
-      Rectangle.class, of("w", 5,  "h", 10), (var w, var h) -> System.out.println("sqr: " + (w * h)),
-      Rectangle.class, of("w", 10, "h", 15), (var w, var h) -> System.out.println("sqr: " + (w * h)),
-      Circle.class,    of("r"), (var r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
-      Else.class,      ()                -> System.out.println("Default sqr: " + 0)
+   matches(figure).as(
+      Rect.class,    Rect::w, Rect::h, (var w, var h) -> System.out.println("sqr: " + (w * h)),
+      Circle.class,  Circle::r, (var r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
+      Else.class,    ()                  -> System.out.println("Default sqr: " + 0)
    );
    
-   foreach(listRectangles, of("x", "y"), (var w, var h) -> {
+   foreach(listRectangles, Rect::w, Rect::h, (var w, var h) -> {
       System.out.println("square: " + (w * h));
    });
 ```
@@ -368,10 +363,11 @@ Using this library developer can write in the following way.
       Else.class, ()                              -> System.out.println("Default square: " + 0)
    );    
 ```
-Also for simplify naming deconstruct method could use another way.
+
+For simplify naming deconstruct method could use another way. Also could apply with another form. 
 
 ```Java
-   matches(figure,
+   matches(figure).as(
       Rect.class,   Rect::unapply, (int w, int h) -> out.println("square: " + (w * h)),
       Circle.class, Circle::unapply, (int r)      -> out.println("square: " + (2 * Math.PI * r)),
       Else.class,   ()                            -> System.out.println("Default square: " + 0)
@@ -384,12 +380,12 @@ Also this pattern give simplify work with Optional<<V>>, Expected<T, E>.
    import org.kl.util.Expected;
    import java.util.Optional;
 
-   matches(value,
+   matches(value).as(
       Optional::empty, () -> out.println("empty"),
       Optional::get,    v -> out.println("value: " + v)
    );
    
-   matches(value,
+   matches(value).as(
       Optional::error, e -> out.println("get error: " + e),
       Optional::value, v -> out.println("get value: " + v)
    );
