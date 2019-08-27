@@ -12,18 +12,22 @@ import sun.reflect.ConstantPool;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class Reflection {
     private static MethodHandles.Lookup lookup = MethodHandles.lookup();
-    private static MethodHandle methodHandle;
-    private static HashMap<Class<?>, Extraction> cacheExtractors = new HashMap<>();
+    private static MethodHandle extractorInvoker;
+    private static MethodHandle memberInvoker;
+    private static HashMap<Class<?>, Extracture> cacheExtractures = new HashMap<>();
+    private static HashMap<Class<?>, Structure>  cacheStructures  = new HashMap<>();
 
     public static Object[] invokeUnreferenceExtractor(Consumer<?> consumer, int countParameters) {
         return invokeUnreferenceExtractor(consumer.getClass(), countParameters);
@@ -45,8 +49,8 @@ public class Reflection {
             Method method = unreferenceExtractor(clazz, countParameters);
             parameters = prepareParameters(method.getParameterTypes());
 
-            methodHandle = MethodHandles.lookup().unreflect(method);
-            methodHandle.invokeWithArguments(parameters);
+            extractorInvoker = MethodHandles.lookup().unreflect(method);
+            extractorInvoker.invokeWithArguments(parameters);
 
             result = resolveParameters(parameters);
         } catch (Throwable e) {
@@ -84,8 +88,8 @@ public class Reflection {
     }
 
     public static <V> Object[] invokeExtractor(V value, int countParameters) {
-        Extraction data = cacheExtractors.computeIfAbsent(value.getClass(),
-                                                          routine -> new Extraction(lookup, routine));
+        Extracture data = cacheExtractures.computeIfAbsent(value.getClass(),
+                                                          routine -> new Extracture(lookup, routine));
         switch (countParameters) {
             case 1: return invokeUnExtractor(value, data);
             case 2: return invokeBiExtractor(value, data);
@@ -96,8 +100,8 @@ public class Reflection {
 
     @SuppressWarnings("unchecked")
     public static <V> Object[] invokeExtractor(V value, String name, int countParameters) {
-        Extraction data = cacheExtractors.computeIfAbsent(value.getClass(),
-                                                          routine -> new Extraction(lookup, routine));
+        Extracture data = cacheExtractures.computeIfAbsent(value.getClass(),
+                                                          routine -> new Extracture(lookup, routine));
         switch (countParameters) {
             case 1: return invokeUnExtractor(value, name, data);
             case 2: return invokeBiExtractor(value, name, data);
@@ -107,27 +111,11 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeUnExtractor(V value, String name, Extraction data) {
+    private static <V> Object[] invokeUnExtractor(V value, String name, Extracture data) {
         Object[] result = new Object[1];
+        Extractor extractor = data.getExtractors().get(0);
 
-        for (Extractor extractor : data.getExtractors()) {
-            if (extractor.getName().equals(name)) {
-                Object parameter = extractor.getParameter();
-
-                extractor.getConsumer().accept(value, parameter);
-                result[0] = resolveParameter(parameter);
-                break;
-            }
-        }
-
-        return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeUnExtractor(V value, Extraction data) {
-        Object[] result = new Object[1];
-
-        for (Extractor extractor : data.getExtractors()) {
+        if (extractor.getName().equals(name)) {
             Object parameter = extractor.getParameter();
 
             extractor.getConsumer().accept(value, parameter);
@@ -138,7 +126,19 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeBiExtractor(V value, String name, Extraction data) {
+    private static <V> Object[] invokeUnExtractor(V value, Extracture data) {
+        Object[] result = new Object[1];
+        Extractor extractor = data.getExtractors().get(0);
+        Object parameter = extractor.getParameter();
+
+        extractor.getConsumer().accept(value, parameter);
+        result[0] = resolveParameter(parameter);
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <V> Object[] invokeBiExtractor(V value, String name, Extracture data) {
         Object[] result = new Object[2];
 
         for (BiExtractor biExtractor : data.getBiExtractors()) {
@@ -155,7 +155,7 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeBiExtractor(V value, Extraction data) {
+    private static <V> Object[] invokeBiExtractor(V value, Extracture data) {
         Object[] result = new Object[2];
 
         for (BiExtractor biExtractor : data.getBiExtractors()) {
@@ -169,7 +169,7 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeTriExtractor(V value, String name, Extraction data) {
+    private static <V> Object[] invokeTriExtractor(V value, String name, Extracture data) {
         Object[] result = new Object[3];
 
         for (TriExtractor triExtractor : data.getTriExtractors()) {
@@ -186,7 +186,7 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeTriExtractor(V value, Extraction data) {
+    private static <V> Object[] invokeTriExtractor(V value, Extracture data) {
         Object[] result = new Object[3];
 
         for (TriExtractor triExtractor : data.getTriExtractors()) {
@@ -194,6 +194,43 @@ public class Reflection {
 
             triExtractor.getConsumer().accept(value, parameters[0], parameters[1], parameters[2]);
             result = resolveParameters(parameters);
+        }
+
+        return result;
+    }
+
+    public static <V> Object[] fetchMembers(V value, int countMembers) {
+        Structure data = cacheStructures.computeIfAbsent(value.getClass(), Structure::new);
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+
+        switch (countMembers) {
+            case 1: return fetchMember(lookup, value, data, 1);
+            case 2: return fetchMember(lookup, value, data, 2);
+            case 3: return fetchMember(lookup, value, data, 3);
+            default: throw new PatternException("Structure must not has more than 3 fields");
+        }
+    }
+
+    private static <V> Object[] fetchMember(MethodHandles.Lookup lookup, V value, Structure data, int countMember) {
+        List<Field> members = data.getMembers();
+        Object[] result = new Object[countMember];
+
+        if (members.size() != countMember) {
+            throw new PatternException("Count fields more then in target. Exclude unnecessary fields");
+        }
+
+        for (int i = 0; i < members.size(); i++) {
+            Field member = members.get(i);
+
+            try {
+                member.setAccessible(true);
+                memberInvoker = lookup.unreflectGetter(member);
+                result[i] = memberInvoker.invoke(value);
+            } catch (IllegalAccessException e) {
+                throw new PatternException("Can not access to field " + member.getName() + " " + e.getMessage());
+            } catch (Throwable throwable) {
+                throw new PatternException("Can not get value field " + member.getName());
+            }
         }
 
         return result;
@@ -326,6 +363,10 @@ public class Reflection {
         }
 
         return flag;
+    }
+
+    public static <T1, T2> boolean compareValues(T1 first, T2 second) {
+        return first != null && first.equals(second);
     }
 
     public static boolean checkTypes(Class<?> inClass, Class<?> outClass) {

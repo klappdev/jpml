@@ -17,12 +17,12 @@ import java.util.function.BiConsumer;
 
 import static org.kl.reflect.Reflection.*;
 
-class Extraction {
+class Extracture {
     private List<Extractor> extractors;
     private List<BiExtractor> biExtractors;
     private List<TriExtractor> triExtractors;
 
-    /*package-private*/ Extraction(MethodHandles.Lookup lookup, Class<?> clazz)  {
+    /*package-private*/ Extracture(MethodHandles.Lookup lookup, Class<?> clazz)  {
         verifyExtractors(lookup, clazz);
     }
 

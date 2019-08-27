@@ -2,7 +2,6 @@ package org.kl;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.kl.error.PatternException;
 import org.kl.shape.Circle;
 import org.kl.shape.Figure;
 import org.kl.shape.Unpiped;
@@ -22,8 +21,6 @@ public class ConstantPatternTest {
     @Test
     public void matchesStatementTest()  {
         /* 1 */
-
-
         byte value1 = 5;
         matches(value1).as(
                 (byte) 5, ()  -> System.out.println("safe brunch 1 - " + value1)
@@ -116,7 +113,7 @@ public class ConstantPatternTest {
         /* 1 */
         byte value1 = 10;
         matches(value1,
-                (byte) 5,      () -> System.out.println("brunch 1 - " + value1),
+                (byte) 5,   () -> System.out.println("brunch 1 - " + value1),
                 Else.class, () -> System.out.println("Else value 1 type")
         );
 
