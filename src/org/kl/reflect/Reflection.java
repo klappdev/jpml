@@ -60,6 +60,11 @@ public class Reflection {
         return result;
     }
 
+    /* Method target-independent:
+     * v8  - sun.reflect.ConstantPool
+     * v9  - jdk.unsupported.ConstantPool
+     * v12 - java.lang.constant.Constable
+     */
     @SuppressWarnings("sunapi")
     private static Method unreferenceExtractor(Class<?> clazz, int countParameters) {
         ConstantPool pool = SharedSecrets.getJavaLangAccess().getConstantPool(clazz);
@@ -211,6 +216,10 @@ public class Reflection {
         }
     }
 
+    /* Method target-independent:
+     * v8 - MethodHandle,
+     * v9 - VarHandle
+     */
     private static <V> Object[] fetchMember(MethodHandles.Lookup lookup, V value, Structure data, int countMember) {
         List<Field> members = data.getMembers();
         Object[] result = new Object[countMember];

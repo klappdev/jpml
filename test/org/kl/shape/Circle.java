@@ -2,15 +2,11 @@ package org.kl.shape;
 
 import org.kl.meta.Exclude;
 import org.kl.meta.Extract;
-import org.kl.type.ByteRef;
 import org.kl.type.IntRef;
-
-import java.util.Objects;
 
 public class Circle extends Figure {
     private int radius;
 
-    @Exclude
     private static int staticRadius = 5;
 
     @Exclude

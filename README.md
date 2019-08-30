@@ -38,18 +38,20 @@ Using this library developer can write in the following way.
    );
 ```
 
-Also for split predicate and branches can write in the another way.
+For work with range values could use such functions: in/or. Also could apply with another form. 
 
 ```Java
+   import static org.kl.pattern.ConstantPattern.or;
+   import static org.kl.pattern.ConstantPattern.in; 
+   
    matches(data).as(
-      new Person("man"),    () ->  System.out.println("man");
-      new Person("woman"),  () ->  System.out.println("woman");
-      new Person("child"),  () ->  System.out.println("child");        
-      Null.class,           () ->  System.out.println("Null value "),
-      Else.class,           () ->  System.out.println("Default value: " + data)
+      or(1,2),     () ->  System.out.println("1 or 2");
+      in(3,4,5,6), () ->  System.out.println("between 3 and 6");
+      7,           () ->  System.out.println("7");        
+      Null.class,  () ->  System.out.println("Null value "),
+      Else.class,  () ->  System.out.println("Default value: " + data)
    );
 ```
-
 
 *Tuple pattern* allow test for equality multiple pieces with constants.
 
@@ -111,6 +113,17 @@ Using this library developer can write in the following way.
       Else.class,    () -> { System.out.println("Default value: " + data); }
    );
 ```
+
+This pattern give simplify work with union types. Also could apply with another form. 
+	
+```Java
+   import java.util.Union;
+   
+   matches(value).as(
+      Integer.class, i -> out.println("number: " + i),
+      String.class,  s -> out.println("string: " + s)
+   );   
+```	
 
 *Guard pattern* allow match type and check condition for the truth at one time.
 
@@ -416,13 +429,30 @@ Using this library developer can write in the following way.
    List<Integer> list = ...;
 
    matches(figure,
-      empty()   ()      -> System.out.println("Empty value"),
+      empty()   () -> System.out.println("Empty value"),
+      head(),   (int h) -> System.out.println("list head: " + h),
+      middle(), (int m) -> out.println("middle list:" + m),
+      tail(),   (int t) -> out.println("tail list:  " + t),
+      at(1),    (int i) -> out.println("at list:    " + i),
+      edges(),  (int f, int l) -> out.println("edges: " + f + " - " + l)
+      Else.class, () -> System.out.println("Default value")
+   );   
+```
+
+Using Java 11 feature, we can deduce types property parameters. 
+Also could apply with another form.
+
+```Java
+   List<Integer> list = ...;
+
+   matches(figure).as(
+      empty()   () -> System.out.println("Empty value"),
       head(),   (var h) -> System.out.println("list head: " + h),
       middle(), (var m) -> out.println("middle list:" + m),
       tail(),   (var t) -> out.println("tail list:  " + t),
       at(1),    (var i) -> out.println("at list:    " + i),
       edges(),  (var f, var l) -> out.println("edges: " + f + " - " + l)
-      Else.class, ()  -> System.out.println("Default value")
+      Else.class, () -> System.out.println("Default value")
    );   
 ```
 

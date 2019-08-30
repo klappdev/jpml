@@ -1,6 +1,5 @@
 package org.kl.shape;
 
-import org.kl.meta.Exclude;
 import org.kl.meta.Extract;
 import org.kl.type.FloatRef;
 
@@ -9,9 +8,9 @@ public class Tripiped extends Figure {
     private float longitude;
     private float height;
 
-    @Exclude private static short staticWidth = 5;
-    @Exclude private static short staticLongitude = 5;
-    @Exclude private static short staticHeight = 10;
+    private static short staticWidth = 5;
+    private static short staticLongitude = 5;
+    private static short staticHeight = 10;
 
     public Tripiped() {
         this.width = 5;
