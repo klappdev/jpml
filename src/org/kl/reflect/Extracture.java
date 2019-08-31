@@ -1,12 +1,10 @@
 package org.kl.reflect;
 
-import org.kl.bean.BiExtractor;
-import org.kl.bean.Extractor;
-import org.kl.bean.TriExtractor;
 import org.kl.error.PatternException;
 import org.kl.lambda.QuarConsumer;
 import org.kl.lambda.TriConsumer;
 import org.kl.meta.Extract;
+import org.kl.util.Extractor;
 
 import java.lang.invoke.*;
 import java.lang.reflect.Method;
@@ -18,9 +16,9 @@ import java.util.function.BiConsumer;
 import static org.kl.reflect.Reflection.*;
 
 class Extracture {
-    private List<Extractor> extractors;
-    private List<BiExtractor> biExtractors;
-    private List<TriExtractor> triExtractors;
+    private List<Extractor.Extractor2> extractors;
+    private List<Extractor.Extractor3> biExtractors;
+    private List<Extractor.Extractor4> triExtractors;
 
     /*package-private*/ Extracture(MethodHandles.Lookup lookup, Class<?> clazz)  {
         verifyExtractors(lookup, clazz);
@@ -41,7 +39,7 @@ class Extracture {
                             this.extractors = new ArrayList<>(3);
                         }
 
-                        extractors.add(new Extractor<>(method.getName(),
+                        extractors.add(new Extractor.Extractor2<>(method.getName(),
                             prepareExtractor(lookup, method),
                             prepareParameters(parameterTypes)[0]
                         ));
@@ -50,7 +48,7 @@ class Extracture {
                             this.biExtractors = new ArrayList<>(3);
                         }
 
-                        biExtractors.add(new BiExtractor(method.getName(),
+                        biExtractors.add(new Extractor.Extractor3(method.getName(),
                             prepareBiExtractor(lookup, method),
                             prepareParameters(parameterTypes)
                         ));
@@ -59,7 +57,7 @@ class Extracture {
                             this.triExtractors = new ArrayList<>(3);
                         }
 
-                        triExtractors.add(new TriExtractor(method.getName(),
+                        triExtractors.add(new Extractor.Extractor4(method.getName(),
                             prepareTriExtractor(lookup, method),
                             prepareParameters(parameterTypes)
                         ));
@@ -116,15 +114,15 @@ class Extracture {
         return (QuarConsumer) site.getTarget().invokeExact();
     }
 
-    /*package-private*/ List<Extractor> getExtractors() {
+    /*package-private*/ List<Extractor.Extractor2> getExtractors() {
         return extractors;
     }
 
-    /*package-private*/ List<BiExtractor> getBiExtractors() {
+    /*package-private*/ List<Extractor.Extractor3> getBiExtractors() {
         return biExtractors;
     }
 
-    /*package-private*/ List<TriExtractor> getTriExtractors() {
+    /*package-private*/ List<Extractor.Extractor4> getTriExtractors() {
         return triExtractors;
     }
 }

@@ -34,7 +34,6 @@ public class SequencePatternTest {
         map.clear();
     }
 
-    @Disabled
     @Test
     public void matchesStatementTest() {
         /* 1 */

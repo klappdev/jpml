@@ -45,8 +45,8 @@ For work with range values could use such functions: in/or. Also could apply wit
    import static org.kl.pattern.ConstantPattern.in; 
    
    matches(data).as(
-      or(1,2),     () ->  System.out.println("1 or 2");
-      in(3,4,5,6), () ->  System.out.println("between 3 and 6");
+      or(1, 2),    () ->  System.out.println("1 or 2");
+      in(3, 6),    () ->  System.out.println("between 3 and 6");
       7,           () ->  System.out.println("7");        
       Null.class,  () ->  System.out.println("Null value "),
       Else.class,  () ->  System.out.println("Default value: " + data)
@@ -118,6 +118,8 @@ This pattern give simplify work with union types. Also could apply with another 
 	
 ```Java
    import java.util.Union;
+   
+   Union value = ...;
    
    matches(value).as(
       Integer.class, i -> out.println("number: " + i),

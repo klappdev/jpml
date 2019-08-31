@@ -1,12 +1,10 @@
 package org.kl.reflect;
 
-import org.kl.bean.BiExtractor;
-import org.kl.bean.Extractor;
-import org.kl.bean.TriExtractor;
 import org.kl.error.PatternException;
 import org.kl.lambda.TriConsumer;
 import org.kl.meta.Extract;
 import org.kl.type.*;
+import org.kl.util.Extractor;
 import sun.misc.SharedSecrets;
 import sun.reflect.ConstantPool;
 
@@ -118,7 +116,7 @@ public class Reflection {
     @SuppressWarnings("unchecked")
     private static <V> Object[] invokeUnExtractor(V value, String name, Extracture data) {
         Object[] result = new Object[1];
-        Extractor extractor = data.getExtractors().get(0);
+        Extractor.Extractor2 extractor = data.getExtractors().get(0);
 
         if (extractor.getName().equals(name)) {
             Object parameter = extractor.getParameter();
@@ -133,7 +131,7 @@ public class Reflection {
     @SuppressWarnings("unchecked")
     private static <V> Object[] invokeUnExtractor(V value, Extracture data) {
         Object[] result = new Object[1];
-        Extractor extractor = data.getExtractors().get(0);
+        Extractor.Extractor2 extractor = data.getExtractors().get(0);
         Object parameter = extractor.getParameter();
 
         extractor.getConsumer().accept(value, parameter);
@@ -146,7 +144,7 @@ public class Reflection {
     private static <V> Object[] invokeBiExtractor(V value, String name, Extracture data) {
         Object[] result = new Object[2];
 
-        for (BiExtractor biExtractor : data.getBiExtractors()) {
+        for (Extractor.Extractor3 biExtractor : data.getBiExtractors()) {
             if (biExtractor.getName().equals(name)) {
                 Object[] parameters = biExtractor.getParameters();
 
@@ -163,7 +161,7 @@ public class Reflection {
     private static <V> Object[] invokeBiExtractor(V value, Extracture data) {
         Object[] result = new Object[2];
 
-        for (BiExtractor biExtractor : data.getBiExtractors()) {
+        for (Extractor.Extractor3 biExtractor : data.getBiExtractors()) {
             Object[] parameters = biExtractor.getParameters();
 
             biExtractor.getConsumer().accept(value, parameters[0], parameters[1]);
@@ -177,7 +175,7 @@ public class Reflection {
     private static <V> Object[] invokeTriExtractor(V value, String name, Extracture data) {
         Object[] result = new Object[3];
 
-        for (TriExtractor triExtractor : data.getTriExtractors()) {
+        for (Extractor.Extractor4 triExtractor : data.getTriExtractors()) {
             if (triExtractor.getName().equals(name)) {
                 Object[] parameters = triExtractor.getParameters();
 
@@ -194,7 +192,7 @@ public class Reflection {
     private static <V> Object[] invokeTriExtractor(V value, Extracture data) {
         Object[] result = new Object[3];
 
-        for (TriExtractor triExtractor : data.getTriExtractors()) {
+        for (Extractor.Extractor4 triExtractor : data.getTriExtractors()) {
             Object[] parameters = triExtractor.getParameters();
 
             triExtractor.getConsumer().accept(value, parameters[0], parameters[1], parameters[2]);

@@ -27,15 +27,15 @@ public class PropertyPatternTest {
         }};
 
         listBipipeds = new ArrayList<Bipiped>() {{
-            add(new Bipiped((short)5, (short)10));
-            add(new Bipiped((short)10, (short)15));
-            add(new Bipiped((short)15, (short)20));
+            add(new Bipiped((short) 5, (short) 10));
+            add(new Bipiped((short) 10, (short) 15));
+            add(new Bipiped((short) 15, (short) 20));
         }};
 
         listParallelepipeds = new ArrayDeque<Parallelepiped>() {{
-            add(new Parallelepiped((short)5,  (short)10, (short)15));
-            add(new Parallelepiped((short)10, (short)15, (short)20));
-            add(new Parallelepiped((short)15, (short)20, (short)25));
+            add(new Parallelepiped((short) 5, (short) 10, (short) 15));
+            add(new Parallelepiped((short) 10, (short) 15, (short) 20));
+            add(new Parallelepiped((short) 15, (short) 20, (short) 25));
         }};
 
         map = new HashMap<Integer, String>() {{
@@ -55,9 +55,8 @@ public class PropertyPatternTest {
     }
 
 
-    @Disabled
     @Test
-    public void matchesStatementTest()  {
+    public void matchesStatementTest() {
         Figure figure;
 
         /* 1 */
@@ -91,7 +90,7 @@ public class PropertyPatternTest {
         );
 
         /* 3 */
-        figure = new Parallelepiped((short)10, (short)15, (short)20);
+        figure = new Parallelepiped((short) 10, (short) 15, (short) 20);
 
         matches(figure,
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short s, Short h) -> {
@@ -100,14 +99,13 @@ public class PropertyPatternTest {
         );
 
         matches(figure,
-                Parallelepiped.class, of("width", (short)15, "longitude", (short)15, "height", (short)20),
+                Parallelepiped.class, of("width", (short) 15, "longitude", (short) 15, "height", (short) 20),
                 (Short w, Short s, Short h) -> out.println("Parallelepiped square: " + (w * s * h))
         );
     }
 
-    @Disabled
     @Test
-    public void foreachLoopTest()  {
+    public void foreachLoopTest() {
         /* 1 */
         foreach(listUpipeds, of("radius"), (Double r) -> {
             System.out.println("Upiped square I: " + (2 * Math.PI * r));
@@ -137,12 +135,12 @@ public class PropertyPatternTest {
 
         /* 4 */
         foreach(map, of("key", "value"), (Integer k, String v) -> {
-            System.out.println("map entry I: " + k  + " - " + v);
+            System.out.println("map entry I: " + k + " - " + v);
         });
     }
 
     @Test
-    public void letOperationTest()  {
+    public void letOperationTest() {
         /* 1 */
         Unpiped unpiped = new Unpiped(5);
 
