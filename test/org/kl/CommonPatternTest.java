@@ -1,15 +1,85 @@
 package org.kl;
 
 import org.junit.jupiter.api.Test;
+import org.kl.error.PatternException;
+import org.kl.pattern.CommonPattern;
 import org.kl.shape.Rectangle;
 import org.kl.state.Else;
 import org.kl.state.Side;
+import org.kl.util.Lazy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.kl.pattern.CommonPattern.when;
-import static org.kl.pattern.CommonPattern.with;
+import static org.kl.pattern.CommonPattern.*;
 
 public class CommonPatternTest {
+
+    @Test
+    public void elvisOperationTest() {
+        Rectangle rect = null;
+        Rectangle[] rects = null;
+        String buffer = "";
+
+        /* 1 */
+        Rectangle emptyRect = new Rectangle();
+        Rectangle result = elvis(rect, emptyRect);
+        assertEquals(result, emptyRect);
+
+        Rectangle[] emptyRects = new Rectangle[]{};
+        Rectangle[] results = elvis(rects, emptyRects);
+        assertEquals(results, emptyRects);
+
+        String bufferResult = elvis(buffer, "empty line");
+        assertEquals(bufferResult, "empty line");
+
+        /* 2 */
+        result = elvis(rect, () -> emptyRect);
+        assertEquals(result, emptyRect);
+
+        results = elvis(rects, () -> emptyRects);
+        assertEquals(results, emptyRects);
+
+        bufferResult = elvis(buffer, () -> "empty line");
+        assertEquals(bufferResult, "empty line");
+
+        /* 3 */
+        result = elvisThrow(emptyRect, PatternException::new);
+        assertEquals(result, emptyRect);
+
+        results = elvisThrow(emptyRects, PatternException::new);
+        assertEquals(results, emptyRects);
+
+        bufferResult = elvisThrow("magic", PatternException::new);
+        assertEquals(bufferResult, "magic");
+    }
+
+    @Test
+    public void lazyOperationTest() {
+        /* 1 */
+        Lazy<Rectangle> lazyRect = lazy(Rectangle::new);
+
+        assertEquals(lazyRect.get().getWidth(), 5);
+        assertEquals(lazyRect.get().getHeight(), 10);
+
+        /* 2 */
+        Lazy<Integer> lazyInt = lazy(5);
+
+        assertEquals(lazyInt.get(), 5);
+
+        /* 3 */
+        Lazy<Float> lazyFloat = lazy(10f);
+
+        assertEquals(lazyFloat.get(), 10);
+
+        /* 4 */
+        Lazy<Character> lazyChar = lazy('c');
+
+        assertEquals(lazyChar.get(), 'c');
+
+        /* 5 */
+        Lazy<String> lazyString = lazy("magic");
+
+        assertEquals(lazyString.get(), "magic");
+    }
 
     @Test
     public void withOperationTest() {

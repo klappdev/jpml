@@ -60,25 +60,31 @@ public class PropertyPatternTest {
         Figure figure;
 
         /* 1 */
-        figure = new Circle(10);
+        figure = new Circle(5);
 
         matches(figure,
-                Circle.class, of("radius"), (Integer r) -> {
-                    out.println("Circle square: " + ((int) (2 * Math.PI * r)));
-                }
+                Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
+        );
+
+        matches((Circle) figure,
+                Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
         matches(figure,
-                Circle.class, of("radius", 15), (Integer r) -> {
-                    out.println("Circle square: " + ((int) (2 * Math.PI * r)));
-                }
+                Circle.class, of("radius", 15), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
         /* 2 */
-        figure = new Rectangle(15, 20);
+        figure = new Rectangle(5, 10);
 
         matches(figure,
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> {
+                    out.println("Rect square: " + (w * h));
+                }
+        );
+
+        matches((Rectangle) figure,
+                Rectangle.class, Rectangle::getWidth, Rectangle::getHeight, (Integer w, Integer h) -> {
                     out.println("Rect square: " + (w * h));
                 }
         );
@@ -98,12 +104,18 @@ public class PropertyPatternTest {
                 }
         );
 
+        matches((Parallelepiped)figure,
+                Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
+                (Short w, Short s, Short h) -> out.println("Parallelepiped square: " + (w * s * h))
+        );
+
         matches(figure,
                 Parallelepiped.class, of("width", (short) 15, "longitude", (short) 15, "height", (short) 20),
                 (Short w, Short s, Short h) -> out.println("Parallelepiped square: " + (w * s * h))
         );
     }
 
+    @Disabled
     @Test
     public void foreachLoopTest() {
         /* 1 */
@@ -139,6 +151,7 @@ public class PropertyPatternTest {
         });
     }
 
+    @Disabled
     @Test
     public void letOperationTest() {
         /* 1 */

@@ -461,8 +461,9 @@ Also could apply with another form.
 *Common pattern* contains general constructions which could be useful.
 
 ```Java
-    Rectangle rect = new Rectangle();
-    
+	lazy var rect = new Rectangle();
+    var result = rect ?: new Rectangle();
+	
     with(rect) {
         setWidth(5);
         setHeight(10);
@@ -479,8 +480,11 @@ Using this library developer can write in the following way.
 ```Java
    import static org.kl.pattern.CommonPattern.with;
    import static org.kl.pattern.CommonPattern.when;
+   import static org.kl.pattern.CommonPattern.lazy;
+   import static org.kl.pattern.CommonPattern.elvis;
 
-   Rectangle rect = new Rectangle();
+   var rect = lazy(Rectangle::new);
+   var result = elvis(rect.get(), new Rectangle());
    
    with(rect, it -> {
        it.setWidth(5);

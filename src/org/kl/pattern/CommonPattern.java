@@ -1,14 +1,104 @@
 package org.kl.pattern;
 
+import org.kl.lambda.Provider;
 import org.kl.state.Else;
+import org.kl.util.Lazy;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class CommonPattern {
-
     private CommonPattern() {}
+
+    public static <T> T elvis(T value, T defaultValue) {
+        return value == null ? defaultValue : value;
+    }
+
+    public static <T> T[] elvis(T[] value, T[] defaultValue) {
+        return value == null ? defaultValue : value;
+    }
+
+    public static String elvis(String value, String defaultValue) {
+        return value == null || value.isEmpty() ? defaultValue : value;
+    }
+
+    public static <T> T elvis(T value, Supplier<? extends T> other) {
+        return value == null ? other.get() : value;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T[] elvis(T[] value, Supplier<T[]> other) {
+        return value == null ? other.get() : value;
+    }
+
+    public static String elvis(String value, Supplier<String> other) {
+        return value == null || value.isEmpty() ? other.get() : value;
+    }
+
+    public static <T, X extends Throwable> T elvisThrow(T value, Provider<? extends X> other) throws X {
+        if (value != null) {
+            return value;
+        } else {
+            throw other.take();
+        }
+    }
+
+    public static <T, X extends Throwable> T[] elvisThrow(T[] value, Provider<? extends X> other) throws X {
+        if (value != null) {
+            return value;
+        } else {
+            throw other.take();
+        }
+    }
+
+    public static <X extends Throwable> String elvisThrow(String value, Provider<? extends X> other) throws X {
+        if (value != null) {
+            return value;
+        } else {
+            throw other.take();
+        }
+    }
+
+    public static <T> Lazy<T> lazy(Supplier<T> supplier) {
+		return new Lazy<>(supplier);
+	}
+
+	public static Lazy<Byte> lazy(byte value) {
+        return new Lazy<>(() -> value);
+    }
+
+    public static Lazy<Short> lazy(short value) {
+        return new Lazy<>(() -> value);
+    }
+
+    public static Lazy<Integer> lazy(int value) {
+        return new Lazy<>(() -> value);
+    }
+
+    public static Lazy<Long> lazy(long value) {
+        return new Lazy<>(() -> value);
+    }
+
+    public static Lazy<Float> lazy(float value) {
+        return new Lazy<>(() -> value);
+    }
+
+    public static Lazy<Double> lazy(double value) {
+        return new Lazy<>(() -> value);
+    }
+
+    public static Lazy<Character> lazy(char value) {
+        return new Lazy<>(() -> value);
+    }
+
+    public static Lazy<Boolean> lazy(boolean value) {
+        return new Lazy<>(() -> value);
+    }
+
+    public static Lazy<String> lazy(String value) {
+        return new Lazy<>(() -> value);
+    }
 
     public static <T> void with(T instance, Consumer<T> consumer) {
         consumer.accept(instance);

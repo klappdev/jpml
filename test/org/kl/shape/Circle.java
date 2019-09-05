@@ -35,4 +35,7 @@ public class Circle extends Figure {
         radius.set(staticRadius);
     }
 
+    public int radius() {
+        return radius;
+    }
 }

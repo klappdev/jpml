@@ -243,6 +243,51 @@ public class Reflection {
         return result;
     }
 
+    public static <V> Object[] fetchMembers(V value, int countMembers, String... names) {
+        Structure data = cacheStructures.computeIfAbsent(value.getClass(), Structure::new);
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+
+        switch (countMembers) {
+            case 1: return fetchMember(lookup, value, data, names, 1);
+            case 2: return fetchMember(lookup, value, data, names, 2);
+            case 3: return fetchMember(lookup, value, data, names, 3);
+            default: throw new PatternException("Structure must not has more than 3 fields");
+        }
+    }
+
+    /* Method target-independent:
+     * v8 - MethodHandle,
+     * v9 - VarHandle
+     */
+    private static <V> Object[] fetchMember(MethodHandles.Lookup lookup, V value, Structure data,
+                                            String[] names, int countMembers) {
+        List<Field> members = data.getMembers();
+        Object[] result = new Object[countMembers];
+        int i = 0;
+
+        if (members.size() != countMembers) {
+            throw new PatternException("Count fields more then in target. Exclude unnecessary fields");
+        }
+
+        for (Field member : members) {
+            if (member.getName().equals(names[i])) {
+                try {
+                    member.setAccessible(true);
+                    memberInvoker = lookup.unreflectGetter(member);
+                    result[i] = memberInvoker.invoke(value);
+
+                    i++;
+                } catch (IllegalAccessException e) {
+                    throw new PatternException("Can not access to field " + member.getName() + " " + e.getMessage());
+                } catch (Throwable throwable) {
+                    throw new PatternException("Can not get value field " + member.getName());
+                }
+            }
+        }
+
+        return result;
+    }
+
     /*package-private*/ static void verifySignatureExtractor(Method method) {
         if (method.getReturnType() != void.class) {
             throw new PatternException("Extract method must not has return value");
