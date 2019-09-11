@@ -30,4 +30,8 @@ public class Quadrate extends Figure {
     public static void unapply(IntRef width) {
         width.set(staticWidth);
     }
+
+    public int width() {
+        return width;
+    }
 }

@@ -3,22 +3,40 @@ package org.kl.util;
 import java.util.function.Supplier;
 
 public final class Lazy<T> {
-	private Supplier<T> supplier;
+	private volatile Supplier<T> delegate;
+	private volatile boolean initialized;
 	private T value;
-	private boolean supplied;
-	 
-	public Lazy(Supplier<T> supplier) {
-		this.supplier = supplier;
+
+	public Lazy(Supplier<T> delegate) {
+		this.delegate = delegate;
 	}
 	 
 	public T get() {
-		if (supplied) {
+		if (initialized) {
 			return value;
 		}
 		
-		this.supplied = true;
-		this.value = supplier.get();
+		this.initialized = true;
+		this.value = delegate.get();
 		
+		return value;
+	}
+
+	public T getSync() {
+		if (!initialized) {
+			synchronized (this) {
+				if (!initialized) {
+					T result = delegate.get();
+					this.value = result;
+
+					this.initialized = true;
+					this.delegate = null;
+
+					return result;
+				}
+			}
+		}
+
 		return value;
 	}
 }

@@ -119,7 +119,7 @@ This pattern give simplify work with union types. Also could apply with another 
 ```Java
    import java.util.Union;
    
-   Union value = ...;
+   Union value = Union.of(1, "one");
    
    matches(value).as(
       Integer.class, i -> out.println("number: " + i),
@@ -409,7 +409,7 @@ Also this pattern give simplify work with Optional<<V>>, Expected<T, E>.
 *Sequence pattern* allow processing on data sequence.
 
 ```Java
-   List<Integer> list = ...;
+   List<Integer> list = List.of(1, 2, 3);
   
    switch (list) {
       case empty()       -> System.out.println("Empty value");
@@ -428,7 +428,7 @@ Using this library developer can write in the following way.
    import org.kl.state.Else;
    import static org.kl.pattern.SequencePattern.matches;
 
-   List<Integer> list = ...;
+   List<Integer> list = List.of(1, 2, 3);
 
    matches(figure,
       empty()   () -> System.out.println("Empty value"),
@@ -460,8 +460,8 @@ Also could apply with another form.
 
 *Common pattern* contains general constructions which could be useful.
 
-```Java
-	lazy var rect = new Rectangle();
+```Java 11
+    lazy var rect = new Rectangle();
     var result = rect ?: new Rectangle();
 	
     with(rect) {

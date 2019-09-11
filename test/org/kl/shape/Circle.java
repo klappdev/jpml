@@ -7,10 +7,8 @@ import org.kl.type.IntRef;
 public class Circle extends Figure {
     private int radius;
 
-    private static int staticRadius = 5;
-
-    @Exclude
-    private int temp;
+    @Exclude private static int staticRadius = 5;
+    @Exclude private int temp;
 
     public Circle() {
         this.radius = 5;

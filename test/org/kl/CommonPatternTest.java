@@ -2,7 +2,6 @@ package org.kl;
 
 import org.junit.jupiter.api.Test;
 import org.kl.error.PatternException;
-import org.kl.pattern.CommonPattern;
 import org.kl.shape.Rectangle;
 import org.kl.state.Else;
 import org.kl.state.Side;
@@ -57,8 +56,8 @@ public class CommonPatternTest {
         /* 1 */
         Lazy<Rectangle> lazyRect = lazy(Rectangle::new);
 
-        assertEquals(lazyRect.get().getWidth(), 5);
-        assertEquals(lazyRect.get().getHeight(), 10);
+        assertEquals(lazyRect.get().width(), 5);
+        assertEquals(lazyRect.get().height(), 10);
 
         /* 2 */
         Lazy<Integer> lazyInt = lazy(5);
@@ -90,8 +89,8 @@ public class CommonPatternTest {
             it.setHeight(10);
         });
 
-        assertEquals(rect.getWidth(),  5);
-        assertEquals(rect.getHeight(), 10);
+        assertEquals(rect.width(),  5);
+        assertEquals(rect.height(), 10);
 
         Rectangle result = with(rect, it -> {
             it.setWidth(15);
@@ -100,8 +99,8 @@ public class CommonPatternTest {
             return it;
         });
 
-        assertEquals(result.getWidth(),  15);
-        assertEquals(result.getHeight(), 15);
+        assertEquals(result.width(),  15);
+        assertEquals(result.height(), 15);
     }
 
     @Test

@@ -45,11 +45,11 @@ public class Rectangle extends Figure {
         this.width = width;
     }
 
-    public int getWidth() {
+    public int width() {
         return width;
     }
 
-    public int getHeight() {
+    public int height() {
         return height;
     }
 }

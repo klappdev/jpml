@@ -36,4 +36,12 @@ public class Triangle extends Figure {
         width.set(staticWidth);
         height.set(staticHeight);
     }
+
+    public double width() {
+        return width;
+    }
+
+    public double height() {
+        return height;
+    }
 }
