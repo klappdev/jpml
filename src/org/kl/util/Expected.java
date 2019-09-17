@@ -1,6 +1,7 @@
 package org.kl.util;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public final class Expected<T, E extends Throwable> {
     private final T value;
@@ -27,6 +28,14 @@ public final class Expected<T, E extends Throwable> {
 
     public static <T, E extends Throwable> Expected<T, E> of(E error) {
         return new Expected<>(error);
+    }
+
+    public static <T, E extends Throwable> Expected<T, E> of(Supplier<T> supplier) {
+        try {
+            return new Expected<>(supplier.get());
+        } catch (Throwable e) {
+            return new Expected<>((E) e);
+        }
     }
 
     public boolean isValue() {

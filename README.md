@@ -47,7 +47,7 @@ For work with range values could use such functions: in/or. Also could apply wit
    matches(data).as(
       or(1, 2),    () ->  System.out.println("1 or 2");
       in(3, 6),    () ->  System.out.println("between 3 and 6");
-      7,           () ->  System.out.println("7");        
+      in(7),       () ->  System.out.println("7");        
       Null.class,  () ->  System.out.println("Null value "),
       Else.class,  () ->  System.out.println("Default value: " + data)
    );
@@ -56,14 +56,20 @@ For work with range values could use such functions: in/or. Also could apply wit
 *Tuple pattern* allow test for equality multiple pieces with constants.
 
 ```Java
+
+   let (side, width) = border;	
+
    switch (side, width) {
       case "top",    25 -> System.out.println("top");
       case "bottom", 30 -> System.out.println("bottom");
       case "left",   15 -> System.out.println("left");        
-      case "right",  15 -> System.out.println("right"); 
-      case null         -> System.out.println("Null value ");
+      case "right",  15 -> System.out.println("right");
       default           -> System.out.println("Default value ");
    };
+   
+   for ((side, width) : listBorders) {
+	  System.out.println("border: " + [side + "," + width]); 	
+   }
 ```
 Using this library developer can write in the following way.
 
@@ -72,15 +78,46 @@ Using this library developer can write in the following way.
    import org.kl.state.Else;
    import org.kl.state.Null;
    import static org.kl.pattern.TuplePattern.matches;
+   import static org.kl.pattern.TuplePattern.let;
 
+   let(border, (String side, int width) -> {
+      System.out.println("border: " + side + "," + width);
+   });
+   
    matches(side, width,
-      "top",    25,  () -> System.out.println("top");
-      "bottom", 30,  () -> System.out.println("bottom");
-      "left",   15,  () -> System.out.println("left");        
-      "right",  15,  () -> System.out.println("right");         
-      Null.class,    () -> System.out.println("Null value"),
+      "top",    25,  () -> System.out.println("top"),
+      "bottom", 30,  () -> System.out.println("bottom"),
+      "left",   15,  () -> System.out.println("left"),        
+      "right",  15,  () -> System.out.println("right"),
       Else.class,    () -> System.out.println("Default value")
    );
+   
+   foreach(listBorders, (String side, int width) -> {
+	  System.out.println("border: " + side + "," + width); 	
+   }
+```
+
+Using Java 11 feature, we can deduce types parameters. 
+Also could apply with another form. 
+
+```Java
+
+   let(border, (var side, var width) -> {
+      System.out.println("border: " + side + "," + width);
+   });
+   
+   var borderLeft = Tuple.of("top", 25);
+   var borderRight = Tuple.of("bottom", 30);
+   
+   matches(side, width).as(
+      borderLeft,  () -> System.out.println("top"),
+      borderRight, () -> System.out.println("bottom"),
+      Else.class,  () -> System.out.println("Default value")
+   );
+   
+   foreach(listBorders, (var side, var width) -> {
+	  System.out.println("border: " + side + "," + width); 	
+   }
 ```
 
 *Type test pattern* allow match type and then extract value.
@@ -117,9 +154,10 @@ Using this library developer can write in the following way.
 This pattern give simplify work with union types. Also could apply with another form. 
 	
 ```Java
-   import java.util.Union;
+   import org.kl.util.Union;
    
-   Union value = Union.of(1, "one");
+   Union value = Union.of(Integer.class, String.class);
+   value.set(5);
    
    matches(value).as(
       Integer.class, i -> out.println("number: " + i),
@@ -401,8 +439,8 @@ Also this pattern give simplify work with Optional<<V>>, Expected<T, E>.
    );
    
    matches(value).as(
-      Optional::error, e -> out.println("get error: " + e),
-      Optional::value, v -> out.println("get value: " + v)
+      Expected::error, e -> out.println("get error: " + e),
+      Expected::value, v -> out.println("get value: " + v)
    );
 ```	
 

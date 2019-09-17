@@ -2184,7 +2184,7 @@ public class DeconstructPatternTest {
 
     @Disabled
     @Test
-    public void letOperationTest()  {
+    public void letStatementTest() {
         /* 1 */
         Circle circle = new Circle(5);
 

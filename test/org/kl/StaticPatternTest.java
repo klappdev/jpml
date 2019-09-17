@@ -7,6 +7,7 @@ import org.kl.util.Expected;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,6 +73,13 @@ public class StaticPatternTest {
         Expected<Integer, SQLException> data2 = Expected.of(new SQLException());
 
         matches(data2,
+                Expected::error, e -> out.println("get error: " + e),
+                Expected::value, (Consumer<Integer>) v -> out.println("get value: " + v)
+        );
+
+        Expected<Integer, ArithmeticException> data3 = Expected.of((Supplier<Integer>) () -> 4 / 0);
+
+        matches(data3,
                 Expected::error, e -> out.println("get error: " + e),
                 Expected::value, (Consumer<Integer>) v -> out.println("get value: " + v)
         );
