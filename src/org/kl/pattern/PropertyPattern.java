@@ -39,7 +39,7 @@ public final class PropertyPattern {
     public static <V, T>
     void foreach(Collection<V> data, Tuple.Tuple2<String, T> item, Consumer<T> consumer)  {
         for (V value : data) {
-            Object[] args = Reflection.fetchMembers(value, 1, (String) item.get(0));
+            Object[] args = Reflection.fetchFields(value, 1, (String) item.get(0));
 
             consumer.accept((T) args[0]);
         }
@@ -56,7 +56,7 @@ public final class PropertyPattern {
 
     public static <V, T>
     void let(V data, Tuple.Tuple2<String, T> item, Consumer<T> consumer)  {
-        Object[] args = Reflection.fetchMembers(data, 1, (String) item.get(0));
+        Object[] args = Reflection.fetchFields(data, 1, (String) item.get(0));
 
         consumer.accept((T) args[0]);
     }
@@ -89,7 +89,7 @@ public final class PropertyPattern {
 
     private static <V, T>
     boolean executeBranch(V value, Tuple.Tuple2<String, T> item, Consumer<T> branch) {
-        Object[] args = Reflection.fetchMembers(value, 1, (String) item.get(0));
+        Object[] args = Reflection.fetchFields(value, 1, (String) item.get(0));
         Object firstArg = item.get(1);
 
         if (firstArg == null || Reflection.compareValues(firstArg, args[0])) {
@@ -123,7 +123,7 @@ public final class PropertyPattern {
 
     private static <V, T, R>
     R executeBranch(V value, Tuple.Tuple2<String, T> item, Function<T, R> branch) {
-        Object[] args = Reflection.fetchMembers(value, 1, (String) item.get(0));
+        Object[] args = Reflection.fetchFields(value, 1, (String) item.get(0));
         Object firstArg = item.get(1);
 
         if (firstArg == null || Reflection.compareValues(firstArg, args[0])) {
@@ -177,7 +177,7 @@ public final class PropertyPattern {
     public static <V, T1, T2>
     void foreach(Collection<V> data, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> consumer)  {
         for (V value : data) {
-            Object[] args = Reflection.fetchMembers(value, 2, (String) item.get(0), item.get(2));
+            Object[] args = Reflection.fetchFields(value, 2, (String) item.get(0), item.get(2));
 
             consumer.accept((T1) args[0], (T2) args[1]);
         }
@@ -203,7 +203,7 @@ public final class PropertyPattern {
 
     public static <V, T1, T2>
     void let(V data, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> consumer)  {
-        Object[] args = Reflection.fetchMembers(data, 2, (String) item.get(0), item.get(2));
+        Object[] args = Reflection.fetchFields(data, 2, (String) item.get(0), item.get(2));
 
         consumer.accept((T1) args[0], (T2) args[1]);
     }
@@ -238,7 +238,7 @@ public final class PropertyPattern {
 
     private static <V, T1, T2>
     boolean executeBranch(V value, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> branch) {
-        Object[] args = Reflection.fetchMembers(value, 2, item.get(0), item.get(2));
+        Object[] args = Reflection.fetchFields(value, 2, item.get(0), item.get(2));
         Object firstArg  = item.get(1);
         Object secondArg = item.get(3);
 
@@ -269,7 +269,7 @@ public final class PropertyPattern {
 
     private static <V, T1, T2, R>
     R executeBranch(V value, Tuple.Tuple4<String, T1, String, T2> item, BiFunction<T1, T2, R> branch) {
-        Object[] args = Reflection.fetchMembers(value, 2, item.get(0), item.get(2));
+        Object[] args = Reflection.fetchFields(value, 2, item.get(0), item.get(2));
         Object firstArg  = item.get(1);
         Object secondArg = item.get(3);
 
@@ -340,7 +340,7 @@ public final class PropertyPattern {
     void foreach(Collection<V> data,
                  Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> consumer)  {
         for (V value : data) {
-            Object[] args = Reflection.fetchMembers(value, 3, (String) item.get(0), item.get(2), item.get(4));
+            Object[] args = Reflection.fetchFields(value, 3, (String) item.get(0), item.get(2), item.get(4));
 
             consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
         }
@@ -362,7 +362,7 @@ public final class PropertyPattern {
     public static <V, T1, T2, T3>
     void let(V data,
              Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> consumer)  {
-        Object[] args = Reflection.fetchMembers(data, 3, (String) item.get(0), item.get(2), item.get(4));
+        Object[] args = Reflection.fetchFields(data, 3, (String) item.get(0), item.get(2), item.get(4));
 
         consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
     }
@@ -402,7 +402,7 @@ public final class PropertyPattern {
 
     private static <V, T1, T2, T3>
     boolean executeBranch(V value, Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> branch) {
-        Object[] args = Reflection.fetchMembers(value, 3, item.get(0), item.get(2), item.get(4));
+        Object[] args = Reflection.fetchFields(value, 3, item.get(0), item.get(2), item.get(4));
         Object firstArg  = item.get(1);
         Object secondArg = item.get(3);
         Object thirdArg  = item.get(5);
@@ -438,7 +438,7 @@ public final class PropertyPattern {
     private static <V, T1, T2, T3, R>
     R executeBranch(V value,
                     Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriFunction<T1, T2, T3, R> branch) {
-        Object[] args = Reflection.fetchMembers(value, 3, item.get(0), item.get(2), item.get(4));
+        Object[] args = Reflection.fetchFields(value, 3, item.get(0), item.get(2), item.get(4));
         Object firstArg  = item.get(1);
         Object secondArg = item.get(3);
         Object thirdArg  = item.get(5);

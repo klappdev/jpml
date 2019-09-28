@@ -29,7 +29,7 @@ Using this library developer can write in the following way.
    import org.kl.state.Null;
    import static org.kl.pattern.ConstantPattern.matches;
 
-   matches(data,
+   matches(data).as(
       new Person("man"),    () ->  System.out.println("man");
       new Person("woman"),  () ->  System.out.println("woman");
       new Person("child"),  () ->  System.out.println("child");        
@@ -38,7 +38,7 @@ Using this library developer can write in the following way.
    );
 ```
 
-For work with range values could use such functions: in/or. Also could apply with another form. 
+For work with range values could use such functions: in/or.
 
 ```Java
    import static org.kl.pattern.ConstantPattern.or;
@@ -71,7 +71,8 @@ For work with range values could use such functions: in/or. Also could apply wit
 	  System.out.println("border: " + [side + "," + width]); 	
    }
 ```
-Using this library developer can write in the following way.
+Using this library developer can write in the following way. Using Java 11 feature, could
+deduce types parameters. 
 
 ```Java
 
@@ -84,7 +85,7 @@ Using this library developer can write in the following way.
       System.out.println("border: " + side + "," + width);
    });
    
-   matches(side, width,
+   matches(side, width).as(
       "top",    25,  () -> System.out.println("top"),
       "bottom", 30,  () -> System.out.println("bottom"),
       "left",   15,  () -> System.out.println("left"),        
@@ -93,29 +94,6 @@ Using this library developer can write in the following way.
    );
    
    foreach(listBorders, (String side, int width) -> {
-	  System.out.println("border: " + side + "," + width); 	
-   }
-```
-
-Using Java 11 feature, we can deduce types parameters. 
-Also could apply with another form. 
-
-```Java
-
-   let(border, (var side, var width) -> {
-      System.out.println("border: " + side + "," + width);
-   });
-   
-   var borderLeft = Tuple.of("top", 25);
-   var borderRight = Tuple.of("bottom", 30);
-   
-   matches(side, width).as(
-      borderLeft,  () -> System.out.println("top"),
-      borderRight, () -> System.out.println("bottom"),
-      Else.class,  () -> System.out.println("Default value")
-   );
-   
-   foreach(listBorders, (var side, var width) -> {
 	  System.out.println("border: " + side + "," + width); 	
    }
 ```
@@ -141,7 +119,7 @@ Using this library developer can write in the following way.
    import org.kl.state.Null;
    import static org.kl.pattern.VerifyPattern.matches;
 
-   matches(data,
+   matches(data).as(
       Integer.class, i  -> { System.out.println(i * i); },
       Byte.class,    b  -> { System.out.println(b * b); },
       Long.class,    l  -> { System.out.println(l * l); },
@@ -151,18 +129,54 @@ Using this library developer can write in the following way.
    );
 ```
 
-This pattern give simplify work with union types. Also could apply with another form. 
+*Union pattern* allow match exhaustive subclasses type.
+
+```Java
+   public sealed class Result<T, E extends Throwable> {
+      public class Success<T> extends Result<T, E> { 
+         Success(T value) {} 
+      }
+      public class Failure<E> extends Result<T, E> {
+         Failture(E exception) {}
+      }
+   }
+
+   switch (result) {
+      case Success  s -> System.out.println("Success:  " + s),
+      case Failture f -> System.out.println("Failture: " + f)
+   };
+```
+
+Using this library developer can write in the following way.
 	
 ```Java
-   import org.kl.util.Union;
+    import org.kl.util.Union;
+    import static org.kl.pattern.UnionPattern.matches;
    
-   Union value = Union.of(Integer.class, String.class);
-   value.set(5);
+    @Sealed
+    public abstract class Result<T, E extends Throwable> {
+       private Result() {}
    
-   matches(value).as(
-      Integer.class, i -> out.println("number: " + i),
-      String.class,  s -> out.println("string: " + s)
-   );   
+       public static class Success<T> extends Result<T, E> { 
+	  Success(T value) {} 
+       }
+       public static class Failure<E> extends Result<T, E> {
+	  Failture(E exception) {}
+       }
+    }
+	
+    matches(result).as(
+       Result.Success.class,  s -> System.out.println("Success:  " + s),
+       Result.Failture.class, f -> System.out.println("Success:  " + s)
+    );
+   
+    Union value = Union.of(Integer.class, String.class);
+    value.set(5);
+   
+    matches(value).as(
+       Integer.class, i -> System.out.println("number: " + i),
+       String.class,  s -> System.out.println("string: " + s)
+    );   
 ```	
 
 *Guard pattern* allow match type and check condition for the truth at one time.
@@ -186,7 +200,7 @@ Using this library developer can write in the following way.
    import org.kl.state.Null;
    import static org.kl.pattern.GuardPattern.matches;
 
-   matches(data,           
+   matches(data).as(           
       Integer.class, i  -> i != 0,  i  -> { System.out.println(i * i); },
       Byte.class,    b  -> b > -1,  b  -> { System.out.println(b * b); },
       Long.class,    l  -> l == 5,  l  -> { System.out.println(l * l); },
@@ -198,7 +212,7 @@ Using this library developer can write in the following way.
 For simplify writing a condition, developer can use such functions to compare: <br/>
 lessThan/lt, greaterThan/gt, lessThanOrEqual/le, greaterThanOrEqual/ge,  <br/>
 equal/eq, notEqual/ne. Also for omit condition could use such functions:<br/>
-always/yes, never/no. Also could apply with another form. 
+always/yes, never/no.
 
 ```Java
    matches(data).as(           
@@ -228,7 +242,8 @@ always/yes, never/no. Also could apply with another form.
    }
 ```
 
-Using this library developer can write in the following way.
+Using this library developer can write in the following way. Using Java 11 feature, we can deduce
+types deconstruct parameters.
 
 ```Java
    import org.kl.state.Else;
@@ -242,33 +257,13 @@ Using this library developer can write in the following way.
       System.out.println("border: " + w + " " + h));
    });
 
-   matches(figure,
+   matches(figure).as(
       Rectangle.class, (int w, int h) -> System.out.println("square: " + (w * h)),
       Circle.class,    (int r)        -> System.out.println("square: " + (2 * Math.PI * r)),
       Else.class,      ()             -> System.out.println("Default square: " + 0)
    );
    
    foreach(listRectangles, (int w, int h) -> {
-      System.out.println("square: " + (w * h));
-   });
-```
-
-Using Java 11 feature, we can deduce types deconstruct parameters. Also could apply with another form. 
-
-```Java
-   Figure figure = new Rectangle();
-   
-   let(figure, (var w, var h) -> {
-      System.out.println("border: " + w + " " + h));
-   });
-
-   matches(figure).as(
-      Rectangle.class, (var w, var h) -> System.out.println("square: " + (w * h)),
-      Circle.class,    (var r)        -> System.out.println("square: " + (2 * Math.PI * r)),
-      Else.class,      ()             -> System.out.println("Default square: " + 0)
-   );
-   
-   foreach(listRectangles, (var w, var h) -> {
       System.out.println("square: " + (w * h));
    });
 ```
@@ -320,7 +315,7 @@ Using this library developer can write in the following way.
       System.out.println("border: " + w + " " + h));
    });
 
-   matches(figure,
+   matches(figure).as(
       Rect.class,    of("w", 5,  "h", 10), (int w, int h) -> System.out.println("sqr: " + (w * h)),
       Rect.class,    of("w", 10, "h", 15), (int w, int h) -> System.out.println("sqr: " + (w * h)),
       Circle.class,  of("r"), (int r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
@@ -333,7 +328,7 @@ Using this library developer can write in the following way.
 ```
 
 For simplify naming parameters could use another way. Using Java 11 feature, we can deduce types
-property parameters. Also could apply with another form. 
+property parameters.
 
 ```Java
 
@@ -373,7 +368,7 @@ Using this library developer can write in the following way.
    import static org.kl.pattern.PositionPattern.matches;
    import static org.kl.pattern.PositionPattern.of;
 
-   matches(data,           
+   matches(data).as(           
       Circle.class,  of(5),  () -> { System.out.println("small circle"); },
       Circle.class,  of(15), () -> { System.out.println("middle circle"); },
       Null.class,            () -> { System.out.println("Null value "); },
@@ -410,20 +405,20 @@ Using this library developer can write in the following way.
    import static org.kl.pattern.StaticPattern.matches;
    import static org.kl.pattern.StaticPattern.of;
 
-   matches(figure,
+   matches(figure).as(
       Rect.class,   of("unapply"), (int w, int h) -> out.println("square: " + (w * h)),
       Circle.class, of("unapply"), (int r)        -> out.println("square: " + (2 * Math.PI * r)),
-      Else.class, ()                              -> System.out.println("Default square: " + 0)
+      Else.class, ()                              -> out.println("Default square: " + 0)
    );    
 ```
 
-For simplify naming deconstruct method could use another way. Also could apply with another form. 
+For simplify naming deconstruct method could use another way. 
 
 ```Java
    matches(figure).as(
       Rect.class,   Rect::unapply, (int w, int h) -> out.println("square: " + (w * h)),
       Circle.class, Circle::unapply, (int r)      -> out.println("square: " + (2 * Math.PI * r)),
-      Else.class,   ()                            -> System.out.println("Default square: " + 0)
+      Else.class,   ()                            -> out.println("Default square: " + 0)
    );
 ```
 
@@ -460,7 +455,8 @@ Also this pattern give simplify work with Optional<<V>>, Expected<T, E>.
    };
 ```
 
-Using this library developer can write in the following way.
+Using this library developer can write in the following way. Using Java 11 feature, we can deduce
+types property parameters. 
 
 ```Java
    import org.kl.state.Else;
@@ -468,7 +464,7 @@ Using this library developer can write in the following way.
 
    List<Integer> list = List.of(1, 2, 3);
 
-   matches(figure,
+   matches(figure).as(
       empty()   () -> System.out.println("Empty value"),
       head(),   (int h) -> System.out.println("list head: " + h),
       middle(), (int m) -> out.println("middle list:" + m),
@@ -479,26 +475,9 @@ Using this library developer can write in the following way.
    );   
 ```
 
-Using Java 11 feature, we can deduce types property parameters. 
-Also could apply with another form.
-
-```Java
-   List<Integer> list = ...;
-
-   matches(figure).as(
-      empty()   () -> System.out.println("Empty value"),
-      head(),   (var h) -> System.out.println("list head: " + h),
-      middle(), (var m) -> out.println("middle list:" + m),
-      tail(),   (var t) -> out.println("tail list:  " + t),
-      at(1),    (var i) -> out.println("at list:    " + i),
-      edges(),  (var f, var l) -> out.println("edges: " + f + " - " + l)
-      Else.class, () -> System.out.println("Default value")
-   );   
-```
-
 *Common pattern* contains general constructions which could be useful.
 
-```Java 11
+```Java 
     lazy var rect = new Rectangle();
     var result = rect ?: new Rectangle();
 	
@@ -511,15 +490,19 @@ Also could apply with another form.
         side == Side.LEFT  -> System.out.println("left  value"),
         side == Side.RIGHT -> System.out.println("right value")
     }
+	
+    repeat(3) {
+	System.out.println("three time");
+    }
+	
+    int even = number.takeIf { it % 2 == 0 };
+    int odd  = number.takeUnless { it % 2 == 0 };
 ```
 
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.pattern.CommonPattern.with;
-   import static org.kl.pattern.CommonPattern.when;
-   import static org.kl.pattern.CommonPattern.lazy;
-   import static org.kl.pattern.CommonPattern.elvis;
+   import static org.kl.pattern.CommonPattern.*;
 
    var rect = lazy(Rectangle::new);
    var result = elvis(rect.get(), new Rectangle());
@@ -533,6 +516,13 @@ Using this library developer can write in the following way.
        side == Side.LEFT,  () -> System.out.println("left  value"),
        side == Side.RIGHT, () -> System.out.println("right value")
    );
+   
+   repeat(3, () -> {
+	   System.out.println("three time");
+   )
+   
+   int even = self(number).takeIf(it -> it % 2 == 0);
+   int odd  = self(number).takeUnless(it -> it % 2 == 0);
 ```
 
 Requirements:<br/>

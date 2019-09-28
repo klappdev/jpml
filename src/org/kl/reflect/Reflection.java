@@ -1,31 +1,229 @@
 package org.kl.reflect;
 
 import org.kl.error.PatternException;
+import org.kl.lambda.QuarConsumer;
 import org.kl.lambda.TriConsumer;
 import org.kl.meta.Extract;
 import org.kl.type.*;
-import org.kl.util.Extractor;
+import org.kl.util.Tuple;
 import sun.misc.SharedSecrets;
+import sun.misc.Unsafe;
 import sun.reflect.ConstantPool;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class Reflection {
+public final class Reflection {
     private static MethodHandles.Lookup lookup = MethodHandles.lookup();
     private static MethodHandle extractorInvoker;
-    private static MethodHandle memberInvoker;
-    private static HashMap<Class<?>, Extracture> cacheExtractures = new HashMap<>();
-    private static HashMap<Class<?>, Structure>  cacheStructures  = new HashMap<>();
+
+    private static HashMap<Class<?>, ExtractorAttribute> cacheExtractors = new HashMap<>();
+    private static HashMap<Class<?>, FieldAttribute> cacheFields = new HashMap<>();
+    private static HashMap<Class<?>, SealedAttribute> cacheSubclasses = new HashMap<>();
+
+    private static final Unsafe UNSAFE = getUnsafe();
+
+    public static Unsafe getUnsafe() {
+        try {
+            Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+
+            return (Unsafe) theUnsafe.get(null);
+        } catch (NoSuchFieldException e) {
+            System.err.println("No such field found: " + e.getMessage());
+        } catch (IllegalAccessException e) {
+            System.err.println("Illegal access occur: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    /**
+     * Method using target-dependent components
+     * @since 8 - sun.misc.Unsafe
+     * @since 9 - jdk.unsupported.Unsafe
+     * @since 12 - java.lang.reflect.Constructor
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> T createInstance(Class<T> clazz) {
+        if (byte.class == clazz || Byte.class == clazz) {
+            return (T)(Byte)(byte) 0;
+        } else if (short.class == clazz || Short.class == clazz) {
+            return (T)(Short)(short) 0;
+        } else if (int.class == clazz || Integer.class == clazz) {
+            return (T)(Integer) 0;
+        } else if (long.class == clazz || Long.class == clazz) {
+            return (T)(Long) 0L;
+        } else if (float.class == clazz || Float.class == clazz) {
+            return (T)(Float) 0F;
+        } else if (double.class == clazz || Double.class == clazz) {
+            return (T)(Double) 0D;
+        } else if (char.class == clazz || Character.class == clazz) {
+            return (T)(Character) '0';
+        } else if (boolean.class == clazz || Boolean.class == clazz) {
+            return (T)(Boolean) false;
+        } else if (void.class == clazz || Void.class == clazz) {
+            return null;
+        }
+
+        if (clazz.isArray()) {
+            return (T) Array.newInstance(clazz.getComponentType(), 0);
+        }
+
+        if (UNSAFE != null) {
+            try {
+                return (T) UNSAFE.allocateInstance(clazz);
+            } catch (InstantiationException e) {
+                System.err.println("Can't create instance: " + e.getMessage());
+            }
+        }
+
+        try {
+            return clazz.getConstructor().newInstance();
+        } catch (Exception e) {
+            throw new PatternException("Can't create instance: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Method using target-dependent components
+     * @since 8 - sun.misc.Unsafe
+     * @since 9 - java.lang.invoke.VarHandle
+     */
+    private static void setField(Object instance, Field field, Object value) {
+        if (value == null && field.getType().isPrimitive()) {
+            return;
+        }
+
+        if (UNSAFE != null) {
+            setUnsafeField(instance, field, value);
+        } else {
+            setSafeField(instance, field, value);
+        }
+    }
+
+    private static void setUnsafeField(Object instance, Field field, Object value) {
+        if (byte.class == field.getType()) {
+            UNSAFE.putByte(instance, UNSAFE.objectFieldOffset(field), (byte) value);
+        } else if (short.class == field.getType()) {
+            UNSAFE.putShort(instance, UNSAFE.objectFieldOffset(field), (short) value);
+        } else if (int.class == field.getType()) {
+            UNSAFE.putInt(instance, UNSAFE.objectFieldOffset(field), (int) value);
+        } else if (long.class == field.getType()) {
+            UNSAFE.putLong(instance, UNSAFE.objectFieldOffset(field), (long) value);
+        } else if (float.class == field.getType()) {
+            UNSAFE.putFloat(instance, UNSAFE.objectFieldOffset(field), (float) value);
+        } else if (double.class == field.getType()) {
+            UNSAFE.putDouble(instance, UNSAFE.objectFieldOffset(field), (double) value);
+        } else if (char.class == field.getType()) {
+            UNSAFE.putChar(instance, UNSAFE.objectFieldOffset(field), (char) value);
+        } else if (boolean.class == field.getType()) {
+            UNSAFE.putBoolean(instance, UNSAFE.objectFieldOffset(field), (boolean) value);
+        }  else {
+            UNSAFE.putObject(instance, UNSAFE.objectFieldOffset(field), value);
+        }
+    }
+
+    private static void setSafeField(Object instance, Field field, Object value)  {
+        field.setAccessible(true);
+
+        try {
+            if (byte.class == field.getType()) {
+                field.setByte(instance, (byte) value);
+            } else if (short.class == field.getType()) {
+                field.setShort(instance, (short) value);
+            } else if (int.class == field.getType()) {
+                field.setInt(instance, (int) value);
+            } else if (long.class == field.getType()) {
+                field.setLong(instance, (long) value);
+            } else if (float.class == field.getType()) {
+                field.setFloat(instance, (float) value);
+            } else if (double.class == field.getType()) {
+                field.setDouble(instance, (double) value);
+            } else if (char.class == field.getType()) {
+                field.setChar(instance, (char) value);
+            } else if (boolean.class == field.getType()) {
+                field.setBoolean(instance, (boolean) value);
+            } else {
+                field.set(instance, value);
+            }
+        } catch (IllegalAccessException e) {
+            throw new PatternException("Illegal access to field: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Method using target-dependent components
+     * @since 8 - sun.misc.Unsafe
+     * @since 9 - java.lang.invoke.VarHandle
+     */
+    private static Object getField(Object instance, Field field) {
+        if (UNSAFE != null) {
+            return getUnsafeField(instance, field);
+        } else {
+            return getSafeField(instance, field);
+        }
+    }
+
+    private static Object getUnsafeField(Object instance, Field field) {
+        if (byte.class == field.getType()) {
+            return UNSAFE.getByte(instance, UNSAFE.objectFieldOffset(field));
+        } else if (short.class == field.getType()) {
+            return UNSAFE.getShort(instance, UNSAFE.objectFieldOffset(field));
+        } else if (int.class == field.getType()) {
+            return UNSAFE.getInt(instance, UNSAFE.objectFieldOffset(field));
+        } else if (long.class == field.getType()) {
+            return UNSAFE.getLong(instance, UNSAFE.objectFieldOffset(field));
+        } else if (float.class == field.getType()) {
+            return UNSAFE.getFloat(instance, UNSAFE.objectFieldOffset(field));
+        } else if (double.class == field.getType()) {
+            return UNSAFE.getDouble(instance, UNSAFE.objectFieldOffset(field));
+        }   else if (char.class == field.getType()) {
+            return UNSAFE.getChar(instance, UNSAFE.objectFieldOffset(field));
+        } else if (boolean.class == field.getType()) {
+            return UNSAFE.getBoolean(instance, UNSAFE.objectFieldOffset(field));
+        } else if (void.class == field.getType()) {
+            return null;
+        } else {
+            return UNSAFE.getObject(instance, UNSAFE.objectFieldOffset(field));
+        }
+    }
+
+    private static Object getSafeField(Object instance, Field field) {
+        field.setAccessible(true);
+
+        try {
+            if (byte.class == field.getType()) {
+                return field.getByte(instance);
+            } else if (short.class == field.getType()) {
+                return field.getShort(instance);
+            } if (int.class == field.getType()) {
+                return field.getInt(instance);
+            } else if (long.class == field.getType()) {
+                return field.getLong(instance);
+            } else if (float.class == field.getType()) {
+                return field.getFloat(instance);
+            } else if (double.class == field.getType()) {
+                return field.getDouble(instance);
+            } else if (char.class == field.getType()) {
+                return field.getChar(instance);
+            } else if (boolean.class == field.getType()) {
+                return field.getBoolean(instance);
+            } else if (void.class == field.getType()) {
+                return null;
+            } else {
+                return field.get(instance);
+            }
+        } catch (IllegalAccessException e) {
+            throw new PatternException("Illegal access to field: " + e.getMessage());
+        }
+    }
 
     public static Object[] invokeUnreferenceExtractor(Consumer<?> consumer, int countParameters) {
         return invokeUnreferenceExtractor(consumer.getClass(), countParameters);
@@ -58,12 +256,12 @@ public class Reflection {
         return result;
     }
 
-    /* Method target-independent:
-     * v8  - sun.reflect.ConstantPool
-     * v9  - jdk.unsupported.ConstantPool
-     * v12 - java.lang.constant.Constable
+    /**
+     * Method using target-dependent components
+     * @since 8 - sun.reflect.ConstantPool
+     * @since 9 - jdk.unsupported.ConstantPool
+     * @since 12 - java.lang.constant.Constable
      */
-    @SuppressWarnings("sunapi")
     private static Method unreferenceExtractor(Class<?> clazz, int countParameters) {
         ConstantPool pool = SharedSecrets.getJavaLangAccess().getConstantPool(clazz);
         int size = pool.getSize();
@@ -91,8 +289,8 @@ public class Reflection {
     }
 
     public static <V> Object[] invokeExtractor(V value, int countParameters) {
-        Extracture data = cacheExtractures.computeIfAbsent(value.getClass(),
-                                                          routine -> new Extracture(lookup, routine));
+        ExtractorAttribute data = cacheExtractors.computeIfAbsent(value.getClass(),
+                                                          routine -> new ExtractorAttribute(lookup, routine));
         switch (countParameters) {
             case 1: return invokeUnExtractor(value, data);
             case 2: return invokeBiExtractor(value, data);
@@ -103,8 +301,8 @@ public class Reflection {
 
     @SuppressWarnings("unchecked")
     public static <V> Object[] invokeExtractor(V value, String name, int countParameters) {
-        Extracture data = cacheExtractures.computeIfAbsent(value.getClass(),
-                                                          routine -> new Extracture(lookup, routine));
+        ExtractorAttribute data = cacheExtractors.computeIfAbsent(value.getClass(),
+                                                          routine -> new ExtractorAttribute(lookup, routine));
         switch (countParameters) {
             case 1: return invokeUnExtractor(value, name, data);
             case 2: return invokeBiExtractor(value, name, data);
@@ -114,14 +312,16 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeUnExtractor(V value, String name, Extracture data) {
+    private static <V> Object[] invokeUnExtractor(V value, String name, ExtractorAttribute data) {
         Object[] result = new Object[1];
-        Extractor.Extractor2 extractor = data.getExtractors().get(0);
+        Tuple.Tuple3<String, BiConsumer<?, ?>, Object> extractor = data.getExtractors().get(0);
+        String label = extractor.get(0);
 
-        if (extractor.getName().equals(name)) {
-            Object parameter = extractor.getParameter();
+        if (label.equals(name)) {
+            Object parameter = extractor.get(2);
+            BiConsumer<V, Object> consumer = extractor.get(1);
 
-            extractor.getConsumer().accept(value, parameter);
+            consumer.accept(value, parameter);
             result[0] = resolveParameter(parameter);
         }
 
@@ -129,26 +329,31 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeUnExtractor(V value, Extracture data) {
+    private static <V> Object[] invokeUnExtractor(V value, ExtractorAttribute data) {
         Object[] result = new Object[1];
-        Extractor.Extractor2 extractor = data.getExtractors().get(0);
-        Object parameter = extractor.getParameter();
+        Tuple.Tuple3<String, BiConsumer<?, ?>, Object> extractor = data.getExtractors().get(0);
 
-        extractor.getConsumer().accept(value, parameter);
+        BiConsumer<V, Object> consumer = extractor.get(1);
+        Object parameter = extractor.get(2);
+
+        consumer.accept(value, parameter);
         result[0] = resolveParameter(parameter);
 
         return result;
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeBiExtractor(V value, String name, Extracture data) {
+    private static <V> Object[] invokeBiExtractor(V value, String name, ExtractorAttribute data) {
         Object[] result = new Object[2];
 
-        for (Extractor.Extractor3 biExtractor : data.getBiExtractors()) {
-            if (biExtractor.getName().equals(name)) {
-                Object[] parameters = biExtractor.getParameters();
+        for (Tuple.Tuple3<String, TriConsumer<?, ?, ?>, Object[]> biExtractor : data.getBiExtractors()) {
+            String label = biExtractor.get(0);
 
-                biExtractor.getConsumer().accept(value, parameters[0], parameters[1]);
+            if (label.equals(name)) {
+                TriConsumer<V, Object, Object> consumer = biExtractor.get(1);
+                Object[] parameters = biExtractor.get(2);
+
+                consumer.accept(value, parameters[0], parameters[1]);
                 result = resolveParameters(parameters);
                 break;
             }
@@ -158,13 +363,14 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeBiExtractor(V value, Extracture data) {
+    private static <V> Object[] invokeBiExtractor(V value, ExtractorAttribute data) {
         Object[] result = new Object[2];
 
-        for (Extractor.Extractor3 biExtractor : data.getBiExtractors()) {
-            Object[] parameters = biExtractor.getParameters();
+        for (Tuple.Tuple3<String, TriConsumer<?, ?, ?>, Object[]> biExtractor : data.getBiExtractors()) {
+            TriConsumer<V, Object, Object> consumer = biExtractor.get(1);
+            Object[] parameters = biExtractor.get(2);
 
-            biExtractor.getConsumer().accept(value, parameters[0], parameters[1]);
+            consumer.accept(value, parameters[0], parameters[1]);
             result = resolveParameters(parameters);
         }
 
@@ -172,14 +378,17 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeTriExtractor(V value, String name, Extracture data) {
+    private static <V> Object[] invokeTriExtractor(V value, String name, ExtractorAttribute data) {
         Object[] result = new Object[3];
 
-        for (Extractor.Extractor4 triExtractor : data.getTriExtractors()) {
-            if (triExtractor.getName().equals(name)) {
-                Object[] parameters = triExtractor.getParameters();
+        for (Tuple.Tuple3<String, QuarConsumer<?, ?, ?, ?>, Object[]> triExtractor : data.getTriExtractors()) {
+            String label = triExtractor.get(0);
 
-                triExtractor.getConsumer().accept(value, parameters[0], parameters[1], parameters[2]);
+            if (label.equals(name)) {
+                QuarConsumer<V, Object, Object, Object> consumer = triExtractor.get(1);
+                Object[] parameters = triExtractor.get(2);
+
+                consumer.accept(value, parameters[0], parameters[1], parameters[2]);
                 result = resolveParameters(parameters);
                 break;
             }
@@ -189,103 +398,102 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-    private static <V> Object[] invokeTriExtractor(V value, Extracture data) {
+    private static <V> Object[] invokeTriExtractor(V value, ExtractorAttribute data) {
         Object[] result = new Object[3];
 
-        for (Extractor.Extractor4 triExtractor : data.getTriExtractors()) {
-            Object[] parameters = triExtractor.getParameters();
+        for (Tuple.Tuple3<String, QuarConsumer<?, ?, ?, ?>, Object[]> triExtractor : data.getTriExtractors()) {
+            QuarConsumer<V, Object, Object, Object> consumer = triExtractor.get(1);
+            Object[] parameters = triExtractor.get(2);
 
-            triExtractor.getConsumer().accept(value, parameters[0], parameters[1], parameters[2]);
+            consumer.accept(value, parameters[0], parameters[1], parameters[2]);
             result = resolveParameters(parameters);
         }
 
         return result;
     }
 
-    public static <V> Object[] fetchMembers(V value, int countMembers) {
-        Structure data = cacheStructures.computeIfAbsent(value.getClass(), Structure::new);
-        MethodHandles.Lookup lookup = MethodHandles.lookup();
+    public static <V> Object[] fetchFields(V value, int countFields) {
+        FieldAttribute data = cacheFields.computeIfAbsent(value.getClass(), FieldAttribute::new);
 
-        switch (countMembers) {
-            case 1: return fetchMember(lookup, value, data, 1);
-            case 2: return fetchMember(lookup, value, data, 2);
-            case 3: return fetchMember(lookup, value, data, 3);
-            default: throw new PatternException("Structure must not has more than 3 fields");
+        if (countFields > 3) {
+            throw new PatternException("Class must not has more than 3 fields");
         }
-    }
 
-    /* Method target-independent:
-     * v8 - MethodHandle,
-     * v9 - VarHandle
-     */
-    private static <V> Object[] fetchMember(MethodHandles.Lookup lookup, V value, Structure data, int countMember) {
-        List<Field> members = data.getMembers();
-        Object[] result = new Object[countMember];
+        List<Field> fields = data.getFields();
+        Object[] result = new Object[countFields];
 
-        if (members.size() != countMember) {
+        if (fields.size() != countFields) {
             throw new PatternException("Count fields more then in target. Exclude unnecessary fields");
         }
 
-        for (int i = 0; i < members.size(); i++) {
-            Field member = members.get(i);
+        for (int i = 0; i < fields.size(); i++) {
+            Field field = fields.get(i);
 
-            try {
-                member.setAccessible(true);
-                memberInvoker = lookup.unreflectGetter(member);
-                result[i] = memberInvoker.invoke(value);
-            } catch (IllegalAccessException e) {
-                throw new PatternException("Can not access to field " + member.getName() + " " + e.getMessage());
-            } catch (Throwable throwable) {
-                throw new PatternException("Can not get value field " + member.getName());
-            }
+            result[i] = getField(value, field);
         }
 
         return result;
     }
 
-    public static <V> Object[] fetchMembers(V value, int countMembers, String... names) {
-        Structure data = cacheStructures.computeIfAbsent(value.getClass(), Structure::new);
-        MethodHandles.Lookup lookup = MethodHandles.lookup();
+    public static <V> Object[] fetchFields(V value, int countFields, String... names) {
+        FieldAttribute data = cacheFields.computeIfAbsent(value.getClass(), FieldAttribute::new);
 
-        switch (countMembers) {
-            case 1: return fetchMember(lookup, value, data, names, 1);
-            case 2: return fetchMember(lookup, value, data, names, 2);
-            case 3: return fetchMember(lookup, value, data, names, 3);
-            default: throw new PatternException("Structure must not has more than 3 fields");
-        }
-    }
-
-    /* Method target-independent:
-     * v8 - MethodHandle,
-     * v9 - VarHandle
-     */
-    private static <V> Object[] fetchMember(MethodHandles.Lookup lookup, V value, Structure data,
-                                            String[] names, int countMembers) {
-        List<Field> members = data.getMembers();
-        Object[] result = new Object[countMembers];
+        List<Field> fields = data.getFields();
+        Object[] result = new Object[countFields];
         int i = 0;
 
-        if (members.size() != countMembers) {
+        if (countFields > 3) {
+            throw new PatternException("Class must not has more than 3 fields");
+        }
+
+        if (fields.size() != countFields) {
             throw new PatternException("Count fields more then in target. Exclude unnecessary fields");
         }
 
-        for (Field member : members) {
-            if (member.getName().equals(names[i])) {
-                try {
-                    member.setAccessible(true);
-                    memberInvoker = lookup.unreflectGetter(member);
-                    result[i] = memberInvoker.invoke(value);
-
-                    i++;
-                } catch (IllegalAccessException e) {
-                    throw new PatternException("Can not access to field " + member.getName() + " " + e.getMessage());
-                } catch (Throwable throwable) {
-                    throw new PatternException("Can not get value field " + member.getName());
-                }
+        for (Field field : fields) {
+            if (field.getName().equals(names[i])) {
+                result[i] = getField(value, field);
+                i++;
             }
         }
 
         return result;
+    }
+
+    public static <V> void verifyExhaustiveness(V value, Class<?>[] inputClasses) {
+        SealedAttribute data = cacheSubclasses.computeIfAbsent(value.getClass(), SealedAttribute::new);
+        Class<?>[] subClasses = data.getSubClasses();
+        StringBuilder builder = new StringBuilder();
+        boolean flag = false;
+
+        if (inputClasses.length > 6) {
+            throw new PatternException("Class must not has more than 6 fields");
+        }
+
+        if (subClasses.length != inputClasses.length) {
+            throw new PatternException("Require " + inputClasses.length + " subclasses. " +
+                                       "But checked class has " + subClasses.length + " subclasses.");
+        }
+
+        for (Class<?> subClass : subClasses) {
+            for (Class<?> inputClass : inputClasses) {
+                if (subClass == inputClass) {
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (!flag) {
+                builder.append(subClass).append(",");
+            }
+
+            flag = false;
+        }
+
+        if (builder.length() >= 1) {
+            throw new PatternException("Must to be exhaustive, add necessary " + builder.toString() +
+                                       " branches or else branch instead");
+        }
     }
 
     /*package-private*/ static void verifySignatureExtractor(Method method) {
@@ -327,11 +535,7 @@ public class Reflection {
         Object[] parameters = new Object[parameterTypes.length];
 
         for (int i = 0; i < parameterTypes.length; i++) {
-            try {
-                parameters[i] = parameterTypes[i].newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new PatternException("Can not resolve parameters extract method: " + e.getMessage());
-            }
+            parameters[i] = createInstance(parameterTypes[i]);
         }
 
         return parameters;

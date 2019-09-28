@@ -12,7 +12,6 @@ import org.kl.reflect.Reflection;
 import org.kl.state.Else;
 import org.kl.state.Null;
 import org.kl.state.Var;
-import org.kl.util.Union;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -163,18 +162,6 @@ public final class VerifyPattern {
         }
     }
 
-    public static <T1, T2> void matches(Union value,
-                                        Class<T1> firstClazz,  Purchaser<T1> firstConsumer,
-                                        Class<T2> secondClazz, Purchaser<T2> secondConsumer) {
-        Class<?> valueClass = value.getActive();
-
-        if (firstClazz == valueClass) {
-            firstConsumer.obtain(value.get(firstClazz));
-        } else if (secondClazz == valueClass) {
-            secondConsumer.obtain(value.get(secondClazz));
-        }
-    }
-
     @SuppressWarnings("unused")
     public static <V, T1, T2> void matches(V value,
                                            Class<T1> firstClazz, Consumer<T1> firstConsumer,
@@ -319,21 +306,6 @@ public final class VerifyPattern {
             secondConsumer.accept((T2) value);
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdConsumer.accept((T3) value);
-        }
-    }
-
-    public static <T1, T2, T3> void matches(Union value,
-                                            Class<T1> firstClazz,  Purchaser<T1> firstConsumer,
-                                            Class<T2> secondClazz, Purchaser<T2> secondConsumer,
-                                            Class<T3> thirdClazz,  Purchaser<T3> thirdConsumer) {
-        Class<?> valueClass = value.getActive();
-
-        if (firstClazz == valueClass) {
-            firstConsumer.obtain(value.get(firstClazz));
-        } else if (secondClazz == valueClass) {
-            secondConsumer.obtain(value.get(secondClazz));
-        } else if (thirdClazz == valueClass) {
-            thirdConsumer.obtain(value.get(thirdClazz));
         }
     }
 

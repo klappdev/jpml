@@ -4,12 +4,93 @@ import org.kl.lambda.Provider;
 import org.kl.state.Else;
 import org.kl.util.Lazy;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public final class CommonPattern {
+    private static CommonPattern instance;
+    private static Object value;
+
     private CommonPattern() {}
+
+    public static <T> CommonPattern self(T other) {
+        value = other;
+
+        if (instance == null) {
+            instance = new CommonPattern();
+        }
+
+        return instance;
+    }
+
+    public static void run(Runnable block) {
+        block.run();
+    }
+
+    public static <R> R run(Supplier<R> block) {
+        return block.get();
+    }
+
+    public static void repeat(int times, Consumer<Integer> block) {
+        for (int i = 0; i < times; i++) {
+            block.accept(i);
+        }
+    }
+
+    public static void repeat(int times, Runnable block) {
+        for (int i = 0; i < times; i++) {
+            block.run();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> void also(Consumer<T> block) {
+        if (value != null) {
+            block.accept((T) value);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T also(UnaryOperator<T> block) {
+        if (value != null) {
+            return block.apply((T) value);
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> void let(Consumer<T> block) {
+        if (value != null) {
+            block.accept((T) value);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T, R> R let(Function<T, R> block) {
+        if (value != null) {
+            return block.apply((T) value);
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T takeIf(Predicate<T> predicate) {
+        if (predicate.test((T) value)) {
+            return (T) value;
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T takeUnless(Predicate<T> predicate) {
+        if (!predicate.test((T) value)) {
+            return (T) value;
+        } else {
+            return null;
+        }
+    }
 
     public static <T> T elvis(T value, T defaultValue) {
         return value == null ? defaultValue : value;
@@ -98,6 +179,19 @@ public final class CommonPattern {
 
     public static Lazy<String> lazy(String value) {
         return new Lazy<>(() -> value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T apply(Consumer<T> block) {
+        block.accept((T) value);
+
+        return (T) value;
+    }
+
+    public static <T> T apply(T value, Consumer<T> block) {
+        block.accept(value);
+
+        return value;
     }
 
     public static <T> void with(T instance, Consumer<T> consumer) {
@@ -483,7 +577,7 @@ public final class CommonPattern {
                              boolean fourthCondition, Supplier<R> fourthBranch,
                              boolean fifthCondition, Supplier<R> fifthBranch,
                              boolean sixthCondition, Supplier<R> sixthBranch,
-                             Class<Else> defaultClass, Supplier<R> defaultBranch) {
+                             Class<Else> defaultClass, Supplier<R> defaultBranch)  {
         if (firstCondition) {
             return firstBranch.get();
         } else if (secondCondition) {
@@ -499,5 +593,15 @@ public final class CommonPattern {
         }
 
         return defaultBranch.get();
+    }
+
+    /* noreturn */
+    public static void TODO() {
+        throw new UnsupportedOperationException();
+    }
+
+    /* noreturn */
+    public static void TODO(String reason) {
+        throw new UnsupportedOperationException("An operation is not implemented: " + reason);
     }
 }
