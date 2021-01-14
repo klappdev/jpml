@@ -24,15 +24,12 @@ The library supports both statement and expression.<br/>
 Using this library developer can write in the following way.
 
 ```Java
-
-   import org.kl.state.Else;
-   import org.kl.state.Null;
-   import static org.kl.pattern.ConstantPattern.matches;
+   import static org.kl.jpml.pattern.ConstantPattern.matches;
 
    matches(data).as(
-      new Person("man"),    () ->  System.out.println("man");
-      new Person("woman"),  () ->  System.out.println("woman");
-      new Person("child"),  () ->  System.out.println("child");        
+      new Person("man"),    () ->  System.out.println("man"),
+      new Person("woman"),  () ->  System.out.println("woman"),
+      new Person("child"),  () ->  System.out.println("child"),        
       Null.class,           () ->  System.out.println("Null value "),
       Else.class,           () ->  System.out.println("Default value: " + data)
    );
@@ -41,13 +38,13 @@ Using this library developer can write in the following way.
 For work with range values could use such functions: in/or.
 
 ```Java
-   import static org.kl.pattern.ConstantPattern.or;
-   import static org.kl.pattern.ConstantPattern.in; 
+   import static org.kl.jpml.pattern.ConstantPattern.or;
+   import static org.kl.jpml.pattern.ConstantPattern.in; 
    
    matches(data).as(
-      or(1, 2),    () ->  System.out.println("1 or 2");
-      in(3, 6),    () ->  System.out.println("between 3 and 6");
-      in(7),       () ->  System.out.println("7");        
+      or(1, 2),    () ->  System.out.println("1 or 2"),
+      in(3, 6),    () ->  System.out.println("between 3 and 6"),
+      in(7),       () ->  System.out.println("7"),        
       Null.class,  () ->  System.out.println("Null value "),
       Else.class,  () ->  System.out.println("Default value: " + data)
    );
@@ -56,14 +53,13 @@ For work with range values could use such functions: in/or.
 *Tuple pattern* allow test for equality multiple pieces with constants.
 
 ```Java
-
    let (side, width) = border;	
 
    switch (side, width) {
-      case "top",    25 -> System.out.println("top");
-      case "bottom", 30 -> System.out.println("bottom");
-      case "left",   15 -> System.out.println("left");        
-      case "right",  15 -> System.out.println("right");
+      case ("top",    25) -> System.out.println("top");
+      case ("bottom", 30) -> System.out.println("bottom");
+      case ("left",   15) -> System.out.println("left");        
+      case ("right",  15) -> System.out.println("right");
       default           -> System.out.println("Default value ");
    };
    
@@ -75,21 +71,18 @@ Using this library developer can write in the following way. Using Java 11 featu
 deduce types parameters. 
 
 ```Java
-
-   import org.kl.state.Else;
-   import org.kl.state.Null;
-   import static org.kl.pattern.TuplePattern.matches;
-   import static org.kl.pattern.TuplePattern.let;
+   import static org.kl.jpml.pattern.TuplePattern.matches;
+   import static org.kl.jpml.pattern.TuplePattern.let;
 
    let(border, (String side, int width) -> {
       System.out.println("border: " + side + "," + width);
    });
    
    matches(side, width).as(
-      "top",    25,  () -> System.out.println("top"),
-      "bottom", 30,  () -> System.out.println("bottom"),
-      "left",   15,  () -> System.out.println("left"),        
-      "right",  15,  () -> System.out.println("right"),
+      of("top",    25),  () -> System.out.println("top"),
+      of("bottom", 30),  () -> System.out.println("bottom"),
+      of("left",   15),  () -> System.out.println("left"),        
+      of("right",  15),  () -> System.out.println("right"),
       Else.class,    () -> System.out.println("Default value")
    );
    
@@ -114,10 +107,7 @@ deduce types parameters.
 Using this library developer can write in the following way.
 
 ```Java
-
-   import org.kl.state.Else;
-   import org.kl.state.Null;
-   import static org.kl.pattern.VerifyPattern.matches;
+   import static org.kl.jpml.pattern.VerifyPattern.matches;
 
    matches(data).as(
       Integer.class, i  -> { System.out.println(i * i); },
@@ -129,7 +119,7 @@ Using this library developer can write in the following way.
    );
 ```
 
-*Union pattern* allow match exhaustive subclasses type.
+*Exhaustive pattern* allow match exhaustive subclasses type.
 
 ```Java
    public sealed class Result<T, E extends Throwable> {
@@ -150,8 +140,7 @@ Using this library developer can write in the following way.
 Using this library developer can write in the following way.
 	
 ```Java
-    import org.kl.util.Union;
-    import static org.kl.pattern.UnionPattern.matches;
+    import static org.kl.jpml.pattern.ExhaustivePattern.matches;
    
     @Sealed
     public abstract class Result<T, E extends Throwable> {
@@ -168,16 +157,8 @@ Using this library developer can write in the following way.
     matches(result).as(
        Result.Success.class,  s -> System.out.println("Success:  " + s),
        Result.Failture.class, f -> System.out.println("Success:  " + s)
-    );
-   
-    Union value = Union.of(Integer.class, String.class);
-    value.set(5);
-   
-    matches(value).as(
-       Integer.class, i -> System.out.println("number: " + i),
-       String.class,  s -> System.out.println("string: " + s)
-    );   
-```	
+    );       
+```
 
 *Guard pattern* allow match type and check condition for the truth at one time.
 
@@ -195,10 +176,7 @@ Using this library developer can write in the following way.
 Using this library developer can write in the following way.
 
 ```Java
-
-   import org.kl.state.Else;
-   import org.kl.state.Null;
-   import static org.kl.pattern.GuardPattern.matches;
+   import static org.kl.jpml.pattern.GuardPattern.matches;
 
    matches(data).as(           
       Integer.class, i  -> i != 0,  i  -> { System.out.println(i * i); },
@@ -246,10 +224,9 @@ Using this library developer can write in the following way. Using Java 11 featu
 types deconstruct parameters.
 
 ```Java
-   import org.kl.state.Else;
-   import static org.kl.pattern.DeconstructPattern.matches;
-   import static org.kl.pattern.DeconstructPattern.foreach;
-   import static org.kl.pattern.DeconstructPattern.let;
+   import static org.kl.jpml.pattern.DeconstructPattern.matches;
+   import static org.kl.jpml.pattern.DeconstructPattern.foreach;
+   import static org.kl.jpml.pattern.DeconstructPattern.let;
 
    Figure figure = new Rectangle();
 
@@ -303,11 +280,10 @@ pass by reference we must to use wrappers such IntRef, FloatRef and etc.
 Using this library developer can write in the following way.
 
 ```Java
-   import org.kl.state.Else;
-   import static org.kl.pattern.PropertyPattern.matches;
-   import static org.kl.pattern.PropertyPattern.foreach;
-   import static org.kl.pattern.PropertyPattern.let;
-   import static org.kl.pattern.PropertyPattern.of;   
+   import static org.kl.jpml.pattern.PropertyPattern.matches;
+   import static org.kl.jpml.pattern.PropertyPattern.foreach;
+   import static org.kl.jpml.pattern.PropertyPattern.let;
+   import static org.kl.jpml.pattern.PropertyPattern.of;   
 
    Figure figure = new Rectangle();
 
@@ -331,7 +307,6 @@ For simplify naming parameters could use another way. Using Java 11 feature, we 
 property parameters.
 
 ```Java
-
    Figure figure = new Rect();
 
    let(figure, Rect::w, Rect::h, (var w, var h) -> {
@@ -363,10 +338,8 @@ property parameters.
 Using this library developer can write in the following way.
 
 ```Java
-   import org.kl.state.Else;
-   import org.kl.state.Null;
-   import static org.kl.pattern.PositionPattern.matches;
-   import static org.kl.pattern.PositionPattern.of;
+   import static org.kl.jpml.pattern.PositionPattern.matches;
+   import static org.kl.jpml.pattern.PositionPattern.of;
 
    matches(data).as(           
       Circle.class,  of(5),  () -> { System.out.println("small circle"); },
@@ -390,20 +363,18 @@ to be marked with annotation @Exclude. Excluded fields must to be declared last.
 
 *Static pattern* allow match type and deconstruct object using factory methods.
 
-```Java
-   
+```Java   
    switch (some) {
-      case Rect.as(int w, int h) -> System.out.println("square: " + (w * h));
-      case Circle.as(int r)      -> System.out.println("square: " + (2 * Math.PI * r));
-      default                    -> System.out.println("Default square: " + 0);
+      case Rect.unapply(int w, int h) -> System.out.println("square: " + (w * h));
+      case Circle.unapply(int r)      -> System.out.println("square: " + (2 * Math.PI * r));
+      default -> System.out.println("Default square: " + 0);
    };
 ```
 
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.pattern.StaticPattern.matches;
-   import static org.kl.pattern.StaticPattern.of;
+   import static org.kl.jpml.pattern.StaticPattern.matches;
 
    matches(figure).as(
       Rect.class,   of("unapply"), (int w, int h) -> out.println("square: " + (w * h)),
@@ -412,32 +383,19 @@ Using this library developer can write in the following way.
    );    
 ```
 
-For simplify naming deconstruct method could use another way. 
-
-```Java
-   matches(figure).as(
-      Rect.class,   Rect::unapply, (int w, int h) -> out.println("square: " + (w * h)),
-      Circle.class, Circle::unapply, (int r)      -> out.println("square: " + (2 * Math.PI * r)),
-      Else.class,   ()                            -> out.println("Default square: " + 0)
-   );
-```
-
-Also this pattern give simplify work with Optional<<V>>, Expected<T, E>.
+Also this pattern give simplify work with Optional<<V>>, Result<T, E>.
 	
 ```Java
-   import org.kl.util.Expected;
-   import java.util.Optional;
-
    matches(value).as(
       Optional::empty, () -> out.println("empty"),
       Optional::get,    v -> out.println("value: " + v)
    );
    
    matches(value).as(
-      Expected::error, e -> out.println("get error: " + e),
-      Expected::value, v -> out.println("get value: " + v)
+      Result::error, e -> out.println("get error: " + e),
+      Result::value, v -> out.println("get value: " + v)
    );
-```	
+```
 
 *Sequence pattern* allow processing on data sequence.
 
@@ -447,10 +405,10 @@ Also this pattern give simplify work with Optional<<V>>, Expected<T, E>.
    switch (list) {
       case empty()       -> System.out.println("Empty value");
       case head(var h)   -> System.out.println("list head: " + h);
-      case middle(var m) -> out.println("middle list:" + m),
-      case tail(var t)   -> out.println("tail list:  " + t),
-      case at(1, var i)  -> out.println("at list:    " + i),
-      case edges(var f, var l) -> out.println("edges: " + f + " - " + l)      
+      case middle(var m) -> out.println("middle list:" + m);
+      case tail(var t)   -> out.println("tail list:  " + t);
+      case at(1, var i)  -> out.println("at list:    " + i);
+      case edges(var f, var l) -> out.println("edges: " + f + " - " + l);      
       default            -> System.out.println("Default value");
    };
 ```
@@ -459,8 +417,7 @@ Using this library developer can write in the following way. Using Java 11 featu
 types property parameters. 
 
 ```Java
-   import org.kl.state.Else;
-   import static org.kl.pattern.SequencePattern.matches;
+   import static org.kl.jpml.pattern.SequencePattern.matches;
 
    List<Integer> list = List.of(1, 2, 3);
 
@@ -470,7 +427,7 @@ types property parameters.
       middle(), (int m) -> out.println("middle list:" + m),
       tail(),   (int t) -> out.println("tail list:  " + t),
       at(1),    (int i) -> out.println("at list:    " + i),
-      edges(),  (int f, int l) -> out.println("edges: " + f + " - " + l)
+      edges(),  (int f, int l) -> out.println("edges: " + f + " - " + l),
       Else.class, () -> System.out.println("Default value")
    );   
 ```
@@ -502,8 +459,6 @@ types property parameters.
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.pattern.CommonPattern.*;
-
    var rect = lazy(Rectangle::new);
    var result = elvis(rect.get(), new Rectangle());
    
