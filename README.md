@@ -24,7 +24,7 @@ The library supports both statement and expression.<br/>
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.jpml.pattern.ConstantPattern.matches;
+   import static org.kl.jpml.pattern.ConstantPattern.match;
 
    matches(data).as(
       new Person("man"),    () ->  System.out.println("man"),
@@ -107,7 +107,7 @@ deduce types parameters.
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.jpml.pattern.VerifyPattern.matches;
+   import static org.kl.jpml.pattern.TypeTestPattern.match;
 
    matches(data).as(
       Integer.class, i  -> { System.out.println(i * i); },

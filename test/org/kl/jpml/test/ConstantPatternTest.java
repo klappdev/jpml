@@ -23,45 +23,45 @@
  */
 package org.kl.jpml.test;
 
-import org.kl.jpml.test.shape.Circle;
-import org.kl.jpml.test.shape.Figure;
-import org.kl.jpml.test.shape.Unpiped;
+import org.junit.jupiter.api.Test;
 import org.kl.jpml.state.Else;
 import org.kl.jpml.state.Null;
 import org.kl.jpml.state.Var;
+import org.kl.jpml.test.shape.Circle;
+import org.kl.jpml.test.shape.Figure;
+import org.kl.jpml.test.shape.Unpiped;
 
-import org.junit.jupiter.api.Test;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.kl.jpml.pattern.ConstantPattern.matches;
+import static org.kl.jpml.pattern.ConstantPattern.match;
 
 public class ConstantPatternTest {
 
     @Test
-    public void matchesStatementTest()  {
+    public void matchStatementTest()  {
         /* 1 */
         byte value1 = 5;
-        matches(value1,
+        match(value1,
                 (byte) 5, ()  -> System.out.println("branch 1 - " + value1)
         );
 
         Figure figure1 = new Circle(5);
-        matches(figure1,
+        match(figure1,
                 new Circle(5), ()  -> System.out.println("branch 1 - " + figure1)
         );
 
         /* 2 */
         short value2 = 10;
-        matches(value2,
+        match(value2,
                 (short) 5,  ()  -> System.out.println("branch 1 - " + value2),
                 (short) 10, ()  -> System.out.println("branch 2 - " + value2)
         );
 
         Figure figure2 = new Circle(10);
-        matches(figure2,
+        match(figure2,
                 new Circle(5),  ()  -> System.out.println("branch 1 - " + figure2),
                 new Circle(10), ()  -> System.out.println("branch 2 - " + figure2)
         );
@@ -69,14 +69,14 @@ public class ConstantPatternTest {
         /* 3 */
         int value3 = 15;
 
-        matches(value3,
+        match(value3,
                 5,  ()  -> System.out.println("branch 1 - " + value3),
                 10, ()  -> System.out.println("branch 2 - " + value3),
                 15, ()  -> System.out.println("branch 3 - " + value3)
         );
 
         Figure figure3 = new Unpiped(15);
-        matches(figure3,
+        match(figure3,
                 new Unpiped(5),  ()  -> System.out.println("branch 1 - " + figure3),
                 new Unpiped(10), ()  -> System.out.println("branch 2 - " + figure3),
                 new Unpiped(15), ()  -> System.out.println("branch 3 - " + figure3)
@@ -84,7 +84,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4 = 20;
-        matches(value4,
+        match(value4,
                 5L,  ()  -> System.out.println("branch 1 - " + value4),
                 10L, ()  -> System.out.println("branch 2 - " + value4),
                 15L, ()  -> System.out.println("branch 3 - " + value4),
@@ -92,7 +92,7 @@ public class ConstantPatternTest {
         );
 
         Figure figure4 = new Unpiped(20);
-        matches(figure4,
+        match(figure4,
                 new Unpiped(5),  ()  -> System.out.println("branch 1 - " + figure4),
                 new Unpiped(10), ()  -> System.out.println("branch 2 - " + figure4),
                 new Unpiped(15), ()  -> System.out.println("branch 3 - " + figure4),
@@ -101,7 +101,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5 = 25.0F;
-        matches(value5,
+        match(value5,
                 5.0F,  ()  -> System.out.println("branch 1 - " + value5),
                 10.0F, ()  -> System.out.println("branch 2 - " + value5),
                 15.0F, ()  -> System.out.println("branch 3 - " + value5),
@@ -111,7 +111,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6 = 30.0D;
-        matches(value6,
+        match(value6,
                 5.0D,  ()  -> System.out.println("branch 1 - " + value6),
                 10.0D, ()  -> System.out.println("branch 2 - " + value6),
                 15.0D, ()  -> System.out.println("branch 3 - " + value6),
@@ -122,27 +122,27 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsStatementTest() {
+    public void matchAsStatementTest() {
         /* 1 */
         byte value1 = 5;
-        matches(value1).as(
+        match(value1).as(
                 (byte) 5, ()  -> System.out.println("safe branch 1 - " + value1)
         );
 
         Figure figure1 = new Circle(5);
-        matches(figure1).as(
+        match(figure1).as(
                 new Circle(5), ()  -> System.out.println("safe branch 1 - " + figure1)
         );
 
         /* 2 */
         short value2 = 10;
-        matches(value2).as(
+        match(value2).as(
                 (short) 5,  ()  -> System.out.println("safe branch 1 - " + value2),
                 (short) 10, ()  -> System.out.println("safe branch 2 - " + value2)
         );
 
         Figure figure2 = new Circle(10);
-        matches(figure2).as(
+        match(figure2).as(
                 new Circle(5),  ()  -> System.out.println("safe branch 1 - " + figure2),
                 new Circle(10), ()  -> System.out.println("safe branch 2 - " + figure2)
         );
@@ -150,14 +150,14 @@ public class ConstantPatternTest {
         /* 3 */
         int value3 = 15;
 
-        matches(value3).as(
+        match(value3).as(
                 5,  ()  -> System.out.println("safe branch 1 - " + value3),
                 10, ()  -> System.out.println("safe branch 2 - " + value3),
                 15, ()  -> System.out.println("safe branch 3 - " + value3)
         );
 
         Figure figure3 = new Unpiped(15);
-        matches(figure3).as(
+        match(figure3).as(
                 new Unpiped(5),  ()  -> System.out.println("safe branch 1 - " + figure3),
                 new Unpiped(10), ()  -> System.out.println("safe branch 2 - " + figure3),
                 new Unpiped(15), ()  -> System.out.println("safe branch 3 - " + figure3)
@@ -165,7 +165,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4 = 20;
-        matches(value4).as(
+        match(value4).as(
                 5L,  ()  -> System.out.println("safe branch 1 - " + value4),
                 10L, ()  -> System.out.println("safe branch 2 - " + value4),
                 15L, ()  -> System.out.println("safe branch 3 - " + value4),
@@ -173,7 +173,7 @@ public class ConstantPatternTest {
         );
 
         Figure figure4 = new Unpiped(20);
-        matches(figure4).as(
+        match(figure4).as(
                 new Unpiped(5),  ()  -> System.out.println("safe branch 1 - " + figure4),
                 new Unpiped(10), ()  -> System.out.println("safe branch 2 - " + figure4),
                 new Unpiped(15), ()  -> System.out.println("safe branch 3 - " + figure4),
@@ -182,7 +182,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5 = 25.0F;
-        matches(value5).as(
+        match(value5).as(
                 5.0F,  ()  -> System.out.println("safe branch 1 - " + value5),
                 10.0F, ()  -> System.out.println("safe branch 2 - " + value5),
                 15.0F, ()  -> System.out.println("safe branch 3 - " + value5),
@@ -192,7 +192,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6 = 30.0D;
-        matches(value6).as(
+        match(value6).as(
                 5.0D,  ()  -> System.out.println("safe branch 1 - " + value6),
                 10.0D, ()  -> System.out.println("safe branch 2 - " + value6),
                 15.0D, ()  -> System.out.println("safe branch 3 - " + value6),
@@ -203,17 +203,17 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesStatementWithDefaultTest()  {
+    public void matchStatementWithDefaultTest()  {
         /* 1 */
         byte value1 = 10;
-        matches(value1,
+        match(value1,
                 (byte) 5,   () -> System.out.println("branch 1 - " + value1),
                 Else.class, () -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
         short value2 = 15;
-        matches(value2,
+        match(value2,
                 (short) 5,     () -> System.out.println("branch 1 - " + value2),
                 (short) 10,    () -> System.out.println("branch 2 - " + value2),
                 Else.class, () -> System.out.println("Else value 2 type")
@@ -221,7 +221,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3 = 20;
-        matches(value3,
+        match(value3,
                 5,  ()  -> System.out.println("branch 1 - " + value3),
                 10, ()  -> System.out.println("branch 2 - " + value3),
                 15, ()  -> System.out.println("branch 3 - " + value3),
@@ -230,7 +230,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4 = 25;
-        matches(value4,
+        match(value4,
                 5L,  ()  -> System.out.println("branch 1 - " + value4),
                 10L, ()  -> System.out.println("branch 2 - " + value4),
                 15L, ()  -> System.out.println("branch 3 - " + value4),
@@ -240,7 +240,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5 = 30.0F;
-        matches(value5,
+        match(value5,
                 5.0F,  ()  -> System.out.println("branch 1 - " + value5),
                 10.0F, ()  -> System.out.println("branch 2 - " + value5),
                 15.0F, ()  -> System.out.println("branch 3 - " + value5),
@@ -251,7 +251,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6 = 35.0D;
-        matches(value6,
+        match(value6,
                 5.0D,  ()  -> System.out.println("branch 1 - " + value6),
                 10.0D, ()  -> System.out.println("branch 2 - " + value6),
                 15.0D, ()  -> System.out.println("branch 3 - " + value6),
@@ -263,17 +263,17 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsStatementWithDefaultTest()  {
+    public void matchAsStatementWithDefaultTest()  {
         /* 1 */
         byte value1 = 10;
-        matches(value1).as(
+        match(value1).as(
                 (byte) 5,   () -> System.out.println("safe branch 1 - " + value1),
                 Else.class, () -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
         short value2 = 15;
-        matches(value2).as(
+        match(value2).as(
                 (short) 5,     () -> System.out.println("safe branch 1 - " + value2),
                 (short) 10,    () -> System.out.println("safe branch 2 - " + value2),
                 Else.class, () -> System.out.println("Else value 2 type")
@@ -281,7 +281,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3 = 20;
-        matches(value3).as(
+        match(value3).as(
                 5,  ()  -> System.out.println("safe branch 1 - " + value3),
                 10, ()  -> System.out.println("safe branch 2 - " + value3),
                 15, ()  -> System.out.println("safe branch 3 - " + value3),
@@ -290,7 +290,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4 = 25;
-        matches(value4).as(
+        match(value4).as(
                 5L,  ()  -> System.out.println("safe branch 1 - " + value4),
                 10L, ()  -> System.out.println("safe branch 2 - " + value4),
                 15L, ()  -> System.out.println("safe branch 3 - " + value4),
@@ -300,7 +300,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5 = 30.0F;
-        matches(value5).as(
+        match(value5).as(
                 5.0F,  ()  -> System.out.println("safe branch 1 - " + value5),
                 10.0F, ()  -> System.out.println("safe branch 2 - " + value5),
                 15.0F, ()  -> System.out.println("safe branch 3 - " + value5),
@@ -311,7 +311,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6 = 35.0D;
-        matches(value6).as(
+        match(value6).as(
                 5.0D,  ()  -> System.out.println("safe branch 1 - " + value6),
                 10.0D, ()  -> System.out.println("safe branch 2 - " + value6),
                 15.0D, ()  -> System.out.println("safe branch 3 - " + value6),
@@ -323,17 +323,17 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesStatementWithVarTest()  {
+    public void matchStatementWithVarTest()  {
         /* 1 */
         byte value1 = 10;
-        matches(value1,
+        match(value1,
                 (byte) 5,  ()  -> System.out.println("branch 1 - " + value1),
                 Var.class, any -> System.out.println("Var value 1 type")
         );
 
         /* 2 */
         short value2 = 15;
-        matches(value2,
+        match(value2,
                 (short) 5,  ()  -> System.out.println("branch 1 - " + value2),
                 (short) 10, ()  -> System.out.println("branch 2 - " + value2),
                 Var.class,  any -> System.out.println("Var value 2 type")
@@ -341,7 +341,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3 = 20;
-        matches(value3,
+        match(value3,
                 5,  ()  -> System.out.println("branch 1 - " + value3),
                 10, ()  -> System.out.println("branch 2 - " + value3),
                 15, ()  -> System.out.println("branch 3 - " + value3),
@@ -350,7 +350,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4 = 25;
-        matches(value4,
+        match(value4,
                 5L,  ()  -> System.out.println("branch 1 - " + value4),
                 10L, ()  -> System.out.println("branch 2 - " + value4),
                 15L, ()  -> System.out.println("branch 3 - " + value4),
@@ -360,7 +360,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5 = 30.0F;
-        matches(value5,
+        match(value5,
                 5.0F,  ()  -> System.out.println("branch 1 - " + value5),
                 10.0F, ()  -> System.out.println("branch 2 - " + value5),
                 15.0F, ()  -> System.out.println("branch 3 - " + value5),
@@ -371,7 +371,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6 = 35.0D;
-        matches(value6,
+        match(value6,
                 5.0D,  ()  -> System.out.println("branch 1 - " + value6),
                 10.0D, ()  -> System.out.println("branch 2 - " + value6),
                 15.0D, ()  -> System.out.println("branch 3 - " + value6),
@@ -383,17 +383,17 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsStatementWithVarTest()  {
+    public void matchAsStatementWithVarTest()  {
         /* 1 */
         byte value1 = 10;
-        matches(value1).as(
+        match(value1).as(
                 (byte) 5,  ()  -> System.out.println("safe branch 1 - " + value1),
                 Var.class, any -> System.out.println("Var value 1 type")
         );
 
         /* 2 */
         short value2 = 15;
-        matches(value2).as(
+        match(value2).as(
                 (short) 5,  ()  -> System.out.println("safe branch 1 - " + value2),
                 (short) 10, ()  -> System.out.println("safe branch 2 - " + value2),
                 Var.class,  any -> System.out.println("Var value 2 type")
@@ -401,7 +401,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3 = 20;
-        matches(value3).as(
+        match(value3).as(
                 5,  ()  -> System.out.println("safe branch 1 - " + value3),
                 10, ()  -> System.out.println("safe branch 2 - " + value3),
                 15, ()  -> System.out.println("safe branch 3 - " + value3),
@@ -410,7 +410,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4 = 25;
-        matches(value4).as(
+        match(value4).as(
                 5L,  ()  -> System.out.println("safe branch 1 - " + value4),
                 10L, ()  -> System.out.println("safe branch 2 - " + value4),
                 15L, ()  -> System.out.println("safe branch 3 - " + value4),
@@ -420,7 +420,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5 = 30.0F;
-        matches(value5).as(
+        match(value5).as(
                 5.0F,  ()  -> System.out.println("safe branch 1 - " + value5),
                 10.0F, ()  -> System.out.println("safe branch 2 - " + value5),
                 15.0F, ()  -> System.out.println("safe branch 3 - " + value5),
@@ -431,7 +431,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6 = 35.0D;
-        matches(value6).as(
+        match(value6).as(
                 5.0D,  ()  -> System.out.println("safe branch 1 - " + value6),
                 10.0D, ()  -> System.out.println("safe branch 2 - " + value6),
                 15.0D, ()  -> System.out.println("safe branch 3 - " + value6),
@@ -443,16 +443,16 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesStatementWithNullDefaultTest()  {
+    public void matchStatementWithNullDefaultTest()  {
         /* 1 */
-        matches(null,
+        match(null,
                 (byte) 5,      () -> System.out.println("branch 1"),
                 Null.class,    () -> System.out.println("Null value 1 type"),
                 Else.class, () -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
-        matches(null,
+        match(null,
                 (short) 5,     () -> System.out.println("branch 1"),
                 (short) 10,    () -> System.out.println("branch 2"),
                 Null.class,    () -> System.out.println("Null value 2 type"),
@@ -460,7 +460,7 @@ public class ConstantPatternTest {
         );
 
         /* 3 */
-        matches(null,
+        match(null,
                 5,  ()  -> System.out.println("branch 1"),
                 10, ()  -> System.out.println("branch 2"),
                 15, ()  -> System.out.println("branch 3"),
@@ -469,7 +469,7 @@ public class ConstantPatternTest {
         );
 
         /* 4*/
-        matches(null,
+        match(null,
                 5L,  ()  -> System.out.println("branch 1"),
                 10L, ()  -> System.out.println("branch 2"),
                 15L, ()  -> System.out.println("branch 3"),
@@ -479,7 +479,7 @@ public class ConstantPatternTest {
         );
 
         /* 5 */
-        matches(null,
+        match(null,
                 5.0F,  ()  -> System.out.println("branch 1"),
                 10.0F, ()  -> System.out.println("branch 2"),
                 15.0F, ()  -> System.out.println("branch 3"),
@@ -490,7 +490,7 @@ public class ConstantPatternTest {
         );
 
         /* 6 */
-        matches(null,
+        match(null,
                 5.0D,  ()  -> System.out.println("branch 1"),
                 10.0D, ()  -> System.out.println("branch 2"),
                 15.0D, ()  -> System.out.println("branch 3"),
@@ -503,16 +503,16 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsStatementWithNullDefaultTest()  {
+    public void matchAsStatementWithNullDefaultTest()  {
         /* 1 */
-        matches(null).as(
+        match(null).as(
                 (byte) 5,      () -> System.out.println("safe branch 1"),
                 Null.class,    () -> System.out.println("Null value 1 type"),
                 Else.class, () -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
-        matches(null).as(
+        match(null).as(
                 (short) 5,     () -> System.out.println("safe branch 1"),
                 (short) 10,    () -> System.out.println("safe branch 2"),
                 Null.class,    () -> System.out.println("Null value 2 type"),
@@ -520,7 +520,7 @@ public class ConstantPatternTest {
         );
 
         /* 3 */
-        matches(null).as(
+        match(null).as(
                 5,  ()  -> System.out.println("safe branch 1"),
                 10, ()  -> System.out.println("safe branch 2"),
                 15, ()  -> System.out.println("safe branch 3"),
@@ -529,7 +529,7 @@ public class ConstantPatternTest {
         );
 
         /* 4*/
-        matches(null).as(
+        match(null).as(
                 5L,  ()  -> System.out.println("safe branch 1"),
                 10L, ()  -> System.out.println("safe branch 2"),
                 15L, ()  -> System.out.println("safe branch 3"),
@@ -539,7 +539,7 @@ public class ConstantPatternTest {
         );
 
         /* 5 */
-        matches(null).as(
+        match(null).as(
                 5.0F,  ()  -> System.out.println("safe branch 1"),
                 10.0F, ()  -> System.out.println("safe branch 2"),
                 15.0F, ()  -> System.out.println("safe branch 3"),
@@ -550,7 +550,7 @@ public class ConstantPatternTest {
         );
 
         /* 6 */
-        matches(null).as(
+        match(null).as(
                 5.0D,  ()  -> System.out.println("safe branch 1"),
                 10.0D, ()  -> System.out.println("safe branch 2"),
                 15.0D, ()  -> System.out.println("safe branch 3"),
@@ -563,16 +563,16 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesStatementWithNullVarTest()  {
+    public void matchStatementWithNullVarTest()  {
         /* 1 */
-        matches(null,
+        match(null,
                 (byte) 5,   () -> System.out.println("branch 1"),
                 Null.class, () -> System.out.println("Null value 1 type"),
                 Var.class, (Consumer<Byte>) any -> System.out.println("Var value 1 type")
         );
 
         /* 2 */
-        matches(null,
+        match(null,
                 (short) 5, () -> System.out.println("branch 1"),
                 (short) 10, () -> System.out.println("branch 2"),
                 Null.class, () -> System.out.println("Null value 2 type"),
@@ -580,7 +580,7 @@ public class ConstantPatternTest {
         );
 
         /* 3 */
-        matches(null,
+        match(null,
                 5,  ()  -> System.out.println("branch 1"),
                 10, ()  -> System.out.println("branch 2"),
                 15, ()  -> System.out.println("branch 3"),
@@ -589,7 +589,7 @@ public class ConstantPatternTest {
         );
 
         /* 4*/
-        matches(null,
+        match(null,
                 5L,  ()  -> System.out.println("branch 1"),
                 10L, ()  -> System.out.println("branch 2"),
                 15L, ()  -> System.out.println("branch 3"),
@@ -599,7 +599,7 @@ public class ConstantPatternTest {
         );
 
         /* 5 */
-        matches(null,
+        match(null,
                 5.0F,  ()  -> System.out.println("branch 1"),
                 10.0F, ()  -> System.out.println("branch 2"),
                 15.0F, ()  -> System.out.println("branch 3"),
@@ -610,7 +610,7 @@ public class ConstantPatternTest {
         );
 
         /* 6 */
-        matches(null,
+        match(null,
                 5.0D,  ()  -> System.out.println("branch 1"),
                 10.0D, ()  -> System.out.println("branch 2"),
                 15.0D, ()  -> System.out.println("branch 3"),
@@ -623,16 +623,16 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsStatementWithNullVarTest()  {
+    public void matchAsStatementWithNullVarTest()  {
         /* 1 */
-        matches(null).as(
+        match(null).as(
                 (byte) 5,   () -> System.out.println("Safe branch 1"),
                 Null.class, () -> System.out.println("Null value 1 type"),
                 Var.class, (Consumer<Byte>) any -> System.out.println("Var value 1 type")
         );
 
         /* 2 */
-        matches(null).as(
+        match(null).as(
                 (short) 5, () -> System.out.println("Safe branch 1"),
                 (short) 10, () -> System.out.println("Safe branch 2"),
                 Null.class, () -> System.out.println("Null value 2 type"),
@@ -640,7 +640,7 @@ public class ConstantPatternTest {
         );
 
         /* 3 */
-        matches(null).as(
+        match(null).as(
                 5,  ()  -> System.out.println("Safe branch 1"),
                 10, ()  -> System.out.println("Safe branch 2"),
                 15, ()  -> System.out.println("Safe branch 3"),
@@ -649,7 +649,7 @@ public class ConstantPatternTest {
         );
 
         /* 4*/
-        matches(null).as(
+        match(null).as(
                 5L,  ()  -> System.out.println("Safe branch 1"),
                 10L, ()  -> System.out.println("Safe branch 2"),
                 15L, ()  -> System.out.println("Safe branch 3"),
@@ -659,7 +659,7 @@ public class ConstantPatternTest {
         );
 
         /* 5 */
-        matches(null).as(
+        match(null).as(
                 5.0F,  ()  -> System.out.println("Safe branch 1"),
                 10.0F, ()  -> System.out.println("Safe branch 2"),
                 15.0F, ()  -> System.out.println("Safe branch 3"),
@@ -670,7 +670,7 @@ public class ConstantPatternTest {
         );
 
         /* 6 */
-        matches(null).as(
+        match(null).as(
                 5.0D,  ()  -> System.out.println("Safe branch 1"),
                 10.0D, ()  -> System.out.println("Safe branch 2"),
                 15.0D, ()  -> System.out.println("Safe branch 3"),
@@ -683,10 +683,10 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesExpressionTest()  {
+    public void matchExpressionTest()  {
         /* 1 */
         byte value1  = 5;
-        byte result1 = matches(value1,
+        byte result1 = match(value1,
                 (byte) 5, () -> { byte result = (byte) (2 * (value1)); return result; }
         );
 
@@ -694,7 +694,7 @@ public class ConstantPatternTest {
 
         /* 2 */
         short value2  = 10;
-        short result2 = matches(value2,
+        short result2 = match(value2,
                 (short) 5,  () -> { short result = (short) (2 * (value2)); return result; },
                 (short) 10, () -> { short result = (short) (2 * (value2)); return result; }
         );
@@ -703,7 +703,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3  = 15;
-        int result3 = matches(value3,
+        int result3 = match(value3,
                 5,  () -> { int result = 2 * (value3); return result; },
                 10, () -> { int result = 2 * (value3); return result; },
                 15, () -> { int result = 2 * (value3); return result; }
@@ -713,7 +713,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4  = 20;
-        long result4 = matches(value4,
+        long result4 = match(value4,
                 5L,  () -> { long result = 2 * (value4); return result; },
                 10L, () -> { long result = 2 * (value4); return result; },
                 15L, () -> { long result = 2 * (value4); return result; },
@@ -724,7 +724,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5  = 25.0F;
-        float result5 = matches(value5,
+        float result5 = match(value5,
                 5.0F,  () -> { float result = 2 * (value5); return result; },
                 10.0F, () -> { float result = 2 * (value5); return result; },
                 15.0F, () -> { float result = 2 * (value5); return result; },
@@ -736,7 +736,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6  = 30.0;
-        double result6 = matches(value6,
+        double result6 = match(value6,
                 5.0D,  () -> { double result = 2 * (value6); return result; },
                 10.0D, () -> { double result = 2 * (value6); return result; },
                 15.0D, () -> { double result = 2 * (value6); return result; },
@@ -749,10 +749,10 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsExpressionTest()  {
+    public void matchAsExpressionTest()  {
         /* 1 */
         byte value1  = 5;
-        byte result1 = matches(value1).as(
+        byte result1 = match(value1).as(
                 (byte) 5, () -> { byte result = (byte) (2 * (value1)); return result; }
         );
 
@@ -760,7 +760,7 @@ public class ConstantPatternTest {
 
         /* 2 */
         short value2  = 10;
-        short result2 = matches(value2).as(
+        short result2 = match(value2).as(
                 (short) 5,  () -> { short result = (short) (2 * (value2)); return result; },
                 (short) 10, () -> { short result = (short) (2 * (value2)); return result; }
         );
@@ -769,7 +769,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3  = 15;
-        int result3 = matches(value3).as(
+        int result3 = match(value3).as(
                 5,  () -> { int result = 2 * (value3); return result; },
                 10, () -> { int result = 2 * (value3); return result; },
                 15, () -> { int result = 2 * (value3); return result; }
@@ -779,7 +779,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4  = 20;
-        long result4 = matches(value4).as(
+        long result4 = match(value4).as(
                 5L,  () -> { long result = 2 * (value4); return result; },
                 10L, () -> { long result = 2 * (value4); return result; },
                 15L, () -> { long result = 2 * (value4); return result; },
@@ -790,7 +790,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5  = 25.0F;
-        float result5 = matches(value5).as(
+        float result5 = match(value5).as(
                 5.0F,  () -> { float result = 2 * (value5); return result; },
                 10.0F, () -> { float result = 2 * (value5); return result; },
                 15.0F, () -> { float result = 2 * (value5); return result; },
@@ -802,7 +802,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6  = 30.0;
-        double result6 = matches(value6).as(
+        double result6 = match(value6).as(
                 5.0D,  () -> { double result = 2 * (value6); return result; },
                 10.0D, () -> { double result = 2 * (value6); return result; },
                 15.0D, () -> { double result = 2 * (value6); return result; },
@@ -815,10 +815,10 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesExpressionWithDefaultTest()  {
+    public void matchExpressionWithDefaultTest()  {
         /* 1 */
         byte value1  = 10;
-        byte result1 = matches(value1,
+        byte result1 = match(value1,
                 (byte) 5,      () -> (byte) (2 * (value1)),
                 Else.class, (Supplier<Byte>) () -> (byte) 0
         );
@@ -827,7 +827,7 @@ public class ConstantPatternTest {
 
         /* 2 */
         short value2  = 15;
-        short result2 = matches(value2,
+        short result2 = match(value2,
                 (short) 5,  () -> (short) (2 * (value2)),
                 (short) 10, () -> (short) (2 * (value2)),
                 Else.class, (Supplier<Short>) () -> (short) 0
@@ -837,7 +837,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3  = 20;
-        int result3 = matches(value3,
+        int result3 = match(value3,
                 5,  () -> 2 * (value3),
                 10, () -> 2 * (value3),
                 15, () -> 2 * (value3),
@@ -848,7 +848,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4  = 25;
-        long result4 = matches(value4,
+        long result4 = match(value4,
                 5L,  () -> 2 * (value4),
                 10L, () -> 2 * (value4),
                 15L, () -> 2 * (value4),
@@ -860,7 +860,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5  = 30.0F;
-        float result5 = matches(value5,
+        float result5 = match(value5,
                 5.0F,  () -> 2 * (value5),
                 10.0F, () -> 2 * (value5),
                 15.0F, () -> 2 * (value5),
@@ -873,7 +873,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6  = 35.0D;
-        double result6 = matches(value6,
+        double result6 = match(value6,
                 5.0D,  () -> 2 * (value6),
                 10.0D, () -> 2 * (value6),
                 15.0D, () -> 2 * (value6),
@@ -887,10 +887,10 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsExpressionWithDefaultTest()  {
+    public void matchAsExpressionWithDefaultTest()  {
         /* 1 */
         byte value1  = 10;
-        byte result1 = matches(value1).as(
+        byte result1 = match(value1).as(
                 (byte) 5,      () -> (byte) (2 * (value1)),
                 Else.class, (Supplier<Byte>) () -> (byte) 0
         );
@@ -899,7 +899,7 @@ public class ConstantPatternTest {
 
         /* 2 */
         short value2  = 15;
-        short result2 = matches(value2).as(
+        short result2 = match(value2).as(
                 (short) 5,  () -> (short) (2 * (value2)),
                 (short) 10, () -> (short) (2 * (value2)),
                 Else.class, (Supplier<Short>) () -> (short) 0
@@ -909,7 +909,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3  = 20;
-        int result3 = matches(value3).as(
+        int result3 = match(value3).as(
                 5,  () -> 2 * (value3),
                 10, () -> 2 * (value3),
                 15, () -> 2 * (value3),
@@ -920,7 +920,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4  = 25;
-        long result4 = matches(value4).as(
+        long result4 = match(value4).as(
                 5L,  () -> 2 * (value4),
                 10L, () -> 2 * (value4),
                 15L, () -> 2 * (value4),
@@ -932,7 +932,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5  = 30.0F;
-        float result5 = matches(value5).as(
+        float result5 = match(value5).as(
                 5.0F,  () -> 2 * (value5),
                 10.0F, () -> 2 * (value5),
                 15.0F, () -> 2 * (value5),
@@ -945,7 +945,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6  = 35.0D;
-        double result6 = matches(value6).as(
+        double result6 = match(value6).as(
                 5.0D,  () -> 2 * (value6),
                 10.0D, () -> 2 * (value6),
                 15.0D, () -> 2 * (value6),
@@ -959,10 +959,10 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesExpressionWithVarTest()  {
+    public void matchExpressionWithVarTest()  {
         /* 1 */
         byte value1 = 10;
-        byte result1 = matches(value1,
+        byte result1 = match(value1,
                 (byte) 5,  ()  -> (byte) (2 * (value1)),
                 Var.class, any -> (byte) -1
         );
@@ -971,7 +971,7 @@ public class ConstantPatternTest {
 
         /* 2 */
         short value2  = 15;
-        short result2 = matches(value2,
+        short result2 = match(value2,
                 (short) 5,  () -> (short) (2 * (value2)),
                 (short) 10, () -> (short) (2 * (value2)),
                 Var.class, any -> (short) -1
@@ -981,7 +981,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3 = 20;
-        int result3 = matches(value3,
+        int result3 = match(value3,
                 5,  () -> 2 * (value3),
                 10, () -> 2 * (value3),
                 15, () -> 2 * (value3),
@@ -992,7 +992,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4  = 25;
-        long result4 = matches(value4,
+        long result4 = match(value4,
                 5L,  () -> 2 * (value4),
                 10L, () -> 2 * (value4),
                 15L, () -> 2 * (value4),
@@ -1004,7 +1004,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5  = 30.0F;
-        float result5 = matches(value5,
+        float result5 = match(value5,
                 5.0F,  () -> 2 * (value5),
                 10.0F, () -> 2 * (value5),
                 15.0F, () -> 2 * (value5),
@@ -1017,7 +1017,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6  = 35.0D;
-        double result6 = matches(value6,
+        double result6 = match(value6,
                 5.0D,  () -> 2 * (value6),
                 10.0D, () -> 2 * (value6),
                 15.0D, () -> 2 * (value6),
@@ -1031,10 +1031,10 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsExpressionWithVarTest()  {
+    public void matchAsExpressionWithVarTest()  {
         /* 1 */
         byte value1 = 10;
-        byte result1 = matches(value1).as(
+        byte result1 = match(value1).as(
                 (byte) 5,  ()  -> (byte) (2 * (value1)),
                 Var.class, any -> (byte) -1
         );
@@ -1043,7 +1043,7 @@ public class ConstantPatternTest {
 
         /* 2 */
         short value2  = 15;
-        short result2 = matches(value2).as(
+        short result2 = match(value2).as(
                 (short) 5,  () -> (short) (2 * (value2)),
                 (short) 10, () -> (short) (2 * (value2)),
                 Var.class, any -> (short) -1
@@ -1053,7 +1053,7 @@ public class ConstantPatternTest {
 
         /* 3 */
         int value3 = 20;
-        int result3 = matches(value3).as(
+        int result3 = match(value3).as(
                 5,  () -> 2 * (value3),
                 10, () -> 2 * (value3),
                 15, () -> 2 * (value3),
@@ -1064,7 +1064,7 @@ public class ConstantPatternTest {
 
         /* 4 */
         long value4  = 25;
-        long result4 = matches(value4).as(
+        long result4 = match(value4).as(
                 5L,  () -> 2 * (value4),
                 10L, () -> 2 * (value4),
                 15L, () -> 2 * (value4),
@@ -1076,7 +1076,7 @@ public class ConstantPatternTest {
 
         /* 5 */
         float value5  = 30.0F;
-        float result5 = matches(value5).as(
+        float result5 = match(value5).as(
                 5.0F,  () -> 2 * (value5),
                 10.0F, () -> 2 * (value5),
                 15.0F, () -> 2 * (value5),
@@ -1089,7 +1089,7 @@ public class ConstantPatternTest {
 
         /* 6 */
         double value6  = 35.0D;
-        double result6 = matches(value6).as(
+        double result6 = match(value6).as(
                 5.0D,  () -> 2 * (value6),
                 10.0D, () -> 2 * (value6),
                 15.0D, () -> 2 * (value6),
@@ -1103,9 +1103,9 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesExpressionWithNullDefaultTest() {
+    public void matchExpressionWithNullDefaultTest() {
         /* 1 */
-        byte result1 = matches(null,
+        byte result1 = match(null,
                 (byte) 5,      () -> (byte) 1,
                 Null.class,    () -> (byte) -1,
                 Else.class, (Supplier<Byte>) () -> (byte) 0
@@ -1114,7 +1114,7 @@ public class ConstantPatternTest {
         assertEquals(result1, -1);
 
         /* 2 */
-        short result2 = matches(null,
+        short result2 = match(null,
                 (short) 5,  () -> (short) 1,
                 (short) 10, () -> (short) 2,
                 Null.class, () -> (short) -1,
@@ -1124,7 +1124,7 @@ public class ConstantPatternTest {
         assertEquals(result2, -1);
 
         /* 3 */
-        int result3 = matches(null,
+        int result3 = match(null,
                 5,  () -> 1,
                 10, () -> 2,
                 15, () -> 3,
@@ -1135,7 +1135,7 @@ public class ConstantPatternTest {
         assertEquals(result3, -1);
 
         /* 4 */
-        long result4 = matches(null,
+        long result4 = match(null,
                 5L,  () -> (long) 1,
                 10L, () -> (long) 2,
                 15L, () -> (long) 3,
@@ -1147,7 +1147,7 @@ public class ConstantPatternTest {
         assertEquals(result4, -1);
 
         /* 5 */
-        float result5 = matches(null,
+        float result5 = match(null,
                 5.0F,  () -> (float) 1,
                 10.0F, () -> (float) 2,
                 15.0F, () -> (float) 3,
@@ -1160,7 +1160,7 @@ public class ConstantPatternTest {
         assertEquals(result5, -1);
 
         /* 6 */
-        double result6 = matches(null,
+        double result6 = match(null,
                 5.0D,  () -> (double) 1,
                 10.0D, () -> (double) 2,
                 15.0D, () -> (double) 3,
@@ -1174,9 +1174,9 @@ public class ConstantPatternTest {
         assertEquals(result6, -1);
     }
 
-    public void matchesAsExpressionWithNullDefaultTest() {
+    public void matchAsExpressionWithNullDefaultTest() {
         /* 1 */
-        byte result1 = matches(null).as(
+        byte result1 = match(null).as(
                 (byte) 5,      () -> (byte) 1,
                 Null.class,    () -> (byte) -1,
                 Else.class, (Supplier<Byte>) () -> (byte) 0
@@ -1185,7 +1185,7 @@ public class ConstantPatternTest {
         assertEquals(result1, -1);
 
         /* 2 */
-        short result2 = matches(null).as(
+        short result2 = match(null).as(
                 (short) 5,  () -> (short) 1,
                 (short) 10, () -> (short) 2,
                 Null.class, () -> (short) -1,
@@ -1195,7 +1195,7 @@ public class ConstantPatternTest {
         assertEquals(result2, -1);
 
         /* 3 */
-        int result3 = matches(null).as(
+        int result3 = match(null).as(
                 5,  () -> 1,
                 10, () -> 2,
                 15, () -> 3,
@@ -1206,7 +1206,7 @@ public class ConstantPatternTest {
         assertEquals(result3, -1);
 
         /* 4 */
-        long result4 = matches(null).as(
+        long result4 = match(null).as(
                 5L,  () -> (long) 1,
                 10L, () -> (long) 2,
                 15L, () -> (long) 3,
@@ -1218,7 +1218,7 @@ public class ConstantPatternTest {
         assertEquals(result4, -1);
 
         /* 5 */
-        float result5 = matches(null).as(
+        float result5 = match(null).as(
                 5.0F,  () -> (float) 1,
                 10.0F, () -> (float) 2,
                 15.0F, () -> (float) 3,
@@ -1231,7 +1231,7 @@ public class ConstantPatternTest {
         assertEquals(result5, -1);
 
         /* 6 */
-        double result6 = matches(null).as(
+        double result6 = match(null).as(
                 5.0D,  () -> (double) 1,
                 10.0D, () -> (double) 2,
                 15.0D, () -> (double) 3,
@@ -1246,9 +1246,9 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesExpressionWithNullVarTest()  {
+    public void matchExpressionWithNullVarTest()  {
         /* 1 */
-        byte result1 = matches(null,
+        byte result1 = match(null,
                 (byte) 5,   () -> (byte) 1,
                 Null.class, () -> (byte) -1,
                 Var.class, (UnaryOperator<Byte>) any -> (byte) 0
@@ -1257,7 +1257,7 @@ public class ConstantPatternTest {
         assertEquals(result1, -1);
 
         /* 2 */
-        short result2 = matches(null,
+        short result2 = match(null,
                 (short) 5,  () -> (short) 1,
                 (short) 10, () -> (short) 2,
                 Null.class, () -> (short) -1,
@@ -1267,7 +1267,7 @@ public class ConstantPatternTest {
         assertEquals(result2, -1);
 
         /* 3 */
-        int result3 = matches(null,
+        int result3 = match(null,
                 5,  () -> 1,
                 10, () -> 2,
                 15, () -> 3,
@@ -1278,7 +1278,7 @@ public class ConstantPatternTest {
         assertEquals(result3, -1);
 
         /* 4 */
-        long result4 = matches(null,
+        long result4 = match(null,
                 5L,  () -> (long) 1,
                 10L, () -> (long) 2,
                 15L, () -> (long) 3,
@@ -1290,7 +1290,7 @@ public class ConstantPatternTest {
         assertEquals(result4, -1);
 
         /* 5 */
-        float result5 = matches(null,
+        float result5 = match(null,
                 5.0F,  () -> (float) 1,
                 10.0F, () -> (float) 2,
                 15.0F, () -> (float) 3,
@@ -1303,7 +1303,7 @@ public class ConstantPatternTest {
         assertEquals(result5, -1);
 
         /* 6 */
-        double result6 = matches(null,
+        double result6 = match(null,
                 5.0D,  () -> (double) 1,
                 10.0D, () -> (double) 2,
                 15.0D, () -> (double) 3,
@@ -1318,9 +1318,9 @@ public class ConstantPatternTest {
     }
 
     @Test
-    public void matchesAsExpressionWithNullVarTest()  {
+    public void matchAsExpressionWithNullVarTest()  {
         /* 1 */
-        byte result1 = matches(null).as(
+        byte result1 = match(null).as(
                 (byte) 5,   () -> (byte) 1,
                 Null.class, () -> (byte) -1,
                 Var.class, (UnaryOperator<Byte>) any -> (byte) 0
@@ -1329,7 +1329,7 @@ public class ConstantPatternTest {
         assertEquals(result1, -1);
 
         /* 2 */
-        short result2 = matches(null).as(
+        short result2 = match(null).as(
                 (short) 5,  () -> (short) 1,
                 (short) 10, () -> (short) 2,
                 Null.class, () -> (short) -1,
@@ -1339,7 +1339,7 @@ public class ConstantPatternTest {
         assertEquals(result2, -1);
 
         /* 3 */
-        int result3 = matches(null).as(
+        int result3 = match(null).as(
                 5,  () -> 1,
                 10, () -> 2,
                 15, () -> 3,
@@ -1350,7 +1350,7 @@ public class ConstantPatternTest {
         assertEquals(result3, -1);
 
         /* 4 */
-        long result4 = matches(null).as(
+        long result4 = match(null).as(
                 5L,  () -> (long) 1,
                 10L, () -> (long) 2,
                 15L, () -> (long) 3,
@@ -1362,7 +1362,7 @@ public class ConstantPatternTest {
         assertEquals(result4, -1);
 
         /* 5 */
-        float result5 = matches(null).as(
+        float result5 = match(null).as(
                 5.0F,  () -> (float) 1,
                 10.0F, () -> (float) 2,
                 15.0F, () -> (float) 3,
@@ -1375,7 +1375,7 @@ public class ConstantPatternTest {
         assertEquals(result5, -1);
 
         /* 6 */
-        double result6 = matches(null).as(
+        double result6 = match(null).as(
                 5.0D,  () -> (double) 1,
                 10.0D, () -> (double) 2,
                 15.0D, () -> (double) 3,

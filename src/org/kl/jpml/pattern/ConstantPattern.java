@@ -44,7 +44,7 @@ public final class ConstantPattern {
 
     private ConstantPattern() {}
 
-    public static <V> ConstantPattern matches(V other) {
+    public static <V> ConstantPattern match(V other) {
         value = other;
 
         if (instance == null) {
@@ -54,7 +54,7 @@ public final class ConstantPattern {
         return instance;
     }
 
-    public static <V> void matches(V value, V data, Runnable firstBranch)  {
+    public static <V> void match(V value, V data, Runnable firstBranch)  {
         if (!Reflection.checkTypes(data.getClass(), value.getClass())) {
             throw new PatternException("Type in brunches must to be equals");
         }
@@ -65,13 +65,13 @@ public final class ConstantPattern {
     }
 
     public <V> void as(V data, Runnable firstBranch)  {
-        matches(value, data, firstBranch);
+        match(value, data, firstBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V data, Runnable firstBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V data, Runnable firstBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (!Reflection.checkTypes(value.getClass(), data.getClass())) {
             throw new PatternException("Type in brunches must to be equals");
         }
@@ -85,15 +85,15 @@ public final class ConstantPattern {
 
     public <V> void as(V data, Runnable firstBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches(value,
+        match(value,
                 data, firstBranch,
                 defaultClass, defaultBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V data, Runnable firstBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V data, Runnable firstBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (!Reflection.checkTypes(value.getClass(), data.getClass())) {
             throw new PatternException("Type in brunches must to be equals");
         }
@@ -107,55 +107,55 @@ public final class ConstantPattern {
 
     public <V> void as(V data, Runnable firstBranch,
                        Class<Var> varClass, Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 data, firstBranch,
                 varClass, varBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V data, Runnable firstBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V data, Runnable firstBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, data, firstBranch, defaultClass, defaultBranch);
+            match(value, data, firstBranch, defaultClass, defaultBranch);
         }
     }
 
     public <V> void as(V data, Runnable firstBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches((V) value,
+        match((V) value,
                 data, firstBranch,
                 nullClass, nullBranch,
                 defaultClass, defaultBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V data, Runnable firstBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Var>  varClass,  Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V data, Runnable firstBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Var>  varClass, Consumer<V> varBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, data, firstBranch, varClass, varBranch);
+            match(value, data, firstBranch, varClass, varBranch);
         }
     }
 
     public <V> void as(V data, Runnable firstBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Var>  varClass,  Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 data, firstBranch,
                 nullClass, nullBranch,
                 varClass, varBranch);
     }
 
-    public static <V> V matches(V value,
-                                V data, Supplier<V> firstBranch)  {
+    public static <V> V match(V value,
+                              V data, Supplier<V> firstBranch)  {
         if (!Reflection.checkTypes(value.getClass(), data.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
@@ -168,15 +168,15 @@ public final class ConstantPattern {
     }
 
     public <V> V as(V data, Supplier<V> firstBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 data, firstBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V data, Supplier<V> firstBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        V result = matches(value, data, firstBranch);
+    public static <V> V match(V value,
+                              V data, Supplier<V> firstBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+        V result = match(value, data, firstBranch);
 
         if (result != null) {
             return result;
@@ -187,16 +187,16 @@ public final class ConstantPattern {
 
     public <V> V as(V data, Supplier<V> firstBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 data, firstBranch,
                 defaultClass, defaultBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V data, Supplier<V> firstBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        V result = matches(value, data, firstBranch);
+    public static <V> V match(V value,
+                              V data, Supplier<V> firstBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
+        V result = match(value, data, firstBranch);
 
         if (result != null) {
             return result;
@@ -207,56 +207,56 @@ public final class ConstantPattern {
 
     public <V> V as(V data, Supplier<V> firstBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 data, firstBranch,
                 varClass, varBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V data, Supplier<V> firstBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+    public static <V> V match(V value,
+                              V data, Supplier<V> firstBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, data, firstBranch, defaultClass, defaultBranch);
+            return match(value, data, firstBranch, defaultClass, defaultBranch);
         }
     }
 
     public <V> V as(V data, Supplier<V> firstBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 data, firstBranch,
                 nullClass, nullBranch,
                 defaultClass, defaultBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V data, Supplier<V> firstBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
+    public static <V> V match(V value,
+                              V data, Supplier<V> firstBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, data, firstBranch, varClass, varBranch);
+            return match(value, data, firstBranch, varClass, varBranch);
         }
     }
 
     public <V> V as(V data, Supplier<V> firstBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 data, firstBranch,
                 nullClass, nullBranch,
                 varClass, varBranch);
     }
 
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(), secondData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
@@ -270,16 +270,16 @@ public final class ConstantPattern {
 
     public <V> void as(V firstData, Runnable firstBranch,
                        V secondData, Runnable secondBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch);
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(), secondData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
@@ -296,17 +296,17 @@ public final class ConstantPattern {
     public <V> void as(V firstData, Runnable firstBranch,
                        V secondData, Runnable secondBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 defaultClass, defaultBranch);
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(), secondData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
@@ -323,22 +323,22 @@ public final class ConstantPattern {
     public <V> void as(V firstData,  Runnable firstBranch,
                        V secondData, Runnable secondBranch,
                        Class<Var> varClass, Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 varClass, varBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                     defaultClass, defaultBranch);
         }
@@ -348,7 +348,7 @@ public final class ConstantPattern {
                        V secondData, Runnable secondBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 nullClass, nullBranch,
@@ -356,15 +356,15 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                     varClass, varBranch);
         }
@@ -374,16 +374,16 @@ public final class ConstantPattern {
                        V secondData, Runnable secondBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Var>  varClass,  Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 nullClass, nullBranch,
                 varClass, varBranch);
     }
 
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(), secondData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
@@ -399,17 +399,17 @@ public final class ConstantPattern {
 
     public <V> V as(V firstData,  Supplier<V> firstBranch,
                     V secondData, Supplier<V> secondBranch)  {
-        return matches((V) value,
+        return match((V) value,
                         firstData, firstBranch,
                         secondData, secondBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch);
 
@@ -423,18 +423,18 @@ public final class ConstantPattern {
     public <V> V as(V firstData, Supplier<V> firstBranch,
                     V secondData, Supplier<V> secondBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 defaultClass, defaultBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch);
 
@@ -448,22 +448,22 @@ public final class ConstantPattern {
     public <V> V as(V firstData,  Supplier<V> firstBranch,
                     V secondData, Supplier<V> secondBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 varClass, varBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                            defaultClass, defaultBranch);
         }
@@ -473,7 +473,7 @@ public final class ConstantPattern {
                     V secondData, Supplier<V> secondBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 nullClass, nullBranch,
@@ -481,15 +481,15 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                            varClass, varBranch);
         }
@@ -499,7 +499,7 @@ public final class ConstantPattern {
                     V secondData, Supplier<V> secondBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 nullClass, nullBranch,
@@ -507,10 +507,10 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("Duplicates")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(),
                                    secondData.getClass(), thirdData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -528,18 +528,18 @@ public final class ConstantPattern {
     public <V> void as(V firstData, Runnable firstBranch,
                        V secondData, Runnable secondBranch,
                        V thirdData, Runnable thirdBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch);
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData, Runnable thirdBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(),
                                    secondData.getClass(), thirdData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -560,7 +560,7 @@ public final class ConstantPattern {
                        V secondData, Runnable secondBranch,
                        V thirdData, Runnable thirdBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -568,11 +568,11 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(),
                                    secondData.getClass(), thirdData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -593,7 +593,7 @@ public final class ConstantPattern {
                        V secondData, Runnable secondBranch,
                        V thirdData,  Runnable thirdBranch,
                        Class<Var> varClass, Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -601,16 +601,16 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData, Runnable thirdBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
                     defaultClass, defaultBranch);
@@ -622,7 +622,7 @@ public final class ConstantPattern {
                        V thirdData, Runnable thirdBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -631,16 +631,16 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
                     varClass, varBranch);
@@ -652,7 +652,7 @@ public final class ConstantPattern {
                        V thirdData,  Runnable thirdBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Var>  varClass,  Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -661,10 +661,10 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("Duplicates")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(),
                                    secondData.getClass(), thirdData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -684,19 +684,19 @@ public final class ConstantPattern {
     public <V> V as(V firstData,  Supplier<V> firstBranch,
                     V secondData, Supplier<V> secondBranch,
                     V thirdData, Supplier<V> thirdBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch);
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch);
@@ -712,7 +712,7 @@ public final class ConstantPattern {
                     V secondData, Supplier<V> secondBranch,
                     V thirdData, Supplier<V> thirdBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -720,12 +720,12 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch);
@@ -741,7 +741,7 @@ public final class ConstantPattern {
                     V secondData, Supplier<V> secondBranch,
                     V thirdData,  Supplier<V> thirdBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -749,16 +749,16 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                                   thirdData,  thirdBranch,
                            defaultClass, defaultBranch);
@@ -770,7 +770,7 @@ public final class ConstantPattern {
                     V thirdData, Supplier<V> thirdBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -779,16 +779,16 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                                   thirdData,  thirdBranch,
                            varClass, varBranch);
@@ -800,7 +800,7 @@ public final class ConstantPattern {
                     V thirdData,  Supplier<V> thirdBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 thirdData,  thirdBranch,
@@ -809,11 +809,11 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("Duplicates")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass())) {
@@ -835,7 +835,7 @@ public final class ConstantPattern {
                        V secondData, Runnable secondBranch,
                        V thirdData, Runnable thirdBranch,
                        V fourthData, Runnable fourthBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -843,12 +843,12 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData, Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass())) {
@@ -873,7 +873,7 @@ public final class ConstantPattern {
                        V thirdData, Runnable thirdBranch,
                        V fourthData, Runnable fourthBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -882,12 +882,12 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass())) {
@@ -912,7 +912,7 @@ public final class ConstantPattern {
                        V thirdData,  Runnable thirdBranch,
                        V fourthData, Runnable fourthBranch,
                        Class<Var> varClass, Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -921,17 +921,17 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData, Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
                            fourthData, fourthBranch,
@@ -945,7 +945,7 @@ public final class ConstantPattern {
                        V fourthData, Runnable fourthBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -955,17 +955,17 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
                            fourthData, fourthBranch,
@@ -979,7 +979,7 @@ public final class ConstantPattern {
                        V fourthData, Runnable fourthBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Var>  varClass,  Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -989,11 +989,11 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("Duplicates")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass())) {
@@ -1017,7 +1017,7 @@ public final class ConstantPattern {
                     V secondData, Supplier<V> secondBranch,
                     V thirdData, Supplier<V> thirdBranch,
                     V fourthData, Supplier<V> fourthBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1025,13 +1025,13 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
@@ -1048,7 +1048,7 @@ public final class ConstantPattern {
                     V thirdData, Supplier<V> thirdBranch,
                     V fourthData, Supplier<V> fourthBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1057,13 +1057,13 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
@@ -1080,7 +1080,7 @@ public final class ConstantPattern {
                     V thirdData,  Supplier<V> thirdBranch,
                     V fourthData, Supplier<V> fourthBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1089,17 +1089,17 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                                   thirdData,  thirdBranch,
                                   fourthData, fourthBranch,
@@ -1113,7 +1113,7 @@ public final class ConstantPattern {
                     V fourthData, Supplier<V> fourthBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1123,17 +1123,17 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                                   thirdData,  thirdBranch,
                                   fourthData, fourthBranch,
@@ -1147,7 +1147,7 @@ public final class ConstantPattern {
                     V fourthData, Supplier<V> fourthBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 thirdData,  thirdBranch,
@@ -1157,12 +1157,12 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("Duplicates")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData,  Runnable fifthBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(),
                                    secondData.getClass(), thirdData.getClass(),
                                    fourthData.getClass(), fifthData.getClass())) {
@@ -1187,7 +1187,7 @@ public final class ConstantPattern {
                        V thirdData, Runnable thirdBranch,
                        V fourthData, Runnable fourthBranch,
                        V fifthData, Runnable fifthBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1196,13 +1196,13 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData, Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData, Runnable fifthBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(),
                                    secondData.getClass(), thirdData.getClass(),
                                    fourthData.getClass(), fifthData.getClass())) {
@@ -1230,7 +1230,7 @@ public final class ConstantPattern {
                        V fourthData, Runnable fourthBranch,
                        V fifthData, Runnable fifthBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1240,13 +1240,13 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData,  Runnable fifthBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (!Reflection.checkTypes(value.getClass(), firstData.getClass(),
                                    secondData.getClass(), thirdData.getClass(),
                                    fourthData.getClass(), fifthData.getClass())) {
@@ -1274,7 +1274,7 @@ public final class ConstantPattern {
                        V fourthData, Runnable fourthBranch,
                        V fifthData,  Runnable fifthBranch,
                        Class<Var> varClass, Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1284,18 +1284,18 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData, Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData, Runnable fifthBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
                            fourthData, fourthBranch,
@@ -1305,18 +1305,18 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData,  Runnable fifthBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
                            fourthData, fourthBranch,
@@ -1332,7 +1332,7 @@ public final class ConstantPattern {
                        V fifthData,  Runnable fifthBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Var>  varClass,  Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1349,7 +1349,7 @@ public final class ConstantPattern {
                        V fifthData,  Runnable fifthBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1360,12 +1360,12 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("Duplicates")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData,  Supplier<V> fifthBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass(), fifthData.getClass())) {
@@ -1392,7 +1392,7 @@ public final class ConstantPattern {
                     V thirdData, Supplier<V> thirdBranch,
                     V fourthData, Supplier<V> fourthBranch,
                     V fifthData,  Supplier<V> fifthBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1401,14 +1401,14 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData, Supplier<V> fifthBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
@@ -1427,7 +1427,7 @@ public final class ConstantPattern {
                     V fourthData, Supplier<V> fourthBranch,
                     V fifthData, Supplier<V> fifthBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1437,14 +1437,14 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData,  Supplier<V> fifthBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
@@ -1463,7 +1463,7 @@ public final class ConstantPattern {
                     V fourthData, Supplier<V> fourthBranch,
                     V fifthData,  Supplier<V> fifthBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1473,18 +1473,18 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData, Supplier<V> fifthBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                                   thirdData,  thirdBranch,
                                   fourthData, fourthBranch,
@@ -1500,7 +1500,7 @@ public final class ConstantPattern {
                     V fifthData, Supplier<V> fifthBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1511,18 +1511,18 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData,  Supplier<V> fifthBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                                   thirdData,  thirdBranch,
                                   fourthData, fourthBranch,
@@ -1538,7 +1538,7 @@ public final class ConstantPattern {
                     V fifthData,  Supplier<V> fifthBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 thirdData,  thirdBranch,
@@ -1549,13 +1549,13 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("Duplicates")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData,  Runnable fifthBranch,
-                                   V sixthData,  Runnable sixthBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 V sixthData, Runnable sixthBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass(),
@@ -1584,7 +1584,7 @@ public final class ConstantPattern {
                        V fourthData, Runnable fourthBranch,
                        V fifthData, Runnable fifthBranch,
                        V sixthData, Runnable sixthBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1594,14 +1594,14 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData, Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData, Runnable fifthBranch,
-                                   V sixthData, Runnable sixthBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 V sixthData, Runnable sixthBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass(),
@@ -1633,7 +1633,7 @@ public final class ConstantPattern {
                        V fifthData, Runnable fifthBranch,
                        V sixthData, Runnable sixthBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches(value,
+        match(value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1644,14 +1644,14 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings({"unused", "Duplicates"})
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData,  Runnable fifthBranch,
-                                   V sixthData,  Runnable sixthBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 V sixthData, Runnable sixthBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass(),
@@ -1683,7 +1683,7 @@ public final class ConstantPattern {
                        V fifthData,  Runnable fifthBranch,
                        V sixthData,  Runnable sixthBranch,
                        Class<Var> varClass, Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1694,19 +1694,19 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData, Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData, Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData, Runnable fifthBranch,
-                                   V sixthData, Runnable sixthBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Else> defaultClass, Runnable defaultBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 V sixthData, Runnable sixthBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Else> defaultClass, Runnable defaultBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
                            fourthData, fourthBranch,
@@ -1724,7 +1724,7 @@ public final class ConstantPattern {
                        V sixthData, Runnable sixthBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Else> defaultClass, Runnable defaultBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1736,19 +1736,19 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> void matches(V value,
-                                   V firstData,  Runnable firstBranch,
-                                   V secondData, Runnable secondBranch,
-                                   V thirdData,  Runnable thirdBranch,
-                                   V fourthData, Runnable fourthBranch,
-                                   V fifthData,  Runnable fifthBranch,
-                                   V sixthData,  Runnable sixthBranch,
-                                   Class<Null> nullClass, Runnable nullBranch,
-                                   Class<Var> varClass, Consumer<V> varBranch)  {
+    public static <V> void match(V value,
+                                 V firstData, Runnable firstBranch,
+                                 V secondData, Runnable secondBranch,
+                                 V thirdData, Runnable thirdBranch,
+                                 V fourthData, Runnable fourthBranch,
+                                 V fifthData, Runnable fifthBranch,
+                                 V sixthData, Runnable sixthBranch,
+                                 Class<Null> nullClass, Runnable nullBranch,
+                                 Class<Var> varClass, Consumer<V> varBranch)  {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstData,  firstBranch,
+            match(value, firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
                            fourthData, fourthBranch,
@@ -1766,7 +1766,7 @@ public final class ConstantPattern {
                        V sixthData,  Runnable sixthBranch,
                        Class<Null> nullClass, Runnable nullBranch,
                        Class<Var>  varClass,  Consumer<V> varBranch)  {
-        matches((V) value,
+        match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1778,13 +1778,13 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("Duplicates")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData,  Supplier<V> fifthBranch,
-                                V sixthData,  Supplier<V> sixthBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              V sixthData, Supplier<V> sixthBranch)  {
         if (!Reflection.checkTypes(value.getClass(),
                                    firstData.getClass(), secondData.getClass(),
                                    thirdData.getClass(), fourthData.getClass(),
@@ -1815,7 +1815,7 @@ public final class ConstantPattern {
                     V fourthData, Supplier<V> fourthBranch,
                     V fifthData,  Supplier<V> fifthBranch,
                     V sixthData,  Supplier<V> sixthBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1825,15 +1825,15 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData, Supplier<V> fifthBranch,
-                                V sixthData, Supplier<V> sixthBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              V sixthData, Supplier<V> sixthBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
@@ -1854,7 +1854,7 @@ public final class ConstantPattern {
                     V fifthData, Supplier<V> fifthBranch,
                     V sixthData, Supplier<V> sixthBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1865,15 +1865,15 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData,  Supplier<V> fifthBranch,
-                                V sixthData,  Supplier<V> sixthBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        V result = matches(value,
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              V sixthData, Supplier<V> sixthBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
+        V result = match(value,
                            firstData,  firstBranch,
                            secondData, secondBranch,
                            thirdData,  thirdBranch,
@@ -1894,7 +1894,7 @@ public final class ConstantPattern {
                     V fifthData,  Supplier<V> fifthBranch,
                     V sixthData,  Supplier<V> sixthBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1905,19 +1905,19 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData, Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData, Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData, Supplier<V> fifthBranch,
-                                V sixthData, Supplier<V> sixthBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Else> defaultClass, Supplier<V> defaultBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              V sixthData, Supplier<V> sixthBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Else> defaultClass, Supplier<V> defaultBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                                   thirdData,  thirdBranch,
                                   fourthData, fourthBranch,
@@ -1935,7 +1935,7 @@ public final class ConstantPattern {
                     V sixthData, Supplier<V> sixthBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Else> defaultClass, Supplier<V> defaultBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData, firstBranch,
                 secondData, secondBranch,
                 thirdData, thirdBranch,
@@ -1947,19 +1947,19 @@ public final class ConstantPattern {
     }
 
     @SuppressWarnings("unused")
-    public static <V> V matches(V value,
-                                V firstData,  Supplier<V> firstBranch,
-                                V secondData, Supplier<V> secondBranch,
-                                V thirdData,  Supplier<V> thirdBranch,
-                                V fourthData, Supplier<V> fourthBranch,
-                                V fifthData,  Supplier<V> fifthBranch,
-                                V sixthData,  Supplier<V> sixthBranch,
-                                Class<Null> nullClass, Supplier<V> nullBranch,
-                                Class<Var> varClass, UnaryOperator<V> varBranch)  {
+    public static <V> V match(V value,
+                              V firstData, Supplier<V> firstBranch,
+                              V secondData, Supplier<V> secondBranch,
+                              V thirdData, Supplier<V> thirdBranch,
+                              V fourthData, Supplier<V> fourthBranch,
+                              V fifthData, Supplier<V> fifthBranch,
+                              V sixthData, Supplier<V> sixthBranch,
+                              Class<Null> nullClass, Supplier<V> nullBranch,
+                              Class<Var> varClass, UnaryOperator<V> varBranch)  {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, firstData,  firstBranch,
+            return match(value, firstData,  firstBranch,
                                   secondData, secondBranch,
                                   thirdData,  thirdBranch,
                                   fourthData, fourthBranch,
@@ -1977,7 +1977,7 @@ public final class ConstantPattern {
                     V sixthData,  Supplier<V> sixthBranch,
                     Class<Null> nullClass, Supplier<V> nullBranch,
                     Class<Var> varClass, UnaryOperator<V> varBranch)  {
-        return matches((V) value,
+        return match((V) value,
                 firstData,  firstBranch,
                 secondData, secondBranch,
                 thirdData,  thirdBranch,

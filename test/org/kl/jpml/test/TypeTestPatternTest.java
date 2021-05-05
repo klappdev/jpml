@@ -34,43 +34,43 @@ import org.kl.jpml.state.Null;
 import org.kl.jpml.state.Var;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.kl.jpml.pattern.VerifyPattern.matches;
+import static org.kl.jpml.pattern.TypeTestPattern.match;
 
-public class VerifyPatternTest {
+public class TypeTestPatternTest {
 
     @Test
-    public void matchesStatementTest() {
+    public void matchStatementTest() {
         /* 1 */
         byte value1 = 5;
-        matches(value1,
+       match(value1,
                 Byte.class,  b  -> { System.out.println(b * b); }
         );
 
-        matches(value1,
+       match(value1,
                 byte.class,  b -> { System.out.println("pc1: " + b * b * b); }
         );
 
         /* 2 */
         short value2 = 15;
-        matches(value2,
+       match(value2,
                 Byte.class,  b -> { System.out.println(b * b); },
                 Short.class, s -> { System.out.println(s * s); }
         );
 
-        matches(value2,
+       match(value2,
                 byte.class,  b -> { System.out.println("pc2: " + b * b * b); },
                 short.class, s -> { System.out.println("pc2: " + s * s * s); }
         );
 
         /* 3 */
         int value3 = 25;
-        matches(value3,
+       match(value3,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); }
         );
 
-        matches(value3,
+       match(value3,
                 byte.class,    b -> { System.out.println("pc3: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc3: " + s * s * s); },
                 int.class,     i -> { System.out.println("pc3: " + i * i * i); }
@@ -78,14 +78,14 @@ public class VerifyPatternTest {
 
         /* 4 */
         long value4 = 35;
-        matches(value4,
+       match(value4,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); },
                 Long.class,    l -> { System.out.println(l * l); }
         );
 
-        matches(value4,
+       match(value4,
                 byte.class,    b -> { System.out.println("pc4: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc4: " + s * s * s); },
                 int.class,     i -> { System.out.println("pc4: " + i * i * i); },
@@ -94,7 +94,7 @@ public class VerifyPatternTest {
 
         /* 5 */
         float value5 = 45.0F;
-        matches(value5,
+       match(value5,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); },
@@ -102,7 +102,7 @@ public class VerifyPatternTest {
                 Float.class,   f -> { System.out.println(f * f); }
         );
 
-        matches(value5,
+       match(value5,
                 byte.class,    b -> { System.out.println("pc5: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc5: " + s * s * s); },
                 int.class,     i -> { System.out.println("pc5: " + i * i * i); },
@@ -112,7 +112,7 @@ public class VerifyPatternTest {
 
         /* 6 */
         double value6 = 55;
-        matches(value6,
+       match(value6,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); },
@@ -121,7 +121,7 @@ public class VerifyPatternTest {
                 Double.class,  d -> { System.out.println(d * d); }
         );
 
-        matches(value6,
+       match(value6,
                 byte.class,    b -> { System.out.println("pc6: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc6: " + s * s * s); },
                 int.class,     i -> { System.out.println("pc6: " + i * i * i); },
@@ -133,44 +133,145 @@ public class VerifyPatternTest {
         /* 7 */
         Figure figure = new Rectangle();
 
-        matches(figure,
+       match(figure,
                 Rectangle.class, r -> { System.out.println("rect:   " + r.square()); },
                 Circle.class,    c -> { System.out.println("circle: " + c.square()); }
         );
     }
 
     @Test
-    public void matchesStatementWithDefaultTest() {
+    public void matchAsStatementTest() {
+        /* 1 */
+        byte value1 = 5;
+        match(value1).as(
+                Byte.class,  b  -> { System.out.println(b * b); }
+        );
+
+        match(value1).as(
+                byte.class,  b -> { System.out.println("pc1: " + b * b * b); }
+        );
+
+        /* 2 */
+        short value2 = 15;
+        match(value2).as(
+                Byte.class,  b -> { System.out.println(b * b); },
+                Short.class, s -> { System.out.println(s * s); }
+        );
+
+        match(value2).as(
+                byte.class,  b -> { System.out.println("pc2: " + b * b * b); },
+                short.class, s -> { System.out.println("pc2: " + s * s * s); }
+        );
+
+        /* 3 */
+        int value3 = 25;
+        match(value3).as(
+                Byte.class,    b -> { System.out.println(b * b); },
+                Short.class,   s -> { System.out.println(s * s); },
+                Integer.class, i -> { System.out.println(i * i); }
+        );
+
+        match(value3).as(
+                byte.class,    b -> { System.out.println("pc3: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc3: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc3: " + i * i * i); }
+        );
+
+        /* 4 */
+        long value4 = 35;
+        match(value4).as(
+                Byte.class,    b -> { System.out.println(b * b); },
+                Short.class,   s -> { System.out.println(s * s); },
+                Integer.class, i -> { System.out.println(i * i); },
+                Long.class,    l -> { System.out.println(l * l); }
+        );
+
+        match(value4).as(
+                byte.class,    b -> { System.out.println("pc4: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc4: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc4: " + i * i * i); },
+                long.class,    l -> { System.out.println("pc4: " + l * l * l); }
+        );
+
+        /* 5 */
+        float value5 = 45.0F;
+        match(value5).as(
+                Byte.class,    b -> { System.out.println(b * b); },
+                Short.class,   s -> { System.out.println(s * s); },
+                Integer.class, i -> { System.out.println(i * i); },
+                Long.class,    l -> { System.out.println(l * l); },
+                Float.class,   f -> { System.out.println(f * f); }
+        );
+
+        match(value5).as(
+                byte.class,    b -> { System.out.println("pc5: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc5: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc5: " + i * i * i); },
+                long.class,    l -> { System.out.println("pc5: " + l * l * l); },
+                float.class,   f -> { System.out.println("pc5: " + f * f * f); }
+        );
+
+        /* 6 */
+        double value6 = 55;
+        match(value6).as(
+                Byte.class,    b -> { System.out.println(b * b); },
+                Short.class,   s -> { System.out.println(s * s); },
+                Integer.class, i -> { System.out.println(i * i); },
+                Long.class,    l -> { System.out.println(l * l); },
+                Float.class,   f -> { System.out.println(f * f); },
+                Double.class,  d -> { System.out.println(d * d); }
+        );
+
+        match(value6).as(
+                byte.class,    b -> { System.out.println("pc6: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc6: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc6: " + i * i * i); },
+                long.class,    l -> { System.out.println("pc6: " + l * l * l); },
+                float.class,   f -> { System.out.println("pc6: " + f * f * f); },
+                double.class,  d -> { System.out.println("pc6: " + d * d * d); }
+        );
+
+        /* 7 */
+        Figure figure = new Rectangle();
+
+        match(figure).as(
+                Rectangle.class, r -> { System.out.println("rect:   " + r.square()); },
+                Circle.class,    c -> { System.out.println("circle: " + c.square()); }
+        );
+    }
+
+    @Test
+    public void matchStatementWithDefaultTest() {
         String data = "unknown";
 
         /* 1 */
-        matches(data,
+        match(data,
                 Byte.class,    b  -> System.out.println(b * b),
                 Else.class, () -> System.out.println("Else value 1 type")
         );
 
         byte value1 = 1;
-        matches(value1,
+        match(value1,
                 byte.class,    b  -> System.out.println("pc1: " + b * b),
                 Else.class, () -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
-        matches(data,
+        match(data,
                 Byte.class,  b -> System.out.println(b * b),
                 Short.class, s -> System.out.println(s * s),
                 Else.class, () -> System.out.println("Else value 2 types")
         );
 
         short value2 = 2;
-        matches(value2,
+        match(value2,
                 byte.class,  b -> System.out.println("pc2: " + b * b),
                 short.class, s -> System.out.println("pc2: " + s * s),
                 Else.class, () -> System.out.println("Else value 2 types")
         );
 
         /* 3 */
-        matches(data,
+        match(data,
                 Byte.class,    b  -> System.out.println(b * b),
                 Short.class,   s  -> System.out.println(s * s),
                 Integer.class, i  -> System.out.println(i * i),
@@ -178,7 +279,7 @@ public class VerifyPatternTest {
         );
 
         int value3 = 3;
-        matches(value3,
+        match(value3,
                 byte.class,    b  -> System.out.println("pc3: " + b * b),
                 short.class,   s  -> System.out.println("pc3: " + s * s),
                 int.class,     i  -> System.out.println("pc3: " + i * i),
@@ -186,7 +287,7 @@ public class VerifyPatternTest {
         );
 
         /* 4 */
-        matches(data,
+        match(data,
                 Byte.class,    b  -> System.out.println(b * b),
                 Short.class,   s  -> System.out.println(s * s),
                 Integer.class, i  -> System.out.println(i * i),
@@ -195,7 +296,7 @@ public class VerifyPatternTest {
         );
 
         long value4 = 4;
-        matches(value4,
+        match(value4,
                 byte.class,    b  -> System.out.println("pc4: " + b * b),
                 short.class,   s  -> System.out.println("pc4: " + s * s),
                 int.class,     i  -> System.out.println("pc4: " + i * i),
@@ -204,7 +305,7 @@ public class VerifyPatternTest {
         );
 
         /* 5 */
-        matches(data,
+        match(data,
                 Byte.class,    b -> System.out.println(b * b),
                 Short.class,   s -> System.out.println(s * s),
                 Integer.class, i -> System.out.println(i * i),
@@ -214,7 +315,7 @@ public class VerifyPatternTest {
         );
 
         float value5 = 5;
-        matches(value5,
+        match(value5,
                 byte.class,    b -> System.out.println("pc5: " + b * b),
                 short.class,   s -> System.out.println("pc5: " + s * s),
                 int.class,     i -> System.out.println("pc5: " + i * i),
@@ -224,7 +325,7 @@ public class VerifyPatternTest {
         );
 
         /* 6 */
-        matches(data,
+        match(data,
                 Byte.class,    b -> System.out.println(b * b),
                 Short.class,   s -> System.out.println(s * s),
                 Integer.class, i -> System.out.println(i * i),
@@ -235,7 +336,7 @@ public class VerifyPatternTest {
         );
 
         double value6 = 6;
-        matches(value6,
+        match(value6,
                 byte.class,    b -> System.out.println("pc6: " + b * b * b),
                 short.class,   s -> System.out.println("pc6: " + s * s * s),
                 int.class,     i -> System.out.println("pc6: " + i * i * i),
@@ -246,7 +347,7 @@ public class VerifyPatternTest {
         );
 
         /* 7 */
-        matches(data,
+        match(data,
                 Rectangle.class, r  -> System.out.println("rect:   " + r.square()),
                 Circle.class,    c  -> System.out.println("circle: " + c.square()),
                 Else.class,   () -> System.out.println("Else shape")
@@ -254,37 +355,151 @@ public class VerifyPatternTest {
     }
 
     @Test
-    public void matchesStatementWithVarTest() {
+    public void matchAsStatementWithDefaultTest() {
         String data = "unknown";
 
         /* 1 */
-        matches(data,
+        match(data).as(
+                Byte.class,    b  -> System.out.println(b * b),
+                Else.class, () -> System.out.println("Else value 1 type")
+        );
+
+        byte value1 = 1;
+        match(value1).as(
+                byte.class,    b  -> System.out.println("pc1: " + b * b),
+                Else.class, () -> System.out.println("Else value 1 type")
+        );
+
+        /* 2 */
+        match(data).as(
+                Byte.class,  b -> System.out.println(b * b),
+                Short.class, s -> System.out.println(s * s),
+                Else.class, () -> System.out.println("Else value 2 types")
+        );
+
+        short value2 = 2;
+        match(value2).as(
+                byte.class,  b -> System.out.println("pc2: " + b * b),
+                short.class, s -> System.out.println("pc2: " + s * s),
+                Else.class, () -> System.out.println("Else value 2 types")
+        );
+
+        /* 3 */
+        match(data).as(
+                Byte.class,    b  -> System.out.println(b * b),
+                Short.class,   s  -> System.out.println(s * s),
+                Integer.class, i  -> System.out.println(i * i),
+                Else.class, () -> System.out.println("Else value 3 types")
+        );
+
+        int value3 = 3;
+        match(value3).as(
+                byte.class,    b  -> System.out.println("pc3: " + b * b),
+                short.class,   s  -> System.out.println("pc3: " + s * s),
+                int.class,     i  -> System.out.println("pc3: " + i * i),
+                Else.class, () -> System.out.println("Else value 3 types")
+        );
+
+        /* 4 */
+        match(data).as(
+                Byte.class,    b  -> System.out.println(b * b),
+                Short.class,   s  -> System.out.println(s * s),
+                Integer.class, i  -> System.out.println(i * i),
+                Long.class,    l  -> System.out.println(l * l),
+                Else.class, () -> System.out.println("Else value 4 types")
+        );
+
+        long value4 = 4;
+        match(value4).as(
+                byte.class,    b  -> System.out.println("pc4: " + b * b),
+                short.class,   s  -> System.out.println("pc4: " + s * s),
+                int.class,     i  -> System.out.println("pc4: " + i * i),
+                long.class,    l  -> System.out.println("pc4: " + l * l),
+                Else.class, () -> System.out.println("Else value 4 types")
+        );
+
+        /* 5 */
+        match(data).as(
+                Byte.class,    b -> System.out.println(b * b),
+                Short.class,   s -> System.out.println(s * s),
+                Integer.class, i -> System.out.println(i * i),
+                Long.class,    l -> System.out.println(l * l),
+                Float.class,   f -> System.out.println(f * f),
+                Else.class, () -> System.out.println("Else value 5 types")
+        );
+
+        float value5 = 5;
+        match(value5).as(
+                byte.class,    b -> System.out.println("pc5: " + b * b),
+                short.class,   s -> System.out.println("pc5: " + s * s),
+                int.class,     i -> System.out.println("pc5: " + i * i),
+                long.class,    l -> System.out.println("pc5: " + l * l),
+                float.class,   f -> System.out.println("pc5: " + f * f),
+                Else.class, () -> System.out.println("Else value 5 types")
+        );
+
+        /* 6 */
+        match(data).as(
+                Byte.class,    b -> System.out.println(b * b),
+                Short.class,   s -> System.out.println(s * s),
+                Integer.class, i -> System.out.println(i * i),
+                Long.class,    l -> System.out.println(l * l),
+                Float.class,   f -> System.out.println(f * f),
+                Double.class,  d -> System.out.println(d * d),
+                Else.class, () -> System.out.println("Else value 6 types")
+        );
+
+        double value6 = 6;
+        match(value6).as(
+                byte.class,    b -> System.out.println("pc6: " + b * b * b),
+                short.class,   s -> System.out.println("pc6: " + s * s * s),
+                int.class,     i -> System.out.println("pc6: " + i * i * i),
+                long.class,    l -> System.out.println("pc6: " + l * l * l),
+                float.class,   f -> System.out.println("pc6: " + f * f * f),
+                double.class,  d -> System.out.println("pc6: " + d * d * d),
+                Else.class, () -> System.out.println("Else value 6 types")
+        );
+
+        /* 7 */
+        match(data).as(
+                Rectangle.class, r  -> System.out.println("rect:   " + r.square()),
+                Circle.class,    c  -> System.out.println("circle: " + c.square()),
+                Else.class,   () -> System.out.println("Else shape")
+        );
+    }
+
+    @Test
+    public void matchStatementWithVarTest() {
+        String data = "unknown";
+
+        /* 1 */
+        match(data,
                 Byte.class, b -> System.out.println(b * b),
                 Var.class, (Purchaser<String>) any -> System.out.println("Else value 1 type")
         );
 
         byte value1 = 1;
-        matches(value1,
+        match(value1,
                 byte.class, b -> System.out.println("pc1: " + b * b),
                 Var.class, (Purchaser<Byte>) any -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
-        matches(data,
+        match(data,
                 Byte.class,  b -> System.out.println(b * b),
                 Short.class, s -> System.out.println(s * s),
                 Var.class, (Purchaser<String>) any -> System.out.println("Else value 2 types")
         );
 
         short value2 = 2;
-        matches(value2,
+        match(value2,
                 byte.class,  b -> System.out.println("pc2: " + b * b),
                 short.class, s -> System.out.println("pc2: " + s * s),
                 Var.class, (Purchaser<Short>) any -> System.out.println("Else value 2 types")
         );
 
         /* 3 */
-        matches(data,
+        match(data,
                 Byte.class,    b  -> System.out.println(b * b),
                 Short.class,   s  -> System.out.println(s * s),
                 Integer.class, i  -> System.out.println(i * i),
@@ -292,7 +507,7 @@ public class VerifyPatternTest {
         );
 
         int value3 = 3;
-        matches(value3,
+        match(value3,
                 byte.class,    b  -> System.out.println("pc3: " + b * b),
                 short.class,   s  -> System.out.println("pc3: " + s * s),
                 int.class,     i  -> System.out.println("pc3: " + i * i),
@@ -300,7 +515,7 @@ public class VerifyPatternTest {
         );
 
         /* 4 */
-        matches(data,
+        match(data,
                 Byte.class,    b  -> System.out.println(b * b),
                 Short.class,   s  -> System.out.println(s * s),
                 Integer.class, i  -> System.out.println(i * i),
@@ -309,7 +524,7 @@ public class VerifyPatternTest {
         );
 
         long value4 = 4;
-        matches(value4,
+        match(value4,
                 byte.class,    b  -> System.out.println("pc4: " + b * b),
                 short.class,   s  -> System.out.println("pc4: " + s * s),
                 int.class,     i  -> System.out.println("pc4: " + i * i),
@@ -318,7 +533,7 @@ public class VerifyPatternTest {
         );
 
         /* 5 */
-        matches(data,
+        match(data,
                 Byte.class,    b -> System.out.println(b * b),
                 Short.class,   s -> System.out.println(s * s),
                 Integer.class, i -> System.out.println(i * i),
@@ -328,7 +543,7 @@ public class VerifyPatternTest {
         );
 
         float value5 = 5;
-        matches(value5,
+        match(value5,
                 byte.class,    b -> System.out.println("pc5: " + b * b),
                 short.class,   s -> System.out.println("pc5: " + s * s),
                 int.class,     i -> System.out.println("pc5: " + i * i),
@@ -338,7 +553,7 @@ public class VerifyPatternTest {
         );
 
         /* 6 */
-        matches(data,
+        match(data,
                 Byte.class,    b -> System.out.println(b * b),
                 Short.class,   s -> System.out.println(s * s),
                 Integer.class, i -> System.out.println(i * i),
@@ -349,7 +564,7 @@ public class VerifyPatternTest {
         );
 
         double value6 = 6;
-        matches(value6,
+        match(value6,
                 byte.class,    b -> System.out.println("pc6: " + b * b * b),
                 short.class,   s -> System.out.println("pc6: " + s * s * s),
                 int.class,     i -> System.out.println("pc6: " + i * i * i),
@@ -360,7 +575,7 @@ public class VerifyPatternTest {
         );
 
         /* 7 */
-        matches(data,
+        match(data,
                 Rectangle.class, r  -> System.out.println("rect:   " + r.square()),
                 Circle.class,    c  -> System.out.println("circle: " + c.square()),
                 Var.class, (Purchaser<String>) any -> System.out.println("Else shape")
@@ -368,25 +583,139 @@ public class VerifyPatternTest {
     }
 
     @Test
-    public void matchesStatementWithNullDefaultTest() {
+    public void matchAsStatementWithVarTest() {
         String data = "unknown";
 
         /* 1 */
-        matches(null,
+        match(data).as(
+                Byte.class, b -> System.out.println(b * b),
+                Var.class, (Purchaser<String>) any -> System.out.println("Else value 1 type")
+        );
+
+        byte value1 = 1;
+        match(value1).as(
+                byte.class, b -> System.out.println("pc1: " + b * b),
+                Var.class, (Purchaser<Byte>) any -> System.out.println("Else value 1 type")
+        );
+
+        /* 2 */
+        match(data).as(
+                Byte.class,  b -> System.out.println(b * b),
+                Short.class, s -> System.out.println(s * s),
+                Var.class, (Purchaser<String>) any -> System.out.println("Else value 2 types")
+        );
+
+        short value2 = 2;
+        match(value2).as(
+                byte.class,  b -> System.out.println("pc2: " + b * b),
+                short.class, s -> System.out.println("pc2: " + s * s),
+                Var.class, (Purchaser<Short>) any -> System.out.println("Else value 2 types")
+        );
+
+        /* 3 */
+        match(data).as(
+                Byte.class,    b  -> System.out.println(b * b),
+                Short.class,   s  -> System.out.println(s * s),
+                Integer.class, i  -> System.out.println(i * i),
+                Var.class, (Purchaser<String>) any -> System.out.println("Else value 3 types")
+        );
+
+        int value3 = 3;
+        match(value3).as(
+                byte.class,    b  -> System.out.println("pc3: " + b * b),
+                short.class,   s  -> System.out.println("pc3: " + s * s),
+                int.class,     i  -> System.out.println("pc3: " + i * i),
+                Var.class, (Purchaser<Integer>) any -> System.out.println("Else value 3 types")
+        );
+
+        /* 4 */
+        match(data).as(
+                Byte.class,    b  -> System.out.println(b * b),
+                Short.class,   s  -> System.out.println(s * s),
+                Integer.class, i  -> System.out.println(i * i),
+                Long.class,    l  -> System.out.println(l * l),
+                Var.class, (Purchaser<String>) any -> System.out.println("Else value 4 types")
+        );
+
+        long value4 = 4;
+        match(value4).as(
+                byte.class,    b  -> System.out.println("pc4: " + b * b),
+                short.class,   s  -> System.out.println("pc4: " + s * s),
+                int.class,     i  -> System.out.println("pc4: " + i * i),
+                long.class,    l  -> System.out.println("pc4: " + l * l),
+                Var.class, (Purchaser<Long>) any -> System.out.println("Else value 4 types")
+        );
+
+        /* 5 */
+        match(data).as(
+                Byte.class,    b -> System.out.println(b * b),
+                Short.class,   s -> System.out.println(s * s),
+                Integer.class, i -> System.out.println(i * i),
+                Long.class,    l -> System.out.println(l * l),
+                Float.class,   f -> System.out.println(f * f),
+                Var.class, (Purchaser<String>) any -> System.out.println("Else value 5 types")
+        );
+
+        float value5 = 5;
+        match(value5).as(
+                byte.class,    b -> System.out.println("pc5: " + b * b),
+                short.class,   s -> System.out.println("pc5: " + s * s),
+                int.class,     i -> System.out.println("pc5: " + i * i),
+                long.class,    l -> System.out.println("pc5: " + l * l),
+                float.class,   f -> System.out.println("pc5: " + f * f),
+                Var.class, (Purchaser<Float>) any -> System.out.println("Else value 5 types")
+        );
+
+        /* 6 */
+        match(data).as(
+                Byte.class,    b -> System.out.println(b * b),
+                Short.class,   s -> System.out.println(s * s),
+                Integer.class, i -> System.out.println(i * i),
+                Long.class,    l -> System.out.println(l * l),
+                Float.class,   f -> System.out.println(f * f),
+                Double.class,  d -> System.out.println(d * d),
+                Var.class, (Purchaser<String>) any -> System.out.println("Else value 6 types")
+        );
+
+        double value6 = 6;
+        match(value6).as(
+                byte.class,    b -> System.out.println("pc6: " + b * b * b),
+                short.class,   s -> System.out.println("pc6: " + s * s * s),
+                int.class,     i -> System.out.println("pc6: " + i * i * i),
+                long.class,    l -> System.out.println("pc6: " + l * l * l),
+                float.class,   f -> System.out.println("pc6: " + f * f * f),
+                double.class,  d -> System.out.println("pc6: " + d * d * d),
+                Var.class, (Purchaser<Double>) any -> System.out.println("Else value 6 types")
+        );
+
+        /* 7 */
+        match(data).as(
+                Rectangle.class, r  -> System.out.println("rect:   " + r.square()),
+                Circle.class,    c  -> System.out.println("circle: " + c.square()),
+                Var.class, (Purchaser<String>) any -> System.out.println("Else shape")
+        );
+    }
+
+    @Test
+    public void matchStatementWithNullDefaultTest() {
+        String data = "unknown";
+
+        /* 1 */
+        match(null,
                 Byte.class,  b -> { System.out.println(b * b); },
                 Null.class, () -> { System.out.println("Null value 1 type"); },
                 Else.class, () -> { System.out.println("Else value 1 type"); }
         );
 
         byte value1 = 1;
-        matches(value1,
+        match(value1,
                 byte.class,  b -> { System.out.println("pc1: " + b * b); },
                 Null.class, () -> { System.out.println("Null value 1 type"); },
                 Else.class, () -> { System.out.println("Else value 1 type"); }
         );
 
         /* 2 */
-        matches(null,
+        match(null,
                 Byte.class,  b -> { System.out.println(b * b); },
                 Short.class, s -> { System.out.println(s * s); },
                 Null.class,    () -> { System.out.println("Null value 2 type"); },
@@ -394,7 +723,7 @@ public class VerifyPatternTest {
         );
 
         short value2 = 2;
-        matches(value2,
+        match(value2,
                 byte.class,  b -> System.out.println("pc2: " + b * b),
                 short.class, s -> System.out.println("pc2: " + s * s),
                 Null.class,    () -> { System.out.println("Null value 2 type"); },
@@ -402,7 +731,7 @@ public class VerifyPatternTest {
         );
 
         /* 3 */
-        matches(null,
+        match(null,
                 Byte.class,    b  -> { System.out.println(b * b); },
                 Short.class,   s  -> { System.out.println(s * s); },
                 Integer.class, i  -> { System.out.println(i * i); },
@@ -411,7 +740,7 @@ public class VerifyPatternTest {
         );
 
         int value3 = 3;
-        matches(value3,
+        match(value3,
                 byte.class,    b  -> { System.out.println("pc3: " + b * b); },
                 short.class,   s  -> { System.out.println("pc3: " + s * s); },
                 int.class,     i  -> { System.out.println("pc3: " + i * i); },
@@ -420,7 +749,7 @@ public class VerifyPatternTest {
         );
 
         /* 4 */
-        matches(null,
+        match(null,
                 Byte.class,    b  -> { System.out.println(b * b); },
                 Short.class,   s  -> { System.out.println(s * s); },
                 Integer.class, i  -> { System.out.println(i * i); },
@@ -430,7 +759,7 @@ public class VerifyPatternTest {
         );
 
         long value4 = 4;
-        matches(value4,
+        match(value4,
                 byte.class,    b  -> { System.out.println("pc4: " + b * b); },
                 short.class,   s  -> { System.out.println("pc4: " + s * s); },
                 int.class,     i  -> { System.out.println("pc4: " + i * i); },
@@ -440,7 +769,7 @@ public class VerifyPatternTest {
         );
 
         /* 5 */
-        matches(null,
+        match(null,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); },
@@ -451,7 +780,7 @@ public class VerifyPatternTest {
         );
 
         float value5 = 5;
-        matches(value5,
+        match(value5,
                 byte.class,    b -> { System.out.println("pc5: " + b * b); },
                 short.class,   s -> { System.out.println("pc5: " + s * s); },
                 int.class,     i -> { System.out.println("pc5: " + i * i); },
@@ -462,7 +791,7 @@ public class VerifyPatternTest {
         );
 
         /* 6 */
-        matches(null,
+        match(null,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); },
@@ -474,7 +803,7 @@ public class VerifyPatternTest {
         );
 
         double value6 = 6;
-        matches(value6,
+        match(value6,
                 byte.class,    b -> { System.out.println("pc6: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc6: " + s * s * s); },
                 int.class,     i -> { System.out.println("pc6: " + i * i * i); },
@@ -486,7 +815,7 @@ public class VerifyPatternTest {
         );
 
         /* 7 */
-        matches(data,
+        match(data,
                 Rectangle.class, r  -> { System.out.println("rect:   " + r.square()); },
                 Circle.class,    c  -> { System.out.println("circle: " + c.square()); },
                 Null.class,      () -> { System.out.println("Null value shape"); },
@@ -495,23 +824,150 @@ public class VerifyPatternTest {
     }
 
     @Test
-    public void matchesStatementWithNullVarTest() {
+    public void matchAsStatementWithNullDefaultTest() {
+        String data = "unknown";
+
         /* 1 */
-        matches(null,
+        match(null).as(
+                Byte.class,  b -> { System.out.println(b * b); },
+                Null.class, () -> { System.out.println("Null value 1 type"); },
+                Else.class, () -> { System.out.println("Else value 1 type"); }
+        );
+
+        byte value1 = 1;
+        match(value1).as(
+                byte.class,  b -> { System.out.println("pc1: " + b * b); },
+                Null.class, () -> { System.out.println("Null value 1 type"); },
+                Else.class, () -> { System.out.println("Else value 1 type"); }
+        );
+
+        /* 2 */
+        match(null).as(
+                Byte.class,  b -> { System.out.println(b * b); },
+                Short.class, s -> { System.out.println(s * s); },
+                Null.class,    () -> { System.out.println("Null value 2 type"); },
+                Else.class, () -> { System.out.println("Else value 2 types"); }
+        );
+
+        short value2 = 2;
+        match(value2).as(
+                byte.class,  b -> System.out.println("pc2: " + b * b),
+                short.class, s -> System.out.println("pc2: " + s * s),
+                Null.class,    () -> { System.out.println("Null value 2 type"); },
+                Else.class, () -> System.out.println("Else value 2 types")
+        );
+
+        /* 3 */
+        match(null).as(
+                Byte.class,    b  -> { System.out.println(b * b); },
+                Short.class,   s  -> { System.out.println(s * s); },
+                Integer.class, i  -> { System.out.println(i * i); },
+                Null.class,    () -> { System.out.println("Null value 3 type"); },
+                Else.class, () -> { System.out.println("Else value 3 types"); }
+        );
+
+        int value3 = 3;
+        match(value3).as(
+                byte.class,    b  -> { System.out.println("pc3: " + b * b); },
+                short.class,   s  -> { System.out.println("pc3: " + s * s); },
+                int.class,     i  -> { System.out.println("pc3: " + i * i); },
+                Null.class,    () -> { System.out.println("Null value 3 type"); },
+                Else.class, () -> { System.out.println("Else value 3 types"); }
+        );
+
+        /* 4 */
+        match(null).as(
+                Byte.class,    b  -> { System.out.println(b * b); },
+                Short.class,   s  -> { System.out.println(s * s); },
+                Integer.class, i  -> { System.out.println(i * i); },
+                Long.class,    l  -> { System.out.println(l * l); },
+                Null.class,    () -> { System.out.println("Null value 4 type"); },
+                Else.class, () -> { System.out.println("Else value 4 types"); }
+        );
+
+        long value4 = 4;
+        match(value4).as(
+                byte.class,    b  -> { System.out.println("pc4: " + b * b); },
+                short.class,   s  -> { System.out.println("pc4: " + s * s); },
+                int.class,     i  -> { System.out.println("pc4: " + i * i); },
+                long.class,    l  -> { System.out.println("pc4: " + l * l); },
+                Null.class,    () -> { System.out.println("Null value 4 type"); },
+                Else.class, () -> { System.out.println("Else value 4 types"); }
+        );
+
+        /* 5 */
+        match(null).as(
+                Byte.class,    b -> { System.out.println(b * b); },
+                Short.class,   s -> { System.out.println(s * s); },
+                Integer.class, i -> { System.out.println(i * i); },
+                Long.class,    l -> { System.out.println(l * l); },
+                Float.class,   f -> { System.out.println(f * f); },
+                Null.class,    () -> { System.out.println("Null value 5 type"); },
+                Else.class, () -> { System.out.println("Else value 5 types"); }
+        );
+
+        float value5 = 5;
+        match(value5).as(
+                byte.class,    b -> { System.out.println("pc5: " + b * b); },
+                short.class,   s -> { System.out.println("pc5: " + s * s); },
+                int.class,     i -> { System.out.println("pc5: " + i * i); },
+                long.class,    l -> { System.out.println("pc5: " + l * l); },
+                float.class,   f -> { System.out.println("pc5: " + f * f); },
+                Null.class,    () -> { System.out.println("Null value 5 type"); },
+                Else.class, () -> { System.out.println("Else value 5 types"); }
+        );
+
+        /* 6 */
+        match(null).as(
+                Byte.class,    b -> { System.out.println(b * b); },
+                Short.class,   s -> { System.out.println(s * s); },
+                Integer.class, i -> { System.out.println(i * i); },
+                Long.class,    l -> { System.out.println(l * l); },
+                Float.class,   f -> { System.out.println(f * f); },
+                Double.class,  d -> { System.out.println(d * d); },
+                Null.class,    () -> { System.out.println("Null value 6 type"); },
+                Else.class, () -> { System.out.println("Else value 6 types"); }
+        );
+
+        double value6 = 6;
+        match(value6).as(
+                byte.class,    b -> { System.out.println("pc6: " + b * b * b); },
+                short.class,   s -> { System.out.println("pc6: " + s * s * s); },
+                int.class,     i -> { System.out.println("pc6: " + i * i * i); },
+                long.class,    l -> { System.out.println("pc6: " + l * l * l); },
+                float.class,   f -> { System.out.println("pc6: " + f * f * f); },
+                double.class,  d -> { System.out.println("pc6: " + d * d * d); },
+                Null.class,    () -> { System.out.println("Null value 6 type"); },
+                Else.class, () -> { System.out.println("Else value 6 types"); }
+        );
+
+        /* 7 */
+        match(data).as(
+                Rectangle.class, r  -> { System.out.println("rect:   " + r.square()); },
+                Circle.class,    c  -> { System.out.println("circle: " + c.square()); },
+                Null.class,      () -> { System.out.println("Null value shape"); },
+                Else.class,   () -> { System.out.println("Else shape"); }
+        );
+    }
+
+    @Test
+    public void matchStatementWithNullVarTest() {
+        /* 1 */
+       match(null,
                 Byte.class,  b -> System.out.println(b * b),
                 Null.class, () -> System.out.println("Null value 1 type"),
                 Var.class, any -> System.out.println("Else value 1 type")
         );
 
         byte value1 = 1;
-        matches(value1,
+       match(value1,
                 byte.class,  b -> System.out.println("pc1: " + b * b),
                 Null.class, () -> System.out.println("Null value 1 type"),
                 Var.class, any -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
-        matches(null,
+       match(null,
                 Byte.class,  b -> System.out.println(b * b),
                 Short.class, s -> System.out.println(s * s),
                 Null.class, () -> System.out.println("Null value 2 type"),
@@ -519,7 +975,7 @@ public class VerifyPatternTest {
         );
 
         short value2 = 2;
-        matches(value2,
+       match(value2,
                 byte.class,  b -> System.out.println("pc2: " + b * b),
                 short.class, s -> System.out.println("pc2: " + s * s),
                 Null.class, () -> System.out.println("Null value 2 type"),
@@ -527,7 +983,7 @@ public class VerifyPatternTest {
         );
 
         /* 3 */
-        matches(null,
+       match(null,
                 Byte.class,    b  -> { System.out.println(b * b); },
                 Short.class,   s  -> { System.out.println(s * s); },
                 Integer.class, i  -> { System.out.println(i * i); },
@@ -536,7 +992,7 @@ public class VerifyPatternTest {
         );
 
         int value3 = 3;
-        matches(value3,
+       match(value3,
                 byte.class,   b  -> { System.out.println("pc3: " + b * b); },
                 short.class,  s  -> { System.out.println("pc3: " + s * s); },
                 int.class,    i  -> { System.out.println("pc3: " + i * i); },
@@ -545,7 +1001,7 @@ public class VerifyPatternTest {
         );
 
         /* 4 */
-        matches(null,
+       match(null,
                 Byte.class,    b  -> { System.out.println(b * b); },
                 Short.class,   s  -> { System.out.println(s * s); },
                 Integer.class, i  -> { System.out.println(i * i); },
@@ -555,7 +1011,7 @@ public class VerifyPatternTest {
         );
 
         long value4 = 4;
-        matches(value4,
+       match(value4,
                 byte.class,    b  -> { System.out.println("pc4: " + b * b); },
                 short.class,   s  -> { System.out.println("pc4: " + s * s); },
                 int.class,     i  -> { System.out.println("pc4: " + i * i); },
@@ -565,7 +1021,7 @@ public class VerifyPatternTest {
         );
 
         /* 5 */
-        matches(null,
+       match(null,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); },
@@ -576,7 +1032,7 @@ public class VerifyPatternTest {
         );
 
         float value5 = 5;
-        matches(value5,
+       match(value5,
                 byte.class,    b -> { System.out.println("pc5: " + b * b); },
                 short.class,   s -> { System.out.println("pc5: " + s * s); },
                 int.class,     i -> { System.out.println("pc5: " + i * i); },
@@ -587,7 +1043,7 @@ public class VerifyPatternTest {
         );
 
         /* 6 */
-        matches(null,
+       match(null,
                 Byte.class,    b -> { System.out.println(b * b); },
                 Short.class,   s -> { System.out.println(s * s); },
                 Integer.class, i -> { System.out.println(i * i); },
@@ -599,7 +1055,7 @@ public class VerifyPatternTest {
         );
 
         double value6 = 6;
-        matches(value6,
+       match(value6,
                 byte.class,    b -> { System.out.println("pc6: " + b * b * b); },
                 short.class,   s -> { System.out.println("pc6: " + s * s * s); },
                 int.class,     i -> { System.out.println("pc6: " + i * i * i); },
@@ -611,7 +1067,7 @@ public class VerifyPatternTest {
         );
 
         /* 7 */
-        matches(null,
+       match(null,
                 Rectangle.class, r  -> { System.out.println("rect:   " + r.square()); },
                 Circle.class,    c  -> { System.out.println("circle: " + c.square()); },
                 Null.class,      () -> { System.out.println("Null value shape"); },
@@ -620,17 +1076,17 @@ public class VerifyPatternTest {
     }
 
     @Test
-    public void matchesExpressionTest() {
+    public void matchExpressionTest() {
         /* 1 */
         byte value1 = 5;
-        int result1 = matches(value1,
+        int result1 =match(value1,
                 Byte.class, b  -> { int result = 2 * (b + b);  return result; }
         );
 
         assertEquals(result1, 2 * (value1 + value1));
 
         /* 1.1 */
-        result1 = matches(value1,
+        result1 =match(value1,
                 byte.class, b  -> { int result = 2 * (b + b);  return result; }
         );
 
@@ -638,7 +1094,7 @@ public class VerifyPatternTest {
 
         /* 2 */
         short value2 = 15;
-        int result2 = matches(value2,
+        int result2 =match(value2,
                 Byte.class,  b -> { int result = 2 * (b + b);  return result; },
                 Short.class, s -> { int result = 2 * (s + s);  return result; }
         );
@@ -646,7 +1102,7 @@ public class VerifyPatternTest {
         assertEquals(result2, 2 * (value2 + value2));
 
         /* 2.1 */
-        result2 = matches(value2,
+        result2 =match(value2,
                 byte.class,  b -> { int result = 2 * (b + b);  return result; },
                 short.class, s -> { int result = 2 * (s + s);  return result; }
         );
@@ -655,7 +1111,7 @@ public class VerifyPatternTest {
 
         /* 3 */
         int value3 = 25;
-        int result3 = matches(value3,
+        int result3 =match(value3,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; }
@@ -664,7 +1120,7 @@ public class VerifyPatternTest {
         assertEquals(result3, 2 * (value3 + value3));
 
         /* 3.1 */
-        result3 = matches(value3,
+        result3 =match(value3,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; }
@@ -674,7 +1130,7 @@ public class VerifyPatternTest {
 
         /* 4 */
         long value4 = 35;
-        int result4 = matches(value4,
+        int result4 =match(value4,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -684,7 +1140,7 @@ public class VerifyPatternTest {
         assertEquals(result4, 2 * (value4 + value4));
 
         /* 4.1 */
-        result4 = matches(value4,
+        result4 =match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -695,7 +1151,7 @@ public class VerifyPatternTest {
 
         /* 5 */
         long value5 = 45;
-        int result5 = matches(value5,
+        int result5 =match(value5,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -706,7 +1162,7 @@ public class VerifyPatternTest {
         assertEquals(result5, 2 * (value5 + value5));
 
         /* 5.1 */
-        result5 = matches(value5,
+        result5 =match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -718,7 +1174,7 @@ public class VerifyPatternTest {
 
         /* 6 */
         long value6 = 45;
-        int result6 = matches(value6,
+        int result6 =match(value6,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -730,7 +1186,7 @@ public class VerifyPatternTest {
         assertEquals(result6, 2 * (value6 + value6));
 
         /* 6.1 */
-        result6 = matches(value6,
+        result6 =match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -745,7 +1201,7 @@ public class VerifyPatternTest {
         /* 7 */
         Figure figure = new Rectangle();
 
-        int square = matches(figure,
+        int square =match(figure,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; }
         );
@@ -754,11 +1210,11 @@ public class VerifyPatternTest {
     }
 
     @Test
-    public void matchesExpressionWithDefaultTest() {
+    public void matchExpressionWithDefaultTest() {
         int data = 0;
 
         /* 1 */
-        int result1 = matches(data,
+        int result1 =match(data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Else.class, () -> { System.out.println("Else value 1 types"); return 0; }
         );
@@ -766,7 +1222,7 @@ public class VerifyPatternTest {
         assertEquals(result1, 0);
 
         byte value1 = 1;
-        result1 = matches(value1,
+        result1 =match(value1,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Else.class, () -> { System.out.println("Else value 1 types"); return 0; }
         );
@@ -774,7 +1230,7 @@ public class VerifyPatternTest {
         assertEquals(result1, 4);
 
         /* 2 */
-        int result2 = matches(data,
+        int result2 =match(data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Else.class, () -> { System.out.println("Else value 2 types"); return 1; }
@@ -783,7 +1239,7 @@ public class VerifyPatternTest {
         assertEquals(result2, 1);
 
         short value2 = 2;
-        result2 = matches(value2,
+        result2 =match(value2,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Else.class, () -> { System.out.println("Else value 2 types"); return 0; }
@@ -792,7 +1248,7 @@ public class VerifyPatternTest {
         assertEquals(result2, 8);
 
         /* 3 */
-        int result3 = matches((long) data,
+        int result3 =match((long) data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i  -> { int result = 2 * (i + i);  return result; },
@@ -802,7 +1258,7 @@ public class VerifyPatternTest {
         assertEquals(result3, 2);
 
         int value3 = 3;
-        result3 = matches(value3,
+        result3 =match(value3,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 int.class,     i  -> { int result = 2 * (i + i);  return result; },
@@ -812,7 +1268,7 @@ public class VerifyPatternTest {
         assertEquals(result3, 12);
 
         /* 4 */
-        int result4 = matches((float) data,
+        int result4 =match((float) data,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -823,7 +1279,7 @@ public class VerifyPatternTest {
         assertEquals(result4, 4);
 
         long value4 = 4;
-        result4 = matches(value4,
+        result4 =match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -834,7 +1290,7 @@ public class VerifyPatternTest {
         assertEquals(result4, 16);
 
         /* 5 */
-        int result5 = matches((double) data,
+        int result5 =match((double) data,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -845,7 +1301,7 @@ public class VerifyPatternTest {
         assertEquals(result5, 5);
 
         float value5 = 5;
-        result5 = matches(value5,
+        result5 =match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -858,7 +1314,7 @@ public class VerifyPatternTest {
 
         /* 6 */
         String buffer = "best";
-        int result6 = matches(buffer,
+        int result6 =match(buffer,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -871,7 +1327,7 @@ public class VerifyPatternTest {
         assertEquals(result6, 6);
 
         double value6 = 6;
-        result6 = matches(value6,
+        result6 =match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -884,7 +1340,7 @@ public class VerifyPatternTest {
         assertEquals(result6, 24);
 
         /* 7 */
-        int square = matches(data,
+        int square =match(data,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; },
                 Else.class,   () -> { System.out.println("Else shape"); return 5; }
@@ -894,11 +1350,11 @@ public class VerifyPatternTest {
     }
 
     @Test
-    public void matchesExpressionWithVarTest() {
+    public void matchExpressionWithVarTest() {
         int data = 0;
 
         /* 1 */
-        int result1 = matches(data,
+        int result1 =match(data,
                 Byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Var.class, (Routine<Integer, Integer>) any -> { System.out.println("Else value 1 types"); return 0; }
         );
@@ -906,7 +1362,7 @@ public class VerifyPatternTest {
         assertEquals(result1, 0);
 
         byte value1 = 1;
-        result1 = matches(value1,
+        result1 =match(value1,
                 byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Var.class, (Routine<Byte, Integer>) any -> { System.out.println("Else value 1 types"); return 0; }
         );
@@ -914,7 +1370,7 @@ public class VerifyPatternTest {
         assertEquals(result1, 4);
 
         /* 2 */
-        int result2 = matches(data,
+        int result2 =match(data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Var.class, (Routine<Integer, Integer>) any -> { System.out.println("Else value 2 types"); return 1; }
@@ -923,7 +1379,7 @@ public class VerifyPatternTest {
         assertEquals(result2, 1);
 
         short value2 = 2;
-        result2 = matches(value2,
+        result2 =match(value2,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Var.class, (Routine<Short, Integer>) any -> { System.out.println("Else value 2 types"); return 0; }
@@ -932,7 +1388,7 @@ public class VerifyPatternTest {
         assertEquals(result2, 8);
 
         /* 3 */
-        int result3 = matches((long) data,
+        int result3 =match((long) data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i  -> { int result = 2 * (i + i);  return result; },
@@ -942,7 +1398,7 @@ public class VerifyPatternTest {
         assertEquals(result3, 2);
 
         int value3 = 3;
-        result3 = matches(value3,
+        result3 =match(value3,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 int.class,     i  -> { int result = 2 * (i + i);  return result; },
@@ -952,7 +1408,7 @@ public class VerifyPatternTest {
         assertEquals(result3, 12);
 
         /* 4 */
-        int result4 = matches((float) data,
+        int result4 =match((float) data,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -963,7 +1419,7 @@ public class VerifyPatternTest {
         assertEquals(result4, 4);
 
         long value4 = 4;
-        result4 = matches(value4,
+        result4 =match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -974,7 +1430,7 @@ public class VerifyPatternTest {
         assertEquals(result4, 16);
 
         /* 5 */
-        int result5 = matches((double) data,
+        int result5 =match((double) data,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -985,7 +1441,7 @@ public class VerifyPatternTest {
         assertEquals(result5, 5);
 
         float value5 = 5;
-        result5 = matches(value5,
+        result5 =match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -998,7 +1454,7 @@ public class VerifyPatternTest {
 
         /* 6 */
         String buffer = "best";
-        int result6 = matches(buffer,
+        int result6 =match(buffer,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1011,7 +1467,7 @@ public class VerifyPatternTest {
         assertEquals(result6, 6);
 
         double value6 = 6;
-        result6 = matches(value6,
+        result6 =match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1024,7 +1480,7 @@ public class VerifyPatternTest {
         assertEquals(result6, 24);
 
         /* 7 */
-        int square = matches(data,
+        int square =match(data,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; },
                 Var.class, (Routine<Integer, Integer>) any -> { System.out.println("Else shape"); return 5; }
@@ -1034,9 +1490,9 @@ public class VerifyPatternTest {
 	}
 
     @Test
-    public void matchesExpressionWithNullDefaultTest() {
+    public void matchExpressionWithNullDefaultTest() {
         /* 1 */
-        int result1 = matches(null,
+        int result1 =match(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Null.class,    () -> { System.out.println("Null value 1 type");     return -1; },
                 Else.class, () -> { System.out.println("Else value 1 types"); return 0;   }
@@ -1045,7 +1501,7 @@ public class VerifyPatternTest {
         assertEquals(result1, -1);
 
         byte value1 = 1;
-        result1 = matches(value1,
+        result1 =match(value1,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Null.class,    () -> { System.out.println("Null value 1 type");     return -1; },
                 Else.class, () -> { System.out.println("Else value 1 types"); return 0;   }
@@ -1054,7 +1510,7 @@ public class VerifyPatternTest {
         assertEquals(result1, 4);
 
         /* 2 */
-        int result2 = matches(null,
+        int result2 =match(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Null.class,    () -> { System.out.println("Null value 2 type");     return -1; },
@@ -1064,7 +1520,7 @@ public class VerifyPatternTest {
         assertEquals(result2, -1);
 
         short value2 = 2;
-        result2 = matches(value2,
+        result2 =match(value2,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Null.class,    () -> { System.out.println("Null value 2 type");     return -1; },
@@ -1074,7 +1530,7 @@ public class VerifyPatternTest {
         assertEquals(result2, 8);
 
         /* 3 */
-        int result3 = matches(null,
+        int result3 =match(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i  -> { int result = 2 * (i + i);  return result; },
@@ -1085,7 +1541,7 @@ public class VerifyPatternTest {
         assertEquals(result3, -1);
 
         int value3 = 3;
-        result3 = matches(value3,
+        result3 =match(value3,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 int.class,     i  -> { int result = 2 * (i + i);  return result; },
@@ -1096,7 +1552,7 @@ public class VerifyPatternTest {
         assertEquals(result3, 12);
 
         /* 4 */
-        int result4 = matches(null,
+        int result4 =match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1108,7 +1564,7 @@ public class VerifyPatternTest {
         assertEquals(result4, -1);
 
         long value4 = 4;
-        result4 = matches(value4,
+        result4 =match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1120,7 +1576,7 @@ public class VerifyPatternTest {
         assertEquals(result4, 16);
 
         /* 5 */
-        int result5 = matches(null,
+        int result5 =match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1132,7 +1588,7 @@ public class VerifyPatternTest {
         assertEquals(result5, -1);
 
         float value5 = 5;
-        result5 = matches(value5,
+        result5 =match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1145,7 +1601,7 @@ public class VerifyPatternTest {
         assertEquals(result5, 20);
 
         /* 6 */
-        int result6 = matches(null,
+        int result6 =match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1159,7 +1615,7 @@ public class VerifyPatternTest {
         assertEquals(result6, -1);
 
         double value6 = 6;
-        result6 = matches(value6,
+        result6 =match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1173,7 +1629,7 @@ public class VerifyPatternTest {
         assertEquals(result6, 24);
 
         /* 7 */
-        int square = matches(null,
+        int square =match(null,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; },
                 Null.class,      () -> { System.out.println("Null value 7 type"); return -1; },
@@ -1184,9 +1640,9 @@ public class VerifyPatternTest {
     }
 
     @Test
-    public void matchesExpressionWithNullVarTest() {
+    public void matchExpressionWithNullVarTest() {
         /* 1 */
-        int result1 = matches(null,
+        int result1 =match(null,
                 Byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Null.class, () -> { System.out.println("Null value 1 type");     return -1; },
                 Var.class, any -> { System.out.println("Else value 1 types"); return 0;  }
@@ -1195,7 +1651,7 @@ public class VerifyPatternTest {
         assertEquals(result1, -1);
 
         byte value1 = 1;
-        result1 = matches(value1,
+        result1 =match(value1,
                 byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Null.class, () -> { System.out.println("Null value 1 type");     return -1; },
                 Var.class, any -> { System.out.println("Else value 1 types"); return 0;  }
@@ -1204,7 +1660,7 @@ public class VerifyPatternTest {
         assertEquals(result1, 4);
 
         /* 2 */
-        int result2 = matches(null,
+        int result2 =match(null,
                 Byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,s  -> { int result = 2 * (s + s);  return result; },
                 Null.class, () -> { System.out.println("Null value 2 type");     return -1; },
@@ -1214,7 +1670,7 @@ public class VerifyPatternTest {
         assertEquals(result2, -1);
 
         short value2 = 2;
-        result2 = matches(value2,
+        result2 =match(value2,
                 byte.class,  b  -> { int result = 2 * (b + b);  return result; },
                 short.class, s  -> { int result = 2 * (s + s);  return result; },
                 Null.class,  () -> { System.out.println("Null value 2 type");     return -1; },
@@ -1224,7 +1680,7 @@ public class VerifyPatternTest {
         assertEquals(result2, 8);
 
         /* 3 */
-        int result3 = matches(null,
+        int result3 =match(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i  -> { int result = 2 * (i + i);  return result; },
@@ -1235,7 +1691,7 @@ public class VerifyPatternTest {
         assertEquals(result3, -1);
 
         int value3 = 3;
-        result3 = matches(value3,
+        result3 =match(value3,
                 byte.class,  b  -> { int result = 2 * (b + b);  return result; },
                 short.class, s  -> { int result = 2 * (s + s);  return result; },
                 int.class,   i  -> { int result = 2 * (i + i);  return result; },
@@ -1246,7 +1702,7 @@ public class VerifyPatternTest {
         assertEquals(result3, 12);
 
         /* 4 */
-        int result4 = matches(null,
+        int result4 =match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1258,7 +1714,7 @@ public class VerifyPatternTest {
         assertEquals(result4, -1);
 
         long value4 = 4;
-        result4 = matches(value4,
+        result4 =match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1270,7 +1726,7 @@ public class VerifyPatternTest {
         assertEquals(result4, 16);
 
         /* 5 */
-        int result5 = matches(null,
+        int result5 =match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1282,7 +1738,7 @@ public class VerifyPatternTest {
         assertEquals(result5, -1);
 
         float value5 = 5;
-        result5 = matches(value5,
+        result5 =match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1295,7 +1751,7 @@ public class VerifyPatternTest {
         assertEquals(result5, 20);
 
         /* 6 */
-        int result6 = matches(null,
+        int result6 = match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1309,7 +1765,7 @@ public class VerifyPatternTest {
         assertEquals(result6, -1);
 
         double value6 = 6;
-        result6 = matches(value6,
+        result6 = match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1323,7 +1779,7 @@ public class VerifyPatternTest {
         assertEquals(result6, 24);
 
         /* 7 */
-        int square = matches(null,
+        int square =match(null,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; },
                 Null.class,      () -> { System.out.println("Null value 7 type"); return -1; },
