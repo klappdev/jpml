@@ -24,6 +24,7 @@
 package org.kl.jpml.test;
 
 import org.junit.jupiter.api.Test;
+import org.kl.jpml.pattern.StaticPattern;
 import org.kl.jpml.test.shape.*;
 import org.kl.jpml.util.Result;
 
@@ -34,31 +35,30 @@ import java.util.function.Supplier;
 
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.kl.jpml.pattern.StaticPattern.matches;
-import static org.kl.jpml.pattern.StaticPattern.of;
+import static org.kl.jpml.pattern.StaticPattern.*;
 
 public class StaticPatternTest {
 
     @Test
-    public void matchesStatementTest() {
+    public void matchStatementTest() {
         /* 1 */
         Figure figure = new Circle(5);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("deconstruct"), (Consumer<Object>) v -> out.println("circle: " + v)
         );
 
         /* 2 */
         figure = new Rectangle();
 
-        matches(figure,
+        match(figure,
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h))
         );
 
         /* 3 */
         figure = new Parallelepiped();
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h));
                 }
@@ -67,28 +67,28 @@ public class StaticPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("deconstruct"), c -> out.println("circle: " + c),
                 Quadrate.class, of("deconstruct"), (Consumer<Object>) a -> out.println("quadrate: " + a)
         );
 
         Optional<Integer> data1 = Optional.of(5);
 
-        matches(data1,
+        match(data1,
                 Optional::empty, () -> out.println("empty value"),
                 Optional::get, v -> out.println("value: " + v)
         );
 
         Result<Integer, SQLException> data2 = Result.of(new SQLException());
 
-        matches(data2,
+        match(data2,
                 Result::error, e -> out.println("get error: " + e),
                 Result::value, (Consumer<Integer>) v -> out.println("get value: " + v)
         );
 
         Result<Integer, ArithmeticException> data3 = Result.of((Supplier<Integer>) () -> 4 / 0);
 
-        matches(data3,
+        match(data3,
                 Result::error, e -> out.println("get error: " + e),
                 Result::value, (Consumer<Integer>) v -> out.println("get value: " + v)
         );
@@ -96,7 +96,7 @@ public class StaticPatternTest {
         /* 1 - 2 */
         figure = new Rectangle();
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("deconstruct"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h))
         );
@@ -104,7 +104,7 @@ public class StaticPatternTest {
         /* 2 - 1 */
         figure = new Triangle();
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Quadrate.class, of("deconstruct"), (Integer a) -> out.println("Quadrate  square: " + (a * a))
         );
@@ -112,7 +112,7 @@ public class StaticPatternTest {
         /* 2 - 2 */
         figure = new Rectangle();
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> out.println("Triangle  square: " + (w * h)),
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h))
         );
@@ -120,7 +120,7 @@ public class StaticPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped();
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("deconstruct"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> out.println("piped square: " + 2 * (w * l + l * h + w * h))
         );
@@ -128,7 +128,7 @@ public class StaticPatternTest {
         /* 3 - 1 */
         figure = new Circle();
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> out.println("piped square: " + 2 * (w * l + l * h + w * h)),
                 Circle.class, of("deconstruct"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
@@ -136,7 +136,7 @@ public class StaticPatternTest {
         /* 3 - 3 */
         figure = new Tripiped();
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h)),
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> out.println("Tripiped square: " + 2 * (w * l + l * h + w * h))
         );
@@ -144,7 +144,7 @@ public class StaticPatternTest {
         /* 2 - 3 */
         figure = new Triangle();
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> out.println("Triangle  square: " + (w * h)),
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> out.println("Tripiped square: " + 2 * (w * l + l * h + w * h))
         );
@@ -152,32 +152,32 @@ public class StaticPatternTest {
         /* 3 - 2 */
         figure = new Tripiped();
 
-        matches(figure,
+        match(figure,
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> out.println("Tripiped square: " + 2 * (w * l + l * h + w * h)),
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> out.println("Triangle  square: " + (w * h))
         );
     }
 
     @Test
-    public void matchesAsStatementTest() {
+    public void matchAsStatementTest() {
         /* 1 */
         Figure figure = new Circle(5);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("deconstruct"), (Consumer<Object>) v -> out.println("circle: " + v)
         );
 
         /* 2 */
         figure = new Rectangle();
 
-        matches(figure).as(
+        match(figure).as(
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h))
         );
 
         /* 3 */
         figure = new Parallelepiped();
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h));
                 }
@@ -186,21 +186,21 @@ public class StaticPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("deconstruct"), c -> out.println("circle: " + c),
                 Quadrate.class, of("deconstruct"), (Consumer<Object>) a -> out.println("quadrate: " + a)
         );
 
         Optional<Integer> data1 = Optional.of(5);
 
-        matches(data1).as(
+        match(data1).as(
                 Optional::empty, () -> out.println("empty value"),
                 Optional::get, v -> out.println("value: " + v)
         );
 
         Result<Integer, SQLException> data2 = Result.of(new SQLException());
 
-        matches(data2).as(
+        match(data2).as(
                 Result::error, e -> out.println("get error: " + e),
                 Result::value, (Consumer<Integer>) v -> out.println("get value: " + v)
         );
@@ -208,7 +208,7 @@ public class StaticPatternTest {
         /* 1 - 2 */
         figure = new Rectangle();
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("deconstruct"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h))
         );
@@ -216,7 +216,7 @@ public class StaticPatternTest {
         /* 2 - 1 */
         figure = new Triangle();
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Quadrate.class, of("deconstruct"), (Integer a) -> out.println("Quadrate  square: " + (a * a))
         );
@@ -224,7 +224,7 @@ public class StaticPatternTest {
         /* 2 - 2 */
         figure = new Rectangle();
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> out.println("Triangle  square: " + (w * h)),
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h))
         );
@@ -232,7 +232,7 @@ public class StaticPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped();
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("deconstruct"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> out.println("piped square: " + 2 * (w * l + l * h + w * h))
         );
@@ -240,7 +240,7 @@ public class StaticPatternTest {
         /* 3 - 1 */
         figure = new Circle();
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> out.println("piped square: " + 2 * (w * l + l * h + w * h)),
                 Circle.class, of("deconstruct"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
@@ -248,7 +248,7 @@ public class StaticPatternTest {
         /* 3 - 3 */
         figure = new Tripiped();
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h)),
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> out.println("Tripiped square: " + 2 * (w * l + l * h + w * h))
         );
@@ -256,7 +256,7 @@ public class StaticPatternTest {
         /* 2 - 3 */
         figure = new Triangle();
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> out.println("Triangle  square: " + (w * h)),
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> out.println("Tripiped square: " + 2 * (w * l + l * h + w * h))
         );
@@ -264,18 +264,18 @@ public class StaticPatternTest {
         /* 3 - 2 */
         figure = new Tripiped();
 
-        matches(figure).as(
+        match(figure).as(
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> out.println("Tripiped square: " + 2 * (w * l + l * h + w * h)),
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> out.println("Triangle  square: " + (w * h))
         );
     }
 
     @Test
-    public void matchesExpressionTest() {
+    public void matchExpressionTest() {
         /* 1 */
         Figure figure = new Circle(5);
 
-        int result = matches(figure,
+        int result = match(figure,
                 Circle.class, of("deconstruct"), (Integer r) -> 2 * (r + r)
         );
 
@@ -284,7 +284,7 @@ public class StaticPatternTest {
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure,
+        result = match(figure,
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> w * h
         );
 
@@ -293,7 +293,7 @@ public class StaticPatternTest {
         /* 3 */
         figure = new Parallelepiped((short) 5, (short) 5, (short) 5);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> w * l * h
         );
 
@@ -302,7 +302,7 @@ public class StaticPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("deconstruct"), (Integer r) -> 2 * (r + r),
                 Quadrate.class, of("deconstruct"), (Integer a) -> a * a
         );
@@ -311,7 +311,7 @@ public class StaticPatternTest {
 
         Optional<Integer> data1 = Optional.of(5);
 
-        result = matches(data1,
+        result = match(data1,
                 Optional::empty, () -> 0,
                 Optional::get, v -> v
         );
@@ -320,7 +320,7 @@ public class StaticPatternTest {
 
         Result<Integer, SQLException> data2 = Result.of(new SQLException());
 
-        result = matches(data2,
+        result = match(data2,
                 Result::error, e -> -1,
                 Result::value, v -> v
         );
@@ -330,7 +330,7 @@ public class StaticPatternTest {
         /* 1 - 2 */
         figure = new Rectangle();
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("deconstruct"), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> (w * h)
         );
@@ -340,7 +340,7 @@ public class StaticPatternTest {
         /* 2 - 1 */
         figure = new Triangle();
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> ((int) ((w * h))),
                 Quadrate.class, of("deconstruct"), (Integer a) -> (a * a)
         );
@@ -350,7 +350,7 @@ public class StaticPatternTest {
         /* 2 - 2 */
         figure = new Rectangle();
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> ((int) ((w * h))),
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> (w * h)
         );
@@ -360,7 +360,7 @@ public class StaticPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped();
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("deconstruct"), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> 2 * (w * l + l * h + w * h)
         );
@@ -370,7 +370,7 @@ public class StaticPatternTest {
         /* 3 - 1 */
         figure = new Circle();
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> 2 * (w * l + l * h + w * h),
                 Circle.class, of("deconstruct"), (Integer r) -> ((int) (2 * Math.PI * r))
         );
@@ -380,7 +380,7 @@ public class StaticPatternTest {
         /* 3 - 3 */
         figure = new Tripiped();
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> 2 * (w * l + l * h + w * h),
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> ((int) (2 * (w * l + l * h + w * h)))
         );
@@ -390,7 +390,7 @@ public class StaticPatternTest {
         /* 2 - 3 */
         figure = new Triangle();
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> ((int) (w * h)),
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> ((int) (2 * (w * l + l * h + w * h)))
         );
@@ -400,7 +400,7 @@ public class StaticPatternTest {
         /* 3 - 2 */
         figure = new Tripiped();
 
-        result = matches(figure,
+        result = match(figure,
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> ((int) (2 * (w * l + l * h + w * h))),
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> ((int) (w * h))
         );
@@ -409,11 +409,11 @@ public class StaticPatternTest {
     }
 
     @Test
-    public void matchesAsExpressionTest() {
+    public void matchAsExpressionTest() {
         /* 1 */
         Figure figure = new Circle(5);
 
-        int result = matches(figure).as(
+        int result = match(figure).as(
                 Circle.class, of("deconstruct"), (Integer r) -> 2 * (r + r)
         );
 
@@ -422,7 +422,7 @@ public class StaticPatternTest {
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> w * h
         );
 
@@ -431,7 +431,7 @@ public class StaticPatternTest {
         /* 3 */
         figure = new Parallelepiped((short) 5, (short) 5, (short) 5);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> w * l * h
         );
 
@@ -440,7 +440,7 @@ public class StaticPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("deconstruct"), (Integer r) -> 2 * (r + r),
                 Quadrate.class, of("deconstruct"), (Integer a) -> a * a
         );
@@ -449,7 +449,7 @@ public class StaticPatternTest {
 
         Optional<Integer> data1 = Optional.of(5);
 
-        result = matches(data1).as(
+        result = match(data1).as(
                 Optional::empty, () -> 0,
                 Optional::get, v -> 1
         );
@@ -458,7 +458,7 @@ public class StaticPatternTest {
 
         Result<Integer, SQLException> data2 = Result.of(new SQLException());
 
-        result = matches(data2).as(
+        result = match(data2).as(
                 Result::error, e -> -1,
                 Result::value, v -> 1
         );
@@ -468,7 +468,7 @@ public class StaticPatternTest {
         /* 1 - 2 */
         figure = new Rectangle();
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("deconstruct"), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> (w * h)
         );
@@ -478,7 +478,7 @@ public class StaticPatternTest {
         /* 2 - 1 */
         figure = new Triangle();
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> ((int) ((w * h))),
                 Quadrate.class, of("deconstruct"), (Integer a) -> (a * a)
         );
@@ -488,7 +488,7 @@ public class StaticPatternTest {
         /* 2 - 2 */
         figure = new Rectangle();
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> ((int) ((w * h))),
                 Rectangle.class, of("deconstruct"), (Integer w, Integer h) -> (w * h)
         );
@@ -498,7 +498,7 @@ public class StaticPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped();
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("deconstruct"), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> 2 * (w * l + l * h + w * h)
         );
@@ -508,7 +508,7 @@ public class StaticPatternTest {
         /* 3 - 1 */
         figure = new Circle();
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> 2 * (w * l + l * h + w * h),
                 Circle.class, of("deconstruct"), (Integer r) -> ((int) (2 * Math.PI * r))
         );
@@ -518,7 +518,7 @@ public class StaticPatternTest {
         /* 3 - 3 */
         figure = new Tripiped();
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("deconstruct"), (Short w, Short l, Short h) -> 2 * (w * l + l * h + w * h),
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> ((int) (2 * (w * l + l * h + w * h)))
         );
@@ -528,7 +528,7 @@ public class StaticPatternTest {
         /* 2 - 3 */
         figure = new Triangle();
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> ((int) (w * h)),
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> ((int) (2 * (w * l + l * h + w * h)))
         );
@@ -538,7 +538,7 @@ public class StaticPatternTest {
         /* 3 - 2 */
         figure = new Tripiped();
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Tripiped.class, of("deconstruct"), (Float w, Float l, Float h) -> ((int) (2 * (w * l + l * h + w * h))),
                 Triangle.class, of("deconstruct"), (Double w, Double h) -> ((int) (w * h))
         );

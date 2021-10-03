@@ -26,7 +26,7 @@ Using this library developer can write in the following way.
 ```Java
    import static org.kl.jpml.pattern.ConstantPattern.match;
 
-   matches(data).as(
+   match(data).as(
       new Person("man"),    () ->  System.out.println("man"),
       new Person("woman"),  () ->  System.out.println("woman"),
       new Person("child"),  () ->  System.out.println("child"),        
@@ -41,7 +41,7 @@ For work with range values could use such functions: in/or.
    import static org.kl.jpml.pattern.ConstantPattern.or;
    import static org.kl.jpml.pattern.ConstantPattern.in; 
    
-   matches(data).as(
+   match(data).as(
       or(1, 2),    () ->  System.out.println("1 or 2"),
       in(3, 6),    () ->  System.out.println("between 3 and 6"),
       in(7),       () ->  System.out.println("7"),        
@@ -71,14 +71,14 @@ Using this library developer can write in the following way. Using Java 11 featu
 deduce types parameters. 
 
 ```Java
-   import static org.kl.jpml.pattern.TuplePattern.matches;
+   import static org.kl.jpml.pattern.TuplePattern.match;
    import static org.kl.jpml.pattern.TuplePattern.let;
 
    let(border, (String side, int width) -> {
       System.out.println("border: " + side + "," + width);
    });
    
-   matches(side, width).as(
+   match(side, width).as(
       of("top",    25),  () -> System.out.println("top"),
       of("bottom", 30),  () -> System.out.println("bottom"),
       of("left",   15),  () -> System.out.println("left"),        
@@ -109,7 +109,7 @@ Using this library developer can write in the following way.
 ```Java
    import static org.kl.jpml.pattern.TypeTestPattern.match;
 
-   matches(data).as(
+   match(data).as(
       Integer.class, i  -> { System.out.println(i * i); },
       Byte.class,    b  -> { System.out.println(b * b); },
       Long.class,    l  -> { System.out.println(l * l); },
@@ -140,7 +140,7 @@ Using this library developer can write in the following way.
 Using this library developer can write in the following way.
 	
 ```Java
-    import static org.kl.jpml.pattern.ExhaustivePattern.matches;
+    import static org.kl.jpml.pattern.ExhaustivePattern.match;
    
     @Sealed
     public abstract class Result<T, E extends Throwable> {
@@ -154,7 +154,7 @@ Using this library developer can write in the following way.
        }
     }
 	
-    matches(result).as(
+    match(result).as(
        Result.Success.class,  s -> System.out.println("Success:  " + s),
        Result.Failture.class, f -> System.out.println("Success:  " + s)
     );       
@@ -176,9 +176,9 @@ Using this library developer can write in the following way.
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.jpml.pattern.GuardPattern.matches;
+   import static org.kl.jpml.pattern.GuardPattern.match;
 
-   matches(data).as(           
+   match(data).as(           
       Integer.class, i  -> i != 0,  i  -> { System.out.println(i * i); },
       Byte.class,    b  -> b > -1,  b  -> { System.out.println(b * b); },
       Long.class,    l  -> l == 5,  l  -> { System.out.println(l * l); },
@@ -193,7 +193,7 @@ equal/eq, notEqual/ne. Also for omit condition could use such functions:<br/>
 always/yes, never/no.
 
 ```Java
-   matches(data).as(           
+   match(data).as(           
       Integer.class, ne(0),  i  -> { System.out.println(i * i); },
       Byte.class,    gt(-1), b  -> { System.out.println(b * b); },
       Long.class,    eq(5),  l  -> { System.out.println(l * l); },
@@ -224,7 +224,7 @@ Using this library developer can write in the following way. Using Java 11 featu
 types deconstruct parameters.
 
 ```Java
-   import static org.kl.jpml.pattern.DeconstructPattern.matches;
+   import static org.kl.jpml.pattern.DeconstructPattern.match;
    import static org.kl.jpml.pattern.DeconstructPattern.foreach;
    import static org.kl.jpml.pattern.DeconstructPattern.let;
 
@@ -234,7 +234,7 @@ types deconstruct parameters.
       System.out.println("border: " + w + " " + h));
    });
 
-   matches(figure).as(
+   match(figure).as(
       Rectangle.class, (int w, int h) -> System.out.println("square: " + (w * h)),
       Circle.class,    (int r)        -> System.out.println("square: " + (2 * Math.PI * r)),
       Else.class,      ()             -> System.out.println("Default square: " + 0)
@@ -280,7 +280,7 @@ pass by reference we must to use wrappers such IntRef, FloatRef and etc.
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.jpml.pattern.PropertyPattern.matches;
+   import static org.kl.jpml.pattern.PropertyPattern.match;
    import static org.kl.jpml.pattern.PropertyPattern.foreach;
    import static org.kl.jpml.pattern.PropertyPattern.let;
    import static org.kl.jpml.pattern.PropertyPattern.of;   
@@ -291,7 +291,7 @@ Using this library developer can write in the following way.
       System.out.println("border: " + w + " " + h));
    });
 
-   matches(figure).as(
+   match(figure).as(
       Rect.class,    of("w", 5,  "h", 10), (int w, int h) -> System.out.println("sqr: " + (w * h)),
       Rect.class,    of("w", 10, "h", 15), (int w, int h) -> System.out.println("sqr: " + (w * h)),
       Circle.class,  of("r"), (int r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
@@ -313,7 +313,7 @@ property parameters.
       System.out.println("border: " + w + " " + h));
    });
 
-   matches(figure).as(
+   match(figure).as(
       Rect.class,    Rect::w, Rect::h, (var w, var h) -> System.out.println("sqr: " + (w * h)),
       Circle.class,  Circle::r, (var r)  -> System.out.println("sqr: " + (2 * Math.PI * r)),
       Else.class,    ()                  -> System.out.println("Default sqr: " + 0)
@@ -338,10 +338,10 @@ property parameters.
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.jpml.pattern.PositionPattern.matches;
+   import static org.kl.jpml.pattern.PositionPattern.match;
    import static org.kl.jpml.pattern.PositionPattern.of;
 
-   matches(data).as(           
+   match(data).as(           
       Circle.class,  of(5),  () -> { System.out.println("small circle"); },
       Circle.class,  of(15), () -> { System.out.println("middle circle"); },
       Null.class,            () -> { System.out.println("Null value "); },
@@ -374,9 +374,9 @@ to be marked with annotation @Exclude. Excluded fields must to be declared last.
 Using this library developer can write in the following way.
 
 ```Java
-   import static org.kl.jpml.pattern.StaticPattern.matches;
+   import static org.kl.jpml.pattern.StaticPattern.match;
 
-   matches(figure).as(
+   match(figure).as(
       Rect.class,   of("unapply"), (int w, int h) -> out.println("square: " + (w * h)),
       Circle.class, of("unapply"), (int r)        -> out.println("square: " + (2 * Math.PI * r)),
       Else.class, ()                              -> out.println("Default square: " + 0)
@@ -386,12 +386,12 @@ Using this library developer can write in the following way.
 Also this pattern give simplify work with Optional<<V>>, Result<T, E>.
 	
 ```Java
-   matches(value).as(
+   match(value).as(
       Optional::empty, () -> out.println("empty"),
       Optional::get,    v -> out.println("value: " + v)
    );
    
-   matches(value).as(
+   match(value).as(
       Result::error, e -> out.println("get error: " + e),
       Result::value, v -> out.println("get value: " + v)
    );
@@ -417,11 +417,11 @@ Using this library developer can write in the following way. Using Java 11 featu
 types property parameters. 
 
 ```Java
-   import static org.kl.jpml.pattern.SequencePattern.matches;
+   import static org.kl.jpml.pattern.SequencePattern.match;
 
    List<Integer> list = List.of(1, 2, 3);
 
-   matches(figure).as(
+   match(figure).as(
       empty()   () -> System.out.println("Empty value"),
       head(),   (int h) -> System.out.println("list head: " + h),
       middle(), (int m) -> out.println("middle list:" + m),

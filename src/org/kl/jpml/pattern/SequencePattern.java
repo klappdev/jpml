@@ -203,7 +203,7 @@ public final class SequencePattern {
                 .findFirst().get();
     }
 
-    public static <E> SequencePattern matches(Collection<E> data) {
+    public static <E> SequencePattern match(Collection<E> data) {
         if (!data.isEmpty()) {
             init(data);
         }
@@ -215,7 +215,7 @@ public final class SequencePattern {
         return instance;
     }
 
-    public static <K, V> SequencePattern matches(Map<K, V> data) {
+    public static <K, V> SequencePattern match(Map<K, V> data) {
         if (!data.isEmpty()) {
             init(data);
         }
@@ -227,7 +227,7 @@ public final class SequencePattern {
         return instance;
     }
 
-    public static <E> void matches(Collection<E> data, BooleanSupplier supplier, Runnable branch) {
+    public static <E> void match(Collection<E> data, BooleanSupplier supplier, Runnable branch) {
         if (!data.isEmpty()) {
             init(data);
         }
@@ -237,71 +237,71 @@ public final class SequencePattern {
         }
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch) {
-        matches(data, firstSupplier, firstBranch);
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch) {
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.get());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Provider<Tuple.Tuple2<E, E>> secondSupplier, BiConsumer<E, E> secondBranch) {
-        matches(data, firstSupplier, firstBranch);
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Provider<Tuple.Tuple2<E, E>> secondSupplier, BiConsumer<E, E> secondBranch) {
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier,  Consumer<E> thirdBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Provider<Tuple.Tuple2<E, E>> thirdSupplier, BiConsumer<E, E> thirdBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Provider<Tuple.Tuple2<E, E>> thirdSupplier, BiConsumer<E, E> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier,  Consumer<E> thirdBranch,
-                                   Supplier<E> fourthSupplier, Consumer<E> fourthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Supplier<E> fourthSupplier, Consumer<E> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
-                                   Provider<Tuple.Tuple2<E, E>> fourthSupplier, BiConsumer<E, E> fourthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Provider<Tuple.Tuple2<E, E>> fourthSupplier, BiConsumer<E, E> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier,  Consumer<E> thirdBranch,
-                                   Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
-                                   Supplier<E> fifthSupplier,  Consumer<E> fifthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
+                                 Supplier<E> fifthSupplier, Consumer<E> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -309,13 +309,13 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.get());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
-                                   Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
-                                   Provider<Tuple.Tuple2<E, E>> fifthSupplier, BiConsumer<E, E> fifthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
+                                 Provider<Tuple.Tuple2<E, E>> fifthSupplier, BiConsumer<E, E> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -323,14 +323,14 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   BooleanSupplier firstSupplier, Runnable firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
-                                   Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
-                                   Supplier<E> fifthSupplier, Consumer<E> fifthBranch,
-                                   Provider<Tuple.Tuple2<E, E>> sixSupplier, BiConsumer<E, E> sixthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 BooleanSupplier firstSupplier, Runnable firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
+                                 Supplier<E> fifthSupplier, Consumer<E> fifthBranch,
+                                 Provider<Tuple.Tuple2<E, E>> sixSupplier, BiConsumer<E, E> sixthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -431,7 +431,7 @@ public final class SequencePattern {
         sixthBranch.accept(sixSupplier.take().first(), sixSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data, BooleanSupplier supplier, Runnable branch) {
+    public static <K, V> void match(Map<K, V> data, BooleanSupplier supplier, Runnable branch) {
         if (!data.isEmpty()) {
             init(data);
         }
@@ -441,74 +441,74 @@ public final class SequencePattern {
         }
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch) {
-        matches(data, firstSupplier, firstBranch);
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch) {
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> secondSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> secondBranch) {
-        matches(data, firstSupplier, firstBranch);
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> secondSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> secondBranch) {
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
-                                      Supplier<Map.Entry<K, V>> fifthSupplier,  Consumer<Map.Entry<K, V>> fifthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
+                                    Supplier<Map.Entry<K, V>> fifthSupplier, Consumer<Map.Entry<K, V>> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -516,14 +516,14 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -531,14 +531,14 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
-                                      Supplier<Map.Entry<K, V>> fifthSupplier,  Consumer<Map.Entry<K, V>> fifthBranch,
-                                      Supplier<Map.Entry<K, V>> sixthSupplier,  Consumer<Map.Entry<K, V>> sixthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
+                                    Supplier<Map.Entry<K, V>> fifthSupplier, Consumer<Map.Entry<K, V>> fifthBranch,
+                                    Supplier<Map.Entry<K, V>> sixthSupplier, Consumer<Map.Entry<K, V>> sixthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -547,15 +547,15 @@ public final class SequencePattern {
         sixthBranch.accept(sixthSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
-                                      Supplier<Map.Entry<K, V>> fifthSupplier,  Consumer<Map.Entry<K, V>> fifthBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> sixSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> sixBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
+                                    Supplier<Map.Entry<K, V>> fifthSupplier, Consumer<Map.Entry<K, V>> fifthBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> sixSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> sixBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -565,66 +565,66 @@ public final class SequencePattern {
     }
 
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch) {
-        matches(data, firstSupplier, firstBranch);
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch) {
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.get().getKey(), secondSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get().getKey(), thirdSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.get().getKey(), fourthSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
-                                      Supplier<Map.Entry<K, V>> fifthSupplier,  BiConsumer<K, V> fifthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
+                                    Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -632,14 +632,14 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.get().getKey(), fifthSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -647,14 +647,14 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
-                                      Supplier<Map.Entry<K, V>> fifthSupplier,  BiConsumer<K, V> fifthBranch,
-                                      Supplier<Map.Entry<K, V>> sixthSupplier,  BiConsumer<K, V> sixthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
+                                    Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch,
+                                    Supplier<Map.Entry<K, V>> sixthSupplier, BiConsumer<K, V> sixthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -663,15 +663,15 @@ public final class SequencePattern {
         sixthBranch.accept(sixthSupplier.get().getKey(), sixthSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      BooleanSupplier firstSupplier, Runnable firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
-                                      Supplier<Map.Entry<K, V>> fifthSupplier,  BiConsumer<K, V> fifthBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> sixSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> sixBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    BooleanSupplier firstSupplier, Runnable firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
+                                    Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> sixSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> sixBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -766,7 +766,7 @@ public final class SequencePattern {
         sixBranch.accept(sixSupplier.take().first(), sixSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data, Supplier<E> supplier, Consumer<E> branch) {
+    public static <E> void match(Collection<E> data, Supplier<E> supplier, Consumer<E> branch) {
         if (!data.isEmpty()) {
             init(data);
 
@@ -774,71 +774,71 @@ public final class SequencePattern {
         }
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   Supplier<E> firstSupplier,  Consumer<E> firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch) {
-        matches(data, firstSupplier,  firstBranch);
+    public static <E> void match(Collection<E> data,
+                                 Supplier<E> firstSupplier, Consumer<E> firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch) {
+        match(data, firstSupplier,  firstBranch);
         secondBranch.accept(secondSupplier.get());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   Supplier<E> firstSupplier, Consumer<E> firstBranch,
-                                   Provider<Tuple.Tuple2<E, E>> secondSupplier, BiConsumer<E, E> secondBranch) {
-        matches(data, firstSupplier,  firstBranch);
+    public static <E> void match(Collection<E> data,
+                                 Supplier<E> firstSupplier, Consumer<E> firstBranch,
+                                 Provider<Tuple.Tuple2<E, E>> secondSupplier, BiConsumer<E, E> secondBranch) {
+        match(data, firstSupplier,  firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   Supplier<E> firstSupplier,  Consumer<E> firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier,  Consumer<E> thirdBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 Supplier<E> firstSupplier, Consumer<E> firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   Supplier<E> firstSupplier, Consumer<E> firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Provider<Tuple.Tuple2<E, E>> thirdSupplier, BiConsumer<E, E> thirdBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 Supplier<E> firstSupplier, Consumer<E> firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Provider<Tuple.Tuple2<E, E>> thirdSupplier, BiConsumer<E, E> thirdBranch) {
+        match(data,
                 firstSupplier, firstBranch,
                 secondSupplier,  secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   Supplier<E> firstSupplier,  Consumer<E> firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier,  Consumer<E> thirdBranch,
-                                   Supplier<E> fourthSupplier, Consumer<E> fourthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 Supplier<E> firstSupplier, Consumer<E> firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Supplier<E> fourthSupplier, Consumer<E> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   Supplier<E> firstSupplier, Consumer<E> firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
-                                   Provider<Tuple.Tuple2<E, E>> fourthSupplier, BiConsumer<E, E> fourthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 Supplier<E> firstSupplier, Consumer<E> firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Provider<Tuple.Tuple2<E, E>> fourthSupplier, BiConsumer<E, E> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   Supplier<E> firstSupplier,  Consumer<E> firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier,  Consumer<E> thirdBranch,
-                                   Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
-                                   Supplier<E> fifthSupplier,  Consumer<E> fifthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 Supplier<E> firstSupplier, Consumer<E> firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
+                                 Supplier<E> fifthSupplier, Consumer<E> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -846,13 +846,13 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.get());
     }
 
-    public static <E> void matches(Collection<E> data,
-                                   Supplier<E> firstSupplier, Consumer<E> firstBranch,
-                                   Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                                   Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
-                                   Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
-                                   Provider<Tuple.Tuple2<E, E>> fifthSupplier, BiConsumer<E, E> fifthBranch) {
-        matches(data,
+    public static <E> void match(Collection<E> data,
+                                 Supplier<E> firstSupplier, Consumer<E> firstBranch,
+                                 Supplier<E> secondSupplier, Consumer<E> secondBranch,
+                                 Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
+                                 Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
+                                 Provider<Tuple.Tuple2<E, E>> fifthSupplier, BiConsumer<E, E> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -924,7 +924,7 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data, Supplier<Map.Entry<K, V>> supplier, Consumer<Map.Entry<K, V>> branch) {
+    public static <K, V> void match(Map<K, V> data, Supplier<Map.Entry<K, V>> supplier, Consumer<Map.Entry<K, V>> branch) {
         if (!data.isEmpty()) {
             init(data);
 
@@ -932,74 +932,74 @@ public final class SequencePattern {
         }
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  Consumer<Map.Entry<K, V>> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch) {
-        matches(data, firstSupplier, firstBranch);
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, Consumer<Map.Entry<K, V>> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch) {
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  Consumer<Map.Entry<K, V>> firstBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> secondSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> secondBranch) {
-        matches(data, firstSupplier, firstBranch);
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, Consumer<Map.Entry<K, V>> firstBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> secondSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> secondBranch) {
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  Consumer<Map.Entry<K, V>> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, Consumer<Map.Entry<K, V>> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  Consumer<Map.Entry<K, V>> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, Consumer<Map.Entry<K, V>> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  Consumer<Map.Entry<K, V>> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, Consumer<Map.Entry<K, V>> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  Consumer<Map.Entry<K, V>> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, Consumer<Map.Entry<K, V>> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  Consumer<Map.Entry<K, V>> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
-                                      Supplier<Map.Entry<K, V>> fifthSupplier,  Consumer<Map.Entry<K, V>> fifthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, Consumer<Map.Entry<K, V>> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
+                                    Supplier<Map.Entry<K, V>> fifthSupplier, Consumer<Map.Entry<K, V>> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -1007,14 +1007,14 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.get());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  Consumer<Map.Entry<K, V>> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  Consumer<Map.Entry<K, V>> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, Consumer<Map.Entry<K, V>> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -1022,7 +1022,7 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data, Provider<Tuple.Tuple2<E, E>> supplier, BiConsumer<E, E> branch) {
+    public static <E> void match(Collection<E> data, Provider<Tuple.Tuple2<E, E>> supplier, BiConsumer<E, E> branch) {
         if (!data.isEmpty()) {
             init(data);
 
@@ -1034,8 +1034,8 @@ public final class SequencePattern {
         branch.accept(supplier.take().first(), supplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data, Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> supplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> branch) {
+    public static <K, V> void match(Map<K, V> data, Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> supplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> branch) {
         if (!data.isEmpty()) {
             init(data);
 
@@ -1043,7 +1043,7 @@ public final class SequencePattern {
         }
     }
 
-    public static <K, V> void matches(Map<K, V> data, Supplier<Map.Entry<K, V>> supplier, BiConsumer<K, V> branch) {
+    public static <K, V> void match(Map<K, V> data, Supplier<Map.Entry<K, V>> supplier, BiConsumer<K, V> branch) {
         if (!data.isEmpty()) {
             init(data);
 
@@ -1051,74 +1051,74 @@ public final class SequencePattern {
         }
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch) {
-        matches(data, firstSupplier,  firstBranch);
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch) {
+        match(data, firstSupplier,  firstBranch);
         secondBranch.accept(secondSupplier.get().getKey(), secondSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> secondSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> secondBranch) {
-        matches(data, firstSupplier,  firstBranch);
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> secondSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> secondBranch) {
+        match(data, firstSupplier,  firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get().getKey(), thirdSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.get().getKey(), fourthSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
-                                      Supplier<Map.Entry<K, V>> fifthSupplier,  BiConsumer<K, V> fifthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
+                                    Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -1126,14 +1126,14 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.get().getKey(), fifthSupplier.get().getValue());
     }
 
-    public static <K, V> void matches(Map<K, V> data,
-                                      Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
-                                      Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                                      Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
-                                      Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
-                                      Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
-                                      BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
-        matches(data,
+    public static <K, V> void match(Map<K, V> data,
+                                    Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
+                                    Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
+                                    Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
+                                    Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
+                                    Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
+                                    BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
+        match(data,
                 firstSupplier,  firstBranch,
                 secondSupplier, secondBranch,
                 thirdSupplier,  thirdBranch,
@@ -1209,7 +1209,7 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
-    public static <E> void matches(Collection<E> data, Provider<Stream<E>> supplier, Purchaser<Stream<E>> branch) {
+    public static <E> void match(Collection<E> data, Provider<Stream<E>> supplier, Purchaser<Stream<E>> branch) {
         if (!data.isEmpty()) {
             init(data);
 
@@ -1221,7 +1221,7 @@ public final class SequencePattern {
         branch.obtain(supplier.take());
     }
 
-    public static <K, V> void matches(Map<K, V> data, Provider<Stream<Map.Entry<K, V>>> supplier, Purchaser<Stream<Map.Entry<K, V>>> branch) {
+    public static <K, V> void match(Map<K, V> data, Provider<Stream<Map.Entry<K, V>>> supplier, Purchaser<Stream<Map.Entry<K, V>>> branch) {
         if (!data.isEmpty()) {
             init(data);
 

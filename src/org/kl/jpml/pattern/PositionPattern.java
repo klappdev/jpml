@@ -40,7 +40,7 @@ public final class PositionPattern {
 
     private PositionPattern() {}
 
-    public static <V> PositionPattern matches(V value) {
+    public static <V> PositionPattern match(V value) {
         data = value;
 
         if (instance == null) {
@@ -55,7 +55,7 @@ public final class PositionPattern {
     }
 
     public static <V, C, T>
-    void matches(V value, Class<C> clazz, Tuple.Tuple2<String, T> item, Runnable branch) {
+    void match(V value, Class<C> clazz, Tuple.Tuple2<String, T> item, Runnable branch) {
         if (clazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 1);
 
@@ -67,11 +67,11 @@ public final class PositionPattern {
 
     public <C, T>
     void as(Class<C> clazz, Tuple.Tuple2<String, T> item, Runnable branch) {
-        matches(data, clazz, item, branch);
+        match(data, clazz, item, branch);
     }
 
     public static <V, C, T, R>
-    R matches(V data, Class<C> clazz, Tuple.Tuple2<String, T> item, Supplier<R> firstBranch) {
+    R match(V data, Class<C> clazz, Tuple.Tuple2<String, T> item, Supplier<R> firstBranch) {
         if (clazz == data.getClass()) {
             Object[] members = Reflection.fetchFields(data, 1);
 
@@ -85,7 +85,7 @@ public final class PositionPattern {
 
     public <C, T, R>
     R as(Class<C> clazz, Tuple.Tuple2<String, T> item, Supplier<R> firstBranch) {
-        return matches(data, clazz, item, firstBranch);
+        return match(data, clazz, item, firstBranch);
     }
 
     public static <T1, T2> Tuple.Tuple4<String, T1, String, T2> of(T1 firstValue, T2 secondValue) {
@@ -93,7 +93,7 @@ public final class PositionPattern {
     }
 
     public static <V, C, T1, T2>
-    void matches(V value, Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, Runnable branch) {
+    void match(V value, Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, Runnable branch) {
         if (clazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 2);
 
@@ -106,11 +106,11 @@ public final class PositionPattern {
 
     public <C, T1, T2>
     void as(Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, Runnable branch) {
-        matches(data, clazz, item, branch);
+        match(data, clazz, item, branch);
     }
 
     public static <V, C, T1, T2, R>
-    R matches(V data, Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, Supplier<R> firstBranch) {
+    R match(V data, Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, Supplier<R> firstBranch) {
         if (clazz == data.getClass()) {
             Object[] members = Reflection.fetchFields(data, 2);
 
@@ -125,7 +125,7 @@ public final class PositionPattern {
 
     public <C, T1, T2, R>
     R as(Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, Supplier<R> firstBranch) {
-        return matches(data, clazz, item, firstBranch);
+        return match(data, clazz, item, firstBranch);
     }
 
     public static <T1, T2, T3>
@@ -134,7 +134,7 @@ public final class PositionPattern {
     }
 
     public static <V, C, T1, T2, T3>
-    void matches(V value, Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item, Runnable branch)  {
+    void match(V value, Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item, Runnable branch)  {
         if (clazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 3);
 
@@ -148,11 +148,11 @@ public final class PositionPattern {
 
     public <C, T1, T2, T3>
     void as(Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item, Runnable branch) {
-        matches(data, clazz, item, branch);
+        match(data, clazz, item, branch);
     }
 
     public static <V, C, T1, T2, T3, R>
-    R matches(V data, Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item, Supplier<R> firstBranch)  {
+    R match(V data, Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item, Supplier<R> firstBranch)  {
         if (clazz == data.getClass()) {
             Object[] members = Reflection.fetchFields(data, 3);
 
@@ -168,13 +168,13 @@ public final class PositionPattern {
 
     public <C, T1, T2, T3, R>
     R as(Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item, Supplier<R> firstBranch) {
-        return matches(data, clazz, item, firstBranch);
+        return match(data, clazz, item, firstBranch);
     }
 
     public static <V, C1, C2, T1, T2>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 1);
 
@@ -193,15 +193,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2>
     void as(Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 1);
 
@@ -222,15 +222,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 1);
 
@@ -250,15 +250,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3>
     void as(Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 1);
 
@@ -280,15 +280,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 2);
 
@@ -308,15 +308,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3>
     void as(Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 2);
 
@@ -338,15 +338,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 2);
 
@@ -367,15 +367,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4>
     void as(Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 2);
 
@@ -398,15 +398,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 1);
 
@@ -427,16 +427,16 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4>
     void as(Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
 
     public static <V, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 1);
 
@@ -459,15 +459,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple2<String, T1> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 3);
 
@@ -488,15 +488,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4>
     void as(Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 3);
 
@@ -519,15 +519,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 3);
 
@@ -550,15 +550,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, T5, T6>
     void as(Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 3);
 
@@ -583,15 +583,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, T5, T6, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 2);
 
@@ -613,15 +613,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, T5>
     void as(Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 2);
 
@@ -645,15 +645,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, T5, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple4<String, T1, String, T2> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Runnable firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem, Runnable secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem, Runnable firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem, Runnable secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 3);
 
@@ -675,15 +675,15 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, T5>
     void as(Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Runnable firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem, Runnable secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Supplier<R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem, Supplier<R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem, Supplier<R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem, Supplier<R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] members = Reflection.fetchFields(value, 3);
 
@@ -707,7 +707,7 @@ public final class PositionPattern {
     public <C1, C2, T1, T2, T3, T4, T5, R>
     R as(Class<C1> firstClazz,  Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,  Supplier<R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem, Supplier<R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }

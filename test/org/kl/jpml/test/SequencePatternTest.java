@@ -57,84 +57,84 @@ public class SequencePatternTest {
     }
 
     @Test
-    public void matchesStatementTest() {
+    public void matchStatementTest() {
         /* 1 */
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list")
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map")
         );
 
         System.out.print("\n");
 
         /* 2 */
-        matches(list,
+        match(list,
                 head(), h -> out.println("head list: " + h)
         );
 
-        matches(map,
+        match(map,
                 headMap(), h -> out.println("head map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map,
+        match(map,
                 headMap(), (k, v) -> out.println("head map: " + k + " - " + v)
         );
 
         System.out.print("\n");
 
         /* 3 */
-        matches(list,
+        match(list,
                 middle(), m -> out.println("middle list: " + m)
         );
 
-        matches(map,
+        match(map,
                 middleMap(), h -> out.println("middle map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map,
+        match(map,
                 middleMap(), (k, v) -> out.println("middle map: " + k + " - " + v)
         );
 
         System.out.print("\n");
 
         /* 4 */
-        matches(list,
+        match(list,
                 tail(), t -> out.println("tail list: " + t)
         );
 
-        matches(map,
+        match(map,
                 tailMap(), h -> out.println("tail map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map,
+        match(map,
                 tailMap(), (k, v) -> out.println("tail map: " + k + " - " + v)
         );
 
         System.out.print("\n");
 
         /* 5 */
-        matches(list,
+        match(list,
                 at(1), i -> out.println("at list: " + i)
         );
 
-        matches(map,
+        match(map,
                 atMap(2), h -> out.println("at map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map,
+        match(map,
                 atMap(2), (k, v) -> out.println("at map: " + k + " - " + v)
         );
 
         System.out.print("\n");
 
         /* 6 */
-        matches(list,
+        match(list,
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 edgesMap(), (first, last) -> out.println("edges map [" + first.getKey() + ":" + first.getValue() + "]" + "\n" +
                                                                 "          [" + last.getKey()  + ":" + last.getValue()  + "]")
         );
@@ -142,48 +142,48 @@ public class SequencePatternTest {
         System.out.print("\n");
 
         /* 7 */
-        matches(list,
+        match(list,
                 sub(0, 2), xs -> xs.forEach(x -> System.out.print("sub item list: " + x + "\n"))
         );
 
-        matches(map,
+        match(map,
                 subMap(0, 2), xs -> xs.forEach(x -> System.out.print("sub item map: " + x + "\n"))
         );
 
         System.out.print("\n");
 
         /* 8 */
-        matches(list,
+        match(list,
                 rest(1), xs -> xs.forEach(x -> System.out.print("rest item list: " + x + "\n"))
         );
 
-        matches(map,
+        match(map,
                 restMap(1), xs -> xs.forEach(x -> System.out.print("rest item map: " + x + "\n"))
         );
 
         System.out.print("\n");
 
         /* 9 */
-        matches(list,
+        match(list,
                 some(0, 2, 4), xs -> xs.forEach(x -> System.out.print("some item list: " + x + "\n"))
         );
 
-        matches(map,
+        match(map,
                 someMap(0, 2, 4), xs -> xs.forEach(x -> System.out.print("some item map: " + x + "\n"))
         );
 
         /* 1-2 */
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 head(),   h -> out.println("head list: " + h)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),   h -> out.println("head map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),  (k, v) -> out.println("head map: " + k + " - " + v)
         );
@@ -191,19 +191,19 @@ public class SequencePatternTest {
         System.out.print("\n");
 
         /* 1-2-3 */
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 head(),   h -> out.println("head list: " + h),
                 middle(), m -> out.println("middle list: " + m)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),   h -> out.println("head map: " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map: " + m.getKey() + " - " + m.getValue())
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),  (k, v) -> out.println("head map: " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map: " + k + " - " + v)
@@ -211,17 +211,17 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 head(),   h -> out.println("head list: " + h),
                 middle(), m -> out.println("middle list: " + m)
         );
 
-        matches(map,
+        match(map,
                 headMap(),   h -> out.println("head map: " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map: " + m.getKey() + " - " + m.getValue())
         );
 
-        matches(map,
+        match(map,
                 headMap(),  (k, v) -> out.println("head map: " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map: " + k + " - " + v)
         );
@@ -229,21 +229,21 @@ public class SequencePatternTest {
         System.out.println("\n");
 
         /* 1-2-3-4 */
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 head(),   h -> out.println("head list: "  + h),
                 middle(), m -> out.println("middle list:" + m),
                 tail(),   t -> out.println("tail list: "  + t)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("tail map:  " + t.getKey() + " - " + t.getValue())
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
@@ -252,19 +252,19 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 head(),   h -> out.println("head list: "  + h),
                 middle(), m -> out.println("middle list:" + m),
                 tail(),   t -> out.println("tail list: "  + t)
         );
 
-        matches(map,
+        match(map,
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("tail map:  " + t.getKey() + " - " + t.getValue())
         );
 
-        matches(map,
+        match(map,
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
                 tailMap(),  (k, v) -> out.println("tail map:  " + k + " - " + v)
@@ -273,7 +273,7 @@ public class SequencePatternTest {
         System.out.println("\n");
 
         /* 1-2-3-4-5 */
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 head(),   h -> out.println("head list:  " + h),
                 middle(), m -> out.println("middle list:" + m),
@@ -281,7 +281,7 @@ public class SequencePatternTest {
                 at(1),    i -> out.println("at list:    " + i)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
@@ -289,7 +289,7 @@ public class SequencePatternTest {
                 atMap(2),    h -> out.println("at map:    " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
@@ -299,21 +299,21 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 head(),   h -> out.println("head list:  " + h),
                 middle(), m -> out.println("middle list:" + m),
                 tail(),   t -> out.println("tail list:  " + t),
                 at(1),    i -> out.println("at list:    " + i)
         );
 
-        matches(map,
+        match(map,
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("tail map:  " + t.getKey() + " - " + t.getValue()),
                 atMap(2),    h -> out.println("at map:    " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map,
+        match(map,
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
                 tailMap(),  (k, v) -> out.println("tail map:  " + k + " - " + v),
@@ -323,7 +323,7 @@ public class SequencePatternTest {
         System.out.println("\n");
 
         /* 1-2-3-4-5 */
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 head(),   h -> out.println("head list:  " + h),
                 middle(), m -> out.println("middle list:" + m),
@@ -332,7 +332,7 @@ public class SequencePatternTest {
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
@@ -342,7 +342,7 @@ public class SequencePatternTest {
                                                                         + "[" + last.getKey()  + ":" + last.getValue()  + "]")
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
@@ -354,7 +354,7 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 head(),   h -> out.println("head list:  " + h),
                 middle(), m -> out.println("middle list:" + m),
                 tail(),   t -> out.println("tail list:  " + t),
@@ -362,7 +362,7 @@ public class SequencePatternTest {
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("tail map:  " + t.getKey() + " - " + t.getValue()),
@@ -371,7 +371,7 @@ public class SequencePatternTest {
                                                                  + "[" + l.getKey()  + ":" + l.getValue()  + "]")
         );
 
-        matches(map,
+        match(map,
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
                 tailMap(),  (k, v) -> out.println("tail map:  " + k + " - " + v),
@@ -382,12 +382,12 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 edgesMap(), (f, l) -> out.println("edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                                  + "[" + l.getKey() + ":" + l.getValue()  + "]")
@@ -395,20 +395,20 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 head(),   h -> out.println("head list:  " + h),
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 edgesMap(), (f, l) -> out.println("edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                                  + "[" + l.getKey() + ":" + l.getValue()  + "]")
         );
 
-        matches(map,
+        match(map,
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 edgesMap(), (f, l) -> out.println("edges map [" + f.getKey() + ":" + f.getValue() + "] "
                         + "[" + l.getKey() + ":" + l.getValue()  + "]")
@@ -416,18 +416,18 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 head(),   h -> out.println("head list:  " + h),
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 edgesMap(), (f, l) -> out.println("edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                                  + "[" + l.getKey() + ":" + l.getValue()  + "]")
         );
 
-        matches(map,
+        match(map,
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 edgesMap(), (f, l) -> out.println("edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                                  + "[" + l.getKey() + ":" + l.getValue()  + "]")
@@ -435,14 +435,14 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 head(),   h -> out.println("head list:  " + h),
                 middle(), m -> out.println("middle list:" + m),
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
@@ -450,7 +450,7 @@ public class SequencePatternTest {
                                                                  + "[" + l.getKey() + ":" + l.getValue()  + "]")
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
@@ -460,20 +460,20 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 head(),   h -> out.println("head list:  " + h),
                 middle(), m -> out.println("middle list:" + m),
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
                 edgesMap(), (f, l) -> out.println("edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                                  + "[" + l.getKey() + ":" + l.getValue()  + "]")
         );
 
-        matches(map,
+        match(map,
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
                 edgesMap(), (f, l) -> out.println("edges map [" + f.getKey() + ":" + f.getValue() + "] "
@@ -482,7 +482,7 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 empty(), () -> out.println("empty list"),
                 head(),   h -> out.println("head list:  " + h),
                 middle(), m -> out.println("middle list:" + m),
@@ -490,7 +490,7 @@ public class SequencePatternTest {
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
@@ -499,7 +499,7 @@ public class SequencePatternTest {
                                                                  + "[" + l.getKey() + ":" + l.getValue() + "]")
         );
 
-        matches(map,
+        match(map,
                 emptyMap(), () -> out.println("empty map"),
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
@@ -510,14 +510,14 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list,
+        match(list,
                 head(),   h -> out.println("head list:  " + h),
                 middle(), m -> out.println("middle list:" + m),
                 tail(),   t -> out.println("tail list:  " + t),
                 edges(), (first, last) -> out.println("edges list: " + first + " - " + last)
         );
 
-        matches(map,
+        match(map,
                 headMap(),   h -> out.println("head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("tail map:  " + t.getKey() + " - " + t.getValue()),
@@ -525,7 +525,7 @@ public class SequencePatternTest {
                                                                  + "[" + l.getKey() + ":" + l.getValue() + "]")
         );
 
-        matches(map,
+        match(map,
                 headMap(),  (k, v) -> out.println("head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("middle map:" + k + " - " + v),
                 tailMap(),  (k, v) -> out.println("tail map:  " + k + " - " + v),
@@ -537,84 +537,84 @@ public class SequencePatternTest {
     }
 
     @Test
-    public void matchesAsStatementTest() {
+    public void matchAsStatementTest() {
         /* 1 */
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list")
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map")
         );
 
         System.out.print("\n");
 
         /* 2 */
-        matches(list).as(
+        match(list).as(
                 head(), h -> out.println("as head list: " + h)
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(), h -> out.println("as head map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(), (k, v) -> out.println("as head map: " + k + " - " + v)
         );
 
         System.out.print("\n");
 
         /* 3 */
-        matches(list).as(
+        match(list).as(
                 middle(), m -> out.println("as middle list: " + m)
         );
 
-        matches(map).as(
+        match(map).as(
                 middleMap(), h -> out.println("as middle map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 middleMap(), (k, v) -> out.println("as middle map: " + k + " - " + v)
         );
 
         System.out.print("\n");
 
         /* 4 */
-        matches(list).as(
+        match(list).as(
                 tail(), t -> out.println("as tail list: " + t)
         );
 
-        matches(map).as(
+        match(map).as(
                 tailMap(), h -> out.println("as tail map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 tailMap(), (k, v) -> out.println("as tail map: " + k + " - " + v)
         );
 
         System.out.print("\n");
 
         /* 5 */
-        matches(list).as(
+        match(list).as(
                 at(1), i -> out.println("as at list: " + i)
         );
 
-        matches(map).as(
+        match(map).as(
                 atMap(2), h -> out.println("as at map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 atMap(2), (k, v) -> out.println("as at map: " + k + " - " + v)
         );
 
         System.out.print("\n");
 
         /* 6 */
-        matches(list).as(
+        match(list).as(
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 edgesMap(), (f, l) -> out.println("as edges map [" + f.getKey() + ":" + f.getValue() + "]" + "\n" +
                                                   "             [" + l.getKey() + ":" + l.getValue() + "]")
         );
@@ -622,48 +622,48 @@ public class SequencePatternTest {
         System.out.print("\n");
 
         /* 7 */
-        matches(list).as(
+        match(list).as(
                 sub(0, 2), xs -> xs.forEach(x -> System.out.print("as sub item list: " + x + "\n"))
         );
 
-        matches(map).as(
+        match(map).as(
                 subMap(0, 2), xs -> xs.forEach(x -> System.out.print("as sub item map: " + x + "\n"))
         );
 
         System.out.print("\n");
 
         /* 8 */
-        matches(list).as(
+        match(list).as(
                 rest(1), xs -> xs.forEach(x -> System.out.print("as rest item list: " + x + "\n"))
         );
 
-        matches(map).as(
+        match(map).as(
                 restMap(1), xs -> xs.forEach(x -> System.out.print("as rest item map: " + x + "\n"))
         );
 
         System.out.print("\n");
 
         /* 9 */
-        matches(list).as(
+        match(list).as(
                 some(0, 2, 4), xs -> xs.forEach(x -> System.out.print("as some item list: " + x + "\n"))
         );
 
-        matches(map).as(
+        match(map).as(
                 someMap(0, 2, 4), xs -> xs.forEach(x -> System.out.print("as some item map: " + x + "\n"))
         );
 
         /* 1-2 */
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 head(),   h -> out.println("as head list: " + h)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),   h -> out.println("as head map: " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),  (k, v) -> out.println("as head map: " + k + " - " + v)
         );
@@ -671,19 +671,19 @@ public class SequencePatternTest {
         System.out.print("\n");
 
         /* 1-2-3 */
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 head(),   h -> out.println("as head list: " + h),
                 middle(), m -> out.println("as middle list: " + m)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),   h -> out.println("as head map: " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map: " + m.getKey() + " - " + m.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),  (k, v) -> out.println("as head map: " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map: " + k + " - " + v)
@@ -691,17 +691,17 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 head(),   h -> out.println("as head list: " + h),
                 middle(), m -> out.println("as middle list: " + m)
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),   h -> out.println("as head map: " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map: " + m.getKey() + " - " + m.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),  (k, v) -> out.println("as head map: " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map: " + k + " - " + v)
         );
@@ -709,21 +709,21 @@ public class SequencePatternTest {
         System.out.println("\n");
 
         /* 1-2-3-4 */
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 head(),   h -> out.println("as head list: "  + h),
                 middle(), m -> out.println("as middle list:" + m),
                 tail(),   t -> out.println("as tail list: "  + t)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("as tail map:  " + t.getKey() + " - " + t.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
@@ -732,19 +732,19 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 head(),   h -> out.println("as head list: "  + h),
                 middle(), m -> out.println("as middle list:" + m),
                 tail(),   t -> out.println("as tail list: "  + t)
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("as tail map:  " + t.getKey() + " - " + t.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
                 tailMap(),  (k, v) -> out.println("as tail map:  " + k + " - " + v)
@@ -753,7 +753,7 @@ public class SequencePatternTest {
         System.out.println("\n");
 
         /* 1-2-3-4-5 */
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 head(),   h -> out.println("as head list:  " + h),
                 middle(), m -> out.println("as middle list:" + m),
@@ -761,7 +761,7 @@ public class SequencePatternTest {
                 at(1),    i -> out.println("as at list:    " + i)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
@@ -769,7 +769,7 @@ public class SequencePatternTest {
                 atMap(2),    h -> out.println("as at map:    " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
@@ -779,21 +779,21 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 head(),   h -> out.println("as head list:  " + h),
                 middle(), m -> out.println("as middle list:" + m),
                 tail(),   t -> out.println("as tail list:  " + t),
                 at(1),    i -> out.println("as at list:    " + i)
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("as tail map:  " + t.getKey() + " - " + t.getValue()),
                 atMap(2),    h -> out.println("as at map:    " + h.getKey() + " - " + h.getValue())
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
                 tailMap(),  (k, v) -> out.println("as tail map:  " + k + " - " + v),
@@ -803,7 +803,7 @@ public class SequencePatternTest {
         System.out.println("\n");
 
         /* 1-2-3-4-5 */
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 head(),   h -> out.println("as head list:  " + h),
                 middle(), m -> out.println("as middle list:" + m),
@@ -812,7 +812,7 @@ public class SequencePatternTest {
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
@@ -822,7 +822,7 @@ public class SequencePatternTest {
                                                                  + "[" + last.getKey()  + ":" + last.getValue()  + "]")
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
@@ -834,7 +834,7 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 head(),   h -> out.println("as head list:  " + h),
                 middle(), m -> out.println("as middle list:" + m),
                 tail(),   t -> out.println("as tail list:  " + t),
@@ -842,7 +842,7 @@ public class SequencePatternTest {
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("as tail map:  " + t.getKey() + " - " + t.getValue()),
@@ -851,7 +851,7 @@ public class SequencePatternTest {
                                                           + "[" + l.getKey()  + ":" + l.getValue()  + "]")
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
                 tailMap(),  (k, v) -> out.println("as tail map:  " + k + " - " + v),
@@ -862,12 +862,12 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 edgesMap(), (f, l) -> out.println("as edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                           + "[" + l.getKey() + ":" + l.getValue()  + "]")
@@ -875,20 +875,20 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 head(),   h -> out.println("as head list:  " + h),
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 edgesMap(), (f, l) -> out.println("as edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                           + "[" + l.getKey() + ":" + l.getValue()  + "]")
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 edgesMap(), (f, l) -> out.println("as edges map [" + f.getKey() + ":" + f.getValue() + "] "
@@ -897,18 +897,18 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 head(),   h -> out.println("as head list:  " + h),
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 edgesMap(), (f, l) -> out.println("as edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                              + "[" + l.getKey() + ":" + l.getValue()  + "]")
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 edgesMap(), (f, l) -> out.println("as edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                              + "[" + l.getKey() + ":" + l.getValue()  + "]")
@@ -916,14 +916,14 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 head(),   h -> out.println("as head list:  " + h),
                 middle(), m -> out.println("as middle list:" + m),
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
@@ -931,7 +931,7 @@ public class SequencePatternTest {
                                                              + "[" + l.getKey() + ":" + l.getValue()  + "]")
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
@@ -941,20 +941,20 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 head(),   h -> out.println("as head list:  " + h),
                 middle(), m -> out.println("as middle list:" + m),
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
                 edgesMap(), (f, l) -> out.println("as edges map [" + f.getKey() + ":" + f.getValue() + "] "
                                                              + "[" + l.getKey() + ":" + l.getValue()  + "]")
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
                 edgesMap(), (f, l) -> out.println("as edges map [" + f.getKey() + ":" + f.getValue() + "] "
@@ -963,7 +963,7 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 empty(), () -> out.println("as empty list"),
                 head(),   h -> out.println("as head list:  " + h),
                 middle(), m -> out.println("as middle list:" + m),
@@ -971,7 +971,7 @@ public class SequencePatternTest {
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
@@ -980,7 +980,7 @@ public class SequencePatternTest {
                                                              + "[" + l.getKey() + ":" + l.getValue() + "]")
         );
 
-        matches(map).as(
+        match(map).as(
                 emptyMap(), () -> out.println("as empty map"),
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
@@ -991,14 +991,14 @@ public class SequencePatternTest {
 
         System.out.println();
 
-        matches(list).as(
+        match(list).as(
                 head(),   h -> out.println("as head list:  " + h),
                 middle(), m -> out.println("as middle list:" + m),
                 tail(),   t -> out.println("as tail list:  " + t),
                 edges(), (first, last) -> out.println("as edges list: " + first + " - " + last)
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),   h -> out.println("as head map:  " + h.getKey() + " - " + h.getValue()),
                 middleMap(), m -> out.println("as middle map:" + m.getKey() + " - " + m.getValue()),
                 tailMap(),   t -> out.println("as tail map:  " + t.getKey() + " - " + t.getValue()),
@@ -1006,7 +1006,7 @@ public class SequencePatternTest {
                                                              + "[" + l.getKey() + ":" + l.getValue() + "]")
         );
 
-        matches(map).as(
+        match(map).as(
                 headMap(),  (k, v) -> out.println("as head map:  " + k + " - " + v),
                 middleMap(),(k, v) -> out.println("as middle map:" + k + " - " + v),
                 tailMap(),  (k, v) -> out.println("as tail map:  " + k + " - " + v),

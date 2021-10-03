@@ -77,40 +77,40 @@ public class PropertyPatternTest {
     }
 
     @Test
-    public void matchesStatementTest() {
+    public void matchStatementTest() {
         Figure figure;
 
         /* 1 */
         figure = new Circle(5);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure,
+        match(figure,
                 Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("radius", 5), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure,
+        match(figure,
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> {
                     out.println("Rect square: " + (w * h));
                 }
         );
 
-        matches(figure,
+        match(figure,
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) -> {
                     out.println("Rect square: " + (w * h));
                 }
         );
 
-        matches(figure,
+        match(figure,
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> {
                     out.println("Rect square: " + (w * h));
                 }
@@ -119,18 +119,18 @@ public class PropertyPatternTest {
         /* 3 */
         figure = new Parallelepiped((short) 10, (short) 15, (short) 20);
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short s, Short h) -> {
                     out.println("Parallelepiped square: " + (w * s * h));
                 }
         );
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short s, Short h) -> out.println("Parallelepiped square: " + (w * s * h))
         );
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("width", (short) 10, "longitude", (short) 15, "height", (short) 20),
                 (Short w, Short s, Short h) -> out.println("Parallelepiped square: " + (w * s * h))
         );
@@ -138,17 +138,17 @@ public class PropertyPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("radius"),  (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Quadrate.class, of("width"), (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
 
-        matches(figure,
+        match(figure,
                 Quadrate.class, Quadrate::width, (Integer w) -> out.println("Quadrate square: " + (w * w)),
                 Circle.class, Circle::radius,  (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("radius", 5),  (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Quadrate.class, of("width", 10), (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
@@ -156,17 +156,17 @@ public class PropertyPatternTest {
         /* 1 - 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> out.println("Rect square: " + (w * h))
         );
 
-        matches(figure,
+        match(figure,
                 Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) ->  out.println("Rect square: " + (w * h))
         );
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("radius", 5), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> out.println("Rect square: " + (w * h))
         );
@@ -174,17 +174,17 @@ public class PropertyPatternTest {
         /* 2 - 1 */
         figure = new Triangle(10D, 20D);
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("width", "height"), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Quadrate.class, of("width"), (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
 
-        matches(figure,
+        match(figure,
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Quadrate.class, Quadrate::width, (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Quadrate.class, of("width", 10), (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
@@ -192,17 +192,17 @@ public class PropertyPatternTest {
         /* 2 - 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("width", "height"), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> out.println("Rect square: " + (w * h))
         );
 
-        matches(figure,
+        match(figure,
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) ->  out.println("Rect square: " + (w * h))
         );
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> out.println("Rect square: " + (w * h))
         );
@@ -210,20 +210,20 @@ public class PropertyPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + (w * l * h));
                 }
         );
 
-        matches(figure,
+        match(figure,
                 Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h))
         );
 
-        matches(figure,
+        match(figure,
                 Circle.class, of("radius", 5), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h))
@@ -232,20 +232,20 @@ public class PropertyPatternTest {
         /* 3 - 1 */
         figure = new Circle(5);
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + (w * l * h));
                 },
                 Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h)),
                 Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h)),
                 Circle.class, of("radius", 5), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
@@ -254,7 +254,7 @@ public class PropertyPatternTest {
         /* 3 - 3 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + (w * l * h));
                 },
@@ -263,7 +263,7 @@ public class PropertyPatternTest {
                 }
         );
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h)),
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height, (Float w, Float l, Float h) -> {
@@ -271,7 +271,7 @@ public class PropertyPatternTest {
                 }
         );
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h)),
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f), (Float w, Float l, Float h) -> {
@@ -282,21 +282,21 @@ public class PropertyPatternTest {
         /* 2 - 3 */
         figure = new Triangle(10D, 20D);
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("width", "height"), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Tripiped.class, of("width", "longitude", "height"), (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 }
         );
 
-        matches(figure,
+        match(figure,
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 }
         );
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f), (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
@@ -306,21 +306,21 @@ public class PropertyPatternTest {
         /* 3 - 2 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        matches(figure,
+        match(figure,
                 Tripiped.class, of("width", "longitude", "height"), (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 },
                 Triangle.class, of("width", "height"), (Double w, Double h) -> out.println("Triangle square: " + (w * h))
         );
 
-        matches(figure,
+        match(figure,
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 },
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> out.println("Triangle square: " + (w * h))
         );
 
-        matches(figure,
+        match(figure,
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f), (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 },
@@ -329,40 +329,40 @@ public class PropertyPatternTest {
     }
 
     @Test
-    public void matchesAsStatementTest() {
+    public void matchAsStatementTest() {
         Figure figure;
 
         /* 1 */
         figure = new Circle(5);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("radius", 5), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure).as(
+        match(figure).as(
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> {
                     out.println("Rect square: " + (w * h));
                 }
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) -> {
                     out.println("Rect square: " + (w * h));
                 }
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> {
                     out.println("Rect square: " + (w * h));
                 }
@@ -371,18 +371,18 @@ public class PropertyPatternTest {
         /* 3 */
         figure = new Parallelepiped((short) 10, (short) 15, (short) 20);
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short s, Short h) -> {
                     out.println("Parallelepiped square: " + (w * s * h));
                 }
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short s, Short h) -> out.println("Parallelepiped square: " + (w * s * h))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("width", (short) 10, "longitude", (short) 15, "height", (short) 20),
                 (Short w, Short s, Short h) -> out.println("Parallelepiped square: " + (w * s * h))
         );
@@ -390,17 +390,17 @@ public class PropertyPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("radius"),  (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Quadrate.class, of("width"), (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Quadrate.class, Quadrate::width, (Integer w) -> out.println("Quadrate square: " + (w * w)),
                 Circle.class, Circle::radius,  (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("radius", 5),  (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Quadrate.class, of("width", 10), (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
@@ -408,17 +408,17 @@ public class PropertyPatternTest {
         /* 1 - 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> out.println("Rect square: " + (w * h))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) ->  out.println("Rect square: " + (w * h))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("radius", 5), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> out.println("Rect square: " + (w * h))
         );
@@ -426,17 +426,17 @@ public class PropertyPatternTest {
         /* 2 - 1 */
         figure = new Triangle(10D, 20D);
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("width", "height"), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Quadrate.class, of("width"), (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Quadrate.class, Quadrate::width, (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Quadrate.class, of("width", 10), (Integer w) -> out.println("Quadrate square: " + (w * w))
         );
@@ -444,17 +444,17 @@ public class PropertyPatternTest {
         /* 2 - 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("width", "height"), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> out.println("Rect square: " + (w * h))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) ->  out.println("Rect square: " + (w * h))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> out.println("Rect square: " + (w * h))
         );
@@ -462,20 +462,20 @@ public class PropertyPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + (w * l * h));
                 }
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of("radius", 5), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h))
@@ -484,20 +484,20 @@ public class PropertyPatternTest {
         /* 3 - 1 */
         figure = new Circle(5);
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + (w * l * h));
                 },
                 Circle.class, of("radius"), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h)),
                 Circle.class, Circle::radius, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h)),
                 Circle.class, of("radius", 5), (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r)))
@@ -506,7 +506,7 @@ public class PropertyPatternTest {
         /* 3 - 3 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + (w * l * h));
                 },
@@ -515,7 +515,7 @@ public class PropertyPatternTest {
                 }
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h)),
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height, (Float w, Float l, Float h) -> {
@@ -523,7 +523,7 @@ public class PropertyPatternTest {
                 }
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> out.println("Parallelepiped square: " + (w * l * h)),
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f), (Float w, Float l, Float h) -> {
@@ -534,21 +534,21 @@ public class PropertyPatternTest {
         /* 2 - 3 */
         figure = new Triangle(10D, 20D);
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("width", "height"), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Tripiped.class, of("width", "longitude", "height"), (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 }
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 }
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> out.println("Triangle square: " + (w * h)),
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f), (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
@@ -558,21 +558,21 @@ public class PropertyPatternTest {
         /* 3 - 2 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        matches(figure).as(
+        match(figure).as(
                 Tripiped.class, of("width", "longitude", "height"), (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 },
                 Triangle.class, of("width", "height"), (Double w, Double h) -> out.println("Triangle square: " + (w * h))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 },
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> out.println("Triangle square: " + (w * h))
         );
 
-        matches(figure).as(
+        match(figure).as(
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f), (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + (w * l * h));
                 },
@@ -581,23 +581,23 @@ public class PropertyPatternTest {
     }
 
     @Test
-    public void matchesExpressionTest() {
+    public void matchExpressionTest() {
         /* 1 */
         Figure figure = new Circle(5);
 
-        int result = matches(figure,
+        int result = match(figure,
                 Circle.class, of("radius"), (Integer r) -> ((int) (2 * Math.PI * r))
         );
 
         assertEquals(result, 31);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, Circle::radius, (Integer r) -> ((int) (2 * Math.PI * r))
         );
 
         assertEquals(result, 31);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("radius", 5), (Integer r) -> ((int) (2 * Math.PI * r))
         );
 
@@ -606,19 +606,19 @@ public class PropertyPatternTest {
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure,
+        result = match(figure,
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure,
+        result = match(figure,
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure,
+        result = match(figure,
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> (w * h)
         );
 
@@ -627,20 +627,20 @@ public class PropertyPatternTest {
         /* 3 */
         figure = new Parallelepiped((short) 10, (short) 15, (short) 20);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short s, Short h) -> (w * s * h)
         );
 
         assertEquals(result, 3_000);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short s, Short h) -> (w * s * h)
         );
 
         assertEquals(result, 3_000);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("width", (short) 10, "longitude", (short) 15, "height", (short) 20),
                 (Short w, Short s, Short h) -> (w * s * h)
         );
@@ -650,21 +650,21 @@ public class PropertyPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("radius"),  (Integer r) -> ((int) (2 * Math.PI * r)),
                 Quadrate.class, of("width"), (Integer w) -> (w * w)
         );
 
         assertEquals(result, 100);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, Circle::radius,  (Integer r) -> ((int) (2 * Math.PI * r)),
                 Quadrate.class, Quadrate::width, (Integer w) -> (w * w)
         );
 
         assertEquals(result, 100);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("radius", 5),  (Integer r) -> ((int) (2 * Math.PI * r)),
                 Quadrate.class, of("width", 10), (Integer w) -> (w * w)
         );
@@ -674,21 +674,21 @@ public class PropertyPatternTest {
         /* 1 - 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("radius"), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, Circle::radius, (Integer r) -> ((int) (2 * Math.PI * r)),
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("radius", 5), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> (w * h)
         );
@@ -698,21 +698,21 @@ public class PropertyPatternTest {
         /* 2 - 1 */
         figure = new Triangle(10D, 20D);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("width", "height"), (Double w, Double h) -> (int)(w * h),
                 Quadrate.class, of("width"), (Integer w) -> (w * w)
         );
 
         assertEquals(result, 200D);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> (int)(w * h),
                 Quadrate.class, Quadrate::width, (Integer w) -> (w * w)
         );
 
         assertEquals(result, 200D);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> (int)(w * h),
                 Quadrate.class, of("width", 10), (Integer w) -> (w * w)
         );
@@ -722,21 +722,21 @@ public class PropertyPatternTest {
         /* 2 - 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("width", "height"), (Double w, Double h) -> (int)(w * h),
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> (int)(w * h),
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) ->  (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> (int)(w * h),
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> (w * h)
         );
@@ -746,14 +746,14 @@ public class PropertyPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("radius"), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> (w * l * h)
         );
 
         assertEquals(result, 750);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, Circle::radius, (Integer r) -> (int) (2 * Math.PI * r),
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> w * l * h
@@ -761,7 +761,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 750);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of("radius", 5), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> w * l * h
@@ -772,14 +772,14 @@ public class PropertyPatternTest {
         /* 3 - 1 */
         figure = new Circle(5);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> w * l * h,
                 Circle.class, of("radius"), (Integer r) -> (int)(2 * Math.PI * r)
         );
 
         assertEquals(result, 31);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> w * l * h,
                 Circle.class, Circle::radius, (Integer r) -> (int)(2 * Math.PI * r)
@@ -787,7 +787,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 31);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> w * l * h,
                 Circle.class, of("radius", 5), (Integer r) -> (int)(2 * Math.PI * r)
@@ -798,14 +798,14 @@ public class PropertyPatternTest {
         /* 3 - 3 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> w * l * h,
                 Tripiped.class, of("width", "longitude", "height"), (Float w, Float l, Float h) -> (int)(w * l * h)
         );
 
         assertEquals(result, 500f);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> w * l * h,
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height,
@@ -814,7 +814,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 500f);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> w * l * h,
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f),
@@ -826,7 +826,7 @@ public class PropertyPatternTest {
         /* 2 - 3 */
         figure = new Triangle(10D, 20D);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("width", "height"),
                 (Double w, Double h) -> (int)(w * h),
                 Tripiped.class, of("width", "longitude", "height"),
@@ -835,7 +835,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 200D);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, Triangle::width, Triangle::height,
                 (Double w, Double h) -> (int)(w * h),
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height,
@@ -844,7 +844,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 200D);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of("width", 10D, "height", 20D),
                 (Double w, Double h) -> (int)(w * h),
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f),
@@ -856,14 +856,14 @@ public class PropertyPatternTest {
         /* 3 - 2 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        result = matches(figure,
+        result = match(figure,
                 Tripiped.class, of("width", "longitude", "height"), (Float w, Float l, Float h) -> (int)(w * l * h),
                 Triangle.class, of("width", "height"), (Double w, Double h) -> (int)(w * h)
         );
 
         assertEquals(result, 500f);
 
-        result = matches(figure,
+        result = match(figure,
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height,
                 (Float w, Float l, Float h) -> (int)(w * l * h),
                 Triangle.class, Triangle::width, Triangle::height,
@@ -872,7 +872,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 500f);
 
-        result = matches(figure,
+        result = match(figure,
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f),
                 (Float w, Float l, Float h) -> (int)(w * l * h),
                 Triangle.class, of("width", 10D, "height", 20D),
@@ -883,23 +883,23 @@ public class PropertyPatternTest {
     }
 
     @Test
-    public void matchesAsExpressionTest() {
+    public void matchAsExpressionTest() {
         /* 1 */
         Figure figure = new Circle(5);
 
-        int result = matches(figure).as(
+        int result = match(figure).as(
                 Circle.class, of("radius"), (Integer r) -> ((int) (2 * Math.PI * r))
         );
 
         assertEquals(result, 31);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, Circle::radius, (Integer r) -> ((int) (2 * Math.PI * r))
         );
 
         assertEquals(result, 31);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("radius", 5), (Integer r) -> ((int) (2 * Math.PI * r))
         );
 
@@ -908,19 +908,19 @@ public class PropertyPatternTest {
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> (w * h)
         );
 
@@ -929,20 +929,20 @@ public class PropertyPatternTest {
         /* 3 */
         figure = new Parallelepiped((short) 10, (short) 15, (short) 20);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short s, Short h) -> (w * s * h)
         );
 
         assertEquals(result, 3_000);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short s, Short h) -> (w * s * h)
         );
 
         assertEquals(result, 3_000);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("width", (short) 10, "longitude", (short) 15, "height", (short) 20),
                 (Short w, Short s, Short h) -> (w * s * h)
         );
@@ -952,21 +952,21 @@ public class PropertyPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("radius"),  (Integer r) -> ((int) (2 * Math.PI * r)),
                 Quadrate.class, of("width"), (Integer w) -> (w * w)
         );
 
         assertEquals(result, 100);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, Circle::radius,  (Integer r) -> ((int) (2 * Math.PI * r)),
                 Quadrate.class, Quadrate::width, (Integer w) -> (w * w)
         );
 
         assertEquals(result, 100);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("radius", 5),  (Integer r) -> ((int) (2 * Math.PI * r)),
                 Quadrate.class, of("width", 10), (Integer w) -> (w * w)
         );
@@ -976,21 +976,21 @@ public class PropertyPatternTest {
         /* 1 - 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("radius"), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, Circle::radius, (Integer r) -> ((int) (2 * Math.PI * r)),
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("radius", 5), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> (w * h)
         );
@@ -1000,21 +1000,21 @@ public class PropertyPatternTest {
         /* 2 - 1 */
         figure = new Triangle(10D, 20D);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("width", "height"), (Double w, Double h) -> (int)(w * h),
                 Quadrate.class, of("width"), (Integer w) -> (w * w)
         );
 
         assertEquals(result, 200D);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> (int)(w * h),
                 Quadrate.class, Quadrate::width, (Integer w) -> (w * w)
         );
 
         assertEquals(result, 200D);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> (int)(w * h),
                 Quadrate.class, of("width", 10), (Integer w) -> (w * w)
         );
@@ -1024,21 +1024,21 @@ public class PropertyPatternTest {
         /* 2 - 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("width", "height"), (Double w, Double h) -> (int)(w * h),
                 Rectangle.class, of("width", "height"), (Integer w, Integer h) -> (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, Triangle::width, Triangle::height, (Double w, Double h) -> (int)(w * h),
                 Rectangle.class, Rectangle::width, Rectangle::height, (Integer w, Integer h) ->  (w * h)
         );
 
         assertEquals(result, 50);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("width", 10D, "height", 20D), (Double w, Double h) -> (int)(w * h),
                 Rectangle.class, of("width", 5, "height", 10), (Integer w, Integer h) -> (w * h)
         );
@@ -1048,14 +1048,14 @@ public class PropertyPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("radius"), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> (w * l * h)
         );
 
         assertEquals(result, 750);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, Circle::radius, (Integer r) -> (int) (2 * Math.PI * r),
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> w * l * h
@@ -1063,7 +1063,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 750);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of("radius", 5), (Integer r) -> ((int) (2 * Math.PI * r)),
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> w * l * h
@@ -1074,14 +1074,14 @@ public class PropertyPatternTest {
         /* 3 - 1 */
         figure = new Circle(5);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> w * l * h,
                 Circle.class, of("radius"), (Integer r) -> (int)(2 * Math.PI * r)
         );
 
         assertEquals(result, 31);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> w * l * h,
                 Circle.class, Circle::radius, (Integer r) -> (int)(2 * Math.PI * r)
@@ -1089,7 +1089,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 31);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> w * l * h,
                 Circle.class, of("radius", 5), (Integer r) -> (int)(2 * Math.PI * r)
@@ -1100,14 +1100,14 @@ public class PropertyPatternTest {
         /* 3 - 3 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("width", "longitude", "height"), (Short w, Short l, Short h) -> w * l * h,
                 Tripiped.class, of("width", "longitude", "height"), (Float w, Float l, Float h) -> (int)(w * l * h)
         );
 
         assertEquals(result, 500f);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, Parallelepiped::width, Parallelepiped::longitude, Parallelepiped::height,
                 (Short w, Short l, Short h) -> w * l * h,
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height,
@@ -1116,7 +1116,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 500f);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of("width", (short) 5, "longitude", (short) 10, "height", (short) 15),
                 (Short w, Short l, Short h) -> w * l * h,
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f),
@@ -1128,7 +1128,7 @@ public class PropertyPatternTest {
         /* 2 - 3 */
         figure = new Triangle(10D, 20D);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("width", "height"),
                 (Double w, Double h) -> (int)(w * h),
                 Tripiped.class, of("width", "longitude", "height"),
@@ -1137,7 +1137,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 200D);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, Triangle::width, Triangle::height,
                 (Double w, Double h) -> (int)(w * h),
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height,
@@ -1146,7 +1146,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 200D);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of("width", 10D, "height", 20D),
                 (Double w, Double h) -> (int)(w * h),
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f),
@@ -1158,14 +1158,14 @@ public class PropertyPatternTest {
         /* 3 - 2 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Tripiped.class, of("width", "longitude", "height"), (Float w, Float l, Float h) -> (int)(w * l * h),
                 Triangle.class, of("width", "height"), (Double w, Double h) -> (int)(w * h)
         );
 
         assertEquals(result, 500f);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Tripiped.class, Tripiped::width, Tripiped::longitude, Tripiped::height,
                 (Float w, Float l, Float h) -> (int)(w * l * h),
                 Triangle.class, Triangle::width, Triangle::height,
@@ -1174,7 +1174,7 @@ public class PropertyPatternTest {
 
         assertEquals(result, 500f);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Tripiped.class, of("width", 10f, "longitude", 5f, "height", 10f),
                 (Float w, Float l, Float h) -> (int)(w * l * h),
                 Triangle.class, of("width", 10D, "height", 20D),

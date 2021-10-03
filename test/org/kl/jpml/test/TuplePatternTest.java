@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import org.kl.jpml.pattern.TuplePattern;
 import org.kl.jpml.state.Else;
 import org.kl.jpml.test.state.Side;
 import org.kl.jpml.state.Var;
@@ -37,7 +38,7 @@ import java.util.List;
 
 import static java.lang.System.out;
 import static org.kl.jpml.pattern.TuplePattern.let;
-import static org.kl.jpml.pattern.TuplePattern.matches;
+import static org.kl.jpml.pattern.TuplePattern.match;
 import static org.kl.jpml.pattern.TuplePattern.foreach;
 
 public class TuplePatternTest {
@@ -74,22 +75,22 @@ public class TuplePatternTest {
     }
 
     @Test
-    public void matchesStatementTest() {
+    public void matchStatementTest() {
         /* 1 */
         byte width1 = 10;
         String side1 = "top";
 
-        matches(width1, side1,
+        match(width1, side1,
                 (byte) 10, "top", () -> out.println("side[" + side1 + "]=" + width1)
         );
 
         Side corner1 = Side.TOP;
-        matches(width1, side1, corner1,
+        match(width1, side1, corner1,
                 (byte) 10, "top", Side.TOP, () -> out.println("side[" + side1 + "]=" + width1 + " # " + corner1)
         );
 
         boolean flag1 = true;
-        matches(width1, side1, corner1, flag1,
+        match(width1, side1, corner1, flag1,
                 (byte) 10, "top", Side.TOP, true, () -> out.println("side[" + side1 + "]=" + width1 +
                                                                     " # " + corner1 + " # " + flag1)
         );
@@ -98,20 +99,20 @@ public class TuplePatternTest {
         short width2 = 15;
         String side2 = "bottom";
 
-        matches(width2, side2,
+        match(width2, side2,
                 (short) 10, "top",    () -> out.println("side[" + side2 + "]=" + width2),
                 (short) 15, "bottom", () -> out.println("side[" + side2 + "]=" + width2)
         );
 
         Side corner2 = Side.BOTTOM;
 
-        matches(width2, side2, corner2,
+        match(width2, side2, corner2,
                 (short) 10, "top",    Side.TOP,    () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 (short) 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2)
         );
 
         boolean flag2 = false;
-        matches(width2, side2, corner2, flag2,
+        match(width2, side2, corner2, flag2,
                 (short) 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side2 + "]=" + width2 +
                                                                             " # " + corner2 + " # " + flag2),
                 (short) 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side2 + "]=" + width2 +
@@ -122,7 +123,7 @@ public class TuplePatternTest {
         int width3 = 20;
         String side3 = "left";
 
-        matches(width3, side3,
+        match(width3, side3,
                 10, "top",    () -> out.println("side[" + side3 + "]=" + width3),
                 15, "bottom", () -> out.println("side[" + side3 + "]=" + width3),
                 20, "left",   () -> out.println("side[" + side3 + "]=" + width3)
@@ -130,14 +131,14 @@ public class TuplePatternTest {
 
         Side corner3 = Side.LEFT;
 
-        matches(width3, side3, corner3,
+        match(width3, side3, corner3,
                 10, "top",    Side.TOP,    () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 20, "left",   Side.LEFT,   () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3)
         );
 
         boolean flag3 = true;
-        matches(width3, side3, corner3, flag3,
+        match(width3, side3, corner3, flag3,
                 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side3 + "]=" + width3 +
                                                                     " # " + corner3 + " # " + flag3),
                 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side3 + "]=" + width3 +
@@ -150,7 +151,7 @@ public class TuplePatternTest {
         long width4 = 25;
         String side4 = "right";
 
-        matches(width4, side4,
+        match(width4, side4,
                 10L, "top",    () -> out.println("side[" + side4 + "]=" + width4),
                 15L, "bottom", () -> out.println("side[" + side4 + "]=" + width4),
                 20L, "left",   () -> out.println("side[" + side4 + "]=" + width4),
@@ -159,7 +160,7 @@ public class TuplePatternTest {
 
         Side corner4 = Side.RIGHT;
 
-        matches(width4, side4, corner4,
+        match(width4, side4, corner4,
                 10L, "top",    Side.TOP,    () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 15L, "bottom", Side.BOTTOM, () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 20L, "left",   Side.LEFT,   () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
@@ -167,7 +168,7 @@ public class TuplePatternTest {
         );
 
         boolean flag4 = false;
-        matches(width4, side4, corner4, flag4,
+        match(width4, side4, corner4, flag4,
                 10L, "top",    Side.TOP,    true,  () -> out.println("side[" + side4 + "]=" + width4 +
                                                                     " # " + corner4 + " # " + flag4),
                 15L, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side4 + "]=" + width4 +
@@ -182,7 +183,7 @@ public class TuplePatternTest {
         float width5 = 30.0F;
         String side5 = "top-left";
 
-        matches(width5, side5,
+        match(width5, side5,
                 10.0F, "top",    () -> out.println("side[" + side5 + "]=" + width5),
                 15.0F, "bottom", () -> out.println("side[" + side5 + "]=" + width5),
                 20.0F, "left",   () -> out.println("side[" + side5 + "]=" + width5),
@@ -192,7 +193,7 @@ public class TuplePatternTest {
 
         Side corner5 = Side.TOP_LEFT;
 
-        matches(width5, side5, corner5,
+        match(width5, side5, corner5,
                 10.0F, "top",    Side.TOP,    () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 15.0F, "bottom", Side.BOTTOM, () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 20.0F, "left",   Side.LEFT,   () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
@@ -201,7 +202,7 @@ public class TuplePatternTest {
         );
 
         boolean flag5 = true;
-        matches(width5, side5, corner5, flag5,
+        match(width5, side5, corner5, flag5,
                 10F, "top",    Side.TOP,    true,  () -> out.println("side[" + side5 + "]=" + width5 +
                                                                      " # " + corner5 + " # " + flag5),
                 15F, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side5 + "]=" + width5 +
@@ -218,7 +219,7 @@ public class TuplePatternTest {
         double width6 = 35.0D;
         String side6 = "top-right";
 
-        matches(width6, side6,
+        match(width6, side6,
                 10.0D, "top",    () -> out.println("side[" + side6 + "]=" + width6),
                 15.0D, "bottom", () -> out.println("side[" + side6 + "]=" + width6),
                 20.0D, "left",   () -> out.println("side[" + side6 + "]=" + width6),
@@ -229,7 +230,7 @@ public class TuplePatternTest {
 
         Side corner6 = Side.TOP_RIGHT;
 
-        matches(width6, side6, corner6,
+        match(width6, side6, corner6,
                 10.0D, "top",    Side.TOP,    () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 15.0D, "bottom", Side.BOTTOM, () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 20.0D, "left",   Side.LEFT,   () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
@@ -239,7 +240,7 @@ public class TuplePatternTest {
         );
 
         boolean flag6 = true;
-        matches(width6, side6, corner6, flag6,
+        match(width6, side6, corner6, flag6,
                 10D, "top",    Side.TOP,    true,  () -> out.println("side[" + side6 + "]=" + width6 +
                                                                      " # " + corner6 + " # " + flag6),
                 15D, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side6 + "]=" + width6 +
@@ -256,22 +257,22 @@ public class TuplePatternTest {
     }
 
     @Test
-    public void matchesAsStatementTest()  {
+    public void matchAsStatementTest()  {
         /* 1 */
         byte width1 = 10;
         String side1 = "top";
 
-        matches(width1, side1).as(
+        match(width1, side1).as(
                 (byte) 10, "top", () -> out.println("side[" + side1 + "]=" + width1)
         );
 
         Side corner1 = Side.TOP;
-        matches(width1, side1, corner1).as(
+        match(width1, side1, corner1).as(
                 (byte) 10, "top", Side.TOP, () -> out.println("side[" + side1 + "]=" + width1 + " # " + corner1)
         );
 
         boolean flag1 = true;
-        matches(width1, side1, corner1, flag1).as(
+        match(width1, side1, corner1, flag1).as(
                 (byte) 10, "top", Side.TOP, true, () -> out.println("side[" + side1 + "]=" + width1 +
                                                         " # " + corner1 + " # " + flag1)
         );
@@ -280,20 +281,20 @@ public class TuplePatternTest {
         short width2 = 15;
         String side2 = "bottom";
 
-        matches(width2, side2).as(
+        match(width2, side2).as(
                 (short) 10, "top",    () -> out.println("side[" + side2 + "]=" + width2),
                 (short) 15, "bottom", () -> out.println("side[" + side2 + "]=" + width2)
         );
 
         Side corner2 = Side.BOTTOM;
 
-        matches(width2, side2, corner2).as(
+        match(width2, side2, corner2).as(
                 (short) 10, "top",    Side.TOP,    () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 (short) 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2)
         );
 
         boolean flag2 = false;
-        matches(width2, side2, corner2, flag2).as(
+        match(width2, side2, corner2, flag2).as(
                 (short) 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side2 + "]=" + width2 +
                                                                 " # " + corner2 + " # " + flag2),
                 (short) 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side2 + "]=" + width2 +
@@ -304,7 +305,7 @@ public class TuplePatternTest {
         int width3 = 20;
         String side3 = "left";
 
-        matches(width3, side3).as(
+        match(width3, side3).as(
                 10, "top",    () -> out.println("side[" + side3 + "]=" + width3),
                 15, "bottom", () -> out.println("side[" + side3 + "]=" + width3),
                 20, "left",   () -> out.println("side[" + side3 + "]=" + width3)
@@ -312,14 +313,14 @@ public class TuplePatternTest {
 
         Side corner3 = Side.LEFT;
 
-        matches(width3, side3, corner3).as(
+        match(width3, side3, corner3).as(
                 10, "top",    Side.TOP,    () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 20, "left",   Side.LEFT,   () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3)
         );
 
         boolean flag3 = true;
-        matches(width3, side3, corner3, flag3).as(
+        match(width3, side3, corner3, flag3).as(
                 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side3 + "]=" + width3 +
                                                         " # " + corner3 + " # " + flag3),
                 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side3 + "]=" + width3 +
@@ -332,7 +333,7 @@ public class TuplePatternTest {
         long width4 = 25;
         String side4 = "right";
 
-        matches(width4, side4).as(
+        match(width4, side4).as(
                 10L, "top",    () -> out.println("side[" + side4 + "]=" + width4),
                 15L, "bottom", () -> out.println("side[" + side4 + "]=" + width4),
                 20L, "left",   () -> out.println("side[" + side4 + "]=" + width4),
@@ -341,7 +342,7 @@ public class TuplePatternTest {
 
         Side corner4 = Side.RIGHT;
 
-        matches(width4, side4, corner4).as(
+        match(width4, side4, corner4).as(
                 10L, "top",    Side.TOP,    () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 15L, "bottom", Side.BOTTOM, () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 20L, "left",   Side.LEFT,   () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
@@ -349,7 +350,7 @@ public class TuplePatternTest {
         );
 
         boolean flag4 = false;
-        matches(width4, side4, corner4, flag4).as(
+        match(width4, side4, corner4, flag4).as(
                 10L, "top",    Side.TOP,    true,  () -> out.println("side[" + side4 + "]=" + width4 +
                                                          " # " + corner4 + " # " + flag4),
                 15L, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side4 + "]=" + width4 +
@@ -364,7 +365,7 @@ public class TuplePatternTest {
         float width5 = 30.0F;
         String side5 = "top-left";
 
-        matches(width5, side5).as(
+        match(width5, side5).as(
                 10.0F, "top",    () -> out.println("side[" + side5 + "]=" + width5),
                 15.0F, "bottom", () -> out.println("side[" + side5 + "]=" + width5),
                 20.0F, "left",   () -> out.println("side[" + side5 + "]=" + width5),
@@ -374,7 +375,7 @@ public class TuplePatternTest {
 
         Side corner5 = Side.TOP_LEFT;
 
-        matches(width5, side5, corner5).as(
+        match(width5, side5, corner5).as(
                 10.0F, "top",    Side.TOP,    () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 15.0F, "bottom", Side.BOTTOM, () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 20.0F, "left",   Side.LEFT,   () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
@@ -383,7 +384,7 @@ public class TuplePatternTest {
         );
 
         boolean flag5 = true;
-        matches(width5, side5, corner5, flag5).as(
+        match(width5, side5, corner5, flag5).as(
                 10F, "top",    Side.TOP,    true,  () -> out.println("side[" + side5 + "]=" + width5 +
                                                          " # " + corner5 + " # " + flag5),
                 15F, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side5 + "]=" + width5 +
@@ -400,7 +401,7 @@ public class TuplePatternTest {
         double width6 = 35.0D;
         String side6 = "top-right";
 
-        matches(width6, side6).as(
+        match(width6, side6).as(
                 10.0D, "top",    () -> out.println("side[" + side6 + "]=" + width6),
                 15.0D, "bottom", () -> out.println("side[" + side6 + "]=" + width6),
                 20.0D, "left",   () -> out.println("side[" + side6 + "]=" + width6),
@@ -411,7 +412,7 @@ public class TuplePatternTest {
 
         Side corner6 = Side.TOP_RIGHT;
 
-        matches(width6, side6, corner6).as(
+        match(width6, side6, corner6).as(
                 10.0D, "top",    Side.TOP,    () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 15.0D, "bottom", Side.BOTTOM, () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 20.0D, "left",   Side.LEFT,   () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
@@ -421,7 +422,7 @@ public class TuplePatternTest {
         );
 
         boolean flag6 = true;
-        matches(width6, side6, corner6, flag6).as(
+        match(width6, side6, corner6, flag6).as(
                 10D, "top",    Side.TOP,    true,  () -> out.println("side[" + side6 + "]=" + width6 +
                                                          " # " + corner6 + " # " + flag6),
                 15D, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side6 + "]=" + width6 +
@@ -438,22 +439,22 @@ public class TuplePatternTest {
     }
 
     @Test
-    public void matchesSmartStatementTest() {
+    public void matchSmartStatementTest() {
         /* 1 */
         byte width1 = 10;
         String side1 = "top";
 
-        matches(width1, side1,
+        match(width1, side1,
                 Tuple.of((byte) 10, "top"), () -> out.println("side[" + side1 + "]=" + width1)
         );
 
         Side corner1 = Side.TOP;
-        matches(width1, side1, corner1,
+        match(width1, side1, corner1,
                 Tuple.of((byte) 10, "top", Side.TOP), () -> out.println("side[" + side1 + "]=" + width1 + " # " + corner1)
         );
 
         boolean flag1 = true;
-        matches(width1, side1, corner1, flag1,
+        match(width1, side1, corner1, flag1,
                 Tuple.of((byte) 10, "top", Side.TOP, true), () -> out.println("side[" + side1 + "]=" + width1 +
                                                                   " # " + corner1 + " # " + flag1)
         );
@@ -462,20 +463,20 @@ public class TuplePatternTest {
         short width2 = 15;
         String side2 = "bottom";
 
-        matches(width2, side2,
+        match(width2, side2,
                 Tuple.of((short) 10, "top"),    () -> out.println("side[" + side2 + "]=" + width2),
                 Tuple.of((short) 15, "bottom"), () -> out.println("side[" + side2 + "]=" + width2)
         );
 
         Side corner2 = Side.BOTTOM;
 
-        matches(width2, side2, corner2,
+        match(width2, side2, corner2,
                 Tuple.of((short) 10, "top", Side.TOP),    () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 Tuple.of((short) 15, "bottom", Side.BOTTOM), () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2)
         );
 
         boolean flag2 = true;
-        matches(width2, side2, corner2, flag2,
+        match(width2, side2, corner2, flag2,
                 Tuple.of((short) 10, "top", Side.TOP, true),  () -> out.println("side[" + side2 + "]=" + width2 +
                                                               " # " + corner2 + " # " + flag2),
                 Tuple.of((short) 15, "bottom", Side.BOTTOM, false), () -> out.println("side[" + side2 + "]=" + width2 +
@@ -486,7 +487,7 @@ public class TuplePatternTest {
         int width3 = 20;
         String side3 = "left";
 
-        matches(width3, side3,
+        match(width3, side3,
                 Tuple.of(10, "top"),    () -> out.println("side[" + side3 + "]=" + width3),
                 Tuple.of(15, "bottom"), () -> out.println("side[" + side3 + "]=" + width3),
                 Tuple.of(20, "left"),   () -> out.println("side[" + side3 + "]=" + width3)
@@ -494,14 +495,14 @@ public class TuplePatternTest {
 
         Side corner3 = Side.LEFT;
 
-        matches(width3, side3, corner3,
+        match(width3, side3, corner3,
                 Tuple.of(10, "top",    Side.TOP),    () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 Tuple.of(15, "bottom", Side.BOTTOM), () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 Tuple.of(20, "left",   Side.LEFT),   () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3)
         );
 
         boolean flag3 = true;
-        matches(width3, side3, corner3, flag3,
+        match(width3, side3, corner3, flag3,
                 Tuple.of(10, "top",    Side.TOP,    true),  () -> out.println("side[" + side3 + "]=" + width3 +
                                                                   " # " + corner3 + " # " + flag3),
                 Tuple.of(15, "bottom", Side.BOTTOM, false), () -> out.println("side[" + side3 + "]=" + width3 +
@@ -514,7 +515,7 @@ public class TuplePatternTest {
         long width4 = 25L;
         String side4 = "right";
 
-        matches(width4, side4,
+        match(width4, side4,
                 Tuple.of(10L, "top"),    () -> out.println("side[" + side4 + "]=" + width4),
                 Tuple.of(15L, "bottom"), () -> out.println("side[" + side4 + "]=" + width4),
                 Tuple.of(20L, "left"),   () -> out.println("side[" + side4 + "]=" + width4),
@@ -523,7 +524,7 @@ public class TuplePatternTest {
 
         Side corner4 = Side.RIGHT;
 
-        matches(width4, side4, corner4,
+        match(width4, side4, corner4,
                 Tuple.of(10L, "top",    Side.TOP),    () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 Tuple.of(15L, "bottom", Side.BOTTOM), () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 Tuple.of(20L, "left",   Side.LEFT),   () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
@@ -531,7 +532,7 @@ public class TuplePatternTest {
         );
 
         boolean flag4 = false;
-        matches(width4, side4, corner4, flag4,
+        match(width4, side4, corner4, flag4,
                 Tuple.of(10L, "top",    Side.TOP,    true),  () -> out.println("side[" + side4 + "]=" + width4 +
                                                                    " # " + corner4 + " # " + flag4),
                 Tuple.of(15L, "bottom", Side.BOTTOM, false), () -> out.println("side[" + side4 + "]=" + width4 +
@@ -546,7 +547,7 @@ public class TuplePatternTest {
         float width5 = 30.0F;
         String side5 = "top-left";
 
-        matches(width5, side5,
+        match(width5, side5,
                 Tuple.of(10.0F, "top"),    () -> out.println("side[" + side5 + "]=" + width5),
                 Tuple.of(15.0F, "bottom"), () -> out.println("side[" + side5 + "]=" + width5),
                 Tuple.of(20.0F, "left"),   () -> out.println("side[" + side5 + "]=" + width5),
@@ -556,7 +557,7 @@ public class TuplePatternTest {
 
         Side corner5 = Side.TOP_LEFT;
 
-        matches(width5, side5, corner5,
+        match(width5, side5, corner5,
                 Tuple.of(10.0F, "top",    Side.TOP),    () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 Tuple.of(15.0F, "bottom", Side.BOTTOM), () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 Tuple.of(20.0F, "left",   Side.LEFT),   () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
@@ -565,7 +566,7 @@ public class TuplePatternTest {
         );
 
         boolean flag5 = true;
-        matches(width5, side5, corner5, flag5,
+        match(width5, side5, corner5, flag5,
                 Tuple.of(10F, "top",    Side.TOP,    true),  () -> out.println("side[" + side5 + "]=" + width5 +
                                                                    " # " + corner5 + " # " + flag5),
                 Tuple.of(15F, "bottom", Side.BOTTOM, false), () -> out.println("side[" + side5 + "]=" + width5 +
@@ -582,7 +583,7 @@ public class TuplePatternTest {
         double width6 = 35.0D;
         String side6 = "top-right";
 
-        matches(width6, side6,
+        match(width6, side6,
                 Tuple.of(10.0D, "top"),    () -> out.println("side[" + side6 + "]=" + width6),
                 Tuple.of(15.0D, "bottom"), () -> out.println("side[" + side6 + "]=" + width6),
                 Tuple.of(20.0D, "left"),   () -> out.println("side[" + side6 + "]=" + width6),
@@ -593,7 +594,7 @@ public class TuplePatternTest {
 
         Side corner6 = Side.TOP_RIGHT;
 
-        matches(width6, side6, corner6,
+        match(width6, side6, corner6,
                 Tuple.of(10.0D, "top",    Side.TOP),    () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 Tuple.of(15.0D, "bottom", Side.BOTTOM), () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 Tuple.of(20.0D, "left",   Side.LEFT),   () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
@@ -603,7 +604,7 @@ public class TuplePatternTest {
         );
 
         boolean flag6 = true;
-        matches(width6, side6, corner6, flag6,
+        match(width6, side6, corner6, flag6,
                 Tuple.of(10D, "top",    Side.TOP,    true),  () -> out.println("side[" + side6 + "]=" + width6 +
                                                                    " # " + corner6 + " # " + flag6),
                 Tuple.of(15D, "bottom", Side.BOTTOM, false), () -> out.println("side[" + side6 + "]=" + width6 +
@@ -620,24 +621,24 @@ public class TuplePatternTest {
     }
 
     @Test
-    public void matchesStatementWithDefaultTest() {
+    public void matchStatementWithDefaultTest() {
         /* 1 */
         byte width1 = 15;
         String side1 = "bottom";
 
-        matches(width1, side1,
+        match(width1, side1,
                 (byte) 10, "top", () -> out.println("side[" + side1 + "]=" + width1),
                 Else.class,       () -> out.println("side[none]=" + 0)
         );
 
         Side corner1 = Side.BOTTOM;
-        matches(width1, side1, corner1,
+        match(width1, side1, corner1,
                 (byte) 10, "top", Side.TOP, () -> out.println("side[" + side1 + "]=" + width1 + " # " + corner1),
                 Else.class, () -> out.println("side[none]=" + 0 + " # " + Side.NONE)
         );
 
         boolean flag1 = false;
-        matches(width1, side1, corner1, flag1,
+        match(width1, side1, corner1, flag1,
                 (byte) 10, "top", Side.TOP, true, () -> out.println("side[" + side1 + "]=" + width1 +
                                                                     " # " + corner1 + " # " + flag1),
                 Else.class, () -> out.println("side[none]=" + 0 + " # " + Side.NONE + " # " + 0)
@@ -647,7 +648,7 @@ public class TuplePatternTest {
         short width2 = 20;
         String side2 = "top";
 
-        matches(width2, side2,
+        match(width2, side2,
                 (short) 10, "top",    () -> out.println("side[" + side2 + "]=" + width2),
                 (short) 15, "bottom", () -> out.println("side[" + side2 + "]=" + width2),
                 Else.class,           () -> out.println("side[none]=" + 0)
@@ -655,14 +656,14 @@ public class TuplePatternTest {
 
         Side corner2 = Side.TOP;
 
-        matches(width2, side2, corner2,
+        match(width2, side2, corner2,
                 (short) 10, "top",    Side.TOP,    () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 (short) 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 Else.class, () -> out.println("side[none]=" + 0 + " # " + Side.NONE)
         );
 
         boolean flag2 = false;
-        matches(width2, side2, corner2, flag2,
+        match(width2, side2, corner2, flag2,
                 (short) 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side2 + "]=" + width2 +
                                                                             " # " + corner2 + " # " + flag2),
                 (short) 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side2 + "]=" + width2 +
@@ -674,7 +675,7 @@ public class TuplePatternTest {
         int width3 = 25;
         String side3 = "right";
 
-        matches(width3, side3,
+        match(width3, side3,
                 10, "top",    () -> out.println("side[" + side3 + "]=" + width3),
                 15, "bottom", () -> out.println("side[" + side3 + "]=" + width3),
                 20, "left",   () -> out.println("side[" + side3 + "]=" + width3),
@@ -683,7 +684,7 @@ public class TuplePatternTest {
 
         Side corner3 = Side.RIGHT;
 
-        matches(width3, side3, corner3,
+        match(width3, side3, corner3,
                 10, "top",    Side.TOP,    () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 20, "left",   Side.LEFT,   () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
@@ -691,7 +692,7 @@ public class TuplePatternTest {
         );
 
         boolean flag3 = true;
-        matches(width3, side3, corner3, flag3,
+        match(width3, side3, corner3, flag3,
                 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side3 + "]=" + width3 +
                                                                     " # " + corner3 + " # " + flag3),
                 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side3 + "]=" + width3 +
@@ -705,7 +706,7 @@ public class TuplePatternTest {
         long width4 = 30;
         String side4 = "left";
 
-        matches(width4, side4,
+        match(width4, side4,
                 10L, "top",    () -> out.println("side[" + side4 + "]=" + width4),
                 15L, "bottom", () -> out.println("side[" + side4 + "]=" + width4),
                 20L, "left",   () -> out.println("side[" + side4 + "]=" + width4),
@@ -715,7 +716,7 @@ public class TuplePatternTest {
 
         Side corner4 = Side.LEFT;
 
-        matches(width4, side4, corner4,
+        match(width4, side4, corner4,
                 10L, "top",    Side.TOP,    () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 15L, "bottom", Side.BOTTOM, () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 20L, "left",   Side.LEFT,   () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
@@ -724,7 +725,7 @@ public class TuplePatternTest {
         );
 
         boolean flag4 = false;
-        matches(width4, side4, corner4, flag4,
+        match(width4, side4, corner4, flag4,
                 10L, "top",    Side.TOP,    true,  () -> out.println("side[" + side4 + "]=" + width4 +
                                                                      " # " + corner4 + " # " + flag4),
                 15L, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side4 + "]=" + width4 +
@@ -740,7 +741,7 @@ public class TuplePatternTest {
         float width5 = 35.0F;
         String side5 = "top-left";
 
-        matches(width5, side5,
+        match(width5, side5,
                 10.0F, "top",    () -> out.println("side[" + side5 + "]=" + width5),
                 15.0F, "bottom", () -> out.println("side[" + side5 + "]=" + width5),
                 20.0F, "left",   () -> out.println("side[" + side5 + "]=" + width5),
@@ -751,7 +752,7 @@ public class TuplePatternTest {
 
         Side corner5 = Side.TOP_LEFT;
 
-        matches(width5, side5, corner5,
+        match(width5, side5, corner5,
                 10.0F, "top",    Side.TOP,    () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 15.0F, "bottom", Side.BOTTOM, () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 20.0F, "left",   Side.LEFT,   () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
@@ -761,7 +762,7 @@ public class TuplePatternTest {
         );
 
         boolean flag5 = true;
-        matches(width5, side5, corner5, flag5,
+        match(width5, side5, corner5, flag5,
                 10F, "top",    Side.TOP,    true,  () -> out.println("side[" + side5 + "]=" + width5 +
                                                                      " # " + corner5 + " # " + flag5),
                 15F, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side5 + "]=" + width5 +
@@ -779,7 +780,7 @@ public class TuplePatternTest {
         double width6 = 40.0D;
         String side6 = "top-right";
 
-        matches(width6, side6,
+        match(width6, side6,
                 10.0D, "top",    () -> out.println("side[" + side6 + "]=" + width6),
                 15.0D, "bottom", () -> out.println("side[" + side6 + "]=" + width6),
                 20.0D, "left",   () -> out.println("side[" + side6 + "]=" + width6),
@@ -791,7 +792,7 @@ public class TuplePatternTest {
 
         Side corner6 = Side.TOP_RIGHT;
 
-        matches(width6, side6, corner6,
+        match(width6, side6, corner6,
                 10.0D, "top",    Side.TOP,    () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 15.0D, "bottom", Side.BOTTOM, () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 20.0D, "left",   Side.LEFT,   () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
@@ -802,7 +803,7 @@ public class TuplePatternTest {
         );
 
         boolean flag6 = false;
-        matches(width6, side6, corner6, flag6,
+        match(width6, side6, corner6, flag6,
                 10D, "top",    Side.TOP,    true,  () -> out.println("side[" + side6 + "]=" + width6 +
                                                                      " # " + corner6 + " # " + flag6),
                 15D, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side6 + "]=" + width6 +
@@ -820,24 +821,24 @@ public class TuplePatternTest {
     }
 
     @Test
-    public void matchesAsStatementWithDefaultTest() {
+    public void matchAsStatementWithDefaultTest() {
         /* 1 */
         byte width1 = 15;
         String side1 = "bottom";
 
-        matches(width1, side1).as(
+        match(width1, side1).as(
                 (byte) 10, "top", () -> out.println("side[" + side1 + "]=" + width1),
                 Else.class,       () -> out.println("side[none]=" + 0)
         );
 
         Side corner1 = Side.BOTTOM;
-        matches(width1, side1, corner1).as(
+        match(width1, side1, corner1).as(
                 (byte) 10, "top", Side.TOP, () -> out.println("side[" + side1 + "]=" + width1 + " # " + corner1),
                 Else.class, () -> out.println("side[none]=" + 0 + " # " + Side.NONE)
         );
 
         boolean flag1 = false;
-        matches(width1, side1, corner1, flag1).as(
+        match(width1, side1, corner1, flag1).as(
                 (byte) 10, "top", Side.TOP, true, () -> out.println("side[" + side1 + "]=" + width1 +
                                                         " # " + corner1 + " # " + flag1),
                 Else.class, () -> out.println("side[none]=" + 0 + " # " + Side.NONE + " # " + 0)
@@ -847,7 +848,7 @@ public class TuplePatternTest {
         short width2 = 20;
         String side2 = "top";
 
-        matches(width2, side2).as(
+        match(width2, side2).as(
                 (short) 10, "top",    () -> out.println("side[" + side2 + "]=" + width2),
                 (short) 15, "bottom", () -> out.println("side[" + side2 + "]=" + width2),
                 Else.class,           () -> out.println("side[none]=" + 0)
@@ -855,14 +856,14 @@ public class TuplePatternTest {
 
         Side corner2 = Side.TOP;
 
-        matches(width2, side2, corner2).as(
+        match(width2, side2, corner2).as(
                 (short) 10, "top",    Side.TOP,    () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 (short) 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 Else.class, () -> out.println("side[none]=" + 0 + " # " + Side.NONE)
         );
 
         boolean flag2 = false;
-        matches(width2, side2, corner2, flag2).as(
+        match(width2, side2, corner2, flag2).as(
                 (short) 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side2 + "]=" + width2 +
                                                                 " # " + corner2 + " # " + flag2),
                 (short) 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side2 + "]=" + width2 +
@@ -874,7 +875,7 @@ public class TuplePatternTest {
         int width3 = 25;
         String side3 = "right";
 
-        matches(width3, side3).as(
+        match(width3, side3).as(
                 10, "top",    () -> out.println("side[" + side3 + "]=" + width3),
                 15, "bottom", () -> out.println("side[" + side3 + "]=" + width3),
                 20, "left",   () -> out.println("side[" + side3 + "]=" + width3),
@@ -883,7 +884,7 @@ public class TuplePatternTest {
 
         Side corner3 = Side.RIGHT;
 
-        matches(width3, side3, corner3).as(
+        match(width3, side3, corner3).as(
                 10, "top",    Side.TOP,    () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 20, "left",   Side.LEFT,   () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
@@ -891,7 +892,7 @@ public class TuplePatternTest {
         );
 
         boolean flag3 = true;
-        matches(width3, side3, corner3, flag3).as(
+        match(width3, side3, corner3, flag3).as(
                 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side3 + "]=" + width3 +
                                                         " # " + corner3 + " # " + flag3),
                 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side3 + "]=" + width3 +
@@ -905,7 +906,7 @@ public class TuplePatternTest {
         long width4 = 30;
         String side4 = "left";
 
-        matches(width4, side4).as(
+        match(width4, side4).as(
                 10L, "top",    () -> out.println("side[" + side4 + "]=" + width4),
                 15L, "bottom", () -> out.println("side[" + side4 + "]=" + width4),
                 20L, "left",   () -> out.println("side[" + side4 + "]=" + width4),
@@ -915,7 +916,7 @@ public class TuplePatternTest {
 
         Side corner4 = Side.LEFT;
 
-        matches(width4, side4, corner4).as(
+        match(width4, side4, corner4).as(
                 10L, "top",    Side.TOP,    () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 15L, "bottom", Side.BOTTOM, () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 20L, "left",   Side.LEFT,   () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
@@ -924,7 +925,7 @@ public class TuplePatternTest {
         );
 
         boolean flag4 = false;
-        matches(width4, side4, corner4, flag4).as(
+        match(width4, side4, corner4, flag4).as(
                 10L, "top",    Side.TOP,    true,  () -> out.println("side[" + side4 + "]=" + width4 +
                                                          " # " + corner4 + " # " + flag4),
                 15L, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side4 + "]=" + width4 +
@@ -940,7 +941,7 @@ public class TuplePatternTest {
         float width5 = 35.0F;
         String side5 = "top-left";
 
-        matches(width5, side5).as(
+        match(width5, side5).as(
                 10.0F, "top",    () -> out.println("side[" + side5 + "]=" + width5),
                 15.0F, "bottom", () -> out.println("side[" + side5 + "]=" + width5),
                 20.0F, "left",   () -> out.println("side[" + side5 + "]=" + width5),
@@ -951,7 +952,7 @@ public class TuplePatternTest {
 
         Side corner5 = Side.TOP_LEFT;
 
-        matches(width5, side5, corner5).as(
+        match(width5, side5, corner5).as(
                 10.0F, "top",    Side.TOP,    () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 15.0F, "bottom", Side.BOTTOM, () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 20.0F, "left",   Side.LEFT,   () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
@@ -961,7 +962,7 @@ public class TuplePatternTest {
         );
 
         boolean flag5 = true;
-        matches(width5, side5, corner5, flag5).as(
+        match(width5, side5, corner5, flag5).as(
                 10F, "top",    Side.TOP,    true,  () -> out.println("side[" + side5 + "]=" + width5 +
                                                          " # " + corner5 + " # " + flag5),
                 15F, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side5 + "]=" + width5 +
@@ -979,7 +980,7 @@ public class TuplePatternTest {
         double width6 = 40.0D;
         String side6 = "top-right";
 
-        matches(width6, side6).as(
+        match(width6, side6).as(
                 10.0D, "top",    () -> out.println("side[" + side6 + "]=" + width6),
                 15.0D, "bottom", () -> out.println("side[" + side6 + "]=" + width6),
                 20.0D, "left",   () -> out.println("side[" + side6 + "]=" + width6),
@@ -991,7 +992,7 @@ public class TuplePatternTest {
 
         Side corner6 = Side.TOP_RIGHT;
 
-        matches(width6, side6, corner6).as(
+        match(width6, side6, corner6).as(
                 10.0D, "top",    Side.TOP,    () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 15.0D, "bottom", Side.BOTTOM, () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 20.0D, "left",   Side.LEFT,   () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
@@ -1002,7 +1003,7 @@ public class TuplePatternTest {
         );
 
         boolean flag6 = false;
-        matches(width6, side6, corner6, flag6).as(
+        match(width6, side6, corner6, flag6).as(
                 10D, "top",    Side.TOP,    true,  () -> out.println("side[" + side6 + "]=" + width6 +
                                                          " # " + corner6 + " # " + flag6),
                 15D, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side6 + "]=" + width6 +
@@ -1020,24 +1021,24 @@ public class TuplePatternTest {
     }
 
     @Test
-    public void matchesStatementWithVarTest() {
+    public void matchStatementWithVarTest() {
         /* 1 */
         byte width1 = 15;
         String side1 = "bottom";
 
-        matches(width1, side1,
+        match(width1, side1,
                 (byte) 10, "top", () -> out.println("side[" + side1 + "]=" + width1),
                 Var.class, (w, s) -> out.println("side[none]=" + w)
         );
 
         Side corner1 = Side.BOTTOM;
-        matches(width1, side1, corner1,
+        match(width1, side1, corner1,
                 (byte) 10, "top", Side.TOP, () -> out.println("side[" + side1 + "]=" + width1 + " # " + corner1),
                 Var.class, (w, s, c) -> out.println("side[none]=" + w + " # " + s)
         );
 
         boolean flag1 = false;
-        matches(width1, side1, corner1, flag1,
+        match(width1, side1, corner1, flag1,
                 (byte) 10, "top", Side.TOP, true, () -> out.println("side[" + side1 + "]=" + width1 +
                                                         " # " + corner1 + " # " + flag1),
                 Var.class, (w, s, c, f) -> out.println("side[none]=" + w + " # " + s + " # " + c)
@@ -1047,7 +1048,7 @@ public class TuplePatternTest {
         short width2 = 20;
         String side2 = "top";
 
-        matches(width2, side2,
+        match(width2, side2,
                 (short) 10, "top",    () -> out.println("side[" + side2 + "]=" + width2),
                 (short) 15, "bottom", () -> out.println("side[" + side2 + "]=" + width2),
                 Var.class, (w, s) -> out.println("side[none]=" + w)
@@ -1055,14 +1056,14 @@ public class TuplePatternTest {
 
         Side corner2 = Side.TOP;
 
-        matches(width2, side2, corner2,
+        match(width2, side2, corner2,
                 (short) 10, "top",    Side.TOP,    () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 (short) 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 Var.class, (w, s, c) -> out.println("side[none]=" + w + " # " + s)
         );
 
         boolean flag2 = false;
-        matches(width2, side2, corner2, flag2,
+        match(width2, side2, corner2, flag2,
                 (short) 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side2 + "]=" + width2 +
                                                                 " # " + corner2 + " # " + flag2),
                 (short) 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side2 + "]=" + width2 +
@@ -1074,7 +1075,7 @@ public class TuplePatternTest {
         int width3 = 25;
         String side3 = "right";
 
-        matches(width3, side3,
+        match(width3, side3,
                 10, "top",    () -> out.println("side[" + side3 + "]=" + width3),
                 15, "bottom", () -> out.println("side[" + side3 + "]=" + width3),
                 20, "left",   () -> out.println("side[" + side3 + "]=" + width3),
@@ -1083,7 +1084,7 @@ public class TuplePatternTest {
 
         Side corner3 = Side.RIGHT;
 
-        matches(width3, side3, corner3,
+        match(width3, side3, corner3,
                 10, "top",    Side.TOP,    () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 20, "left",   Side.LEFT,   () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
@@ -1091,7 +1092,7 @@ public class TuplePatternTest {
         );
 
         boolean flag3 = true;
-        matches(width3, side3, corner3, flag3,
+        match(width3, side3, corner3, flag3,
                 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side3 + "]=" + width3 +
                                                         " # " + corner3 + " # " + flag3),
                 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side3 + "]=" + width3 +
@@ -1105,7 +1106,7 @@ public class TuplePatternTest {
         long width4 = 30;
         String side4 = "left";
 
-        matches(width4, side4,
+        match(width4, side4,
                 10L, "top",    () -> out.println("side[" + side4 + "]=" + width4),
                 15L, "bottom", () -> out.println("side[" + side4 + "]=" + width4),
                 20L, "left",   () -> out.println("side[" + side4 + "]=" + width4),
@@ -1115,7 +1116,7 @@ public class TuplePatternTest {
 
         Side corner4 = Side.LEFT;
 
-        matches(width4, side4, corner4,
+        match(width4, side4, corner4,
                 10L, "top",    Side.TOP,    () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 15L, "bottom", Side.BOTTOM, () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 20L, "left",   Side.LEFT,   () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
@@ -1124,7 +1125,7 @@ public class TuplePatternTest {
         );
 
         boolean flag4 = false;
-        matches(width4, side4, corner4, flag4,
+        match(width4, side4, corner4, flag4,
                 10L, "top",    Side.TOP,    true,  () -> out.println("side[" + side4 + "]=" + width4 +
                                                          " # " + corner4 + " # " + flag4),
                 15L, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side4 + "]=" + width4 +
@@ -1140,7 +1141,7 @@ public class TuplePatternTest {
         float width5 = 35.0F;
         String side5 = "top-left";
 
-        matches(width5, side5,
+        match(width5, side5,
                 10.0F, "top",    () -> out.println("side[" + side5 + "]=" + width5),
                 15.0F, "bottom", () -> out.println("side[" + side5 + "]=" + width5),
                 20.0F, "left",   () -> out.println("side[" + side5 + "]=" + width5),
@@ -1151,7 +1152,7 @@ public class TuplePatternTest {
 
         Side corner5 = Side.TOP_LEFT;
 
-        matches(width5, side5, corner5,
+        match(width5, side5, corner5,
                 10.0F, "top",    Side.TOP,    () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 15.0F, "bottom", Side.BOTTOM, () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 20.0F, "left",   Side.LEFT,   () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
@@ -1161,7 +1162,7 @@ public class TuplePatternTest {
         );
 
         boolean flag5 = true;
-        matches(width5, side5, corner5, flag5,
+        match(width5, side5, corner5, flag5,
                 10F, "top",    Side.TOP,    true,  () -> out.println("side[" + side5 + "]=" + width5 +
                                                         " # " + corner5 + " # " + flag5),
                 15F, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side5 + "]=" + width5 +
@@ -1179,7 +1180,7 @@ public class TuplePatternTest {
         double width6 = 40.0D;
         String side6 = "top-right";
 
-        matches(width6, side6,
+        match(width6, side6,
                 10.0D, "top",    () -> out.println("side[" + side6 + "]=" + width6),
                 15.0D, "bottom", () -> out.println("side[" + side6 + "]=" + width6),
                 20.0D, "left",   () -> out.println("side[" + side6 + "]=" + width6),
@@ -1191,7 +1192,7 @@ public class TuplePatternTest {
 
         Side corner6 = Side.TOP_RIGHT;
 
-        matches(width6, side6, corner6,
+        match(width6, side6, corner6,
                 10.0D, "top",    Side.TOP,    () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 15.0D, "bottom", Side.BOTTOM, () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 20.0D, "left",   Side.LEFT,   () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
@@ -1202,7 +1203,7 @@ public class TuplePatternTest {
         );
 
         boolean flag6 = false;
-        matches(width6, side6, corner6, flag6,
+        match(width6, side6, corner6, flag6,
                 10D, "top",    Side.TOP,    true,  () -> out.println("side[" + side6 + "]=" + width6 +
                                                          " # " + corner6 + " # " + flag6),
                 15D, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side6 + "]=" + width6 +
@@ -1220,24 +1221,24 @@ public class TuplePatternTest {
     }
 
     @Test
-    public void matchesAsStatementWithVarTest() {
+    public void matchAsStatementWithVarTest() {
         /* 1 */
         byte width1 = 15;
         String side1 = "bottom";
 
-        matches(width1, side1).as(
+        match(width1, side1).as(
                 (byte) 10, "top", () -> out.println("side[" + side1 + "]=" + width1),
                 Var.class, (w, s) -> out.println("side[none]=" + w)
         );
 
         Side corner1 = Side.BOTTOM;
-        matches(width1, side1, corner1).as(
+        match(width1, side1, corner1).as(
                 (byte) 10, "top", Side.TOP, () -> out.println("side[" + side1 + "]=" + width1 + " # " + corner1),
                 Var.class, (w, s, c) -> out.println("side[none]=" + w + " # " + s)
         );
 
         boolean flag1 = false;
-        matches(width1, side1, corner1, flag1).as(
+        match(width1, side1, corner1, flag1).as(
                 (byte) 10, "top", Side.TOP, true, () -> out.println("side[" + side1 + "]=" + width1 +
                                                         " # " + corner1 + " # " + flag1),
                 Var.class, (w, s, c, f) -> out.println("side[none]=" + w + " # " + s + " # " + c)
@@ -1247,7 +1248,7 @@ public class TuplePatternTest {
         short width2 = 20;
         String side2 = "top";
 
-        matches(width2, side2).as(
+        match(width2, side2).as(
                 (short) 10, "top",    () -> out.println("side[" + side2 + "]=" + width2),
                 (short) 15, "bottom", () -> out.println("side[" + side2 + "]=" + width2),
                 Var.class, (w, s) -> out.println("side[none]=" + w)
@@ -1255,14 +1256,14 @@ public class TuplePatternTest {
 
         Side corner2 = Side.TOP;
 
-        matches(width2, side2, corner2).as(
+        match(width2, side2, corner2).as(
                 (short) 10, "top",    Side.TOP,    () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 (short) 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side2 + "]=" + width2 + " # " + corner2),
                 Var.class, (w, s, c) -> out.println("side[none]=" + w + " # " + s)
         );
 
         boolean flag2 = false;
-        matches(width2, side2, corner2, flag2).as(
+        match(width2, side2, corner2, flag2).as(
                 (short) 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side2 + "]=" + width2 +
                                                                 " # " + corner2 + " # " + flag2),
                 (short) 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side2 + "]=" + width2 +
@@ -1274,7 +1275,7 @@ public class TuplePatternTest {
         int width3 = 25;
         String side3 = "right";
 
-        matches(width3, side3).as(
+        match(width3, side3).as(
                 10, "top",    () -> out.println("side[" + side3 + "]=" + width3),
                 15, "bottom", () -> out.println("side[" + side3 + "]=" + width3),
                 20, "left",   () -> out.println("side[" + side3 + "]=" + width3),
@@ -1283,7 +1284,7 @@ public class TuplePatternTest {
 
         Side corner3 = Side.RIGHT;
 
-        matches(width3, side3, corner3).as(
+        match(width3, side3, corner3).as(
                 10, "top",    Side.TOP,    () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 15, "bottom", Side.BOTTOM, () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
                 20, "left",   Side.LEFT,   () -> out.println("side[" + side3 + "]=" + width3 + " # " + corner3),
@@ -1291,7 +1292,7 @@ public class TuplePatternTest {
         );
 
         boolean flag3 = true;
-        matches(width3, side3, corner3, flag3).as(
+        match(width3, side3, corner3, flag3).as(
                 10, "top",    Side.TOP,    true,  () -> out.println("side[" + side3 + "]=" + width3 +
                                                         " # " + corner3 + " # " + flag3),
                 15, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side3 + "]=" + width3 +
@@ -1305,7 +1306,7 @@ public class TuplePatternTest {
         long width4 = 30;
         String side4 = "left";
 
-        matches(width4, side4).as(
+        match(width4, side4).as(
                 10L, "top",    () -> out.println("side[" + side4 + "]=" + width4),
                 15L, "bottom", () -> out.println("side[" + side4 + "]=" + width4),
                 20L, "left",   () -> out.println("side[" + side4 + "]=" + width4),
@@ -1315,7 +1316,7 @@ public class TuplePatternTest {
 
         Side corner4 = Side.LEFT;
 
-        matches(width4, side4, corner4).as(
+        match(width4, side4, corner4).as(
                 10L, "top",    Side.TOP,    () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 15L, "bottom", Side.BOTTOM, () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
                 20L, "left",   Side.LEFT,   () -> out.println("side[" + side4 + "]=" + width4 + " # " + corner4),
@@ -1324,7 +1325,7 @@ public class TuplePatternTest {
         );
 
         boolean flag4 = false;
-        matches(width4, side4, corner4, flag4).as(
+        match(width4, side4, corner4, flag4).as(
                 10L, "top",    Side.TOP,    true,  () -> out.println("side[" + side4 + "]=" + width4 +
                                                          " # " + corner4 + " # " + flag4),
                 15L, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side4 + "]=" + width4 +
@@ -1340,7 +1341,7 @@ public class TuplePatternTest {
         float width5 = 35.0F;
         String side5 = "top-left";
 
-        matches(width5, side5).as(
+        match(width5, side5).as(
                 10.0F, "top",    () -> out.println("side[" + side5 + "]=" + width5),
                 15.0F, "bottom", () -> out.println("side[" + side5 + "]=" + width5),
                 20.0F, "left",   () -> out.println("side[" + side5 + "]=" + width5),
@@ -1351,7 +1352,7 @@ public class TuplePatternTest {
 
         Side corner5 = Side.TOP_LEFT;
 
-        matches(width5, side5, corner5).as(
+        match(width5, side5, corner5).as(
                 10.0F, "top",    Side.TOP,    () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 15.0F, "bottom", Side.BOTTOM, () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
                 20.0F, "left",   Side.LEFT,   () -> out.println("side[" + side5 + "]=" + width5 + " # " + corner5),
@@ -1361,7 +1362,7 @@ public class TuplePatternTest {
         );
 
         boolean flag5 = true;
-        matches(width5, side5, corner5, flag5).as(
+        match(width5, side5, corner5, flag5).as(
                 10F, "top",    Side.TOP,    true,  () -> out.println("side[" + side5 + "]=" + width5 +
                                                         " # " + corner5 + " # " + flag5),
                 15F, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side5 + "]=" + width5 +
@@ -1379,7 +1380,7 @@ public class TuplePatternTest {
         double width6 = 40.0D;
         String side6 = "top-right";
 
-        matches(width6, side6).as(
+        match(width6, side6).as(
                 10.0D, "top",    () -> out.println("side[" + side6 + "]=" + width6),
                 15.0D, "bottom", () -> out.println("side[" + side6 + "]=" + width6),
                 20.0D, "left",   () -> out.println("side[" + side6 + "]=" + width6),
@@ -1391,7 +1392,7 @@ public class TuplePatternTest {
 
         Side corner6 = Side.TOP_RIGHT;
 
-        matches(width6, side6, corner6).as(
+        match(width6, side6, corner6).as(
                 10.0D, "top",    Side.TOP,    () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 15.0D, "bottom", Side.BOTTOM, () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
                 20.0D, "left",   Side.LEFT,   () -> out.println("side[" + side6 + "]=" + width6 + " # " + corner6),
@@ -1402,7 +1403,7 @@ public class TuplePatternTest {
         );
 
         boolean flag6 = false;
-        matches(width6, side6, corner6, flag6).as(
+        match(width6, side6, corner6, flag6).as(
                 10D, "top",    Side.TOP,    true,  () -> out.println("side[" + side6 + "]=" + width6 +
                                                          " # " + corner6 + " # " + flag6),
                 15D, "bottom", Side.BOTTOM, false, () -> out.println("side[" + side6 + "]=" + width6 +

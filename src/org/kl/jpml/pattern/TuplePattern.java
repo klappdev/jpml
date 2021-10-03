@@ -65,7 +65,7 @@ public final class TuplePattern {
         branch.accept(leftValue, rightValue);
     }
 
-    public static <V1, V2> TuplePattern matches(V1 leftValue, V2 rightValue) {
+    public static <V1, V2> TuplePattern match(V1 leftValue, V2 rightValue) {
         biData = Tuple.of(leftValue, rightValue);
 
         if (instance == null) {
@@ -95,7 +95,7 @@ public final class TuplePattern {
         branch.accept(leftValue, middleValue, rightValue);
     }
 
-    public static <V1, V2, V3> TuplePattern matches(V1 leftValue, V2 middleValue, V3 rightValue) {
+    public static <V1, V2, V3> TuplePattern match(V1 leftValue, V2 middleValue, V3 rightValue) {
         triData = Tuple.of(leftValue, middleValue, rightValue);
 
         if (instance == null) {
@@ -127,7 +127,7 @@ public final class TuplePattern {
         branch.accept(leftValue, topValue, rightValue, bottomValue);
     }
 
-    public static <V1, V2, V3, V4> TuplePattern matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue) {
+    public static <V1, V2, V3, V4> TuplePattern match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue) {
         quarData = Tuple.of(leftValue, bottomValue, rightValue, topValue);
 
         if (instance == null) {
@@ -138,8 +138,8 @@ public final class TuplePattern {
     }
 
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData, V2 firstRightData, Runnable firstBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -154,22 +154,22 @@ public final class TuplePattern {
 
     public <V1, V2>
     void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch);
     }
 
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 Tuple.Tuple2<V1, V2> item, Runnable firstBranch) {
-        matches(leftValue, rightValue,
+    void match(V1 leftValue, V2 rightValue,
+               Tuple.Tuple2<V1, V2> item, Runnable firstBranch) {
+        match(leftValue, rightValue,
                 (V1) item.first(), (V2) item.second(), firstBranch);
     }
 
     @SuppressWarnings("unused")
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
-                 Class<Else> elseClass, Runnable elseBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -185,16 +185,16 @@ public final class TuplePattern {
     public <V1, V2>
     void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 elseClass, elseBranch);
     }
 
     @SuppressWarnings("unused")
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
-                 Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -210,14 +210,14 @@ public final class TuplePattern {
     public <V1, V2>
     void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
-        matches((V1) biData.first(), (V2) biData.second(),
+        match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 varClass, varBranch);
     }
 
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -232,23 +232,23 @@ public final class TuplePattern {
 
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch);
     }
 
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 Tuple.Tuple3<V1, V2, V3> item, Runnable firstBranch) {
-        matches(leftValue, middleValue, rightValue,
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               Tuple.Tuple3<V1, V2, V3> item, Runnable firstBranch) {
+        match(leftValue, middleValue, rightValue,
                 (V1) item.first(), (V2) item.second(), item.third(), firstBranch
         );
     }
 
     @SuppressWarnings("unused")
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -264,16 +264,16 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 elseClass, elseBranch);
     }
 
     @SuppressWarnings("unused")
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
-                 Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
@@ -289,15 +289,15 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
-        matches((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
+        match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 varClass, varBranch);
     }
 
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,  V2 firstBottomData,
-                 V3 firstRightData, V4 firstTopData, Runnable firstBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -316,24 +316,24 @@ public final class TuplePattern {
     public <V1, V2, V3, V4>
     void as(V1 firstLeftData,  V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch);
     }
 
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 Tuple.Tuple4<V1, V2, V3, V4> item, Runnable firstBranch) {
-        matches(leftValue, bottomValue, rightValue, topValue,
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               Tuple.Tuple4<V1, V2, V3, V4> item, Runnable firstBranch) {
+        match(leftValue, bottomValue, rightValue, topValue,
                 (V1) item.first(), (V2) item.second(), (V3) item.third(), item.fourth(), firstBranch
         );
     }
 
     @SuppressWarnings("unused")
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,  V2 firstBottomData,
-                 V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -353,17 +353,17 @@ public final class TuplePattern {
     void as(V1 firstLeftData,  V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 elseClass, elseBranch);
     }
 
     @SuppressWarnings("unused")
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,  V2 firstBottomData,
-                 V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-                 Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -383,15 +383,15 @@ public final class TuplePattern {
     void as(V1 firstLeftData,  V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
-        matches((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
+        match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 varClass, varBranch);
     }
 
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass())) {
@@ -410,26 +410,26 @@ public final class TuplePattern {
     public <V1, V2>
     void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch);
     }
 
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 Tuple.Tuple2<V1, V2> firstItem, Runnable firstBranch,
-                 Tuple.Tuple2<V1, V2>  secondItem, Runnable secondBranch) {
-        matches(leftValue, rightValue,
+    void match(V1 leftValue, V2 rightValue,
+               Tuple.Tuple2<V1, V2> firstItem, Runnable firstBranch,
+               Tuple.Tuple2<V1, V2>  secondItem, Runnable secondBranch) {
+        match(leftValue, rightValue,
                 firstItem.first(), firstItem.second(), firstBranch,
                 secondItem.first(), secondItem.second(), secondBranch);
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass())) {
@@ -449,7 +449,7 @@ public final class TuplePattern {
     void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 elseClass, elseBranch);
@@ -457,10 +457,10 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass())) {
@@ -480,16 +480,16 @@ public final class TuplePattern {
     void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
-        matches((V1) biData.first(), (V2) biData.second(),
+        match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 varClass, varBranch);
     }
 
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
@@ -508,26 +508,26 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch);
     }
 
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 Tuple.Tuple3<V1, V2, V3> firstItem, Runnable firstBranch,
-                 Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch) {
-        matches(leftValue, middleValue, rightValue,
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               Tuple.Tuple3<V1, V2, V3> firstItem, Runnable firstBranch,
+               Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch) {
+        match(leftValue, middleValue, rightValue,
                 (V1) firstItem.first(), firstItem.second(), firstItem.third(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondBranch);
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
@@ -547,7 +547,7 @@ public final class TuplePattern {
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 elseClass, elseBranch);
@@ -555,10 +555,10 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
@@ -578,18 +578,18 @@ public final class TuplePattern {
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
-        matches((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
+        match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 varClass, varBranch);
     }
 
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch)  {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -615,28 +615,28 @@ public final class TuplePattern {
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
             V1 secondLeftData,  V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch);
     }
 
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 Tuple.Tuple4<V1, V2, V3, V4> firstItem, Runnable firstBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch) {
-        matches(leftValue, bottomValue, rightValue, topValue,
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               Tuple.Tuple4<V1, V2, V3, V4> firstItem, Runnable firstBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch) {
+        match(leftValue, bottomValue, rightValue, topValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstItem.fourth(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), firstItem.fourth(), secondBranch);
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -663,7 +663,7 @@ public final class TuplePattern {
             V1 secondLeftData,  V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 elseClass, elseBranch);
@@ -671,12 +671,12 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 Class<Var> elseClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               Class<Var> elseClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -703,7 +703,7 @@ public final class TuplePattern {
             V1 secondLeftData,  V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
-        matches((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
+        match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 varClass, varBranch);
@@ -711,10 +711,10 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass(),
@@ -737,18 +737,18 @@ public final class TuplePattern {
     void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
             V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch);
     }
 
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 Tuple.Tuple2<V1, V2> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch,
-                 Tuple.Tuple2<V1, V2> thirdItem,  Runnable thirdBranch) {
-        matches(leftValue, rightValue,
+    void match(V1 leftValue, V2 rightValue,
+               Tuple.Tuple2<V1, V2> firstItem, Runnable firstBranch,
+               Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch,
+               Tuple.Tuple2<V1, V2> thirdItem, Runnable thirdBranch) {
+        match(leftValue, rightValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdBranch);
@@ -756,11 +756,11 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -784,7 +784,7 @@ public final class TuplePattern {
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
             V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -793,11 +793,11 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 Class<Var> elseClass, BiConsumer<V1, V2> varBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               Class<Var> elseClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -821,7 +821,7 @@ public final class TuplePattern {
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
             V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
-        matches((V1) biData.first(), (V2) biData.second(),
+        match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -830,10 +830,10 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -856,18 +856,18 @@ public final class TuplePattern {
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
             V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch);
     }
 
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 Tuple.Tuple3<V1, V2, V3> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch,
-                 Tuple.Tuple3<V1, V2, V3> thirdItem,  Runnable thirdBranch) {
-        matches(leftValue, middleValue, rightValue,
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               Tuple.Tuple3<V1, V2, V3> firstItem, Runnable firstBranch,
+               Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch,
+               Tuple.Tuple3<V1, V2, V3> thirdItem, Runnable thirdBranch) {
+        match(leftValue, middleValue, rightValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdItem.third(), thirdBranch);
@@ -875,11 +875,11 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -903,7 +903,7 @@ public final class TuplePattern {
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
             V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -912,11 +912,11 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -940,7 +940,7 @@ public final class TuplePattern {
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
             V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
-        matches((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
+        match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -949,13 +949,13 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch)  {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -988,18 +988,18 @@ public final class TuplePattern {
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
             V1 thirdLeftData,   V2 thirdBottomData,
             V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch);
     }
 
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 Tuple.Tuple4<V1, V2, V3, V4> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> thirdItem,  Runnable thirdBranch) {
-        matches(leftValue, bottomValue, rightValue, topValue,
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               Tuple.Tuple4<V1, V2, V3, V4> firstItem, Runnable firstBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> thirdItem, Runnable thirdBranch) {
+        match(leftValue, bottomValue, rightValue, topValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstItem.fourth(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondItem.fourth(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdItem.third(), thirdItem.fourth(), thirdBranch);
@@ -1007,14 +1007,14 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -1048,7 +1048,7 @@ public final class TuplePattern {
             V1 thirdLeftData,   V2 thirdBottomData,
             V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -1057,14 +1057,14 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -1098,7 +1098,7 @@ public final class TuplePattern {
             V1 thirdLeftData,   V2 thirdBottomData,
             V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
-        matches((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
+        match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -1107,11 +1107,11 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass(),
@@ -1138,7 +1138,7 @@ public final class TuplePattern {
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
             V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -1146,12 +1146,12 @@ public final class TuplePattern {
     }
 
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 Tuple.Tuple2<V1, V2> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch,
-                 Tuple.Tuple2<V1, V2> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple2<V1, V2> fourthItem,  Runnable fourthBranch) {
-        matches(leftValue, rightValue,
+    void match(V1 leftValue, V2 rightValue,
+               Tuple.Tuple2<V1, V2> firstItem, Runnable firstBranch,
+               Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch,
+               Tuple.Tuple2<V1, V2> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple2<V1, V2> fourthItem, Runnable fourthBranch) {
+        match(leftValue, rightValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdBranch,
@@ -1160,12 +1160,12 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -1193,7 +1193,7 @@ public final class TuplePattern {
             V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -1203,12 +1203,12 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                 Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
+               Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -1236,7 +1236,7 @@ public final class TuplePattern {
             V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
-        matches((V1) biData.first(), (V2) biData.second(),
+        match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -1246,11 +1246,11 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -1277,7 +1277,7 @@ public final class TuplePattern {
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
             V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -1285,12 +1285,12 @@ public final class TuplePattern {
     }
 
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 Tuple.Tuple3<V1, V2, V3> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch,
-                 Tuple.Tuple3<V1, V2, V3> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple3<V1, V2, V3> fourthItem, Runnable fourthBranch) {
-        matches(leftValue, middleValue, rightValue,
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               Tuple.Tuple3<V1, V2, V3> firstItem, Runnable firstBranch,
+               Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch,
+               Tuple.Tuple3<V1, V2, V3> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple3<V1, V2, V3> fourthItem, Runnable fourthBranch) {
+        match(leftValue, middleValue, rightValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdItem.third(), thirdBranch,
@@ -1299,12 +1299,12 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                         firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                         secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -1332,7 +1332,7 @@ public final class TuplePattern {
             V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -1342,12 +1342,12 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
+               Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -1375,7 +1375,7 @@ public final class TuplePattern {
             V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
-        matches((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
+        match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -1385,15 +1385,15 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(), rightValue.getClass(), topValue.getClass(),
                 firstLeftData.getClass(), firstBottomData.getClass(), firstRightData.getClass(), firstTopData.getClass(),
                 secondLeftData.getClass(), secondBottomData.getClass(), secondRightData.getClass(), secondTopData.getClass(),
@@ -1428,7 +1428,7 @@ public final class TuplePattern {
             V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
             V1 fourthLeftData,  V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -1436,12 +1436,12 @@ public final class TuplePattern {
     }
 
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 Tuple.Tuple4<V1, V2, V3, V4> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> fourthItem, Runnable fourthBranch) {
-        matches(leftValue, bottomValue, rightValue, topValue,
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               Tuple.Tuple4<V1, V2, V3, V4> firstItem, Runnable firstBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> fourthItem, Runnable fourthBranch) {
+        match(leftValue, bottomValue, rightValue, topValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstItem.fourth(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondItem.fourth(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdItem.third(), thirdItem.fourth(), thirdBranch,
@@ -1450,16 +1450,16 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -1500,7 +1500,7 @@ public final class TuplePattern {
             V1 fourthLeftData,  V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -1510,16 +1510,16 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
+               Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),  firstBottomData.getClass(),
@@ -1560,7 +1560,7 @@ public final class TuplePattern {
             V1 fourthLeftData,  V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
-        matches((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
+        match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -1570,12 +1570,12 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch)  {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -1606,7 +1606,7 @@ public final class TuplePattern {
             V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
             V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -1615,13 +1615,13 @@ public final class TuplePattern {
     }
 
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 Tuple.Tuple2<V1, V2> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch,
-                 Tuple.Tuple2<V1, V2> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple2<V1, V2> fourthItem, Runnable fourthBranch,
-                 Tuple.Tuple2<V1, V2> fifthItem,  Runnable fifthBranch) {
-        matches(leftValue, rightValue,
+    void match(V1 leftValue, V2 rightValue,
+               Tuple.Tuple2<V1, V2> firstItem, Runnable firstBranch,
+               Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch,
+               Tuple.Tuple2<V1, V2> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple2<V1, V2> fourthItem, Runnable fourthBranch,
+               Tuple.Tuple2<V1, V2> fifthItem, Runnable fifthBranch) {
+        match(leftValue, rightValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdBranch,
@@ -1631,13 +1631,13 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
+               Class<Else> elseClass, Runnable elseBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -1669,7 +1669,7 @@ public final class TuplePattern {
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
             V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -1680,13 +1680,13 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-                 Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
+               Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -1718,7 +1718,7 @@ public final class TuplePattern {
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
             V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
-        matches((V1) biData.first(), (V2) biData.second(),
+        match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -1729,12 +1729,12 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch)  {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -1765,7 +1765,7 @@ public final class TuplePattern {
             V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
             V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -1774,13 +1774,13 @@ public final class TuplePattern {
     }
 
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 Tuple.Tuple3<V1, V2, V3> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch,
-                 Tuple.Tuple3<V1, V2, V3> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple3<V1, V2, V3> fourthItem, Runnable fourthBranch,
-                 Tuple.Tuple3<V1, V2, V3> fifthItem, Runnable fifthBranch) {
-        matches(leftValue, middleValue, rightValue,
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               Tuple.Tuple3<V1, V2, V3> firstItem, Runnable firstBranch,
+               Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch,
+               Tuple.Tuple3<V1, V2, V3> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple3<V1, V2, V3> fourthItem, Runnable fourthBranch,
+               Tuple.Tuple3<V1, V2, V3> fifthItem, Runnable fifthBranch) {
+        match(leftValue, middleValue, rightValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdItem.third(), thirdBranch,
@@ -1790,13 +1790,13 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -1828,7 +1828,7 @@ public final class TuplePattern {
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
             V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -1839,13 +1839,13 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-                 Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
+               Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -1877,7 +1877,7 @@ public final class TuplePattern {
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
             V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
-        matches((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
+        match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -1888,17 +1888,17 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 V1 fifthLeftData,   V2 fifthBottomData,
-                 V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch)  {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthBottomData,
+               V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -1945,7 +1945,7 @@ public final class TuplePattern {
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
             V1 fifthLeftData,   V2 fifthBottomData,
             V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -1954,13 +1954,13 @@ public final class TuplePattern {
     }
 
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 Tuple.Tuple4<V1, V2, V3, V4> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> fourthItem, Runnable fourthBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> fifthItem,  Runnable fifthBranch) {
-        matches(leftValue, bottomValue, rightValue, topValue,
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               Tuple.Tuple4<V1, V2, V3, V4> firstItem, Runnable firstBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> fourthItem, Runnable fourthBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> fifthItem, Runnable fifthBranch) {
+        match(leftValue, bottomValue, rightValue, topValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstItem.fourth(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondItem.fourth(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdItem.third(), thirdItem.fourth(), thirdBranch,
@@ -1970,18 +1970,18 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 V1 fifthLeftData,   V2 fifthBottomData,
-                 V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthBottomData,
+               V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                         rightValue.getClass(), topValue.getClass(),
                                         firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -2029,7 +2029,7 @@ public final class TuplePattern {
             V1 fifthLeftData,   V2 fifthBottomData,
             V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -2040,18 +2040,18 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 V1 fifthLeftData,   V2 fifthBottomData,
-                 V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-                 Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthBottomData,
+               V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
+               Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -2099,7 +2099,7 @@ public final class TuplePattern {
             V1 fifthLeftData,   V2 fifthBottomData,
             V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
-        matches((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
+        match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -2110,13 +2110,13 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-                 V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch)  {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch)  {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                      firstLeftData.getClass(),  firstRightData.getClass(),
                                      secondLeftData.getClass(), secondRightData.getClass(),
@@ -2151,7 +2151,7 @@ public final class TuplePattern {
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
             V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
             V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -2161,14 +2161,14 @@ public final class TuplePattern {
     }
 
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 Tuple.Tuple2<V1, V2> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch,
-                 Tuple.Tuple2<V1, V2> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple2<V1, V2> fourthItem, Runnable fourthBranch,
-                 Tuple.Tuple2<V1, V2> fifthItem,  Runnable fifthBranch,
-                 Tuple.Tuple2<V1, V2> sixthItem,  Runnable sixthBranch) {
-        matches(leftValue, rightValue,
+    void match(V1 leftValue, V2 rightValue,
+               Tuple.Tuple2<V1, V2> firstItem, Runnable firstBranch,
+               Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch,
+               Tuple.Tuple2<V1, V2> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple2<V1, V2> fourthItem, Runnable fourthBranch,
+               Tuple.Tuple2<V1, V2> fifthItem, Runnable fifthBranch,
+               Tuple.Tuple2<V1, V2> sixthItem, Runnable sixthBranch) {
+        match(leftValue, rightValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdBranch,
@@ -2179,14 +2179,14 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-                 V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -2222,7 +2222,7 @@ public final class TuplePattern {
             V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
             V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(biData.first(), biData.second(),
+        match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -2234,14 +2234,14 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2>
-    void matches(V1 leftValue, V2 rightValue,
-                 V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-                 V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch,
-                 Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
+    void match(V1 leftValue, V2 rightValue,
+               V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch,
+               Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
                                     firstLeftData.getClass(),  firstRightData.getClass(),
                                     secondLeftData.getClass(), secondRightData.getClass(),
@@ -2277,7 +2277,7 @@ public final class TuplePattern {
             V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
             V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
-        matches((V1) biData.first(), (V2) biData.second(),
+        match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
                 thirdLeftData, thirdRightData, thirdBranch,
@@ -2289,13 +2289,13 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-                 V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch)  {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch)  {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -2330,7 +2330,7 @@ public final class TuplePattern {
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
             V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
             V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -2340,14 +2340,14 @@ public final class TuplePattern {
     }
 
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 Tuple.Tuple3<V1, V2, V3> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch,
-                 Tuple.Tuple3<V1, V2, V3> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple3<V1, V2, V3> fourthItem, Runnable fourthBranch,
-                 Tuple.Tuple3<V1, V2, V3> fifthItem,  Runnable fifthBranch,
-                 Tuple.Tuple3<V1, V2, V3> sixthItem,  Runnable sixthBranch) {
-        matches(leftValue, middleValue, rightValue,
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               Tuple.Tuple3<V1, V2, V3> firstItem, Runnable firstBranch,
+               Tuple.Tuple3<V1, V2, V3> secondItem, Runnable secondBranch,
+               Tuple.Tuple3<V1, V2, V3> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple3<V1, V2, V3> fourthItem, Runnable fourthBranch,
+               Tuple.Tuple3<V1, V2, V3> fifthItem, Runnable fifthBranch,
+               Tuple.Tuple3<V1, V2, V3> sixthItem, Runnable sixthBranch) {
+        match(leftValue, middleValue, rightValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdItem.third(), thirdBranch,
@@ -2358,14 +2358,14 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-                 V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -2401,7 +2401,7 @@ public final class TuplePattern {
             V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
             V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(triData.first(), triData.second(), triData.third(),
+        match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -2413,14 +2413,14 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3>
-    void matches(V1 leftValue, V2 middleValue, V3 rightValue,
-                 V1 firstLeftData,  V2 firstMiddleData,  V3 firstRightData,  Runnable firstBranch,
-                 V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-                 V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
-                 V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-                 V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-                 V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch,
-                 Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
+    void match(V1 leftValue, V2 middleValue, V3 rightValue,
+               V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch,
+               Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
@@ -2456,7 +2456,7 @@ public final class TuplePattern {
             V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
             V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
-        matches((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
+        match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
                 thirdLeftData, thirdMiddleData, thirdRightData, thirdBranch,
@@ -2468,19 +2468,19 @@ public final class TuplePattern {
 
     @SuppressWarnings("Duplicates")
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 V1 fifthLeftData,   V2 fifthBottomData,
-                 V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-                 V1 sixthLeftData,   V2 sixthBottomData,
-                 V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch)  {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthBottomData,
+               V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthBottomData,
+               V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch)  {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(), rightValue.getClass(), topValue.getClass(),
                 firstLeftData.getClass(),  firstBottomData.getClass(),  firstRightData.getClass(),  firstTopData.getClass(),
                 secondLeftData.getClass(), secondBottomData.getClass(), secondRightData.getClass(), secondTopData.getClass(),
@@ -2527,7 +2527,7 @@ public final class TuplePattern {
             V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
             V1 sixthLeftData,   V2 sixthBottomData,
             V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -2537,14 +2537,14 @@ public final class TuplePattern {
     }
 
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 Tuple.Tuple4<V1, V2, V3, V4> firstItem,  Runnable firstBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> thirdItem,  Runnable thirdBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> fourthItem, Runnable fourthBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> fifthItem,  Runnable fifthBranch,
-                 Tuple.Tuple4<V1, V2, V3, V4> sixthItem,  Runnable sixthBranch) {
-        matches(leftValue, bottomValue, rightValue, topValue,
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               Tuple.Tuple4<V1, V2, V3, V4> firstItem, Runnable firstBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> secondItem, Runnable secondBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> thirdItem, Runnable thirdBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> fourthItem, Runnable fourthBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> fifthItem, Runnable fifthBranch,
+               Tuple.Tuple4<V1, V2, V3, V4> sixthItem, Runnable sixthBranch) {
+        match(leftValue, bottomValue, rightValue, topValue,
                 (V1) firstItem.first(), (V2) firstItem.second(), firstItem.third(), firstItem.fourth(), firstBranch,
                 (V1) secondItem.first(), (V2) secondItem.second(), secondItem.third(), secondItem.fourth(), secondBranch,
                 (V1) thirdItem.first(), (V2) thirdItem.second(), thirdItem.third(), thirdItem.fourth(), thirdBranch,
@@ -2555,20 +2555,20 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 V1 fifthLeftData,   V2 fifthBottomData,
-                 V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-                 V1 sixthLeftData,   V2 sixthBottomData,
-                 V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch,
-                 Class<Else> elseClass, Runnable elseBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthBottomData,
+               V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthBottomData,
+               V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -2623,7 +2623,7 @@ public final class TuplePattern {
             V1 sixthLeftData,   V2 sixthBottomData,
             V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
-        matches(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
+        match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,
@@ -2635,20 +2635,20 @@ public final class TuplePattern {
 
     @SuppressWarnings({"Duplicates", "unused"})
     public static <V1, V2, V3, V4>
-    void matches(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
-                 V1 firstLeftData,   V2 firstBottomData,
-                 V3 firstRightData,  V4 firstTopData,  Runnable firstBranch,
-                 V1 secondLeftData,  V2 secondBottomData,
-                 V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-                 V1 thirdLeftData,   V2 thirdBottomData,
-                 V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-                 V1 fourthLeftData,  V2 fourthBottomData,
-                 V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-                 V1 fifthLeftData,   V2 fifthBottomData,
-                 V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-                 V1 sixthLeftData,   V2 sixthBottomData,
-                 V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch,
-                 Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
+    void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
+               V1 firstLeftData, V2 firstBottomData,
+               V3 firstRightData, V4 firstTopData, Runnable firstBranch,
+               V1 secondLeftData, V2 secondBottomData,
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch,
+               V1 thirdLeftData, V2 thirdBottomData,
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+               V1 fourthLeftData, V2 fourthBottomData,
+               V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
+               V1 fifthLeftData, V2 fifthBottomData,
+               V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
+               V1 sixthLeftData, V2 sixthBottomData,
+               V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch,
+               Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
                                        rightValue.getClass(), topValue.getClass(),
                                        firstLeftData.getClass(),   firstBottomData.getClass(),
@@ -2703,7 +2703,7 @@ public final class TuplePattern {
             V1 sixthLeftData,   V2 sixthBottomData,
             V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
-        matches((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
+        match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
                 thirdLeftData, thirdBottomData, thirdRightData, thirdTopData, thirdBranch,

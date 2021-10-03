@@ -47,7 +47,7 @@ public final class PropertyPattern {
 
     private PropertyPattern() {}
 
-    public static <V> PropertyPattern matches(V value) {
+    public static <V> PropertyPattern match(V value) {
         data = value;
 
         if (instance == null) {
@@ -100,7 +100,7 @@ public final class PropertyPattern {
     }
 
     public static <V, C, T>
-    void matches(V value, Class<C> clazz, Tuple.Tuple2<String, T> item, Consumer<T> branch) {
+    void match(V value, Class<C> clazz, Tuple.Tuple2<String, T> item, Consumer<T> branch) {
         if (clazz == value.getClass()) {
             if (executeBranch(value, item, branch)) return;
         }
@@ -123,11 +123,11 @@ public final class PropertyPattern {
 
     public <C, T>
     void as(Class<C> clazz, Tuple.Tuple2<String, T> item, Consumer<T> branch) {
-        matches(data, clazz, item, branch);
+        match(data, clazz, item, branch);
     }
 
     public static <V, C, T, R>
-    R matches(V value, Class<C> clazz, Tuple.Tuple2<String, T> item, Function<T, R> branch) {
+    R match(V value, Class<C> clazz, Tuple.Tuple2<String, T> item, Function<T, R> branch) {
         if (clazz == value.getClass()) {
             R result = executeBranch(value, item, branch);
 
@@ -139,7 +139,7 @@ public final class PropertyPattern {
 
     public <C, T, R>
     R as(Class<C> clazz, Tuple.Tuple2<String, T> item, Function<T, R> branch) {
-        return matches(data, clazz, item, branch);
+        return match(data, clazz, item, branch);
     }
 
     private static <V, T, R>
@@ -155,7 +155,7 @@ public final class PropertyPattern {
     }
 
     public static <V, U, C, T>
-    void matches(V value, Class<C> clazz, Function<U, T> function, Consumer<T> branch) {
+    void match(V value, Class<C> clazz, Function<U, T> function, Consumer<T> branch) {
         if (clazz == value.getClass()) {
             executeBranch(value, function, branch);
             return;
@@ -172,11 +172,11 @@ public final class PropertyPattern {
 
     public <U, C, T>
     void as(Class<C> clazz, Function<U, T> function, Consumer<T> branch) {
-        matches(data, clazz, function, branch);
+        match(data, clazz, function, branch);
     }
 
     public static <V, U, C, T, R>
-    R matches(V value, Class<C> clazz, Function<U, T> function, Function<T, R> branch) {
+    R match(V value, Class<C> clazz, Function<U, T> function, Function<T, R> branch) {
         if (clazz == value.getClass()) {
             return executeBranch(value, function, branch);
         }
@@ -186,7 +186,7 @@ public final class PropertyPattern {
 
     public <U, C, T, R>
     R as(Class<C> clazz, Function<U, T> function, Function<T, R> branch) {
-        return matches(data, clazz, function, branch);
+        return match(data, clazz, function, branch);
     }
 
     private static <V, U, T, R>
@@ -249,7 +249,7 @@ public final class PropertyPattern {
     }
 
     public static <V, C, T1, T2>
-    void matches(V value, Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> branch) {
+    void match(V value, Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> branch) {
         if (clazz == value.getClass()) {
             if (executeBranch(value, item, branch)) return;
         }
@@ -274,11 +274,11 @@ public final class PropertyPattern {
 
     public <C, T1, T2>
     void as(Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> branch) {
-        matches(data, clazz, item, branch);
+        match(data, clazz, item, branch);
     }
 
     public static <V, C, T1, T2, R>
-    R matches(V value, Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, BiFunction<T1, T2, R> branch) {
+    R match(V value, Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, BiFunction<T1, T2, R> branch) {
         if (clazz == value.getClass()) {
             R result = executeBranch(value, item, branch);
 
@@ -304,12 +304,12 @@ public final class PropertyPattern {
 
     public <C, T1, T2, R>
     R as(Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, BiFunction<T1, T2, R> branch) {
-        return matches(data, clazz, item, branch);
+        return match(data, clazz, item, branch);
     }
 
     public static <V, U, C, T1, T2>
-    void matches(V value, Class<C> clazz, Function<U, T1> firstFunction,
-                 Function<U, T2> secondFunction, BiConsumer<T1, T2> branch) {
+    void match(V value, Class<C> clazz, Function<U, T1> firstFunction,
+               Function<U, T2> secondFunction, BiConsumer<T1, T2> branch) {
         if (clazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, branch);
             return;
@@ -329,12 +329,12 @@ public final class PropertyPattern {
 
     public <U, C, T1, T2>
     void as(Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction, BiConsumer<T1, T2> branch) {
-        matches(data, clazz, firstFunction, secondFunction, branch);
+        match(data, clazz, firstFunction, secondFunction, branch);
     }
 
     public static <V, U, C, T1, T2, R>
-    R matches(V value, Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
-              BiFunction<T1, T2, R> branch) {
+    R match(V value, Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
+            BiFunction<T1, T2, R> branch) {
         if (clazz == value.getClass()) {
             return executeBranch(value, firstFunction, secondFunction, branch);
         }
@@ -354,7 +354,7 @@ public final class PropertyPattern {
     public <U, C, T1, T2, R>
     R as(Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
          BiFunction<T1, T2, R> branch) {
-        return matches(data, clazz, firstFunction, secondFunction, branch);
+        return match(data, clazz, firstFunction, secondFunction, branch);
     }
 
     public static <V, T1, T2, T3>
@@ -412,8 +412,8 @@ public final class PropertyPattern {
     }
 
     public static <V, C, T1, T2, T3>
-    void matches(V value, Class<C> clazz,
-                 Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> branch) {
+    void match(V value, Class<C> clazz,
+               Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> branch) {
         if (clazz == value.getClass()) {
             if (executeBranch(value, item, branch)) return;
         }
@@ -440,13 +440,13 @@ public final class PropertyPattern {
 
     public <C, T1, T2, T3>
     void as(Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> branch) {
-        matches(data, clazz, item, branch);
+        match(data, clazz, item, branch);
     }
 
 
     public static <V, C, T1, T2, T3, R>
-    R matches(V value, Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item,
-              TriFunction<T1, T2, T3, R> branch) {
+    R match(V value, Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item,
+            TriFunction<T1, T2, T3, R> branch) {
         if (clazz == value.getClass()) {
             R result = executeBranch(value, item, branch);
 
@@ -476,12 +476,12 @@ public final class PropertyPattern {
     public <C, T1, T2, T3, R>
     R as(Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item,
          TriFunction<T1, T2, T3, R> branch) {
-        return matches(data, clazz, item, branch);
+        return match(data, clazz, item, branch);
     }
 
     public static <V, U, C, T1, T2, T3>
-    void matches(V value, Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
-                 Function<U, T3> thirdFunction, TriConsumer<T1, T2, T3> branch) {
+    void match(V value, Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
+               Function<U, T3> thirdFunction, TriConsumer<T1, T2, T3> branch) {
         if (clazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, thirdFunction, branch);
             return;
@@ -503,12 +503,12 @@ public final class PropertyPattern {
     public <V1, C, T1, T2, T3>
     void as(Class<C> clazz, Function<V1, T1> firstFunction, Function<V1, T2> secondFunction,
             Function<V1, T3> thirdFunction, TriConsumer<T1, T2, T3> branch) {
-        matches(data, clazz, firstFunction, secondFunction, thirdFunction, branch);
+        match(data, clazz, firstFunction, secondFunction, thirdFunction, branch);
     }
 
     public static <V, U, C, T1, T2, T3, R>
-    R matches(V value, Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
-              Function<U, T3> thirdFunction, TriFunction<T1, T2, T3, R> branch) {
+    R match(V value, Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
+            Function<U, T3> thirdFunction, TriFunction<T1, T2, T3, R> branch) {
         if (clazz == value.getClass()) {
             return executeBranch(value, firstFunction, secondFunction, thirdFunction, branch);
         }
@@ -529,15 +529,15 @@ public final class PropertyPattern {
     public <U, C, T1, T2, T3, R>
     R as(Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
          Function<U, T3> thirdFunction, TriFunction<T1, T2, T3, R> branch) {
-        return matches(data, clazz, firstFunction, secondFunction,
+        return match(data, clazz, firstFunction, secondFunction,
                        thirdFunction, branch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Consumer<T2> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Consumer<T2> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -550,16 +550,16 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2>
     void as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Consumer<T2> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Function<T2, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Function<T2, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -576,16 +576,16 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, R>
     R as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Function<T2, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, U1, U2, C1, C2, T1, T2>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T2> secondFunction, Consumer<T2> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Function<U2, T2> secondFunction, Consumer<T2> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, firstBranch);
             return;
@@ -600,16 +600,16 @@ public final class PropertyPattern {
     public <U1, U2, C1, C2, T1, T2>
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Function<U2, T2> secondFunction, Consumer<T2> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, firstBranch,
                 secondClazz,secondFunction,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, U1, U2, C1, C2, T1, T2, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<T2, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<T2, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -622,16 +622,16 @@ public final class PropertyPattern {
     public <U1, U2, C1, C2, T1, T2, R>
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<T2, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstFunction, firstBranch,
                        secondClazz,secondFunction,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, BiConsumer<T2, T3> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, BiConsumer<T2, T3> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -644,16 +644,16 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3>
     void as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, BiConsumer<T2, T3> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, BiFunction<T2, T3, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, BiFunction<T2, T3, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -670,16 +670,16 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3, R>
     R as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, BiFunction<T2, T3, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T2> secondFunction,
-                 Function<U2, T3> thirdFunction, BiConsumer<T2, T3> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Function<U2, T2> secondFunction,
+               Function<U2, T3> thirdFunction, BiConsumer<T2, T3> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, firstBranch);
             return;
@@ -695,16 +695,16 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Function<U2, T2> secondFunction,
             Function<U2, T3> thirdFunction, BiConsumer<T2, T3> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, firstBranch,
                 secondClazz, secondFunction, thirdFunction, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
-              BiFunction<T2, T3, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
+            BiFunction<T2, T3, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -718,16 +718,16 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
          BiFunction<T2, T3, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstFunction, firstBranch,
                        secondClazz, secondFunction, thirdFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Consumer<T3> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Consumer<T3> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -740,16 +740,16 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3>
     void as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Consumer<T3> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Function<T3, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Function<T3, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -766,16 +766,16 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3, R>
     R as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Function<T3, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction,
-                 Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T3> thirdFunction, Consumer<T3> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction,
+               Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Function<U2, T3> thirdFunction, Consumer<T3> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, firstBranch);
             return;
@@ -791,16 +791,16 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction,
             Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Function<U2, T3> thirdFunction, Consumer<T3> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, secondFunction, firstBranch,
                 secondClazz, thirdFunction, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-              BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<T3, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+            BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<T3, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, secondFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -814,16 +814,16 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
          BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<T3, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstFunction, secondFunction, firstBranch,
                        secondClazz, thirdFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, BiConsumer<T3, T4> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, BiConsumer<T3, T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -836,16 +836,16 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3, T4>
     void as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, BiConsumer<T3, T4> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, BiFunction<T3, T4, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, BiFunction<T3, T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -862,18 +862,18 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3, T4, R>
     R as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, BiFunction<T3, T4, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction,
-                 Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T3> thirdFunction,
-                 Function<U2, T4> fourthFunction, BiConsumer<T3, T4> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction,
+               Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Function<U2, T3> thirdFunction,
+               Function<U2, T4> fourthFunction, BiConsumer<T3, T4> secondBranch)  {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, firstBranch);
             return;
@@ -890,17 +890,17 @@ public final class PropertyPattern {
             Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Function<U2, T3> thirdFunction,
             Function<U2, T4> fourthFunction, BiConsumer<T3, T4> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, secondFunction, firstBranch,
                 secondClazz, thirdFunction, fourthFunction, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-              BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
-              BiFunction<T3, T4, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+            BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
+            BiFunction<T3, T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, secondFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -915,17 +915,17 @@ public final class PropertyPattern {
          BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
          BiFunction<T3, T4, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstFunction, secondFunction,firstBranch,
                        secondClazz, thirdFunction, fourthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
-                 TriConsumer<T2, T3, T4> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
+               TriConsumer<T2, T3, T4> secondBranch)  {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -939,17 +939,17 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
             TriConsumer<T2, T3, T4> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
-              TriFunction<T2, T3, T4, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
+            TriFunction<T2, T3, T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -967,16 +967,16 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
          TriFunction<T2, T3, T4, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
-                 Function<U2, T4> fourthFunction, TriConsumer<T2, T3, T4> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
+               Function<U2, T4> fourthFunction, TriConsumer<T2, T3, T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, firstBranch);
             return;
@@ -992,16 +992,16 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
             Function<U2, T4> fourthFunction, TriConsumer<T2, T3, T4> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, firstBranch,
                 secondClazz, secondFunction, thirdFunction, fourthFunction, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
-              Function<U2, T4> fourthFunction, TriFunction<T2, T3, T4, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
+            Function<U2, T4> fourthFunction, TriFunction<T2, T3, T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -1015,17 +1015,17 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
          Function<U2, T4> fourthFunction, TriFunction<T2, T3, T4, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstFunction, firstBranch,
                        secondClazz, secondFunction, thirdFunction, fourthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
-                 TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Consumer<T4> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
+               TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Consumer<T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -1039,17 +1039,17 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
             TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Consumer<T4> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
-              TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Function<T4, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
+            TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Function<T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -1067,16 +1067,16 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
          TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Function<T4, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-                 Function<U1, T3> thirdFunction,TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T4> fourthFunction, Consumer<T4> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+               Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Function<U2, T4> fourthFunction, Consumer<T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, thirdFunction, firstBranch);
             return;
@@ -1092,17 +1092,17 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
             Function<U1, T3> thirdFunction,TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Function<U2, T4> fourthFunction, Consumer<T4> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                 secondClazz, fourthFunction, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-              Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T4> fourthFunction,
-              Function<T4, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+            Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T4> fourthFunction,
+            Function<T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, secondFunction, thirdFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -1117,18 +1117,18 @@ public final class PropertyPattern {
          Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T4> fourthFunction,
          Function<T4, R> secondBranch) {
-        return matches(data,
+        return match(data,
                 firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                 secondClazz, fourthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
-                 TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem,
-                 TriConsumer<T4, T5, T6> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
+               TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem,
+               TriConsumer<T4, T5, T6> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -1143,18 +1143,18 @@ public final class PropertyPattern {
             TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem,
             TriConsumer<T4, T5, T6> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
-              TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem,
-              TriFunction<T4, T5, T6, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
+            TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem,
+            TriFunction<T4, T5, T6, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -1173,17 +1173,17 @@ public final class PropertyPattern {
          TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem,
          TriFunction<T4, T5, T6, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-                 Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
-                 Function<U2, T6> sixthFunction, TriConsumer<T4, T5, T6> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+               Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
+               Function<U2, T6> sixthFunction, TriConsumer<T4, T5, T6> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, thirdFunction, firstBranch);
             return;
@@ -1200,17 +1200,17 @@ public final class PropertyPattern {
             Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
             Function<U2, T6> sixthFunction, TriConsumer<T4, T5, T6> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                 secondClazz, fourthFunction, fifthFunction, sixthFunction, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5, T6, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-              Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
-              Function<U2, T6> sixthFunction, TriFunction<T4, T5, T6, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+            Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
+            Function<U2, T6> sixthFunction, TriFunction<T4, T5, T6, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, secondFunction, thirdFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -1225,17 +1225,17 @@ public final class PropertyPattern {
          Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
          Function<U2, T6> sixthFunction, TriFunction<T4, T5, T6, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                        secondClazz, fourthFunction, fifthFunction, sixthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem,
-                 TriConsumer<T3, T4, T5> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem,
+               TriConsumer<T3, T4, T5> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -1249,18 +1249,18 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem,
             TriConsumer<T3, T4, T5> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, T5, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem,
-              BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem,
-              TriFunction<T3, T4, T5, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem,
+            BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem,
+            TriFunction<T3, T4, T5, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -1279,17 +1279,17 @@ public final class PropertyPattern {
          BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem,
          TriFunction<T3, T4, T5, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-                 BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
-                 Function<U2, T5> fifthFunction, TriConsumer<T3, T4, T5> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+               BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
+               Function<U2, T5> fifthFunction, TriConsumer<T3, T4, T5> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, firstBranch);
             return;
@@ -1306,17 +1306,17 @@ public final class PropertyPattern {
             BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
             Function<U2, T5> fifthFunction, TriConsumer<T3, T4, T5> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, secondFunction, firstBranch,
                 secondClazz, thirdFunction, fourthFunction, fifthFunction, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5, T6, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-              BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
-              Function<U2, T5> fifthFunction, TriFunction<T3, T4, T5, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+            BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
+            Function<U2, T5> fifthFunction, TriFunction<T3, T4, T5, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, secondFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -1331,18 +1331,18 @@ public final class PropertyPattern {
          BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
          Function<U2, T5> fifthFunction, TriFunction<T3, T4, T5, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstFunction, secondFunction, firstBranch,
                        secondClazz, thirdFunction, fourthFunction, fifthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
-                 TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem,
-                 BiConsumer<T4, T5> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
+               TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem,
+               BiConsumer<T4, T5> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -1357,18 +1357,18 @@ public final class PropertyPattern {
             TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem,
             BiConsumer<T4, T5> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstItem, firstBranch,
                 secondClazz,secondItem,secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
     public static <V, C1, C2, T1, T2, T3, T4, T5, R>
-    R matches(V value,
-              Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
-              TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem,
-              BiFunction<T4, T5, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
+            TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem,
+            BiFunction<T4, T5, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             R result = executeBranch(value, firstItem, firstBranch);
 
@@ -1387,17 +1387,17 @@ public final class PropertyPattern {
          TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem,
          BiFunction<T4, T5, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstItem, firstBranch,
                        secondClazz,secondItem,secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-                 Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
-                 BiConsumer<T4, T5> secondBranch) {
+    void match(V value,
+               Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+               Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
+               BiConsumer<T4, T5> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, thirdFunction, firstBranch);
             return;
@@ -1414,17 +1414,17 @@ public final class PropertyPattern {
             Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
             BiConsumer<T4, T5> secondBranch) {
-        matches(data,
+        match(data,
                 firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                 secondClazz, fourthFunction, fifthFunction, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5, T6, R>
-    R matches(V value,
-              Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-              Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
-              BiFunction<T4, T5, R> secondBranch) {
+    R match(V value,
+            Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
+            Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
+            BiFunction<T4, T5, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             return executeBranch(value, firstFunction, secondFunction, thirdFunction, firstBranch);
         } else if (secondClazz == value.getClass()) {
@@ -1439,7 +1439,7 @@ public final class PropertyPattern {
          Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
          BiFunction<T4, T5, R> secondBranch) {
-        return matches(data,
+        return match(data,
                        firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                        secondClazz, fourthFunction, fifthFunction, secondBranch);
     }

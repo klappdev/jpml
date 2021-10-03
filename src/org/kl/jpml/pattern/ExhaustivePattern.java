@@ -34,7 +34,7 @@ public final class ExhaustivePattern {
 
     private ExhaustivePattern() {}
 
-    public static <V> ExhaustivePattern matches(V value) {
+    public static <V> ExhaustivePattern match(V value) {
         sealedValue = value;
 
         if (instance == null) {
@@ -45,9 +45,9 @@ public final class ExhaustivePattern {
     }
 
     public static <V, T1, T2>
-    void matches(V value,
-                Class<T1> firstClazz,  Consumer<T1> firstBranch,
-                Class<T2> secondClazz, Consumer<T2> secondBranch) {
+    void match(V value,
+               Class<T1> firstClazz, Consumer<T1> firstBranch,
+               Class<T2> secondClazz, Consumer<T2> secondBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{ firstClazz, secondClazz });
         Class<?> valueClass = value.getClass();
 
@@ -61,15 +61,15 @@ public final class ExhaustivePattern {
     public <T1, T2>
     void as(Class<T1> firstClazz,  Consumer<T1> firstBranch,
             Class<T2> secondClazz, Consumer<T2> secondBranch) {
-        matches(sealedValue,
+        match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch);
     }
 
     public static <V, T1, T2, R>
-    R matches(V value,
-              Class<T1> firstClazz,  Routine<T1, R> firstBranch,
-              Class<T2> secondClazz, Routine<T2, R> secondBranch) {
+    R match(V value,
+            Class<T1> firstClazz, Routine<T1, R> firstBranch,
+            Class<T2> secondClazz, Routine<T2, R> secondBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{ firstClazz, secondClazz });
         Class<?> valueClass = value.getClass();
 
@@ -85,16 +85,16 @@ public final class ExhaustivePattern {
     public <T1, T2, R>
     R as(Class<T1> firstClazz,  Routine<T1, R> firstBranch,
          Class<T2> secondClazz, Routine<T2, R> secondBranch) {
-        return matches(sealedValue,
+        return match(sealedValue,
                        firstClazz, firstBranch,
                        secondClazz, secondBranch);
     }
 
     public static <V, T1, T2, T3>
-    void matches(V value,
-                Class<T1> firstClazz, Consumer<T1> firstBranch,
-                Class<T2> secondClazz, Consumer<T2> secondBranch,
-                Class<T3> thirdClazz, Consumer<T3> thirdBranch) {
+    void match(V value,
+               Class<T1> firstClazz, Consumer<T1> firstBranch,
+               Class<T2> secondClazz, Consumer<T2> secondBranch,
+               Class<T3> thirdClazz, Consumer<T3> thirdBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{ firstClazz, secondClazz, thirdClazz });
         Class<?> valueClass = value.getClass();
 
@@ -111,17 +111,17 @@ public final class ExhaustivePattern {
     void as(Class<T1> firstClazz,  Consumer<T1> firstBranch,
             Class<T2> secondClazz, Consumer<T2> secondBranch,
             Class<T3> thirdClazz, Consumer<T3> thirdBranch) {
-        matches(sealedValue,
+        match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
                 thirdClazz, thirdBranch);
     }
 
     public static <V, T1, T2, T3, R>
-    R matches(V value,
-              Class<T1> firstClazz,  Routine<T1, R> firstBranch,
-              Class<T2> secondClazz, Routine<T2, R> secondBranch,
-              Class<T3> thirdClazz,  Routine<T3, R> thirdBranch) {
+    R match(V value,
+            Class<T1> firstClazz, Routine<T1, R> firstBranch,
+            Class<T2> secondClazz, Routine<T2, R> secondBranch,
+            Class<T3> thirdClazz, Routine<T3, R> thirdBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{ firstClazz, secondClazz, thirdClazz });
         Class<?> valueClass = value.getClass();
 
@@ -140,18 +140,18 @@ public final class ExhaustivePattern {
     R as(Class<T1> firstClazz,  Routine<T1, R> firstBranch,
          Class<T2> secondClazz, Routine<T2, R> secondBranch,
          Class<T3> thirdClazz,  Routine<T3, R> thirdBranch) {
-        return matches(sealedValue,
+        return match(sealedValue,
                        firstClazz, firstBranch,
                        secondClazz, secondBranch,
                        thirdClazz, thirdBranch);
     }
 
     public static <V, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<T1> firstClazz, Consumer<T1> firstBranch,
-                 Class<T2> secondClazz, Consumer<T2> secondBranch,
-                 Class<T3> thirdClazz, Consumer<T3> thirdBranch,
-                 Class<T4> fourthClazz, Consumer<T4> fourthBranch) {
+    void match(V value,
+               Class<T1> firstClazz, Consumer<T1> firstBranch,
+               Class<T2> secondClazz, Consumer<T2> secondBranch,
+               Class<T3> thirdClazz, Consumer<T3> thirdBranch,
+               Class<T4> fourthClazz, Consumer<T4> fourthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz, fourthClazz
         });
@@ -173,7 +173,7 @@ public final class ExhaustivePattern {
             Class<T2> secondClazz, Consumer<T2> secondBranch,
             Class<T3> thirdClazz, Consumer<T3> thirdBranch,
             Class<T4> fourthClazz, Consumer<T4> fourthBranch) {
-        matches(sealedValue,
+        match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
                 thirdClazz, thirdBranch,
@@ -181,11 +181,11 @@ public final class ExhaustivePattern {
     }
 
     public static <V, T1, T2, T3, T4, R>
-    R matches(V value,
-              Class<T1> firstClazz,  Routine<T1, R> firstBranch,
-              Class<T2> secondClazz, Routine<T2, R> secondBranch,
-              Class<T3> thirdClazz,  Routine<T3, R> thirdBranch,
-              Class<T4> fourthClazz, Routine<T4, R> fourthBranch) {
+    R match(V value,
+            Class<T1> firstClazz, Routine<T1, R> firstBranch,
+            Class<T2> secondClazz, Routine<T2, R> secondBranch,
+            Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
+            Class<T4> fourthClazz, Routine<T4, R> fourthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz, fourthClazz
         });
@@ -209,7 +209,7 @@ public final class ExhaustivePattern {
          Class<T2> secondClazz, Routine<T2, R> secondBranch,
          Class<T3> thirdClazz,  Routine<T3, R> thirdBranch,
          Class<T4> fourthClazz, Routine<T4, R> fourthBranch) {
-        return matches(sealedValue,
+        return match(sealedValue,
                        firstClazz, firstBranch,
                        secondClazz, secondBranch,
                        thirdClazz, thirdBranch,
@@ -217,12 +217,12 @@ public final class ExhaustivePattern {
     }
 
     public static <V, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<T1> firstClazz, Consumer<T1> firstBranch,
-                 Class<T2> secondClazz, Consumer<T2> secondBranch,
-                 Class<T3> thirdClazz, Consumer<T3> thirdBranch,
-                 Class<T4> fourthClazz, Consumer<T4> fourthBranch,
-                 Class<T5> fifthClazz,  Consumer<T5> fifthBranch) {
+    void match(V value,
+               Class<T1> firstClazz, Consumer<T1> firstBranch,
+               Class<T2> secondClazz, Consumer<T2> secondBranch,
+               Class<T3> thirdClazz, Consumer<T3> thirdBranch,
+               Class<T4> fourthClazz, Consumer<T4> fourthBranch,
+               Class<T5> fifthClazz, Consumer<T5> fifthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz,
                 fourthClazz, fifthClazz
@@ -248,7 +248,7 @@ public final class ExhaustivePattern {
             Class<T3> thirdClazz, Consumer<T3> thirdBranch,
             Class<T4> fourthClazz, Consumer<T4> fourthBranch,
             Class<T5> fifthClazz,  Consumer<T5> fifthBranch) {
-        matches(sealedValue,
+        match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
                 thirdClazz, thirdBranch,
@@ -257,12 +257,12 @@ public final class ExhaustivePattern {
     }
 
     public static <V, T1, T2, T3, T4, T5, R>
-    R matches(V value,
-              Class<T1> firstClazz,  Routine<T1, R> firstBranch,
-              Class<T2> secondClazz, Routine<T2, R> secondBranch,
-              Class<T3> thirdClazz,  Routine<T3, R> thirdBranch,
-              Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
-              Class<T5> fifthClazz,  Routine<T5, R> fifthBranch) {
+    R match(V value,
+            Class<T1> firstClazz, Routine<T1, R> firstBranch,
+            Class<T2> secondClazz, Routine<T2, R> secondBranch,
+            Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
+            Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
+            Class<T5> fifthClazz, Routine<T5, R> fifthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz,
                 fourthClazz, fifthClazz
@@ -290,7 +290,7 @@ public final class ExhaustivePattern {
          Class<T3> thirdClazz,  Routine<T3, R> thirdBranch,
          Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
          Class<T5> fifthClazz,  Routine<T5, R> fifthBranch) {
-        return matches(sealedValue,
+        return match(sealedValue,
                        firstClazz, firstBranch,
                        secondClazz, secondBranch,
                        thirdClazz, thirdBranch,
@@ -299,13 +299,13 @@ public final class ExhaustivePattern {
     }
 
     public static <V, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<T1> firstClazz, Consumer<T1> firstBranch,
-                 Class<T2> secondClazz, Consumer<T2> secondBranch,
-                 Class<T3> thirdClazz, Consumer<T3> thirdBranch,
-                 Class<T4> fourthClazz, Consumer<T4> fourthBranch,
-                 Class<T5> fifthClazz,  Consumer<T5> fifthBranch,
-                 Class<T6> sixthClazz,  Consumer<T6> sixthBranch) {
+    void match(V value,
+               Class<T1> firstClazz, Consumer<T1> firstBranch,
+               Class<T2> secondClazz, Consumer<T2> secondBranch,
+               Class<T3> thirdClazz, Consumer<T3> thirdBranch,
+               Class<T4> fourthClazz, Consumer<T4> fourthBranch,
+               Class<T5> fifthClazz, Consumer<T5> fifthBranch,
+               Class<T6> sixthClazz, Consumer<T6> sixthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz,
                 fourthClazz, fifthClazz, sixthClazz
@@ -334,7 +334,7 @@ public final class ExhaustivePattern {
             Class<T4> fourthClazz, Consumer<T4> fourthBranch,
             Class<T5> fifthClazz,  Consumer<T5> fifthBranch,
             Class<T6> sixthClazz,  Consumer<T6> sixthBranch) {
-        matches(sealedValue,
+        match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
                 thirdClazz, thirdBranch,
@@ -344,13 +344,13 @@ public final class ExhaustivePattern {
     }
 
     public static <V, T1, T2, T3, T4, T5, T6, R>
-    R matches(V value,
-              Class<T1> firstClazz,  Routine<T1, R> firstBranch,
-              Class<T2> secondClazz, Routine<T2, R> secondBranch,
-              Class<T3> thirdClazz,  Routine<T3, R> thirdBranch,
-              Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
-              Class<T5> fifthClazz,  Routine<T5, R> fifthBranch,
-              Class<T6> sixthClazz,  Routine<T6, R> sixthBranch) {
+    R match(V value,
+            Class<T1> firstClazz, Routine<T1, R> firstBranch,
+            Class<T2> secondClazz, Routine<T2, R> secondBranch,
+            Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
+            Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
+            Class<T5> fifthClazz, Routine<T5, R> fifthBranch,
+            Class<T6> sixthClazz, Routine<T6, R> sixthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz,
                 fourthClazz, fifthClazz, sixthClazz
@@ -381,7 +381,7 @@ public final class ExhaustivePattern {
          Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
          Class<T5> fifthClazz,  Routine<T5, R> fifthBranch,
          Class<T6> sixthClazz,  Routine<T6, R> sixthBranch) {
-        return matches(sealedValue,
+        return match(sealedValue,
                        firstClazz, firstBranch,
                        secondClazz, secondBranch,
                        thirdClazz, thirdBranch,

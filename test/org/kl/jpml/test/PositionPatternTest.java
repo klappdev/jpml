@@ -28,8 +28,7 @@ import org.kl.jpml.test.shape.*;
 
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.kl.jpml.pattern.PositionPattern.matches;
-import static org.kl.jpml.pattern.PositionPattern.of;
+import static org.kl.jpml.pattern.PositionPattern.*;
 
 public class PositionPatternTest {
 
@@ -40,28 +39,28 @@ public class PositionPatternTest {
         /* 1 */
         figure = new Circle(5);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of(5), () -> out.println("figure circle")
         );
 
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure,
+        match(figure,
                 Rectangle.class, of(5, 10), () -> out.println("figure rectangle")
         );
 
         /* 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> out.println("figure parallelepiped")
         );
 
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of(5), () -> out.println("br 1 - figure circle "),
                 Quadrate.class, of(10), () -> out.println("br 2 - figure quadrate ")
         );
@@ -69,7 +68,7 @@ public class PositionPatternTest {
         /* 1 - 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of(5), () -> out.println("br 1 - figure circle"),
                 Rectangle.class, of(5, 10), () -> out.println("br 2 - figure rectangle")
         );
@@ -77,7 +76,7 @@ public class PositionPatternTest {
         /* 2 - 1 */
         figure = new Triangle(10D, 20D);
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of(10D, 20D), () -> out.println("br 1 - figure triangle"),
                 Quadrate.class, of(10), () -> out.println("br 2 - figure quadrate ")
         );
@@ -85,7 +84,7 @@ public class PositionPatternTest {
         /* 2 - 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of(10D, 20D), () -> out.println("br 1 - figure triangle"),
                 Rectangle.class, of(5, 10), () -> out.println("br 2 - figure rectangle")
         );
@@ -93,7 +92,7 @@ public class PositionPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        matches(figure,
+        match(figure,
                 Circle.class, of(5), () -> out.println("br 1 - figure circle"),
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> out.println("br 2 - figure parallelepiped")
         );
@@ -101,7 +100,7 @@ public class PositionPatternTest {
         /* 3 - 1 */
         figure = new Circle(5);
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> out.println("br 1 - figure parallelepiped"),
                 Circle.class, of(5), () -> out.println("br 2 - figure circle")
         );
@@ -109,7 +108,7 @@ public class PositionPatternTest {
         /* 3 - 3 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        matches(figure,
+        match(figure,
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> out.println("br 1 - figure parallelepiped"),
                 Tripiped.class, of(10f, 5f, 10f), () -> out.println("br 2 - figure tripiped")
         );
@@ -117,7 +116,7 @@ public class PositionPatternTest {
         /* 2 - 3 */
         figure = new Triangle(10D, 20D);
 
-        matches(figure,
+        match(figure,
                 Triangle.class, of(10D, 20D), () -> out.println("br 1 - figure triangle"),
                 Tripiped.class, of(10f, 5f, 10f), () -> out.println("br 2 - figure tripiped")
         );
@@ -125,7 +124,7 @@ public class PositionPatternTest {
         /* 3 - 2 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        matches(figure,
+        match(figure,
                 Tripiped.class, of(10f, 5f, 10f), () -> out.println("br 1 - figure tripiped"),
                 Triangle.class, of(10D, 20D), () -> out.println("br 2 - figure triangle")
         );
@@ -138,28 +137,28 @@ public class PositionPatternTest {
         /* 1 */
         figure = new Circle(5);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of(5), () -> out.println("figure circle")
         );
 
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure).as(
+        match(figure).as(
                 Rectangle.class, of(5, 10), () -> out.println("figure rectangle")
         );
 
         /* 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> out.println("figure parallelepiped")
         );
 
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of(5), () -> out.println("br 1 - figure circle "),
                 Quadrate.class, of(10), () -> out.println("br 2 - figure quadrate ")
         );
@@ -167,7 +166,7 @@ public class PositionPatternTest {
         /* 1 - 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of(5), () -> out.println("br 1 - figure circle"),
                 Rectangle.class, of(5, 10), () -> out.println("br 2 - figure rectangle")
         );
@@ -175,7 +174,7 @@ public class PositionPatternTest {
         /* 2 - 1 */
         figure = new Triangle(10D, 20D);
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of(10D, 20D), () -> out.println("br 1 - figure triangle"),
                 Quadrate.class, of(10), () -> out.println("br 2 - figure quadrate ")
         );
@@ -183,7 +182,7 @@ public class PositionPatternTest {
         /* 2 - 2 */
         figure = new Rectangle(5, 10);
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of(10D, 20D), () -> out.println("br 1 - figure triangle"),
                 Rectangle.class, of(5, 10), () -> out.println("br 2 - figure rectangle")
         );
@@ -191,7 +190,7 @@ public class PositionPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        matches(figure).as(
+        match(figure).as(
                 Circle.class, of(5), () -> out.println("br 1 - figure circle"),
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> out.println("br 2 - figure parallelepiped")
         );
@@ -199,7 +198,7 @@ public class PositionPatternTest {
         /* 3 - 1 */
         figure = new Circle(5);
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> out.println("br 1 - figure parallelepiped"),
                 Circle.class, of(5), () -> out.println("br 2 - figure circle")
         );
@@ -207,7 +206,7 @@ public class PositionPatternTest {
         /* 3 - 3 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        matches(figure).as(
+        match(figure).as(
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> out.println("br 1 - figure parallelepiped"),
                 Tripiped.class, of(10f, 5f, 10f), () -> out.println("br 2 - figure tripiped")
         );
@@ -215,7 +214,7 @@ public class PositionPatternTest {
         /* 2 - 3 */
         figure = new Triangle(10D, 20D);
 
-        matches(figure).as(
+        match(figure).as(
                 Triangle.class, of(10D, 20D), () -> out.println("br 1 - figure triangle"),
                 Tripiped.class, of(10f, 5f, 10f), () -> out.println("br 2 - figure tripiped")
         );
@@ -223,7 +222,7 @@ public class PositionPatternTest {
         /* 3 - 2 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        matches(figure).as(
+        match(figure).as(
                 Tripiped.class, of(10f, 5f, 10f), () -> out.println("br 1 - figure tripiped"),
                 Triangle.class, of(10D, 20D), () -> out.println("br 2 - figure triangle")
         );
@@ -234,7 +233,7 @@ public class PositionPatternTest {
         /* 1 */
         Figure figure = new Circle(5);
 
-        int result = matches(figure,
+        int result = match(figure,
                 Circle.class, of(5), () -> 5
         );
 
@@ -243,7 +242,7 @@ public class PositionPatternTest {
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure,
+        result = match(figure,
                 Rectangle.class, of(5, 10), () -> 10
         );
 
@@ -252,7 +251,7 @@ public class PositionPatternTest {
         /* 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> 15
         );
 
@@ -261,7 +260,7 @@ public class PositionPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of(5), () -> 5,
                 Quadrate.class, of(10), () -> 10
         );
@@ -271,7 +270,7 @@ public class PositionPatternTest {
         /* 1 - 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of(5), () -> 5,
                 Rectangle.class, of(5, 10), () -> 10
         );
@@ -281,7 +280,7 @@ public class PositionPatternTest {
         /* 2 - 1 */
         figure = new Triangle(10D, 20D);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of(10D, 20D), () -> 20,
                 Quadrate.class, of(10), () -> 10
         );
@@ -291,7 +290,7 @@ public class PositionPatternTest {
         /* 2 - 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of(10D, 20D), () -> 20,
                 Rectangle.class, of(5, 10), () -> 10
         );
@@ -301,7 +300,7 @@ public class PositionPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        result = matches(figure,
+        result = match(figure,
                 Circle.class, of(5), () -> 5,
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> 15
         );
@@ -311,7 +310,7 @@ public class PositionPatternTest {
         /* 3 - 1 */
         figure = new Circle(5);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> 15,
                 Circle.class, of(5), () -> 10
         );
@@ -321,7 +320,7 @@ public class PositionPatternTest {
         /* 3 - 3 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        result = matches(figure,
+        result = match(figure,
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> 15,
                 Tripiped.class, of(10f, 5f, 10f), () -> 10
         );
@@ -331,7 +330,7 @@ public class PositionPatternTest {
         /* 2 - 3 */
         figure = new Triangle(10D, 20D);
 
-        result = matches(figure,
+        result = match(figure,
                 Triangle.class, of(10D, 20D), () -> 15,
                 Tripiped.class, of(10f, 5f, 10f), () -> 10
         );
@@ -341,7 +340,7 @@ public class PositionPatternTest {
         /* 3 - 2 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        result = matches(figure,
+        result = match(figure,
                 Tripiped.class, of(10f, 5f, 10f), () -> 10,
                 Triangle.class, of(10D, 20D), () -> 15
         );
@@ -354,7 +353,7 @@ public class PositionPatternTest {
         /* 1 */
         Figure figure = new Circle(5);
 
-        int result = matches(figure).as(
+        int result = match(figure).as(
                 Circle.class, of(5), () -> 5
         );
 
@@ -363,7 +362,7 @@ public class PositionPatternTest {
         /* 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Rectangle.class, of(5, 10), () -> 10
         );
 
@@ -372,7 +371,7 @@ public class PositionPatternTest {
         /* 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> 15
         );
 
@@ -381,7 +380,7 @@ public class PositionPatternTest {
         /* 1 - 1 */
         figure = new Quadrate(10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of(5), () -> 5,
                 Quadrate.class, of(10), () -> 10
         );
@@ -391,7 +390,7 @@ public class PositionPatternTest {
         /* 1 - 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of(5), () -> 5,
                 Rectangle.class, of(5, 10), () -> 10
         );
@@ -401,7 +400,7 @@ public class PositionPatternTest {
         /* 2 - 1 */
         figure = new Triangle(10D, 20D);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of(10D, 20D), () -> 20,
                 Quadrate.class, of(10), () -> 10
         );
@@ -411,7 +410,7 @@ public class PositionPatternTest {
         /* 2 - 2 */
         figure = new Rectangle(5, 10);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of(10D, 20D), () -> 20,
                 Rectangle.class, of(5, 10), () -> 10
         );
@@ -421,7 +420,7 @@ public class PositionPatternTest {
         /* 1 - 3 */
         figure = new Parallelepiped((short) 5, (short) 10, (short) 15);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Circle.class, of(5), () -> 5,
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> 15
         );
@@ -431,7 +430,7 @@ public class PositionPatternTest {
         /* 3 - 1 */
         figure = new Circle(5);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> 15,
                 Circle.class, of(5), () -> 10
         );
@@ -441,7 +440,7 @@ public class PositionPatternTest {
         /* 3 - 3 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Parallelepiped.class, of((short) 5, (short) 10, (short) 15), () -> 15,
                 Tripiped.class, of(10f, 5f, 10f), () -> 10
         );
@@ -451,7 +450,7 @@ public class PositionPatternTest {
         /* 2 - 3 */
         figure = new Triangle(10D, 20D);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Triangle.class, of(10D, 20D), () -> 15,
                 Tripiped.class, of(10f, 5f, 10f), () -> 10
         );
@@ -461,7 +460,7 @@ public class PositionPatternTest {
         /* 3 - 2 */
         figure = new Tripiped(10f, 5f, 10f);
 
-        result = matches(figure).as(
+        result = match(figure).as(
                 Tripiped.class, of(10f, 5f, 10f), () -> 10,
                 Triangle.class, of(10D, 20D), () -> 15
         );

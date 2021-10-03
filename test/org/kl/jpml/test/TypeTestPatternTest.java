@@ -1079,14 +1079,14 @@ public class TypeTestPatternTest {
     public void matchExpressionTest() {
         /* 1 */
         byte value1 = 5;
-        int result1 =match(value1,
+        int result1 = match(value1,
                 Byte.class, b  -> { int result = 2 * (b + b);  return result; }
         );
 
         assertEquals(result1, 2 * (value1 + value1));
 
         /* 1.1 */
-        result1 =match(value1,
+        result1 = match(value1,
                 byte.class, b  -> { int result = 2 * (b + b);  return result; }
         );
 
@@ -1094,7 +1094,7 @@ public class TypeTestPatternTest {
 
         /* 2 */
         short value2 = 15;
-        int result2 =match(value2,
+        int result2 = match(value2,
                 Byte.class,  b -> { int result = 2 * (b + b);  return result; },
                 Short.class, s -> { int result = 2 * (s + s);  return result; }
         );
@@ -1102,7 +1102,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, 2 * (value2 + value2));
 
         /* 2.1 */
-        result2 =match(value2,
+        result2 = match(value2,
                 byte.class,  b -> { int result = 2 * (b + b);  return result; },
                 short.class, s -> { int result = 2 * (s + s);  return result; }
         );
@@ -1111,7 +1111,7 @@ public class TypeTestPatternTest {
 
         /* 3 */
         int value3 = 25;
-        int result3 =match(value3,
+        int result3 = match(value3,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; }
@@ -1120,7 +1120,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, 2 * (value3 + value3));
 
         /* 3.1 */
-        result3 =match(value3,
+        result3 = match(value3,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; }
@@ -1130,7 +1130,7 @@ public class TypeTestPatternTest {
 
         /* 4 */
         long value4 = 35;
-        int result4 =match(value4,
+        int result4 = match(value4,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1140,7 +1140,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, 2 * (value4 + value4));
 
         /* 4.1 */
-        result4 =match(value4,
+        result4 = match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1151,7 +1151,7 @@ public class TypeTestPatternTest {
 
         /* 5 */
         long value5 = 45;
-        int result5 =match(value5,
+        int result5 = match(value5,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1162,7 +1162,7 @@ public class TypeTestPatternTest {
         assertEquals(result5, 2 * (value5 + value5));
 
         /* 5.1 */
-        result5 =match(value5,
+        result5 = match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1174,7 +1174,7 @@ public class TypeTestPatternTest {
 
         /* 6 */
         long value6 = 45;
-        int result6 =match(value6,
+        int result6 = match(value6,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1186,7 +1186,7 @@ public class TypeTestPatternTest {
         assertEquals(result6, 2 * (value6 + value6));
 
         /* 6.1 */
-        result6 =match(value6,
+        result6 = match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1201,7 +1201,7 @@ public class TypeTestPatternTest {
         /* 7 */
         Figure figure = new Rectangle();
 
-        int square =match(figure,
+        int square = match(figure,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; }
         );
@@ -1214,7 +1214,7 @@ public class TypeTestPatternTest {
         int data = 0;
 
         /* 1 */
-        int result1 =match(data,
+        int result1 = match(data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Else.class, () -> { System.out.println("Else value 1 types"); return 0; }
         );
@@ -1222,7 +1222,7 @@ public class TypeTestPatternTest {
         assertEquals(result1, 0);
 
         byte value1 = 1;
-        result1 =match(value1,
+        result1 = match(value1,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Else.class, () -> { System.out.println("Else value 1 types"); return 0; }
         );
@@ -1230,7 +1230,7 @@ public class TypeTestPatternTest {
         assertEquals(result1, 4);
 
         /* 2 */
-        int result2 =match(data,
+        int result2 = match(data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Else.class, () -> { System.out.println("Else value 2 types"); return 1; }
@@ -1239,7 +1239,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, 1);
 
         short value2 = 2;
-        result2 =match(value2,
+        result2 = match(value2,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Else.class, () -> { System.out.println("Else value 2 types"); return 0; }
@@ -1248,7 +1248,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, 8);
 
         /* 3 */
-        int result3 =match((long) data,
+        int result3 = match((long) data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i  -> { int result = 2 * (i + i);  return result; },
@@ -1258,7 +1258,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, 2);
 
         int value3 = 3;
-        result3 =match(value3,
+        result3 = match(value3,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 int.class,     i  -> { int result = 2 * (i + i);  return result; },
@@ -1268,7 +1268,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, 12);
 
         /* 4 */
-        int result4 =match((float) data,
+        int result4 = match((float) data,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1279,7 +1279,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, 4);
 
         long value4 = 4;
-        result4 =match(value4,
+        result4 = match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1290,7 +1290,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, 16);
 
         /* 5 */
-        int result5 =match((double) data,
+        int result5 = match((double) data,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1301,7 +1301,7 @@ public class TypeTestPatternTest {
         assertEquals(result5, 5);
 
         float value5 = 5;
-        result5 =match(value5,
+        result5 = match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1314,7 +1314,7 @@ public class TypeTestPatternTest {
 
         /* 6 */
         String buffer = "best";
-        int result6 =match(buffer,
+        int result6 = match(buffer,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1327,7 +1327,7 @@ public class TypeTestPatternTest {
         assertEquals(result6, 6);
 
         double value6 = 6;
-        result6 =match(value6,
+        result6 = match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1340,7 +1340,7 @@ public class TypeTestPatternTest {
         assertEquals(result6, 24);
 
         /* 7 */
-        int square =match(data,
+        int square = match(data,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; },
                 Else.class,   () -> { System.out.println("Else shape"); return 5; }
@@ -1354,7 +1354,7 @@ public class TypeTestPatternTest {
         int data = 0;
 
         /* 1 */
-        int result1 =match(data,
+        int result1 = match(data,
                 Byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Var.class, (Routine<Integer, Integer>) any -> { System.out.println("Else value 1 types"); return 0; }
         );
@@ -1362,7 +1362,7 @@ public class TypeTestPatternTest {
         assertEquals(result1, 0);
 
         byte value1 = 1;
-        result1 =match(value1,
+        result1 = match(value1,
                 byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Var.class, (Routine<Byte, Integer>) any -> { System.out.println("Else value 1 types"); return 0; }
         );
@@ -1370,7 +1370,7 @@ public class TypeTestPatternTest {
         assertEquals(result1, 4);
 
         /* 2 */
-        int result2 =match(data,
+        int result2 = match(data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Var.class, (Routine<Integer, Integer>) any -> { System.out.println("Else value 2 types"); return 1; }
@@ -1379,7 +1379,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, 1);
 
         short value2 = 2;
-        result2 =match(value2,
+        result2 = match(value2,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Var.class, (Routine<Short, Integer>) any -> { System.out.println("Else value 2 types"); return 0; }
@@ -1388,7 +1388,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, 8);
 
         /* 3 */
-        int result3 =match((long) data,
+        int result3 = match((long) data,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i  -> { int result = 2 * (i + i);  return result; },
@@ -1398,7 +1398,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, 2);
 
         int value3 = 3;
-        result3 =match(value3,
+        result3 = match(value3,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 int.class,     i  -> { int result = 2 * (i + i);  return result; },
@@ -1408,7 +1408,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, 12);
 
         /* 4 */
-        int result4 =match((float) data,
+        int result4 = match((float) data,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1419,7 +1419,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, 4);
 
         long value4 = 4;
-        result4 =match(value4,
+        result4 = match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1430,7 +1430,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, 16);
 
         /* 5 */
-        int result5 =match((double) data,
+        int result5 = match((double) data,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1441,7 +1441,7 @@ public class TypeTestPatternTest {
         assertEquals(result5, 5);
 
         float value5 = 5;
-        result5 =match(value5,
+        result5 = match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1454,7 +1454,7 @@ public class TypeTestPatternTest {
 
         /* 6 */
         String buffer = "best";
-        int result6 =match(buffer,
+        int result6 = match(buffer,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1467,7 +1467,7 @@ public class TypeTestPatternTest {
         assertEquals(result6, 6);
 
         double value6 = 6;
-        result6 =match(value6,
+        result6 = match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1480,7 +1480,7 @@ public class TypeTestPatternTest {
         assertEquals(result6, 24);
 
         /* 7 */
-        int square =match(data,
+        int square = match(data,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; },
                 Var.class, (Routine<Integer, Integer>) any -> { System.out.println("Else shape"); return 5; }
@@ -1492,7 +1492,7 @@ public class TypeTestPatternTest {
     @Test
     public void matchExpressionWithNullDefaultTest() {
         /* 1 */
-        int result1 =match(null,
+        int result1 = match(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Null.class,    () -> { System.out.println("Null value 1 type");     return -1; },
                 Else.class, () -> { System.out.println("Else value 1 types"); return 0;   }
@@ -1501,7 +1501,7 @@ public class TypeTestPatternTest {
         assertEquals(result1, -1);
 
         byte value1 = 1;
-        result1 =match(value1,
+        result1 = match(value1,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Null.class,    () -> { System.out.println("Null value 1 type");     return -1; },
                 Else.class, () -> { System.out.println("Else value 1 types"); return 0;   }
@@ -1510,7 +1510,7 @@ public class TypeTestPatternTest {
         assertEquals(result1, 4);
 
         /* 2 */
-        int result2 =match(null,
+        int result2 = match(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Null.class,    () -> { System.out.println("Null value 2 type");     return -1; },
@@ -1520,7 +1520,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, -1);
 
         short value2 = 2;
-        result2 =match(value2,
+        result2 = match(value2,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Null.class,    () -> { System.out.println("Null value 2 type");     return -1; },
@@ -1530,7 +1530,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, 8);
 
         /* 3 */
-        int result3 =match(null,
+        int result3 = match(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i  -> { int result = 2 * (i + i);  return result; },
@@ -1541,7 +1541,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, -1);
 
         int value3 = 3;
-        result3 =match(value3,
+        result3 = match(value3,
                 byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 int.class,     i  -> { int result = 2 * (i + i);  return result; },
@@ -1552,7 +1552,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, 12);
 
         /* 4 */
-        int result4 =match(null,
+        int result4 = match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1564,7 +1564,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, -1);
 
         long value4 = 4;
-        result4 =match(value4,
+        result4 = match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1576,7 +1576,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, 16);
 
         /* 5 */
-        int result5 =match(null,
+        int result5 = match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1588,7 +1588,7 @@ public class TypeTestPatternTest {
         assertEquals(result5, -1);
 
         float value5 = 5;
-        result5 =match(value5,
+        result5 = match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1601,7 +1601,7 @@ public class TypeTestPatternTest {
         assertEquals(result5, 20);
 
         /* 6 */
-        int result6 =match(null,
+        int result6 = match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1615,7 +1615,7 @@ public class TypeTestPatternTest {
         assertEquals(result6, -1);
 
         double value6 = 6;
-        result6 =match(value6,
+        result6 = match(value6,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1629,7 +1629,7 @@ public class TypeTestPatternTest {
         assertEquals(result6, 24);
 
         /* 7 */
-        int square =match(null,
+        int square = match(null,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; },
                 Null.class,      () -> { System.out.println("Null value 7 type"); return -1; },
@@ -1642,7 +1642,7 @@ public class TypeTestPatternTest {
     @Test
     public void matchExpressionWithNullVarTest() {
         /* 1 */
-        int result1 =match(null,
+        int result1 = match(null,
                 Byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Null.class, () -> { System.out.println("Null value 1 type");     return -1; },
                 Var.class, any -> { System.out.println("Else value 1 types"); return 0;  }
@@ -1651,7 +1651,7 @@ public class TypeTestPatternTest {
         assertEquals(result1, -1);
 
         byte value1 = 1;
-        result1 =match(value1,
+        result1 = match(value1,
                 byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Null.class, () -> { System.out.println("Null value 1 type");     return -1; },
                 Var.class, any -> { System.out.println("Else value 1 types"); return 0;  }
@@ -1660,7 +1660,7 @@ public class TypeTestPatternTest {
         assertEquals(result1, 4);
 
         /* 2 */
-        int result2 =match(null,
+        int result2 = match(null,
                 Byte.class, b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,s  -> { int result = 2 * (s + s);  return result; },
                 Null.class, () -> { System.out.println("Null value 2 type");     return -1; },
@@ -1670,7 +1670,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, -1);
 
         short value2 = 2;
-        result2 =match(value2,
+        result2 = match(value2,
                 byte.class,  b  -> { int result = 2 * (b + b);  return result; },
                 short.class, s  -> { int result = 2 * (s + s);  return result; },
                 Null.class,  () -> { System.out.println("Null value 2 type");     return -1; },
@@ -1680,7 +1680,7 @@ public class TypeTestPatternTest {
         assertEquals(result2, 8);
 
         /* 3 */
-        int result3 =match(null,
+        int result3 = match(null,
                 Byte.class,    b  -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s  -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i  -> { int result = 2 * (i + i);  return result; },
@@ -1691,7 +1691,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, -1);
 
         int value3 = 3;
-        result3 =match(value3,
+        result3 = match(value3,
                 byte.class,  b  -> { int result = 2 * (b + b);  return result; },
                 short.class, s  -> { int result = 2 * (s + s);  return result; },
                 int.class,   i  -> { int result = 2 * (i + i);  return result; },
@@ -1702,7 +1702,7 @@ public class TypeTestPatternTest {
         assertEquals(result3, 12);
 
         /* 4 */
-        int result4 =match(null,
+        int result4 = match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1714,7 +1714,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, -1);
 
         long value4 = 4;
-        result4 =match(value4,
+        result4 = match(value4,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1726,7 +1726,7 @@ public class TypeTestPatternTest {
         assertEquals(result4, 16);
 
         /* 5 */
-        int result5 =match(null,
+        int result5 = match(null,
                 Byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 Short.class,   s -> { int result = 2 * (s + s);  return result; },
                 Integer.class, i -> { int result = 2 * (i + i);  return result; },
@@ -1738,7 +1738,7 @@ public class TypeTestPatternTest {
         assertEquals(result5, -1);
 
         float value5 = 5;
-        result5 =match(value5,
+        result5 = match(value5,
                 byte.class,    b -> { int result = 2 * (b + b);  return result; },
                 short.class,   s -> { int result = 2 * (s + s);  return result; },
                 int.class,     i -> { int result = 2 * (i + i);  return result; },
@@ -1779,7 +1779,7 @@ public class TypeTestPatternTest {
         assertEquals(result6, 24);
 
         /* 7 */
-        int square =match(null,
+        int square = match(null,
                 Rectangle.class, r -> { int result = r.square(); return result; },
                 Circle.class,    c -> { int result = c.square(); return result; },
                 Null.class,      () -> { System.out.println("Null value 7 type"); return -1; },
