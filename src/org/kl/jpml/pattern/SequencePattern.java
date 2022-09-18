@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -34,13 +34,17 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+/**
+ * Sequence pattern allow processing on data sequence.
+ */
 public final class SequencePattern {
     private static Collection range;
     private static Map map;
 
     private static SequencePattern instance;
 
-    private SequencePattern() {}
+    private SequencePattern() {
+    }
 
     public static <E> void init(Collection<E> other) {
         range = other;
@@ -96,7 +100,7 @@ public final class SequencePattern {
 
     public static <E> Provider<Tuple.Tuple2<E, E>> edges() {
         Tuple.Tuple2<E, E> unique = new Tuple.Tuple2<>(first(), last());
-        return () ->  unique;
+        return () -> unique;
     }
 
     public static <K, V> Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> edgesMap() {
@@ -256,7 +260,7 @@ public final class SequencePattern {
                                  Supplier<E> secondSupplier, Consumer<E> secondBranch,
                                  Supplier<E> thirdSupplier, Consumer<E> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
@@ -266,7 +270,7 @@ public final class SequencePattern {
                                  Supplier<E> secondSupplier, Consumer<E> secondBranch,
                                  Provider<Tuple.Tuple2<E, E>> thirdSupplier, BiConsumer<E, E> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
@@ -277,9 +281,9 @@ public final class SequencePattern {
                                  Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                                  Supplier<E> fourthSupplier, Consumer<E> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
@@ -289,9 +293,9 @@ public final class SequencePattern {
                                  Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                                  Provider<Tuple.Tuple2<E, E>> fourthSupplier, BiConsumer<E, E> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
@@ -302,9 +306,9 @@ public final class SequencePattern {
                                  Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
                                  Supplier<E> fifthSupplier, Consumer<E> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.get());
     }
@@ -316,9 +320,9 @@ public final class SequencePattern {
                                  Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
                                  Provider<Tuple.Tuple2<E, E>> fifthSupplier, BiConsumer<E, E> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
@@ -331,9 +335,9 @@ public final class SequencePattern {
                                  Supplier<E> fifthSupplier, Consumer<E> fifthBranch,
                                  Provider<Tuple.Tuple2<E, E>> sixSupplier, BiConsumer<E, E> sixthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch,
                 fifthSupplier, fifthBranch);
         sixthBranch.accept(sixSupplier.take().first(), sixSupplier.take().second());
@@ -353,31 +357,31 @@ public final class SequencePattern {
 
     public <E> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                       Supplier<E> thirdSupplier,  Consumer<E> thirdBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch);
+                       Supplier<E> thirdSupplier, Consumer<E> thirdBranch) {
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
 
     public <E> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                       Supplier<E> thirdSupplier,  Consumer<E> thirdBranch,
+                       Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                        Supplier<E> fourthSupplier, Consumer<E> fourthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
     public <E> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                       Supplier<E> thirdSupplier,  Consumer<E> thirdBranch,
+                       Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                        Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
-                       Supplier<E> fifthSupplier,  Consumer<E> fifthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch,
-           fourthSupplier, fourthBranch);
+                       Supplier<E> fifthSupplier, Consumer<E> fifthBranch) {
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch,
+                fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.get());
     }
 
@@ -390,8 +394,8 @@ public final class SequencePattern {
     public <E> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
                        Provider<Tuple.Tuple2<E, E>> thirdSupplier, BiConsumer<E, E> thirdBranch) {
-        as(firstSupplier,  firstBranch,
-          secondSupplier, secondBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
@@ -399,9 +403,9 @@ public final class SequencePattern {
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
                        Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                        Provider<Tuple.Tuple2<E, E>> fourthSupplier, BiConsumer<E, E> fourthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
@@ -410,10 +414,10 @@ public final class SequencePattern {
                        Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                        Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
                        Provider<Tuple.Tuple2<E, E>> fifthSupplier, BiConsumer<E, E> fifthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch,
-           fourthSupplier, fourthBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch,
+                fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
@@ -423,11 +427,11 @@ public final class SequencePattern {
                        Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
                        Supplier<E> fifthSupplier, Consumer<E> fifthBranch,
                        Provider<Tuple.Tuple2<E, E>> sixSupplier, BiConsumer<E, E> sixthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch,
-           fourthSupplier, fourthBranch,
-           fifthSupplier, fifthBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch,
+                fourthSupplier, fourthBranch,
+                fifthSupplier, fifthBranch);
         sixthBranch.accept(sixSupplier.take().first(), sixSupplier.take().second());
     }
 
@@ -461,7 +465,7 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
                                     Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
@@ -472,7 +476,7 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
@@ -483,9 +487,9 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
                                     Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
@@ -496,9 +500,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
@@ -509,9 +513,9 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
                                     Supplier<Map.Entry<K, V>> fifthSupplier, Consumer<Map.Entry<K, V>> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.get());
     }
@@ -524,9 +528,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
@@ -539,11 +543,11 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> fifthSupplier, Consumer<Map.Entry<K, V>> fifthBranch,
                                     Supplier<Map.Entry<K, V>> sixthSupplier, Consumer<Map.Entry<K, V>> sixthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch,
-                fifthSupplier,  fifthBranch);
+                fifthSupplier, fifthBranch);
         sixthBranch.accept(sixthSupplier.get());
     }
 
@@ -556,9 +560,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> sixSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> sixBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch,
                 fifthSupplier, fifthBranch);
         sixBranch.accept(sixSupplier.take().first(), sixSupplier.take().second());
@@ -577,7 +581,7 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
                                     Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get().getKey(), thirdSupplier.get().getValue());
     }
@@ -588,7 +592,7 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
@@ -599,9 +603,9 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                                     Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get().getKey(), fourthSupplier.get().getValue());
     }
 
@@ -612,9 +616,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
@@ -625,9 +629,9 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
                                     Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.get().getKey(), fifthSupplier.get().getValue());
     }
@@ -640,9 +644,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
@@ -655,11 +659,11 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch,
                                     Supplier<Map.Entry<K, V>> sixthSupplier, BiConsumer<K, V> sixthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch,
-                fifthSupplier,  fifthBranch);
+                fifthSupplier, fifthBranch);
         sixthBranch.accept(sixthSupplier.get().getKey(), sixthSupplier.get().getValue());
     }
 
@@ -672,11 +676,11 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> sixSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> sixBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch,
-                fifthSupplier,  fifthBranch);
+                fifthSupplier, fifthBranch);
         sixBranch.accept(sixSupplier.take().first(), sixSupplier.take().second());
     }
 
@@ -688,31 +692,31 @@ public final class SequencePattern {
 
     public <K, V> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch);
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch) {
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get().getKey(), thirdSupplier.get().getValue());
     }
 
     public <K, V> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                           Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get().getKey(), fourthSupplier.get().getValue());
     }
 
     public <K, V> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                           Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
-                          Supplier<Map.Entry<K, V>> fifthSupplier,  BiConsumer<K, V> fifthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch,
-           fourthSupplier, fourthBranch);
+                          Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch) {
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch,
+                fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.get().getKey(), fifthSupplier.get().getValue());
     }
 
@@ -721,48 +725,48 @@ public final class SequencePattern {
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
                           Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
                           BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
     public <K, V> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                           Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
                           BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
     public <K, V> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                           Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
                           Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
                           BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch,
-           fourthSupplier, fourthBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch,
+                fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
 
     public <K, V> void as(BooleanSupplier firstSupplier, Runnable firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                           Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
-                          Supplier<Map.Entry<K, V>> fifthSupplier,  BiConsumer<K, V> fifthBranch,
+                          Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch,
                           Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> sixSupplier,
                           BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> sixBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch,
-           fourthSupplier, fourthBranch,
-           fifthSupplier,  fifthBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch,
+                fourthSupplier, fourthBranch,
+                fifthSupplier, fifthBranch);
         sixBranch.accept(sixSupplier.take().first(), sixSupplier.take().second());
     }
 
@@ -777,14 +781,14 @@ public final class SequencePattern {
     public static <E> void match(Collection<E> data,
                                  Supplier<E> firstSupplier, Consumer<E> firstBranch,
                                  Supplier<E> secondSupplier, Consumer<E> secondBranch) {
-        match(data, firstSupplier,  firstBranch);
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.get());
     }
 
     public static <E> void match(Collection<E> data,
                                  Supplier<E> firstSupplier, Consumer<E> firstBranch,
                                  Provider<Tuple.Tuple2<E, E>> secondSupplier, BiConsumer<E, E> secondBranch) {
-        match(data, firstSupplier,  firstBranch);
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
@@ -793,7 +797,7 @@ public final class SequencePattern {
                                  Supplier<E> secondSupplier, Consumer<E> secondBranch,
                                  Supplier<E> thirdSupplier, Consumer<E> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
@@ -804,7 +808,7 @@ public final class SequencePattern {
                                  Provider<Tuple.Tuple2<E, E>> thirdSupplier, BiConsumer<E, E> thirdBranch) {
         match(data,
                 firstSupplier, firstBranch,
-                secondSupplier,  secondBranch);
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
@@ -814,9 +818,9 @@ public final class SequencePattern {
                                  Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                                  Supplier<E> fourthSupplier, Consumer<E> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
@@ -826,9 +830,9 @@ public final class SequencePattern {
                                  Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                                  Provider<Tuple.Tuple2<E, E>> fourthSupplier, BiConsumer<E, E> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
@@ -839,9 +843,9 @@ public final class SequencePattern {
                                  Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
                                  Supplier<E> fifthSupplier, Consumer<E> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.get());
     }
@@ -853,9 +857,9 @@ public final class SequencePattern {
                                  Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
                                  Provider<Tuple.Tuple2<E, E>> fifthSupplier, BiConsumer<E, E> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
@@ -864,41 +868,41 @@ public final class SequencePattern {
         branch.accept(supplier.get());
     }
 
-    public <E> void as(Supplier<E> firstSupplier,  Consumer<E> firstBranch,
+    public <E> void as(Supplier<E> firstSupplier, Consumer<E> firstBranch,
                        Supplier<E> secondSupplier, Consumer<E> secondBranch) {
-        as(firstSupplier,  firstBranch);
+        as(firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.get());
     }
 
-    public <E> void as(Supplier<E> firstSupplier,  Consumer<E> firstBranch,
+    public <E> void as(Supplier<E> firstSupplier, Consumer<E> firstBranch,
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                       Supplier<E> thirdSupplier,  Consumer<E> thirdBranch) {
-        as(firstSupplier,  firstBranch,
-          secondSupplier, secondBranch);
+                       Supplier<E> thirdSupplier, Consumer<E> thirdBranch) {
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
 
-    public <E> void as(Supplier<E> firstSupplier,  Consumer<E> firstBranch,
+    public <E> void as(Supplier<E> firstSupplier, Consumer<E> firstBranch,
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
-                       Supplier<E> thirdSupplier,  Consumer<E> thirdBranch,
+                       Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                        Supplier<E> fourthSupplier, Consumer<E> fourthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
     public <E> void as(Supplier<E> firstSupplier, Consumer<E> firstBranch,
                        Provider<Tuple.Tuple2<E, E>> secondSupplier, BiConsumer<E, E> secondBranch) {
-        as(firstSupplier,  firstBranch);
+        as(firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
     public <E> void as(Supplier<E> firstSupplier, Consumer<E> firstBranch,
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
                        Provider<Tuple.Tuple2<E, E>> thirdSupplier, BiConsumer<E, E> thirdBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
@@ -906,9 +910,9 @@ public final class SequencePattern {
                        Supplier<E> secondSupplier, Consumer<E> secondBranch,
                        Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                        Provider<Tuple.Tuple2<E, E>> fourthSupplier, BiConsumer<E, E> fourthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
@@ -917,10 +921,10 @@ public final class SequencePattern {
                        Supplier<E> thirdSupplier, Consumer<E> thirdBranch,
                        Supplier<E> fourthSupplier, Consumer<E> fourthBranch,
                        Provider<Tuple.Tuple2<E, E>> fifthSupplier, BiConsumer<E, E> fifthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch,
-           fourthSupplier, fourthBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch,
+                fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
@@ -952,7 +956,7 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> secondSupplier, Consumer<Map.Entry<K, V>> secondBranch,
                                     Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get());
     }
@@ -963,7 +967,7 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
@@ -974,9 +978,9 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> thirdSupplier, Consumer<Map.Entry<K, V>> thirdBranch,
                                     Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get());
     }
 
@@ -987,9 +991,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
@@ -1000,9 +1004,9 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> fourthSupplier, Consumer<Map.Entry<K, V>> fourthBranch,
                                     Supplier<Map.Entry<K, V>> fifthSupplier, Consumer<Map.Entry<K, V>> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.get());
     }
@@ -1015,9 +1019,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
@@ -1054,7 +1058,7 @@ public final class SequencePattern {
     public static <K, V> void match(Map<K, V> data,
                                     Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                                     Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch) {
-        match(data, firstSupplier,  firstBranch);
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.get().getKey(), secondSupplier.get().getValue());
     }
 
@@ -1062,7 +1066,7 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> secondSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> secondBranch) {
-        match(data, firstSupplier,  firstBranch);
+        match(data, firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
@@ -1071,7 +1075,7 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
                                     Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get().getKey(), thirdSupplier.get().getValue());
     }
@@ -1082,7 +1086,7 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
@@ -1093,9 +1097,9 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                                     Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get().getKey(), fourthSupplier.get().getValue());
     }
 
@@ -1106,9 +1110,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch);
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
@@ -1119,9 +1123,9 @@ public final class SequencePattern {
                                     Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
                                     Supplier<Map.Entry<K, V>> fifthSupplier, BiConsumer<K, V> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.get().getKey(), fifthSupplier.get().getValue());
     }
@@ -1134,9 +1138,9 @@ public final class SequencePattern {
                                     Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
                                     BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
         match(data,
-                firstSupplier,  firstBranch,
+                firstSupplier, firstBranch,
                 secondSupplier, secondBranch,
-                thirdSupplier,  thirdBranch,
+                thirdSupplier, thirdBranch,
                 fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
@@ -1145,67 +1149,67 @@ public final class SequencePattern {
         branch.accept(supplier.get().getKey(), supplier.get().getValue());
     }
 
-    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
+    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch) {
-        as(firstSupplier,  firstBranch);
+        as(firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.get().getKey(), secondSupplier.get().getValue());
     }
 
-    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
+    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch);
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch) {
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.get().getKey(), thirdSupplier.get().getValue());
     }
 
-    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
+    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                           Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.get().getKey(), fourthSupplier.get().getValue());
     }
 
-    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
+    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                           Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> secondSupplier,
                           BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> secondBranch) {
-        as(firstSupplier,  firstBranch);
+        as(firstSupplier, firstBranch);
         secondBranch.accept(secondSupplier.take().first(), secondSupplier.take().second());
     }
 
-    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
+    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
                           Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> thirdSupplier,
                           BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> thirdBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch);
         thirdBranch.accept(thirdSupplier.take().first(), thirdSupplier.take().second());
     }
 
-    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
+    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                           Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fourthSupplier,
                           BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fourthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch);
         fourthBranch.accept(fourthSupplier.take().first(), fourthSupplier.take().second());
     }
 
-    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier,  BiConsumer<K, V> firstBranch,
+    public <K, V> void as(Supplier<Map.Entry<K, V>> firstSupplier, BiConsumer<K, V> firstBranch,
                           Supplier<Map.Entry<K, V>> secondSupplier, BiConsumer<K, V> secondBranch,
-                          Supplier<Map.Entry<K, V>> thirdSupplier,  BiConsumer<K, V> thirdBranch,
+                          Supplier<Map.Entry<K, V>> thirdSupplier, BiConsumer<K, V> thirdBranch,
                           Supplier<Map.Entry<K, V>> fourthSupplier, BiConsumer<K, V> fourthBranch,
                           Provider<Tuple.Tuple2<Map.Entry<K, V>, Map.Entry<K, V>>> fifthSupplier,
                           BiConsumer<Map.Entry<K, V>, Map.Entry<K, V>> fifthBranch) {
-        as(firstSupplier,  firstBranch,
-           secondSupplier, secondBranch,
-           thirdSupplier,  thirdBranch,
-           fourthSupplier, fourthBranch);
+        as(firstSupplier, firstBranch,
+                secondSupplier, secondBranch,
+                thirdSupplier, thirdBranch,
+                fourthSupplier, fourthBranch);
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 

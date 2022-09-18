@@ -27,53 +27,30 @@ import org.kl.jpml.error.PatternException;
 import org.kl.jpml.lambda.TriConsumer;
 import org.kl.jpml.lambda.TriFunction;
 import org.kl.jpml.reflect.Reflection;
-import org.kl.jpml.util.Result;
 
 import java.util.Optional;
 import java.util.function.*;
 
-/*
+/**
  * Static pattern allow match type and deconstruct object
  * using factory methods. Maximum number of branches for
  * match three with three value params.
  */
 public final class StaticPattern {
-    private static Object data;
-    private static Optional optionalData;
-    private static Result expectedData;
+    private final Object data;
+    private final Optional optionalData;
 
-    private static StaticPattern instance;
-
-    private StaticPattern() {}
+    private <V, E extends Throwable> StaticPattern(V data, Optional<V> optionalData) {
+        this.data = data;
+        this.optionalData = optionalData;
+    }
 
     public static <V> StaticPattern match(V value) {
-        data = value;
-
-        if (instance == null) {
-            instance = new StaticPattern();
-        }
-
-        return instance;
+        return new StaticPattern(value, null);
     }
 
-    public static <V> StaticPattern match(Optional<V> value) {
-        optionalData = value;
-
-        if (instance == null) {
-            instance = new StaticPattern();
-        }
-
-        return instance;
-    }
-
-    public static <V, E extends Throwable> StaticPattern match(Result<V, E> value) {
-        expectedData = value;
-
-        if (instance == null) {
-            instance = new StaticPattern();
-        }
-
-        return instance;
+    public static <V> StaticPattern match(Optional<V> optionalValue) {
+        return new StaticPattern(null, optionalValue);
     }
 
     public static String of(String name) {
@@ -95,7 +72,7 @@ public final class StaticPattern {
     }
 
     public static <V, C, T, R>
-    R match(V data, Class<C> clazz, String name, Function<T, R> firstBranch)  {
+    R match(V data, Class<C> clazz, String name, Function<T, R> firstBranch) {
         if (clazz == data.getClass()) {
             Object[] args = Reflection.invokeExtractor(data, name, 1);
 
@@ -106,7 +83,7 @@ public final class StaticPattern {
     }
 
     public <C, T, R>
-    R as(Class<C> clazz, String name, Function<T, R> firstBranch)  {
+    R as(Class<C> clazz, String name, Function<T, R> firstBranch) {
         return match(data, clazz, name, firstBranch);
     }
 
@@ -125,7 +102,7 @@ public final class StaticPattern {
     }
 
     public static <V, C, T1, T2, R>
-    R match(V data, Class<C> clazz, String name, BiFunction<T1, T2, R> firstBranch)  {
+    R match(V data, Class<C> clazz, String name, BiFunction<T1, T2, R> firstBranch) {
         if (clazz == data.getClass()) {
             Object[] args = Reflection.invokeExtractor(data, name, 2);
 
@@ -136,7 +113,7 @@ public final class StaticPattern {
     }
 
     public <C, T1, T2, R>
-    R as(Class<C> clazz, String name, BiFunction<T1, T2, R> firstBranch)  {
+    R as(Class<C> clazz, String name, BiFunction<T1, T2, R> firstBranch) {
         return match(data, clazz, name, firstBranch);
     }
 
@@ -166,14 +143,14 @@ public final class StaticPattern {
     }
 
     public <C, T1, T2, T3, R>
-    R as(Class<C> clazz, String name, TriFunction<T1, T2, T3, R> firstBranch)  {
+    R as(Class<C> clazz, String name, TriFunction<T1, T2, T3, R> firstBranch) {
         return match(data, clazz, name, firstBranch);
     }
 
     public static <V, C1, C2, T1, T2>
     void match(V value,
                Class<C1> firstClazz, String firstName, Consumer<T1> firstBranch,
-               Class<C2> secondClazz, String secondName, Consumer<T2> secondBranch)  {
+               Class<C2> secondClazz, String secondName, Consumer<T2> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 1);
 
@@ -199,47 +176,26 @@ public final class StaticPattern {
         }
     }
 
-    public static <T, E extends Throwable>
-    void match(Result<T, E> value,
-               Function<Result<T, E>, E> firstFunction, Consumer<E> firstBranch,
-               Function<Result<T, E>, T> secondFunction, Consumer<T> secondBranch) {
-        if (value.isError()) {
-            E arg = firstFunction.apply(value);
-            firstBranch.accept(arg);
-        } else {
-            T arg = secondFunction.apply(value);
-            secondBranch.accept(arg);
-        }
-    }
-
     public <C1, C2, T1, T2>
-    void as(Class<C1> firstClazz,  String firstName,  Consumer<T1> firstBranch,
-            Class<C2> secondClazz, String secondName, Consumer<T2> secondBranch)  {
+    void as(Class<C1> firstClazz, String firstName, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, String secondName, Consumer<T2> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
     }
 
     @SuppressWarnings("unchecked")
     public <V, T> void as(Supplier<Optional<V>> supplier, Runnable firstBranch,
-                         Function<Optional<V>, T> function, Consumer<T> secondBranch) {
+                          Function<Optional<V>, T> function, Consumer<T> secondBranch) {
         match(optionalData,
                 supplier, firstBranch,
                 function, secondBranch);
     }
 
-    public <T, E extends Throwable>
-    void as(Function<Result<T, E>, E> firstFunction, Consumer<E> firstBranch,
-            Function<Result<T, E>, T> secondFunction, Consumer<T> secondBranch) {
-        match(expectedData,
-                firstFunction, firstBranch,
-                secondFunction,secondBranch);
-    }
-
     public static <V, C1, C2, T1, T2, R>
     R match(V value,
             Class<C1> firstClazz, String firstName, Function<T1, R> firstBranch,
-            Class<C2> secondClazz, String secondName, Function<T2, R> secondBranch)  {
+            Class<C2> secondClazz, String secondName, Function<T2, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 1);
 
@@ -269,49 +225,27 @@ public final class StaticPattern {
         }
     }
 
-    public static <T, E extends Throwable, R>
-    R match(Result<T, E> value,
-            Function<Result<T, E>, E> firstFunction, Function<E, R> firstBranch,
-            Function<Result<T, E>, T> secondFunction, Function<T, R> secondBranch) {
-        if (value.isError()) {
-            E arg = firstFunction.apply(value);
-            return firstBranch.apply(arg);
-        } else {
-            T arg = secondFunction.apply(value);
-            return secondBranch.apply(arg);
-        }
-    }
-
     public <C1, C2, T1, T2, T3, R>
-    R as(Class<C1> firstClazz,  String firstName,  Function<T1, R> firstBranch,
-         Class<C2> secondClazz, String secondName, Function<T2, R> secondBranch)  {
+    R as(Class<C1> firstClazz, String firstName, Function<T1, R> firstBranch,
+         Class<C2> secondClazz, String secondName, Function<T2, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 
     @SuppressWarnings("unchecked")
     public <V, T, R>
-    R as(Supplier<Optional<V>> supplier,    Supplier<R> firstBranch,
-         Function<Optional<V>, T> function, Function<T, R> secondBranch)  {
+    R as(Supplier<Optional<V>> supplier, Supplier<R> firstBranch,
+         Function<Optional<V>, T> function, Function<T, R> secondBranch) {
         return match((Optional<V>) optionalData,
-                       supplier, firstBranch,
-                       function,secondBranch);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T, E extends Throwable, R>
-    R as(Function<Result<T, E>, E> firstFunction, Function<E, R> firstBranch,
-         Function<Result<T, E>, T> secondFunction, Function<T, R> secondBranch) {
-        return match((Result<T, E>) expectedData,
-                       firstFunction, firstBranch,
-                       secondFunction,secondBranch);
+                supplier, firstBranch,
+                function, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3>
     void match(V value,
                Class<C1> firstClazz, String firstName, Consumer<T1> firstBranch,
-               Class<C2> secondClazz, String secondName, BiConsumer<T2, T3> secondBranch)  {
+               Class<C2> secondClazz, String secondName, BiConsumer<T2, T3> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 1);
 
@@ -324,17 +258,17 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3>
-    void as(Class<C1> firstClazz,  String firstName,  Consumer<T1> firstBranch,
-            Class<C2> secondClazz, String secondName, BiConsumer<T2, T3> secondBranch)  {
+    void as(Class<C1> firstClazz, String firstName, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, String secondName, BiConsumer<T2, T3> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, R>
     R match(V value,
             Class<C1> firstClazz, String firstName, Function<T1, R> firstBranch,
-            Class<C2> secondClazz, String secondName, BiFunction<T2, T3, R> secondBranch)  {
+            Class<C2> secondClazz, String secondName, BiFunction<T2, T3, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 1);
 
@@ -351,17 +285,17 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, R>
-    R as(Class<C1> firstClazz,  String firstName,  Function<T1, R> firstBranch,
-         Class<C2> secondClazz, String secondName, BiFunction<T2, T3, R> secondBranch)  {
+    R as(Class<C1> firstClazz, String firstName, Function<T1, R> firstBranch,
+         Class<C2> secondClazz, String secondName, BiFunction<T2, T3, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3>
     void match(V value,
                Class<C1> firstClazz, String firstName, BiConsumer<T1, T2> firstBranch,
-               Class<C2> secondClazz, String secondName, Consumer<T3> secondBranch)  {
+               Class<C2> secondClazz, String secondName, Consumer<T3> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 2);
 
@@ -374,11 +308,11 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3>
-    void as(Class<C1> firstClazz,  String firstName,  BiConsumer<T1, T2> firstBranch,
-            Class<C2> secondClazz, String secondName, Consumer<T3> secondBranch)  {
+    void as(Class<C1> firstClazz, String firstName, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, String secondName, Consumer<T3> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, R>
@@ -401,17 +335,17 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, R>
-    R as(Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
-         Class<C2> secondClazz, String secondName, Function<T3, R> secondBranch)  {
+    R as(Class<C1> firstClazz, String firstName, BiFunction<T1, T2, R> firstBranch,
+         Class<C2> secondClazz, String secondName, Function<T3, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
     void match(V value,
                Class<C1> firstClazz, String firstName, BiConsumer<T1, T2> firstBranch,
-               Class<C2> secondClazz, String secondName, BiConsumer<T3, T4> secondBranch)  {
+               Class<C2> secondClazz, String secondName, BiConsumer<T3, T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 2);
 
@@ -424,11 +358,11 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4>
-    void as(Class<C1> firstClazz,  String firstName,  BiConsumer<T1, T2> firstBranch,
-            Class<C2> secondClazz, String secondName, BiConsumer<T3, T4> secondBranch)  {
+    void as(Class<C1> firstClazz, String firstName, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, String secondName, BiConsumer<T3, T4> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, R>
@@ -451,17 +385,17 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, R>
-    R as(Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
+    R as(Class<C1> firstClazz, String firstName, BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, String secondName, BiFunction<T3, T4, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
     void match(V value,
                Class<C1> firstClazz, String firstName, Consumer<T1> firstBranch,
-               Class<C2> secondClazz, String secondName, TriConsumer<T2, T3, T4> secondBranch)  {
+               Class<C2> secondClazz, String secondName, TriConsumer<T2, T3, T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 1);
 
@@ -474,11 +408,11 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4>
-    void as(Class<C1> firstClazz,  String firstName,  Consumer<T1> firstBranch,
-            Class<C2> secondClazz, String secondName, TriConsumer<T2, T3, T4> secondBranch)  {
+    void as(Class<C1> firstClazz, String firstName, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, String secondName, TriConsumer<T2, T3, T4> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, R>
@@ -501,17 +435,17 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, R>
-    R as(Class<C1> firstClazz,  String firstName,  Function<T1, R> firstBranch,
+    R as(Class<C1> firstClazz, String firstName, Function<T1, R> firstBranch,
          Class<C2> secondClazz, String secondName, TriFunction<T2, T3, T4, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
     void match(V value,
                Class<C1> firstClazz, String firstName, TriConsumer<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, String secondName, Consumer<T4> secondBranch)  {
+               Class<C2> secondClazz, String secondName, Consumer<T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 3);
 
@@ -524,11 +458,11 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4>
-    void as(Class<C1> firstClazz,  String firstName,  TriConsumer<T1, T2, T3> firstBranch,
+    void as(Class<C1> firstClazz, String firstName, TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, String secondName, Consumer<T4> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, R>
@@ -551,11 +485,11 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, R>
-    R as(Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+    R as(Class<C1> firstClazz, String firstName, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, String secondName, Function<T4, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6>
@@ -574,11 +508,11 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, T5, T6>
-    void as(Class<C1> firstClazz,  String firstName,  TriConsumer<T1, T2, T3> firstBranch,
+    void as(Class<C1> firstClazz, String firstName, TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, String secondName, TriConsumer<T4, T5, T6> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6, R>
@@ -601,17 +535,17 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, T5, T6, R>
-    R as(Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+    R as(Class<C1> firstClazz, String firstName, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, String secondName, TriFunction<T4, T5, T6, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5>
     void match(V value,
                Class<C1> firstClazz, String firstName, BiConsumer<T1, T2> firstBranch,
-               Class<C2> secondClazz, String secondName, TriConsumer<T3, T4, T5> secondBranch)  {
+               Class<C2> secondClazz, String secondName, TriConsumer<T3, T4, T5> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 2);
 
@@ -624,11 +558,11 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, T5>
-    void as(Class<C1> firstClazz,  String firstName,  BiConsumer<T1, T2> firstBranch,
-            Class<C2> secondClazz, String secondName, TriConsumer<T3, T4, T5> secondBranch)  {
+    void as(Class<C1> firstClazz, String firstName, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, String secondName, TriConsumer<T3, T4, T5> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
 
     }
 
@@ -652,17 +586,17 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, T5, R>
-    R as(Class<C1> firstClazz,  String firstName,  BiFunction<T1, T2, R> firstBranch,
+    R as(Class<C1> firstClazz, String firstName, BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, String secondName, TriFunction<T3, T4, T5, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5>
     void match(V value,
                Class<C1> firstClazz, String firstName, TriConsumer<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, String secondName, BiConsumer<T4, T5> secondBranch)  {
+               Class<C2> secondClazz, String secondName, BiConsumer<T4, T5> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, firstName, 3);
 
@@ -675,11 +609,11 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, T5>
-    void as(Class<C1> firstClazz,  String firstName,  TriConsumer<T1, T2, T3> firstBranch,
-            Class<C2> secondClazz, String secondName, BiConsumer<T4, T5> secondBranch)  {
+    void as(Class<C1> firstClazz, String firstName, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, String secondName, BiConsumer<T4, T5> secondBranch) {
         match(data,
                 firstClazz, firstName, firstBranch,
-                secondClazz,secondName,secondBranch);
+                secondClazz, secondName, secondBranch);
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, R>
@@ -702,10 +636,10 @@ public final class StaticPattern {
     }
 
     public <C1, C2, T1, T2, T3, T4, T5, R>
-    R as(Class<C1> firstClazz,  String firstName,  TriFunction<T1, T2, T3, R> firstBranch,
+    R as(Class<C1> firstClazz, String firstName, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, String secondName, BiFunction<T4, T5, R> secondBranch) {
         return match(data,
-                       firstClazz, firstName, firstBranch,
-                       secondClazz,secondName,secondBranch);
+                firstClazz, firstName, firstBranch,
+                secondClazz, secondName, secondBranch);
     }
 }

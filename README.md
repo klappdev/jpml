@@ -1,5 +1,7 @@
 # jpml
-Java pattern matching library base on lambdas.
+**J**ava **p**attern **m**atching **l**ibrary.
+
+[![Apk file](https://img.shields.io/github/downloads/genuinetools/apk-file/total.svg?style=for-the-badge)](files/jpml-jvm8.jar)
 
 Many languages support pattern matching at the language level. <br/>
 Java language does not support at the moment pattern matching  <br/>
@@ -9,7 +11,7 @@ Using Java 8 features, we can emulate some of the features pattern matching.<br/
 In general, patterns can be divided into three types: constant, type, var.<br/>
 The library supports both statement and expression.<br/>
 
-*Constant pattern* allow test for equality with constants.
+**Constant pattern** allow test for equality with constants.
 
 ```Java
    switch (data) {
@@ -50,7 +52,7 @@ For work with range values could use such functions: in/or.
    );
 ```
 
-*Tuple pattern* allow test for equality multiple pieces with constants.
+**Tuple pattern** allow test for equality multiple pieces with constants.
 
 ```Java
    let (side, width) = border;	
@@ -91,7 +93,7 @@ deduce types parameters.
    }
 ```
 
-*Type test pattern* allow match type and then extract value.
+**Type test pattern** allow match type and then extract value.
 
 ```Java
     switch (data) {
@@ -119,7 +121,7 @@ Using this library developer can write in the following way.
    );
 ```
 
-*Exhaustive pattern* allow match exhaustive subclasses type.
+**Exhaustive pattern* allow match exhaustive subclasses type.
 
 ```Java
    public sealed class Result<T, E extends Throwable> {
@@ -160,7 +162,7 @@ Using this library developer can write in the following way.
     );       
 ```
 
-*Guard pattern* allow match type and check condition for the truth at one time.
+**Guard pattern** allow match type and check condition for the truth at one time.
 
 ```Java
     switch (data) {
@@ -202,7 +204,7 @@ always/yes, never/no.
    );
 ```
 
-*Deconstruction pattern* allow match type and deconstruct object at the parts.
+**Deconstruction pattern** allow match type and deconstruct object at the parts.
 
 ```Java
    Figure figure = new Rectangle();
@@ -257,9 +259,7 @@ pass by reference we must to use wrappers such IntRef, FloatRef and etc.
       height.set(this.height);
    }
 ```
-*Property pattern* allow match type and access to fields class.
-
-
+**Property pattern** allow match type and access to fields class.
 ```Java
     Figure figure = new Rectangle();
     
@@ -324,7 +324,7 @@ property parameters.
    });
 ```
 
-*Position pattern* allow match type and check value fields class in order of declaration.
+**Position pattern** allow match type and check value fields class in order of declaration.
 
 ```Java
     switch (data) {
@@ -361,7 +361,7 @@ to be marked with annotation @Exclude. Excluded fields must to be declared last.
    }
 ```
 
-*Static pattern* allow match type and deconstruct object using factory methods.
+**Static pattern** allow match type and deconstruct object using factory methods.
 
 ```Java   
    switch (some) {
@@ -383,21 +383,16 @@ Using this library developer can write in the following way.
    );    
 ```
 
-Also this pattern give simplify work with Optional<<V>>, Result<T, E>.
+Also this pattern give simplify work with Optional<<V>>.
 	
 ```Java
    match(value).as(
       Optional::empty, () -> out.println("empty"),
       Optional::get,    v -> out.println("value: " + v)
    );
-   
-   match(value).as(
-      Result::error, e -> out.println("get error: " + e),
-      Result::value, v -> out.println("get value: " + v)
-   );
 ```
 
-*Sequence pattern* allow processing on data sequence.
+**Sequence pattern** allow processing on data sequence.
 
 ```Java
    List<Integer> list = List.of(1, 2, 3);
@@ -432,7 +427,7 @@ types property parameters.
    );   
 ```
 
-*Common pattern* contains general constructions which could be useful.
+**Common pattern** contains general constructions which could be useful.
 
 ```Java 
     lazy var rect = new Rectangle();
@@ -481,6 +476,6 @@ Using this library developer can write in the following way.
 ```
 
 Requirements:<br/>
-JDK: Java 8, 11
+Java version: 8, 11
 
 

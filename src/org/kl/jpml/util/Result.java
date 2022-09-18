@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -26,82 +26,86 @@ package org.kl.jpml.util;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class Result<T, E extends Throwable> {
-    private final T value;
-    private final E error;
+public abstract class Result {
+    protected Result() {}
 
-    private Result() {
-        this.value = null;
-        this.error = null;
+    public static final class Value<T> extends Result {
+        private final T value;
+
+        public Value(T value) {
+            this.value = value;
+        }
+
+        public T value() {
+            return value;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            if (other == null || getClass() != other.getClass()) return false;
+            if (!super.equals(other)) return false;
+
+            final Value tmp = (Value) other;
+            return Objects.equals(value, tmp.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), value);
+        }
+
+        @Override
+        public String toString() {
+            return "Result.Value [" + value + "]";
+        }
     }
 
-    private Result(T value) {
-        this.value = Objects.requireNonNull(value);
-        this.error = null;
+    public static final class Error<E extends Throwable> extends Result {
+        private final E error;
+
+        public Error(E error) {
+            this.error = error;
+        }
+
+        public E error() {
+            return error;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            if (other == null || getClass() != other.getClass()) return false;
+            if (!super.equals(other)) return false;
+
+            final Error tmp = (Error) other;
+            return Objects.equals(error, tmp.error);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), error);
+        }
+
+        @Override
+        public String toString() {
+            return "Result.Error [" + error + "]";
+        }
     }
 
-    private Result(E error) {
-        this.error = Objects.requireNonNull(error);
-        this.value = null;
+    public static <T, E extends Throwable> Result of(T value) {
+        return new Result.Value<>(value);
     }
 
-    public static <T, E extends Throwable> Result<T, E> of(T value) {
-        return new Result<>(value);
+    public static <T, E extends Throwable> Result of(E error) {
+        return new Result.Error<>(error);
     }
 
-    public static <T, E extends Throwable> Result<T, E> of(E error) {
-        return new Result<>(error);
-    }
-
-    public static <T, E extends Throwable> Result<T, E> of(Supplier<T> supplier) {
+    public static <T, E extends Throwable> Result of(Supplier<T> supplier) {
         try {
-            return new Result<>(supplier.get());
+            return new Result.Value<>(supplier.get());
         } catch (Throwable e) {
-            return new Result<>((E) e);
+            return new Result.Error<>((E) e);
         }
-    }
-
-    public boolean isValue() {
-        return value != null;
-    }
-
-    public boolean isError() {
-        return error != null;
-    }
-
-    public T value() {
-        return value;
-    }
-
-    public E error() {
-        return error;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-
-        if (other == null || getClass() != other.getClass()) {
-            return false;
-        }
-
-        Result<?, ?> result = (Result<?, ?>) other;
-
-        return Objects.equals(value, result.value) &&
-               Objects.equals(error, result.error);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value, error);
-    }
-
-    @Override
-    public String toString() {
-        return value != null
-                ? "Value: " + value
-                : "Error: " + error;
     }
 }

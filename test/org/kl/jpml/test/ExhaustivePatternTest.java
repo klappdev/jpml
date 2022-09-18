@@ -26,6 +26,7 @@ package org.kl.jpml.test;
 import org.kl.jpml.test.color.*;
 
 import org.junit.jupiter.api.Test;
+
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,7 +40,7 @@ public class ExhaustivePatternTest {
         BiColor biColor = new BiColor.Red();
 
         match(biColor,
-                BiColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                BiColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 BiColor.Blue.class, (Consumer<BiColor.Blue>) b -> System.out.println("blue subclass: " + b)
         );
 
@@ -47,7 +48,7 @@ public class ExhaustivePatternTest {
         TriColor triColor = new TriColor.Blue();
 
         match(triColor,
-                TriColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                TriColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 TriColor.Blue.class, b -> System.out.println("blue subclass: " + b),
                 TriColor.White.class, (Consumer<TriColor.White>) w -> System.out.println("white subclass: " + w)
         );
@@ -56,7 +57,7 @@ public class ExhaustivePatternTest {
         QuarColor quarColor = new QuarColor.Black();
 
         match(quarColor,
-                QuarColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                QuarColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 QuarColor.Blue.class, b -> System.out.println("blue subclass: " + b),
                 QuarColor.White.class, w -> System.out.println("white subclass: " + w),
                 QuarColor.Black.class, (Consumer<QuarColor.Black>) b -> System.out.println("black subclass: " + b)
@@ -66,7 +67,7 @@ public class ExhaustivePatternTest {
         QuinColor quinColor = new QuinColor.Green();
 
         match(quinColor,
-                QuinColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                QuinColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 QuinColor.Blue.class, b -> System.out.println("blue subclass: " + b),
                 QuinColor.White.class, w -> System.out.println("white subclass: " + w),
                 QuinColor.Black.class, b -> System.out.println("black subclass: " + b),
@@ -77,7 +78,7 @@ public class ExhaustivePatternTest {
         SexColor sexColor = new SexColor.Yellow();
 
         match(sexColor,
-                SexColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                SexColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 SexColor.Blue.class, b -> System.out.println("blue subclass: " + b),
                 SexColor.White.class, w -> System.out.println("white subclass: " + w),
                 SexColor.Black.class, b -> System.out.println("black subclass: " + b),
@@ -92,7 +93,7 @@ public class ExhaustivePatternTest {
         BiColor biColor = new BiColor.Red();
 
         match(biColor).as(
-                BiColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                BiColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 BiColor.Blue.class, (Consumer<BiColor.Blue>) b -> System.out.println("blue subclass: " + b)
         );
 
@@ -100,7 +101,7 @@ public class ExhaustivePatternTest {
         TriColor triColor = new TriColor.Blue();
 
         match(triColor).as(
-                TriColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                TriColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 TriColor.Blue.class, b -> System.out.println("blue subclass: " + b),
                 TriColor.White.class, (Consumer<TriColor.White>) w -> System.out.println("white subclass: " + w)
         );
@@ -109,7 +110,7 @@ public class ExhaustivePatternTest {
         QuarColor quarColor = new QuarColor.Black();
 
         match(quarColor).as(
-                QuarColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                QuarColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 QuarColor.Blue.class, b -> System.out.println("blue subclass: " + b),
                 QuarColor.White.class, w -> System.out.println("white subclass: " + w),
                 QuarColor.Black.class, (Consumer<QuarColor.Black>) b -> System.out.println("black subclass: " + b)
@@ -119,7 +120,7 @@ public class ExhaustivePatternTest {
         QuinColor quinColor = new QuinColor.Green();
 
         match(quinColor).as(
-                QuinColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                QuinColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 QuinColor.Blue.class, b -> System.out.println("blue subclass: " + b),
                 QuinColor.White.class, w -> System.out.println("white subclass: " + w),
                 QuinColor.Black.class, b -> System.out.println("black subclass: " + b),
@@ -130,7 +131,7 @@ public class ExhaustivePatternTest {
         SexColor sexColor = new SexColor.Yellow();
 
         match(sexColor).as(
-                SexColor.Red.class,  r -> System.out.println("red subclass:  " + r),
+                SexColor.Red.class, r -> System.out.println("red subclass:  " + r),
                 SexColor.Blue.class, b -> System.out.println("blue subclass: " + b),
                 SexColor.White.class, w -> System.out.println("white subclass: " + w),
                 SexColor.Black.class, b -> System.out.println("black subclass: " + b),
@@ -145,7 +146,7 @@ public class ExhaustivePatternTest {
         BiColor biColor = new BiColor.Red();
 
         int result1 = match(biColor,
-                BiColor.Red.class,  r -> 0x1,
+                BiColor.Red.class, r -> 0x1,
                 BiColor.Blue.class, b -> 0x2
         );
 
@@ -155,7 +156,7 @@ public class ExhaustivePatternTest {
         TriColor triColor = new TriColor.Blue();
 
         int result2 = match(triColor,
-                TriColor.Red.class,  r -> 0x1,
+                TriColor.Red.class, r -> 0x1,
                 TriColor.Blue.class, b -> 0x2,
                 TriColor.White.class, w -> 0x3
         );
@@ -166,7 +167,7 @@ public class ExhaustivePatternTest {
         QuarColor quarColor = new QuarColor.White();
 
         int result3 = match(quarColor,
-                QuarColor.Red.class,  r -> 0x1,
+                QuarColor.Red.class, r -> 0x1,
                 QuarColor.Blue.class, b -> 0x2,
                 QuarColor.White.class, w -> 0x3,
                 QuarColor.Black.class, b -> 0x4
@@ -178,7 +179,7 @@ public class ExhaustivePatternTest {
         QuinColor quinColor = new QuinColor.Green();
 
         int result4 = match(quinColor,
-                QuinColor.Red.class,  r -> 0x1,
+                QuinColor.Red.class, r -> 0x1,
                 QuinColor.Blue.class, b -> 0x2,
                 QuinColor.White.class, w -> 0x3,
                 QuinColor.Black.class, b -> 0x4,
@@ -191,7 +192,7 @@ public class ExhaustivePatternTest {
         SexColor sexColor = new SexColor.Yellow();
 
         int result5 = match(sexColor,
-                SexColor.Red.class,  r -> 0x1,
+                SexColor.Red.class, r -> 0x1,
                 SexColor.Blue.class, b -> 0x2,
                 SexColor.White.class, w -> 0x3,
                 SexColor.Black.class, b -> 0x4,
@@ -208,7 +209,7 @@ public class ExhaustivePatternTest {
         BiColor biColor = new BiColor.Red();
 
         int result1 = match(biColor).as(
-                BiColor.Red.class,  r -> 0x1,
+                BiColor.Red.class, r -> 0x1,
                 BiColor.Blue.class, b -> 0x2
         );
 
@@ -218,7 +219,7 @@ public class ExhaustivePatternTest {
         TriColor triColor = new TriColor.Blue();
 
         int result2 = match(triColor).as(
-                TriColor.Red.class,  r -> 0x1,
+                TriColor.Red.class, r -> 0x1,
                 TriColor.Blue.class, b -> 0x2,
                 TriColor.White.class, w -> 0x3
         );
@@ -229,7 +230,7 @@ public class ExhaustivePatternTest {
         QuarColor quarColor = new QuarColor.White();
 
         int result3 = match(quarColor).as(
-                QuarColor.Red.class,  r -> 0x1,
+                QuarColor.Red.class, r -> 0x1,
                 QuarColor.Blue.class, b -> 0x2,
                 QuarColor.White.class, w -> 0x3,
                 QuarColor.Black.class, b -> 0x4
@@ -241,7 +242,7 @@ public class ExhaustivePatternTest {
         QuinColor quinColor = new QuinColor.Green();
 
         int result4 = match(quinColor).as(
-                QuinColor.Red.class,  r -> 0x1,
+                QuinColor.Red.class, r -> 0x1,
                 QuinColor.Blue.class, b -> 0x2,
                 QuinColor.White.class, w -> 0x3,
                 QuinColor.Black.class, b -> 0x4,
@@ -254,7 +255,7 @@ public class ExhaustivePatternTest {
         SexColor sexColor = new SexColor.Yellow();
 
         int result5 = match(sexColor).as(
-                SexColor.Red.class,  r -> 0x1,
+                SexColor.Red.class, r -> 0x1,
                 SexColor.Blue.class, b -> 0x2,
                 SexColor.White.class, w -> 0x3,
                 SexColor.Black.class, b -> 0x4,

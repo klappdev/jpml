@@ -24,7 +24,6 @@
 package org.kl.jpml.benchmark;
 
 import org.kl.jpml.lambda.Routine;
-import org.kl.jpml.pattern.ExhaustivePattern;
 import org.kl.jpml.test.color.*;
 import org.openjdk.jmh.Main;
 import org.openjdk.jmh.annotations.*;
@@ -34,23 +33,23 @@ import java.util.concurrent.TimeUnit;
 import static org.kl.jpml.pattern.ExhaustivePattern.match;
 
 /*
-    UnionPatternBenchmark.matchesSealedBiExpressionPlain           avgt    9   5,992 ±  0,332  ns/op
-    UnionPatternBenchmark.matchesSealedTriExpressionPlain          avgt    9   7,199 ±  0,356  ns/op
-    UnionPatternBenchmark.matchesSealedQuarExpressionPlain         avgt    9   8,349 ±  1,789  ns/op
-    UnionPatternBenchmark.matchesSealedQuinExpressionPlain         avgt    9   8,163 ±  0,541  ns/op
-    UnionPatternBenchmark.matchesSealedSexExpressionPlain          avgt    9   8,746 ±  0,600  ns/op
+    UnionPatternBenchmark.matchSealedBiExpressionPlain           avgt    9   5,992 ±  0,332  ns/op
+    UnionPatternBenchmark.matchSealedTriExpressionPlain          avgt    9   7,199 ±  0,356  ns/op
+    UnionPatternBenchmark.matchSealedQuarExpressionPlain         avgt    9   8,349 ±  1,789  ns/op
+    UnionPatternBenchmark.matchSealedQuinExpressionPlain         avgt    9   8,163 ±  0,541  ns/op
+    UnionPatternBenchmark.matchSealedSexExpressionPlain          avgt    9   8,746 ±  0,600  ns/op
 
-    UnionPatternBenchmark.matchesSealedBiExpressionReflective      avgt    9  45,192 ± 11,951  ns/op
-    UnionPatternBenchmark.matchesSealedTriExpressionReflective     avgt    9  43,413 ±  0,702  ns/op
-    UnionPatternBenchmark.matchesSealedQuarExpressionReflective    avgt    9  59,127 ± 12,189  ns/op
-    UnionPatternBenchmark.matchesSealedQuinExpressionReflective    avgt    9  57,653 ±  3,363  ns/op
-    UnionPatternBenchmark.matchesSealedSexExpressionReflective     avgt    9  65,511 ±  4,214  ns/op
+    UnionPatternBenchmark.matchSealedBiExpressionReflective      avgt    9  45,192 ± 11,951  ns/op
+    UnionPatternBenchmark.matchSealedTriExpressionReflective     avgt    9  43,413 ±  0,702  ns/op
+    UnionPatternBenchmark.matchSealedQuarExpressionReflective    avgt    9  59,127 ± 12,189  ns/op
+    UnionPatternBenchmark.matchSealedQuinExpressionReflective    avgt    9  57,653 ±  3,363  ns/op
+    UnionPatternBenchmark.matchSealedSexExpressionReflective     avgt    9  65,511 ±  4,214  ns/op
 
-    UnionPatternBenchmark.matchesAsSealedBiExpressionReflective    avgt    9  51,458 ± 20,076  ns/op
-    UnionPatternBenchmark.matchesAsSealedTriExpressionReflective   avgt    9  51,867 ± 10,918  ns/op
-    UnionPatternBenchmark.matchesAsSealedQuarExpressionReflective  avgt    9  60,489 ± 11,864  ns/op
-    UnionPatternBenchmark.matchesAsSealedQuinExpressionReflective  avgt    9  65,481 ±  6,173  ns/op
-    UnionPatternBenchmark.matchesAsSealedSexExpressionReflective   avgt    9  69,764 ± 11,748  ns/op
+    UnionPatternBenchmark.matchAsSealedBiExpressionReflective    avgt    9  51,458 ± 20,076  ns/op
+    UnionPatternBenchmark.matchAsSealedTriExpressionReflective   avgt    9  51,867 ± 10,918  ns/op
+    UnionPatternBenchmark.matchAsSealedQuarExpressionReflective  avgt    9  60,489 ± 11,864  ns/op
+    UnionPatternBenchmark.matchAsSealedQuinExpressionReflective  avgt    9  65,481 ±  6,173  ns/op
+    UnionPatternBenchmark.matchAsSealedSexExpressionReflective   avgt    9  69,764 ± 11,748  ns/op
  */
 @Warmup(iterations = 3, time = 1)
 @Measurement(iterations = 3, time = 1)
@@ -151,7 +150,7 @@ public class ExhaustivePatternBenchmark {
 
     @Benchmark
     public int matchSealedBiExpressionReflective() {
-        return ExhaustivePattern.match(biColor,
+        return match(biColor,
                 BiColor.Red.class,  r -> 0x1,
                 BiColor.Blue.class, b -> 0x2
         );
@@ -159,7 +158,7 @@ public class ExhaustivePatternBenchmark {
 
     @Benchmark
     public int matchAsSealedBiExpressionReflective() {
-        return ExhaustivePattern.match(biColor).as(
+        return match(biColor).as(
                 BiColor.Red.class,  r -> 0x1,
                 BiColor.Blue.class, (Routine<BiColor.Blue, Integer>) b -> 0x2
         );
@@ -167,7 +166,7 @@ public class ExhaustivePatternBenchmark {
 
     @Benchmark
     public int matchSealedTriExpressionReflective() {
-        return ExhaustivePattern.match(triColor,
+        return match(triColor,
                 TriColor.Red.class,  r -> 0x1,
                 TriColor.Blue.class, b -> 0x2,
                 TriColor.White.class, b -> 0x3
@@ -176,7 +175,7 @@ public class ExhaustivePatternBenchmark {
 
     @Benchmark
     public int matchAsSealedTriExpressionReflective() {
-        return ExhaustivePattern.match(triColor).as(
+        return match(triColor).as(
                 TriColor.Red.class,  r -> 0x1,
                 TriColor.Blue.class, b -> 0x2,
                 TriColor.White.class, (Routine<TriColor.White, Integer>) b -> 0x3
@@ -185,7 +184,7 @@ public class ExhaustivePatternBenchmark {
 
     @Benchmark
     public int matchSealedQuarExpressionReflective() {
-        return ExhaustivePattern.match(quarColor,
+        return match(quarColor,
                 QuarColor.Red.class,  r -> 0x1,
                 QuarColor.Blue.class, b -> 0x2,
                 QuarColor.White.class, w -> 0x3,
@@ -195,7 +194,7 @@ public class ExhaustivePatternBenchmark {
 
     @Benchmark
     public int matchAsSealedQuarExpressionReflective() {
-        return ExhaustivePattern.match(quarColor).as(
+        return match(quarColor).as(
                 QuarColor.Red.class,  r -> 0x1,
                 QuarColor.Blue.class, b -> 0x2,
                 QuarColor.White.class, w -> 0x3,
@@ -204,8 +203,8 @@ public class ExhaustivePatternBenchmark {
     }
 
     @Benchmark
-    public int matchesSealedQuinExpressionReflective() {
-        return ExhaustivePattern.match(quinColor,
+    public int matchSealedQuinExpressionReflective() {
+        return match(quinColor,
                 QuinColor.Red.class,  r -> 0x1,
                 QuinColor.Blue.class, b -> 0x2,
                 QuinColor.White.class, w -> 0x3,
@@ -215,8 +214,8 @@ public class ExhaustivePatternBenchmark {
     }
 
     @Benchmark
-    public int matchesAsSealedQuinExpressionReflective() {
-        return ExhaustivePattern.match(quinColor).as(
+    public int matchAsSealedQuinExpressionReflective() {
+        return match(quinColor).as(
                 QuinColor.Red.class,  r -> 0x1,
                 QuinColor.Blue.class, b -> 0x2,
                 QuinColor.White.class, w -> 0x3,
@@ -226,7 +225,7 @@ public class ExhaustivePatternBenchmark {
     }
 
     @Benchmark
-    public int matchesSealedSexExpressionReflective() {
+    public int matchSealedSexExpressionReflective() {
         return match(sexColor,
                 SexColor.Red.class,  r -> 0x1,
                 SexColor.Blue.class, b -> 0x2,
@@ -238,8 +237,8 @@ public class ExhaustivePatternBenchmark {
     }
 
     @Benchmark
-    public int matchesAsSealedSexExpressionReflective() {
-        return ExhaustivePattern.match(sexColor).as(
+    public int matchAsSealedSexExpressionReflective() {
+        return match(sexColor).as(
                 SexColor.Red.class,  r -> 0x1,
                 SexColor.Blue.class, b -> 0x2,
                 SexColor.White.class, w -> 0x3,

@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -33,17 +33,24 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.*;
 
-/*
+/**
  * Deconstruction pattern allow match type and deconstruct
  * object at the parts. Maximum number of branches for match
  * three with three deconstruction params.
  */
 public final class DeconstructPattern {
+    private final Object value;
 
-    private DeconstructPattern() {}
+    private <V> DeconstructPattern(V value) {
+        this.value = value;
+    }
+
+    public static <V> DeconstructPattern match(V value) {
+        return new DeconstructPattern(value);
+    }
 
     public static <V, T>
-    void foreach(Collection<V> data, Consumer<T> branch)  {
+    void foreach(Collection<V> data, Consumer<T> branch) {
         for (V value : data) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -52,15 +59,15 @@ public final class DeconstructPattern {
     }
 
     public static <V, T>
-    void let(V data, Consumer<T> branch)  {
+    void let(V data, Consumer<T> branch) {
         Object[] args = Reflection.invokeExtractor(data, 1);
 
         branch.accept((T) args[0]);
     }
 
     public static <V, C, T>
-    void matches(V value,
-                 Class<C> clazz, Consumer<T> branch)  {
+    void match(V value,
+               Class<C> clazz, Consumer<T> branch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -68,11 +75,14 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C, T> void as(Class<C> clazz, Consumer<T> branch) {
+        match(value, clazz, branch);
+    }
+
     public static <V, C, T>
-    void matches(V value,
-                 Class<C> clazz, Purchaser<T> branch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C> clazz, Purchaser<T> branch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -83,11 +93,16 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C, T>
+    void as(Class<C> clazz, Purchaser<T> branch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, clazz, branch, elseClass, elseBranch);
+    }
+
     public static <V, C, T>
-    void matches(V value,
-                 Class<C> clazz, Purchaser<T> branch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C> clazz, Purchaser<T> branch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -98,35 +113,35 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C, T>
-    void matches(V value,
-                 Class<C> clazz, Purchaser<T> branch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C> clazz, Purchaser<T> branch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, clazz, branch, elseClass, elseBranch);
+            match(value, clazz, branch, elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C, T>
-    void matches(V value,
-                 Class<C> clazz, Purchaser<T> branch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C> clazz, Purchaser<T> branch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, clazz, branch, varClass, varBranch);
+            match(value, clazz, branch, varClass, varBranch);
         }
     }
 
     public static <V, C, T, R>
-    R matches(V value,
-              Class<C> clazz, Function<T, R> branch)  {
+    R match(V value,
+            Class<C> clazz, Function<T, R> branch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -136,12 +151,12 @@ public final class DeconstructPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C, T, R>
-    R matches(V value,
-              Class<C> clazz, Function<T, R> branch,
-              Class<Else> elseClass, Supplier<R> elseBranch)  {
-        R result = matches(value, clazz, branch);
+    R match(V value,
+            Class<C> clazz, Function<T, R> branch,
+            Class<Else> elseClass, Supplier<R> elseBranch) {
+        R result = match(value, clazz, branch);
 
         if (result != null) {
             return result;
@@ -150,12 +165,12 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C, T, R>
-    R matches(V value,
-              Class<C> clazz, Function<T, R> branch,
-              Class<Var> varClass, Routine<V, R> varBranch)  {
-        R result = matches(value, clazz, branch);
+    R match(V value,
+            Class<C> clazz, Function<T, R> branch,
+            Class<Var> varClass, Routine<V, R> varBranch) {
+        R result = match(value, clazz, branch);
 
         if (result != null) {
             return result;
@@ -164,34 +179,34 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C, T, R>
-    R matches(V value,
-              Class<C> clazz, Function<T, R> branch,
-              Class<Null> nullClass, Supplier<R> nullBranch,
-              Class<Else> elseClass, Supplier<R> elseBranch)  {
+    R match(V value,
+            Class<C> clazz, Function<T, R> branch,
+            Class<Null> nullClass, Supplier<R> nullBranch,
+            Class<Else> elseClass, Supplier<R> elseBranch) {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, clazz, branch, elseClass, elseBranch);
+            return match(value, clazz, branch, elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C, T, R>
-    R matches(V value,
-              Class<C> clazz, Function<T, R> branch,
-              Class<Null> nullClass, Supplier<R> nullBranch,
-              Class<Var> varClass,   Routine<V, R> varBranch)  {
+    R match(V value,
+            Class<C> clazz, Function<T, R> branch,
+            Class<Null> nullClass, Supplier<R> nullBranch,
+            Class<Var> varClass, Routine<V, R> varBranch) {
         if (value == null) {
             return nullBranch.get();
         } else {
-            return matches(value, clazz, branch, varClass, varBranch);
+            return match(value, clazz, branch, varClass, varBranch);
         }
     }
 
     public static <V, T1, T2>
-    void foreach(Collection<V> data, BiConsumer<T1, T2> branch)  {
+    void foreach(Collection<V> data, BiConsumer<T1, T2> branch) {
         for (V value : data) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -207,15 +222,15 @@ public final class DeconstructPattern {
     }
 
     public static <V, T1, T2>
-    void let(V data, BiConsumer<T1, T2> branch)  {
+    void let(V data, BiConsumer<T1, T2> branch) {
         Object[] args = Reflection.invokeExtractor(data, 2);
 
         branch.accept((T1) args[0], (T2) args[1]);
     }
 
     public static <V, C, T1, T2>
-    void matches(V value,
-                 Class<C> clazz, BiConsumer<T1, T2> branch)  {
+    void match(V value,
+               Class<C> clazz, BiConsumer<T1, T2> branch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -223,11 +238,15 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C, T1, T2>
+    void as(Class<C> clazz, BiConsumer<T1, T2> branch) {
+        match(value, clazz, branch);
+    }
+
     public static <V, C, T1, T2>
-    void matches(V value,
-                 Class<C> clazz, BiPurchaser<T1, T2> branch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C> clazz, BiPurchaser<T1, T2> branch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -238,11 +257,16 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C, T1, T2>
+    void as(Class<C> clazz, BiPurchaser<T1, T2> branch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, clazz, branch, elseClass, elseBranch);
+    }
+
     public static <V, C, T1, T2>
-    void matches(V value,
-                 Class<C> clazz, BiPurchaser<T1, T2> branch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C> clazz, BiPurchaser<T1, T2> branch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -253,35 +277,33 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C, T1, T2>
-    void matches(V value,
-                 Class<C> clazz, BiPurchaser<T1, T2> branch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C> clazz, BiPurchaser<T1, T2> branch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, clazz, branch, elseClass, elseBranch);
+            match(value, clazz, branch, elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C, T1, T2>
-    void matches(V value,
-                 Class<C> clazz, BiPurchaser<T1, T2> branch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C> clazz, BiPurchaser<T1, T2> branch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, clazz, branch, varClass, varBranch);
+            match(value, clazz, branch, varClass, varBranch);
         }
     }
 
     public static <V, C, T1, T2, R>
-    R matches(V value,
-              Class<C> clazz, BiFunction<T1, T2, R> branch)  {
+    R match(V value,
+            Class<C> clazz, BiFunction<T1, T2, R> branch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -292,7 +314,7 @@ public final class DeconstructPattern {
     }
 
     public static <V, T1, T2, T3>
-    void foreach(Collection<V> data, TriConsumer<T1, T2, T3> branch)  {
+    void foreach(Collection<V> data, TriConsumer<T1, T2, T3> branch) {
         for (V value : data) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -301,15 +323,15 @@ public final class DeconstructPattern {
     }
 
     public static <V, T1, T2, T3>
-    void let(V data, TriConsumer<T1, T2, T3> branch)  {
+    void let(V data, TriConsumer<T1, T2, T3> branch) {
         Object[] args = Reflection.invokeExtractor(data, 3);
 
         branch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
     }
 
     public static <V, C, T1, T2, T3>
-    void matches(V value,
-                 Class<C> clazz, TriConsumer<T1, T2, T3> branch)  {
+    void match(V value,
+               Class<C> clazz, TriConsumer<T1, T2, T3> branch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -317,11 +339,15 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C, T1, T2, T3>
+    void as(Class<C> clazz, TriConsumer<T1, T2, T3> branch) {
+        match(value, clazz, branch);
+    }
+
     public static <V, C, T1, T2, T3>
-    void matches(V value,
-                 Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -332,11 +358,16 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C, T1, T2, T3>
+    void as(Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, clazz, branch, elseClass, elseBranch);
+    }
+
     public static <V, C, T1, T2, T3>
-    void matches(V value,
-                 Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -347,35 +378,33 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C, T1, T2, T3>
-    void matches(V value,
-                 Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, clazz, branch, elseClass, elseBranch);
+            match(value, clazz, branch, elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C, T1, T2, T3>
-    void matches(V value,
-                 Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, clazz, branch, varClass, varBranch);
+            match(value, clazz, branch, varClass, varBranch);
         }
     }
 
     public static <V, C, T1, T2, T3, R>
-    R matches(V value,
-              Class<C> clazz, TriFunction<T1, T2, T3, R> branch)  {
+    R match(V value,
+            Class<C> clazz, TriFunction<T1, T2, T3, R> branch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -386,9 +415,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Consumer<T2> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -400,12 +429,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, Consumer<T2> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Consumer<T2> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -421,12 +457,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, Consumer<T2> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T2> secondBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -442,42 +485,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Consumer<T2> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T2> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Function<T1, R> firstBranch,
-              Class<C2> secondClazz, Function<T2, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, Function<T2, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -492,9 +533,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -506,12 +547,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2, T3>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -527,12 +575,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2, T3>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -548,42 +603,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, T3, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Function<T1, R> firstBranch,
-              Class<C2> secondClazz, BiFunction<T2, T3, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, BiFunction<T2, T3, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -598,9 +651,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Consumer<T3> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -612,12 +665,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2, T3>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, Consumer<T3> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Consumer<T3> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -633,12 +693,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2, T3>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, Consumer<T3> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T3> secondBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -652,42 +719,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Consumer<T3> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T3> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, T3, R>
-    R matches(V value,
-              Class<C1> firstClazz,  BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, Function<T3, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, Function<T3, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -702,9 +767,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -716,12 +781,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -737,12 +809,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -758,43 +837,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz,  BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, BiFunction<T3, T4, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, BiFunction<T3, T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -809,9 +885,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -823,12 +899,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -844,12 +927,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -865,42 +955,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz,  Function<T1, R> firstBranch,
-              Class<C2> secondClazz, TriFunction<T2, T3, T4, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, Function<T1, R> firstBranch,
+            Class<C2> secondClazz, TriFunction<T2, T3, T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -915,9 +1003,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -929,12 +1017,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, Consumer<T4> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -950,12 +1045,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, Consumer<T4> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T4> secondBranch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -971,42 +1073,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T4> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, R>
-    R matches(V value,
-              Class<C1> firstClazz,  TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, Function<T4, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, Function<T4, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1021,9 +1121,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1035,12 +1135,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1056,12 +1163,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1077,42 +1191,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
-    void matches(V value,
-               Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
                Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var>  varClass,  Purchaser<V> varBranch)  {
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6, R>
-    R matches(V value,
-              Class<C1> firstClazz,  TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, TriFunction<T4, T5, T6, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, TriFunction<T4, T5, T6, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1127,9 +1239,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1141,12 +1253,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1162,12 +1281,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1183,42 +1309,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, T5, R>
-    R matches(V value,
-              Class<C1> firstClazz,  BiFunction<T1, T2, R> firstBranch,
-              Class<C2> secondClazz, TriFunction<T3, T4, T5, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, BiFunction<T1, T2, R> firstBranch,
+            Class<C2> secondClazz, TriFunction<T3, T4, T5, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1233,9 +1357,9 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1247,12 +1371,19 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
+    }
+
     public static <V, C1, C2, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1268,12 +1399,19 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value, firstClazz, firstBranch, secondClazz, secondBranch,
+                elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-                 Class<Var> varClass, Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1289,42 +1427,40 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
     public static <V, C1, T1, C2, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, T5, R>
-    R matches(V value,
-              Class<C1> firstClazz,  TriFunction<T1, T2, T3, R> firstBranch,
-              Class<C2> secondClazz, BiFunction<T4, T5, R> secondBranch)  {
+    R match(V value,
+            Class<C1> firstClazz, TriFunction<T1, T2, T3, R> firstBranch,
+            Class<C2> secondClazz, BiFunction<T4, T5, R> secondBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -1338,10 +1474,11 @@ public final class DeconstructPattern {
         return null;
     }
 
-    public static <V, C1, C2, C3, T1, T2, T3> void matches(V value,
-                                                           Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                                                           Class<C2> secondClazz, Consumer<T2> secondBranch,
-                                                           Class<C3> thirdClazz,  Consumer<T3> thirdBranch)  {
+    public static <V, C1, C2, C3, T1, T2, T3>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, Consumer<T3> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1357,12 +1494,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, C2, C3, T1, T2, T3> void matches(V value,
-                                                           Class<C1> firstClazz, Consumer<T1> firstBranch,
-                                                           Class<C2> secondClazz, Consumer<T2> secondBranch,
-                                                           Class<C3> thirdClazz, Consumer<T3> thirdBranch,
-                                                           Class<Else> elseClass, Runnable elseBranch)  {
+    public <V, C1, C2, C3, T1, T2, T3>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, Consumer<T2> secondBranch,
+            Class<C3> thirdClazz, Consumer<T3> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
+    public static <V, C1, C2, C3, T1, T2, T3>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, Consumer<T3> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1383,12 +1530,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3> void matches(V value,
-                                                           Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                                                           Class<C2> secondClazz, Purchaser<T2> secondBranch,
-                                                           Class<C3> thirdClazz,  Purchaser<T3> thirdBranch,
-                                                           Class<Var> varClass,   Purchaser<V>  varBranch)  {
+    public <C1, C2, C3, T1, T2, T3>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, Consumer<T2> secondBranch,
+            Class<C3> thirdClazz, Consumer<T3> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
+    public static <V, C1, T1, C2, T2, C3, T3>
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T3> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1409,44 +1566,45 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3> void matches(V value,
-                                                           Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                                                           Class<C2> secondClazz, Consumer<T2> secondBranch,
-                                                           Class<C3> thirdClazz,  Consumer<T3> thirdBranch,
-                                                           Class<Null> nullClass, Runnable nullBranch,
-                                                           Class<Else> elseClass, Runnable elseBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, Consumer<T3> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3> void matches(V value,
-                                                           Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                                                           Class<C2> secondClazz, Purchaser<T2> secondBranch,
-                                                           Class<C3> thirdClazz,  Purchaser<T3> thirdBranch,
-                                                           Class<Null> nullClass, Runnable nullBranch,
-                                                           Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3>
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T3> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
-    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
-                                                           Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                                                           Class<C2> secondClazz, Consumer<T2> secondBranch,
-                                                           Class<C3> thirdClazz,  BiConsumer<T3, T4> thirdBranch)  {
+    public static <V, C1, C2, C3, T1, T2, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T3, T4> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1462,12 +1620,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
-                                                               Class<C1> firstClazz, Consumer<T1> firstBranch,
-                                                               Class<C2> secondClazz, Consumer<T2> secondBranch,
-                                                               Class<C3> thirdClazz, BiConsumer<T3, T4> thirdBranch,
-                                                               Class<Else> elseClass, Runnable elseBranch)  {
+    public <V, C1, C2, C3, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, Consumer<T2> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T3, T4> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
+    public static <V, C1, C2, C3, T1, T2, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T3, T4> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1488,12 +1656,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                           Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                                                           Class<C2> secondClazz, Purchaser<T2> secondBranch,
-                                                           Class<C3> thirdClazz,  BiPurchaser<T3, T4> thirdBranch,
-                                                           Class<Var> varClass,   Purchaser<V> varBranch)  {
+    public <C1, C2, C3, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, Consumer<T2> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T3, T4> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T3, T4> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1514,44 +1692,45 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                               Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                                                               Class<C2> secondClazz, Consumer<T2> secondBranch,
-                                                               Class<C3> thirdClazz,  BiConsumer<T3, T4> thirdBranch,
-                                                               Class<Null> nullClass, Runnable nullBranch,
-                                                               Class<Else> elseClass, Runnable elseBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T3, T4> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                           Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                                                           Class<C2> secondClazz, Purchaser<T2> secondBranch,
-                                                           Class<C3> thirdClazz,  BiPurchaser<T3, T4> thirdBranch,
-                                                           Class<Null> nullClass, Runnable nullBranch,
-                                                           Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T3, T4> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
-    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
-                                                           Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                                                           Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                                                           Class<C3> thirdClazz,  BiConsumer<T4, T5> thirdBranch)  {
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1567,12 +1746,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
-                                                                   Class<C1> firstClazz, Consumer<T1> firstBranch,
-                                                                   Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                                                                   Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
-                                                                   Class<Else> elseClass, Runnable elseBranch)  {
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1593,12 +1782,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                           Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                                                           Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                                                           Class<C3> thirdClazz,  BiPurchaser<T4, T5> thirdBranch,
-                                                           Class<Var> varClass,   Purchaser<V> varBranch)  {
+    public <C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T4, T5> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -1619,44 +1818,45 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                                   Class<C1> firstClazz, Consumer<T1> firstBranch,
-                                                                   Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                                                                   Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
-                                                                   Class<Null> nullClass, Runnable nullBranch,
-                                                                   Class<Else> elseClass, Runnable elseBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                               Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                                                               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                                                               Class<C3> thirdClazz,  BiPurchaser<T4, T5> thirdBranch,
-                                                               Class<Null> nullClass, Runnable nullBranch,
-                                                               Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T4, T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
-    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                                                           Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                                                           Class<C3> thirdClazz,  BiConsumer<T5, T6> thirdBranch)  {
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1672,12 +1872,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                                                       Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                                                                       Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                                                                       Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
-                                                                       Class<Else> elseClass, Runnable elseBranch)  {
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1698,12 +1908,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6> void matches(V value,
-                                                           Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                                                           Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-                                                           Class<C3> thirdClazz,  BiPurchaser<T5, T6> thirdBranch,
-                                                           Class<Var> varClass,   Purchaser<V> varBranch)  {
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1724,44 +1944,46 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6> void matches(V value,
-                                                                       Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                                                                       Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                                                                       Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
-                                                                       Class<Null> nullClass, Runnable nullBranch,
-                                                                       Class<Else> elseClass, Runnable elseBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6> void matches(V value,
-                                                                       Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                                                                       Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-                                                                       Class<C3> thirdClazz,  BiPurchaser<T5, T6> thirdBranch,
-                                                                       Class<Null> nullClass, Runnable nullBranch,
-                                                                       Class<Var>  varClass,  Purchaser<V> varBranch)  {
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
-    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
-                                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                                                           Class<C2> secondClazz, Consumer<T3> secondBranch,
-                                                           Class<C3> thirdClazz,  Consumer<T4> thirdBranch)  {
+    public static <V, C1, C2, C3, T1, T2, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, Consumer<T4> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1777,12 +1999,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
-                                                               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                                                               Class<C2> secondClazz, Consumer<T3> secondBranch,
-                                                               Class<C3> thirdClazz, Consumer<T4> thirdBranch,
-                                                               Class<Else> elseClass, Runnable elseBranch)  {
+    public <V, C1, C2, C3, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, Consumer<T3> secondBranch,
+            Class<C3> thirdClazz, Consumer<T4> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
+    public static <V, C1, C2, C3, T1, T2, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, Consumer<T4> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1803,12 +2035,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                           Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                                                           Class<C2> secondClazz, Purchaser<T3> secondBranch,
-                                                           Class<C3> thirdClazz,  Purchaser<T4> thirdBranch,
-                                                           Class<Var> varClass,   Purchaser<V>  varBranch)  {
+    public <C1, C2, C3, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, Consumer<T3> secondBranch,
+            Class<C3> thirdClazz, Consumer<T4> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T4> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1829,44 +2071,45 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                                                               Class<C2> secondClazz, Consumer<T3> secondBranch,
-                                                               Class<C3> thirdClazz, Consumer<T4> thirdBranch,
-                                                               Class<Null> nullClass, Runnable nullBranch,
-                                                               Class<Else> elseClass, Runnable elseBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, Consumer<T4> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                               Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                                                               Class<C2> secondClazz, Purchaser<T3> secondBranch,
-                                                               Class<C3> thirdClazz,  Purchaser<T4> thirdBranch,
-                                                               Class<Null> nullClass, Runnable nullBranch,
-                                                               Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T4> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
-    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
-                                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                                                           Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                                                           Class<C3> thirdClazz,  Consumer<T5> thirdBranch)  {
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T5> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1882,12 +2125,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
-                                                                   Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                                                                   Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                                                                   Class<C3> thirdClazz, Consumer<T5> thirdBranch,
-                                                                   Class<Else> elseClass, Runnable elseBranch)  {
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+            Class<C3> thirdClazz, Consumer<T5> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T5> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1908,12 +2161,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                           Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                                                           Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-                                                           Class<C3> thirdClazz,  Purchaser<T5> thirdBranch,
-                                                           Class<Var> varClass,   Purchaser<V> varBranch)  {
+    public <C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+            Class<C3> thirdClazz, Consumer<T5> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1934,44 +2197,45 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                                   Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                                                                   Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                                                                   Class<C3> thirdClazz, Consumer<T5> thirdBranch,
-                                                                   Class<Null> nullClass, Runnable nullBranch,
-                                                                   Class<Else> elseClass, Runnable elseBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                               Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                                                               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-                                                               Class<C3> thirdClazz,  Purchaser<T5> thirdBranch,
-                                                               Class<Null> nullClass, Runnable nullBranch,
-                                                               Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
-    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
-                                                           Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                                                           Class<C2> secondClazz, Consumer<T3> secondBranch,
-                                                           Class<C3> thirdClazz,  BiConsumer<T4, T5> thirdBranch)  {
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -1987,12 +2251,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, C2, C3, T1, T2, T3, T4, T5> void matches(V value,
-                                                                   Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                                                                   Class<C2> secondClazz, Consumer<T3> secondBranch,
-                                                                   Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
-                                                                   Class<Else> elseClass, Runnable elseBranch)  {
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, Consumer<T3> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
+    public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -2013,12 +2287,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                           Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                                                           Class<C2> secondClazz, Purchaser<T3> secondBranch,
-                                                           Class<C3> thirdClazz,  BiPurchaser<T4, T5> thirdBranch,
-                                                           Class<Var> varClass,   Purchaser<V> varBranch)  {
+    public <C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, Consumer<T3> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T4, T5> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -2039,44 +2323,45 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                                   Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                                                                   Class<C2> secondClazz, Consumer<T3> secondBranch,
-                                                                   Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
-                                                                   Class<Null> nullClass, Runnable nullBranch,
-                                                                   Class<Else> elseClass, Runnable elseBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T4, T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4, T5> void matches(V value,
-                                                                   Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                                                                   Class<C2> secondClazz, Purchaser<T3> secondBranch,
-                                                                   Class<C3> thirdClazz,  BiPurchaser<T4, T5> thirdBranch,
-                                                                   Class<Null> nullClass, Runnable nullBranch,
-                                                                   Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T4, T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
-    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
-                                                           Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                                                           Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                                                           Class<C3> thirdClazz,  Consumer<T4> thirdBranch)  {
+    public static <V, C1, C2, C3, T1, T2, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<C3> thirdClazz, Consumer<T4> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2092,12 +2377,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, C2, C3, T1, T2, T3, T4> void matches(V value,
-                                                               Class<C1> firstClazz, Consumer<T1> firstBranch,
-                                                               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                                                               Class<C3> thirdClazz, Consumer<T4> thirdBranch,
-                                                               Class<Else> elseClass, Runnable elseBranch)  {
+    public <V, C1, C2, C3, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+            Class<C3> thirdClazz, Consumer<T4> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
+    public static <V, C1, C2, C3, T1, T2, T3, T4>
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<C3> thirdClazz, Consumer<T4> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2118,12 +2413,21 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                           Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                                                           Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                                                           Class<C3> thirdClazz,  Purchaser<T4> thirdBranch,
-                                                           Class<Var> varClass,   Purchaser<V> varBranch)  {
+    public <C1, C2, C3, T1, T2, T3, T4>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+            Class<C3> thirdClazz, Consumer<T4> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4> void match(V value,
+                                                             Class<C1> firstClazz, Purchaser<T1> firstBranch,
+                                                             Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+                                                             Class<C3> thirdClazz, Purchaser<T4> thirdBranch,
+                                                             Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2144,45 +2448,45 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                               Class<C1> firstClazz, Consumer<T1> firstBranch,
-                                                               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                                                               Class<C3> thirdClazz, Consumer<T4> thirdBranch,
-                                                               Class<Null> nullClass, Runnable nullBranch,
-                                                               Class<Else> elseClass, Runnable elseBranch)  {
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4> void match(V value,
+                                                             Class<C1> firstClazz, Consumer<T1> firstBranch,
+                                                             Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+                                                             Class<C3> thirdClazz, Consumer<T4> thirdBranch,
+                                                             Class<Null> nullClass, Runnable nullBranch,
+                                                             Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, C1, T1, C2, T2, C3, T3, T4> void matches(V value,
-                                                               Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                                                               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                                                               Class<C3> thirdClazz,  Purchaser<T4> thirdBranch,
-                                                               Class<Null> nullClass, Runnable nullBranch,
-                                                               Class<Var>  varClass,  Purchaser<V> varBranch)  {
+
+    public static <V, C1, T1, C2, T2, C3, T3, T4> void match(V value,
+                                                             Class<C1> firstClazz, Purchaser<T1> firstBranch,
+                                                             Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+                                                             Class<C3> thirdClazz, Purchaser<T4> thirdBranch,
+                                                             Class<Null> nullClass, Runnable nullBranch,
+                                                             Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Consumer<T2> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T3, T4, T5> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T3, T4, T5> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2198,13 +2502,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, Consumer<T2> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T3, T4, T5> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Consumer<T2> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T3, T4, T5> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T3, T4, T5> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2225,13 +2538,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, Consumer<T2> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T3, T4, T5> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T2> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T3, T4, T5> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T3, T4, T5> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2252,47 +2574,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, Consumer<T2> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T3, T4, T5> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, Consumer<T2> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T3, T4, T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T2> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T3, T4, T5> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T3, T4, T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T5, T6, T7> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2308,13 +2630,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2335,13 +2666,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T5, T6, T7> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2362,47 +2702,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T5, T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8, T9>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T7, T8, T9> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T7, T8, T9> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2418,13 +2758,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8, T9>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T7, T8, T9> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8, T9>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T7, T8, T9> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T7, T8, T9> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2445,13 +2794,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8, T9>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T7, T8, T9> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8, T9>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T7, T8, T9> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T7, T8, T9> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2472,47 +2830,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8, T9>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T7, T8, T9> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T7, T8, T9> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8, T9>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T7, T8, T9> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T7, T8, T9> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz,  Consumer<T5> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T5> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2528,13 +2886,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, Consumer<T4> secondBranch,
+            Class<C3> thirdClazz, Consumer<T5> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz, Consumer<T5> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T5> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2555,13 +2922,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, Consumer<T4> secondBranch,
+            Class<C3> thirdClazz, Consumer<T5> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T4> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T5> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2582,47 +2958,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz, Consumer<T5> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T4> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T5> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  Consumer<T7> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, Consumer<T7> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2638,13 +3014,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+            Class<C3> thirdClazz, Consumer<T7> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz, Consumer<T7> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, Consumer<T7> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2665,13 +3050,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+            Class<C3> thirdClazz, Consumer<T7> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T7> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T7> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2692,47 +3086,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  Consumer<T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, Consumer<T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T5, T6, T7> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2748,13 +3142,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, Consumer<T4> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2775,13 +3178,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, Consumer<T4> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T4> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T5, T6, T7> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -2802,47 +3214,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
+            match(value, firstClazz, firstBranch,
                     secondClazz, secondBranch,
-                    thirdClazz,  thirdBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T4> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T5, T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3 ,T4> secondBranch,
-                 Class<C3> thirdClazz,  Consumer<T5> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T5> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2858,13 +3270,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+            Class<C3> thirdClazz, Consumer<T5> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3 ,T4> secondBranch,
-                 Class<C3> thirdClazz, Consumer<T5> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T5> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2885,13 +3306,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+            Class<C3> thirdClazz, Consumer<T5> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T5> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -2912,47 +3342,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz, Consumer<T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, Consumer<T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T5> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T5, T6, T7> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -2968,13 +3398,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -2995,13 +3434,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T5, T6, T7> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3022,47 +3470,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T5, T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T5, T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T6, T7, T8> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3078,13 +3526,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3105,13 +3562,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T6, T7, T8> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T6, T7, T8> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3132,47 +3598,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T6, T7, T8> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T6, T7, T8> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                        secondClazz, secondBranch,
-                        thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  BiConsumer<T6, T7> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3188,13 +3654,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3215,13 +3690,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T6, T7> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T6, T7> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3242,47 +3726,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  BiConsumer<T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
+            match(value, firstClazz, firstBranch,
                     secondClazz, secondBranch,
-                    thirdClazz,  thirdBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  BiConsumer<T7, T8> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T7, T8> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3298,13 +3782,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T7, T8> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz, BiConsumer<T7, T8> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T7, T8> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3325,13 +3818,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T7, T8> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T7, T8> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T7, T8> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3352,47 +3854,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  BiConsumer<T7, T8> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T7, T8> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T7, T8> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T7, T8> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
+            match(value, firstClazz, firstBranch,
                     secondClazz, secondBranch,
-                    thirdClazz,  thirdBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T6, T7, T8> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3408,13 +3910,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3435,13 +3946,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7, T8>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T6, T7, T8> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T6, T7, T8> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3462,47 +3982,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T6, T7, T8> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T6, T7, T8> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T6, T7, T8> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  BiConsumer<T6, T7> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3518,13 +4038,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3545,13 +4074,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T6, T7> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T6, T7> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3572,47 +4110,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T6, T7> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T6, T7> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T4, T5, T6> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -3628,13 +4166,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -3655,13 +4202,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6, T7>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T4, T5, T6> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T4, T5, T6> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -3682,47 +4238,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T4, T5, T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T2, T3> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T4, T5, T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T4, T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  Consumer<T6> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, Consumer<T6> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3738,13 +4294,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+            Class<C3> thirdClazz, Consumer<T6> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz, Consumer<T6> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, Consumer<T6> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3765,13 +4330,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+            Class<C3> thirdClazz, Consumer<T6> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T6> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T6> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3792,47 +4366,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  Consumer<T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiConsumer<T4, T5> secondBranch,
+               Class<C3> thirdClazz, Consumer<T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Consumer<T3> secondBranch,
-                 Class<C3> thirdClazz,  TriConsumer<T4, T5, T6> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3848,13 +4422,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, Consumer<T3> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Consumer<T3> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3875,13 +4458,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, Consumer<T3> secondBranch,
+            Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T3> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T4, T5, T6> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T4, T5, T6> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -3902,47 +4494,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Consumer<T3> secondBranch,
-                 Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, Consumer<T3> secondBranch,
+               Class<C3> thirdClazz, TriConsumer<T4, T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T3> secondBranch,
-                 Class<C3> thirdClazz,  TriPurchaser<T4, T5, T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<C3> thirdClazz, TriPurchaser<T4, T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
+            match(value, firstClazz, firstBranch,
                     secondClazz, secondBranch,
-                    thirdClazz,  thirdBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz,  BiConsumer<T5, T6> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3958,13 +4550,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, Consumer<T4> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -3985,13 +4586,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+            Class<C2> secondClazz, Consumer<T4> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T4> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T5, T6> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
@@ -4012,47 +4622,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriConsumer<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Consumer<T4> secondBranch,
-                 Class<C3> thirdClazz,  BiConsumer<T5, T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriConsumer<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Consumer<T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  TriPurchaser<T1, T2, T3> firstBranch,
-                 Class<C2> secondClazz, Purchaser<T4> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T5, T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  BiConsumer<T5, T6> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -4068,13 +4678,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -4095,13 +4714,22 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, Consumer<T1> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+            Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T5, T6> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
@@ -4122,47 +4750,47 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, Consumer<T1> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Consumer<T1> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiConsumer<T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  Purchaser<T1> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-                 Class<C3> thirdClazz,  BiPurchaser<T5, T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, Purchaser<T1> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  Consumer<T6> thirdBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, Consumer<T6> thirdBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -4178,13 +4806,22 @@ public final class DeconstructPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+    public <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+            Class<C3> thirdClazz, Consumer<T6> thirdBranch) {
+        match(value,
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz, Consumer<T6> thirdBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, Consumer<T6> thirdBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
@@ -4205,17 +4842,26 @@ public final class DeconstructPattern {
         elseBranch.run();
     }
 
-    @SuppressWarnings("unused")
+    public <C1, C2, C3, T1, T2, T3, T4, T5, T6>
+    void as(Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+            Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+            Class<C3> thirdClazz, Consumer<T6> thirdBranch,
+            Class<Else> elseClass, Runnable elseBranch) {
+        match(value,
+                firstClazz, firstBranch, secondClazz, secondBranch,
+                thirdClazz, thirdBranch, elseClass, elseBranch);
+    }
+
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T6> thirdBranch,
-                 Class<Var> varClass,   Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T6> thirdBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0],(T2) args[1]);
+            firstBranch.obtain((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
@@ -4232,38 +4878,38 @@ public final class DeconstructPattern {
         varBranch.obtain(value);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz, Consumer<T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Else> elseClass, Runnable elseBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiConsumer<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriConsumer<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, Consumer<T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     elseClass, elseBranch);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
-    void matches(V value,
-                 Class<C1> firstClazz,  BiPurchaser<T1, T2> firstBranch,
-                 Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-                 Class<C3> thirdClazz,  Purchaser<T6> thirdBranch,
-                 Class<Null> nullClass, Runnable nullBranch,
-                 Class<Var>  varClass,  Purchaser<V> varBranch)  {
+    void match(V value,
+               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, Purchaser<T6> thirdBranch,
+               Class<Null> nullClass, Runnable nullBranch,
+               Class<Var> varClass, Purchaser<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
-            matches(value, firstClazz,  firstBranch,
-                           secondClazz, secondBranch,
-                           thirdClazz,  thirdBranch,
+            match(value, firstClazz, firstBranch,
+                    secondClazz, secondBranch,
+                    thirdClazz, thirdBranch,
                     varClass, varBranch);
         }
     }

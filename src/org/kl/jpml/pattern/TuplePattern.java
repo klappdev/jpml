@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -34,21 +34,24 @@ import org.kl.jpml.util.Tuple;
 import java.util.Collection;
 import java.util.function.BiConsumer;
 
-/*
+/**
  * Tuple pattern allow test for equality multiple pieces
  * with constants. Maximum number of branches for match six
  * with fourth pieces.
  */
 public final class TuplePattern {
-    private static Tuple.Tuple2 biData;
-    private static Tuple.Tuple3 triData;
-    private static Tuple.Tuple4 quarData;
-    private static TuplePattern instance;
+    private final Tuple.Tuple2 biData;
+    private final Tuple.Tuple3 triData;
+    private final Tuple.Tuple4 quarData;
 
-    private TuplePattern() {}
+    private <T1, T2, T3, T4> TuplePattern(Tuple.Tuple2<T1, T2> biData, Tuple.Tuple3<T1, T2, T3> triData, Tuple.Tuple4<T1, T2, T3, T4> quarData) {
+        this.biData = biData;
+        this.triData = triData;
+        this.quarData = quarData;
+    }
 
     public static <V1, V2>
-    void foreach(Collection<Tuple.Tuple2<V1, V2>> data, BiConsumer<V1, V2> branch)  {
+    void foreach(Collection<Tuple.Tuple2<V1, V2>> data, BiConsumer<V1, V2> branch) {
         for (Tuple.Tuple2<V1, V2> value : data) {
             V1 leftValue = value.first();
             V2 rightValue = value.second();
@@ -58,7 +61,7 @@ public final class TuplePattern {
     }
 
     public static <V1, V2>
-    void let(Tuple.Tuple2<V1, V2> item, BiConsumer<V1, V2> branch)  {
+    void let(Tuple.Tuple2<V1, V2> item, BiConsumer<V1, V2> branch) {
         V1 leftValue = item.first();
         V2 rightValue = item.second();
 
@@ -66,13 +69,7 @@ public final class TuplePattern {
     }
 
     public static <V1, V2> TuplePattern match(V1 leftValue, V2 rightValue) {
-        biData = Tuple.of(leftValue, rightValue);
-
-        if (instance == null) {
-            instance = new TuplePattern();
-        }
-
-        return instance;
+        return new TuplePattern(Tuple.of(leftValue, rightValue), null, null);
     }
 
     public static <V1, V2, V3>
@@ -96,13 +93,7 @@ public final class TuplePattern {
     }
 
     public static <V1, V2, V3> TuplePattern match(V1 leftValue, V2 middleValue, V3 rightValue) {
-        triData = Tuple.of(leftValue, middleValue, rightValue);
-
-        if (instance == null) {
-            instance = new TuplePattern();
-        }
-
-        return instance;
+        return new TuplePattern(null, Tuple.of(leftValue, middleValue, rightValue), null);
     }
 
     public static <V1, V2, V3, V4>
@@ -128,20 +119,14 @@ public final class TuplePattern {
     }
 
     public static <V1, V2, V3, V4> TuplePattern match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue) {
-        quarData = Tuple.of(leftValue, bottomValue, rightValue, topValue);
-
-        if (instance == null) {
-            instance = new TuplePattern();
-        }
-
-        return instance;
+        return new TuplePattern(null, null, Tuple.of(leftValue, bottomValue, rightValue, topValue));
     }
 
     public static <V1, V2>
     void match(V1 leftValue, V2 rightValue,
                V1 firstLeftData, V2 firstRightData, Runnable firstBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                     firstLeftData.getClass(), firstRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -165,13 +150,13 @@ public final class TuplePattern {
                 (V1) item.first(), (V2) item.second(), firstBranch);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V1, V2>
     void match(V1 leftValue, V2 rightValue,
                V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                     firstLeftData.getClass(), firstRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -190,13 +175,13 @@ public final class TuplePattern {
                 elseClass, elseBranch);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V1, V2>
     void match(V1 leftValue, V2 rightValue,
                V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
                Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                     firstLeftData.getClass(), firstRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -219,7 +204,7 @@ public final class TuplePattern {
     void match(V1 leftValue, V2 middleValue, V3 rightValue,
                V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -244,13 +229,13 @@ public final class TuplePattern {
         );
     }
 
-    @SuppressWarnings("unused")
+
     public static <V1, V2, V3>
     void match(V1 leftValue, V2 middleValue, V3 rightValue,
                V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -269,13 +254,13 @@ public final class TuplePattern {
                 elseClass, elseBranch);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V1, V2, V3>
     void match(V1 leftValue, V2 middleValue, V3 rightValue,
                V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
                Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -298,15 +283,15 @@ public final class TuplePattern {
     void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
                V1 firstLeftData, V2 firstBottomData,
                V3 firstRightData, V4 firstTopData, Runnable firstBranch) {
-        if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),  firstBottomData.getClass(),
-                                       firstRightData.getClass(), firstTopData.getClass())) {
+        if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else {
             throw new PatternException("Statement must to have only one branch");
@@ -314,7 +299,7 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch);
@@ -328,21 +313,21 @@ public final class TuplePattern {
         );
     }
 
-    @SuppressWarnings("unused")
+
     public static <V1, V2, V3, V4>
     void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
                V1 firstLeftData, V2 firstBottomData,
                V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
-        if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),  firstBottomData.getClass(),
-                                       firstRightData.getClass(), firstTopData.getClass())) {
+               Class<Else> elseClass, Runnable elseBranch) {
+        if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else {
             elseBranch.run();
@@ -350,7 +335,7 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
@@ -358,16 +343,16 @@ public final class TuplePattern {
                 elseClass, elseBranch);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V1, V2, V3, V4>
     void match(V1 leftValue, V2 bottomValue, V3 rightValue, V4 topValue,
                V1 firstLeftData, V2 firstBottomData,
                V3 firstRightData, V4 firstTopData, Runnable firstBranch,
                Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
-        if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),  firstBottomData.getClass(),
-                                       firstRightData.getClass(), firstTopData.getClass())) {
+        if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -380,7 +365,7 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
@@ -393,8 +378,8 @@ public final class TuplePattern {
                V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
                V1 secondLeftData, V2 secondRightData, Runnable secondBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                     firstLeftData.getClass(),  firstRightData.getClass(),
-                                     secondLeftData.getClass(), secondRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -408,7 +393,7 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch) {
         match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
@@ -418,7 +403,7 @@ public final class TuplePattern {
     public static <V1, V2>
     void match(V1 leftValue, V2 rightValue,
                Tuple.Tuple2<V1, V2> firstItem, Runnable firstBranch,
-               Tuple.Tuple2<V1, V2>  secondItem, Runnable secondBranch) {
+               Tuple.Tuple2<V1, V2> secondItem, Runnable secondBranch) {
         match(leftValue, rightValue,
                 firstItem.first(), firstItem.second(), firstBranch,
                 secondItem.first(), secondItem.second(), secondBranch);
@@ -431,8 +416,8 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                     firstLeftData.getClass(),  firstRightData.getClass(),
-                                     secondLeftData.getClass(), secondRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -446,7 +431,7 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(biData.first(), biData.second(),
@@ -462,8 +447,8 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -491,8 +476,8 @@ public final class TuplePattern {
                V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
                V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -529,8 +514,8 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -560,8 +545,8 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -589,21 +574,21 @@ public final class TuplePattern {
                V1 firstLeftData, V2 firstBottomData,
                V3 firstRightData, V4 firstTopData, Runnable firstBranch,
                V1 secondLeftData, V2 secondBottomData,
-               V3 secondRightData, V4 secondTopData, Runnable secondBranch)  {
-        if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),  firstBottomData.getClass(),
-                                       firstRightData.getClass(), firstTopData.getClass(),
-                                       secondLeftData.getClass(), secondBottomData.getClass(),
-                                       secondRightData.getClass(),secondTopData.getClass())) {
+               V3 secondRightData, V4 secondTopData, Runnable secondBranch) {
+        if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else {
             throw new PatternException("Statement must to have only two branches");
@@ -611,9 +596,9 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
@@ -636,21 +621,21 @@ public final class TuplePattern {
                V3 firstRightData, V4 firstTopData, Runnable firstBranch,
                V1 secondLeftData, V2 secondBottomData,
                V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
-        if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),  firstBottomData.getClass(),
-                                       firstRightData.getClass(), firstTopData.getClass(),
-                                       secondLeftData.getClass(), secondBottomData.getClass(),
-                                       secondRightData.getClass(),secondTopData.getClass())) {
+               Class<Else> elseClass, Runnable elseBranch) {
+        if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else {
             elseBranch.run();
@@ -658,9 +643,9 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
@@ -677,20 +662,20 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondBottomData,
                V3 secondRightData, V4 secondTopData, Runnable secondBranch,
                Class<Var> elseClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
-        if (!Reflection.checkQuarTypes(leftValue.getClass(),  bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),  firstBottomData.getClass(),
-                                       firstRightData.getClass(), firstTopData.getClass(),
-                                       secondLeftData.getClass(), secondBottomData.getClass(),
-                                       secondRightData.getClass(),secondTopData.getClass())) {
+        if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-                   rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else {
             varBranch.accept(leftValue, bottomValue, rightValue, topValue);
@@ -698,9 +683,9 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
@@ -716,9 +701,9 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                     firstLeftData.getClass(),  firstRightData.getClass(),
-                                     secondLeftData.getClass(), secondRightData.getClass(),
-                                     thirdLeftData.getClass(),  thirdRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -734,9 +719,9 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch) {
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch) {
         match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
@@ -760,11 +745,11 @@ public final class TuplePattern {
                V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
                V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -780,9 +765,9 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
@@ -799,9 +784,9 @@ public final class TuplePattern {
                V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
                Class<Var> elseClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -819,7 +804,7 @@ public final class TuplePattern {
     public <V1, V2>
     void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
@@ -835,9 +820,9 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -855,7 +840,7 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch) {
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch) {
         match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
@@ -879,11 +864,11 @@ public final class TuplePattern {
                V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
                V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -901,7 +886,7 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
@@ -918,9 +903,9 @@ public final class TuplePattern {
                V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
                Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -938,7 +923,7 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
@@ -955,26 +940,26 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondBottomData,
                V3 secondRightData, V4 secondTopData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdBottomData,
-               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch)  {
+               V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                        rightValue.getClass(), topValue.getClass(),
-                                        firstLeftData.getClass(),   firstBottomData.getClass(),
-                                        firstRightData.getClass(),  firstTopData.getClass(),
-                                        secondLeftData.getClass(),  secondBottomData.getClass(),
-                                        secondRightData.getClass(), secondTopData.getClass(),
-                                        thirdLeftData.getClass(),   thirdBottomData.getClass(),
-                                        thirdRightData.getClass(),  thirdTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-            rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else {
             throw new PatternException("Statement must to have only three branches");
@@ -982,12 +967,12 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch) {
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
@@ -1014,26 +999,26 @@ public final class TuplePattern {
                V3 secondRightData, V4 secondTopData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdBottomData,
                V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                        rightValue.getClass(), topValue.getClass(),
-                                        firstLeftData.getClass(),   firstBottomData.getClass(),
-                                        firstRightData.getClass(),  firstTopData.getClass(),
-                                        secondLeftData.getClass(),  secondBottomData.getClass(),
-                                        secondRightData.getClass(), secondTopData.getClass(),
-                                        thirdLeftData.getClass(),   thirdBottomData.getClass(),
-                                        thirdRightData.getClass(),  thirdTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-            rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else {
             elseBranch.run();
@@ -1041,12 +1026,12 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
@@ -1066,24 +1051,24 @@ public final class TuplePattern {
                V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
                Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),   firstBottomData.getClass(),
-                                       firstRightData.getClass(),  firstTopData.getClass(),
-                                       secondLeftData.getClass(),  secondBottomData.getClass(),
-                                       secondRightData.getClass(), secondTopData.getClass(),
-                                       thirdLeftData.getClass(),   thirdBottomData.getClass(),
-                                       thirdRightData.getClass(),  thirdTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-                   rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-                   rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else {
             varBranch.accept(leftValue, bottomValue, rightValue, topValue);
@@ -1091,12 +1076,12 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
@@ -1113,10 +1098,10 @@ public final class TuplePattern {
                V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                     firstLeftData.getClass(),  firstRightData.getClass(),
-                                     secondLeftData.getClass(), secondRightData.getClass(),
-                                     thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                     fourthLeftData.getClass(), fourthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1134,9 +1119,9 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch) {
         match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
@@ -1165,12 +1150,12 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                    fourthLeftData.getClass(), fourthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1188,9 +1173,9 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(biData.first(), biData.second(),
@@ -1210,10 +1195,10 @@ public final class TuplePattern {
                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
                Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                    fourthLeftData.getClass(), fourthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1233,7 +1218,7 @@ public final class TuplePattern {
     public <V1, V2>
     void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         match((V1) biData.first(), (V2) biData.second(),
@@ -1252,10 +1237,10 @@ public final class TuplePattern {
                V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                       fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1265,7 +1250,7 @@ public final class TuplePattern {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && middleValue.equals(thirdMiddleData) && rightValue.equals(thirdRightData)) {
             thirdBranch.run();
-        }  else if (leftValue.equals(fourthLeftData) && middleValue.equals(fourthMiddleData) && rightValue.equals(fourthRightData)) {
+        } else if (leftValue.equals(fourthLeftData) && middleValue.equals(fourthMiddleData) && rightValue.equals(fourthRightData)) {
             fourthBranch.run();
         } else {
             throw new PatternException("Statement must to have only fourth branches");
@@ -1275,7 +1260,7 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch) {
         match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
@@ -1304,12 +1289,12 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                        firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                        secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                        thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                        fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1319,7 +1304,7 @@ public final class TuplePattern {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && middleValue.equals(thirdMiddleData) && rightValue.equals(thirdRightData)) {
             thirdBranch.run();
-        }  else if (leftValue.equals(fourthLeftData) && middleValue.equals(fourthMiddleData) && rightValue.equals(fourthRightData)) {
+        } else if (leftValue.equals(fourthLeftData) && middleValue.equals(fourthMiddleData) && rightValue.equals(fourthRightData)) {
             fourthBranch.run();
         } else {
             elseBranch.run();
@@ -1329,7 +1314,7 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(triData.first(), triData.second(), triData.third(),
@@ -1349,10 +1334,10 @@ public final class TuplePattern {
                V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
                Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                       fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1362,7 +1347,7 @@ public final class TuplePattern {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && middleValue.equals(thirdMiddleData) && rightValue.equals(thirdRightData)) {
             thirdBranch.run();
-        }  else if (leftValue.equals(fourthLeftData) && middleValue.equals(fourthMiddleData) && rightValue.equals(fourthRightData)) {
+        } else if (leftValue.equals(fourthLeftData) && middleValue.equals(fourthMiddleData) && rightValue.equals(fourthRightData)) {
             fourthBranch.run();
         } else {
             varBranch.accept(leftValue, middleValue, rightValue);
@@ -1372,7 +1357,7 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
@@ -1420,13 +1405,13 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
@@ -1459,31 +1444,31 @@ public final class TuplePattern {
                V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthBottomData,
                V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                        rightValue.getClass(), topValue.getClass(),
-                                        firstLeftData.getClass(),  firstBottomData.getClass(),
-                                        firstRightData.getClass(),  firstTopData.getClass(),
-                                        secondLeftData.getClass(), secondBottomData.getClass(),
-                                        secondRightData.getClass(), secondTopData.getClass(),
-                                        thirdLeftData.getClass(),  thirdBottomData.getClass(),
-                                        thirdRightData.getClass(),  thirdTopData.getClass(),
-                                        fourthLeftData.getClass(), fourthBottomData.getClass(),
-                                        fourthRightData.getClass(), fourthTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass(),
+                fourthLeftData.getClass(), fourthBottomData.getClass(),
+                fourthRightData.getClass(), fourthTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-            rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else if (leftValue.equals(fourthLeftData) && bottomValue.equals(fourthBottomData) &&
-            rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
+                rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
             fourthBranch.run();
         } else {
             elseBranch.run();
@@ -1491,13 +1476,13 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
@@ -1521,29 +1506,29 @@ public final class TuplePattern {
                V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
                Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),  firstBottomData.getClass(),
-                                       firstRightData.getClass(),  firstTopData.getClass(),
-                                       secondLeftData.getClass(), secondBottomData.getClass(),
-                                       secondRightData.getClass(), secondTopData.getClass(),
-                                       thirdLeftData.getClass(),  thirdBottomData.getClass(),
-                                       thirdRightData.getClass(),  thirdTopData.getClass(),
-                                       fourthLeftData.getClass(), fourthBottomData.getClass(),
-                                       fourthRightData.getClass(), fourthTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass(),
+                fourthLeftData.getClass(), fourthBottomData.getClass(),
+                fourthRightData.getClass(), fourthTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-                   rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-                   rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else if (leftValue.equals(fourthLeftData) && bottomValue.equals(fourthBottomData) &&
-                   rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
+                rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
             fourthBranch.run();
         } else {
             varBranch.accept(leftValue, bottomValue, rightValue, topValue);
@@ -1551,13 +1536,13 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
@@ -1575,13 +1560,13 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-               V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch)  {
+               V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                    fourthLeftData.getClass(), fourthRightData.getClass(),
-                                    fifthLeftData.getClass(),  fifthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1601,11 +1586,11 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch) {
+            V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch) {
         match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
@@ -1637,13 +1622,13 @@ public final class TuplePattern {
                V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
                V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
-               Class<Else> elseClass, Runnable elseBranch)  {
+               Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                    fourthLeftData.getClass(), fourthRightData.getClass(),
-                                    fifthLeftData.getClass(),  fifthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1663,11 +1648,11 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
+            V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
@@ -1688,11 +1673,11 @@ public final class TuplePattern {
                V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
                Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                    fourthLeftData.getClass(), fourthRightData.getClass(),
-                                    fifthLeftData.getClass(),  fifthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1714,9 +1699,9 @@ public final class TuplePattern {
     public <V1, V2>
     void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
+            V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
@@ -1734,13 +1719,13 @@ public final class TuplePattern {
                V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
                V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-               V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch)  {
+               V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                       fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
-                                       fifthLeftData.getClass(),  fifthMiddleData.getClass(),  fifthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthMiddleData.getClass(), fifthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1762,9 +1747,9 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch) {
+            V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch) {
         match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
@@ -1798,11 +1783,11 @@ public final class TuplePattern {
                V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                       fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
-                                       fifthLeftData.getClass(),  fifthMiddleData.getClass(),  fifthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthMiddleData.getClass(), fifthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1824,9 +1809,9 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
+            V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
@@ -1847,11 +1832,11 @@ public final class TuplePattern {
                V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
                Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                       fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
-                                       fifthLeftData.getClass(),  fifthMiddleData.getClass(),  fifthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthMiddleData.getClass(), fifthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -1873,9 +1858,9 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
+            V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
@@ -1898,36 +1883,36 @@ public final class TuplePattern {
                V1 fourthLeftData, V2 fourthBottomData,
                V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
                V1 fifthLeftData, V2 fifthBottomData,
-               V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch)  {
+               V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                        rightValue.getClass(), topValue.getClass(),
-                                        firstLeftData.getClass(),   firstBottomData.getClass(),
-                                        firstRightData.getClass(),  firstTopData.getClass(),
-                                        secondLeftData.getClass(),  secondBottomData.getClass(),
-                                        secondRightData.getClass(), secondTopData.getClass(),
-                                        thirdLeftData.getClass(),   thirdBottomData.getClass(),
-                                        thirdRightData.getClass(),  thirdTopData.getClass(),
-                                        fourthLeftData.getClass(),  fourthBottomData.getClass(),
-                                        fourthRightData.getClass(), fourthTopData.getClass(),
-                                        fifthLeftData.getClass(),   fifthBottomData.getClass(),
-                                        fifthRightData.getClass(),  fifthTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass(),
+                fourthLeftData.getClass(), fourthBottomData.getClass(),
+                fourthRightData.getClass(), fourthTopData.getClass(),
+                fifthLeftData.getClass(), fifthBottomData.getClass(),
+                fifthRightData.getClass(), fifthTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-            rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else if (leftValue.equals(fourthLeftData) && bottomValue.equals(fourthBottomData) &&
-            rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
+                rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && bottomValue.equals(fifthBottomData) &&
-            rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
+                rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
             fifthBranch.run();
         } else {
             throw new PatternException("Statement must to have only fifth branches");
@@ -1935,16 +1920,16 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-            V1 fifthLeftData,   V2 fifthBottomData,
-            V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch) {
+            V1 fifthLeftData, V2 fifthBottomData,
+            V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
@@ -1983,34 +1968,34 @@ public final class TuplePattern {
                V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                        rightValue.getClass(), topValue.getClass(),
-                                        firstLeftData.getClass(),   firstBottomData.getClass(),
-                                        firstRightData.getClass(),  firstTopData.getClass(),
-                                        secondLeftData.getClass(),  secondBottomData.getClass(),
-                                        secondRightData.getClass(), secondTopData.getClass(),
-                                        thirdLeftData.getClass(),   thirdBottomData.getClass(),
-                                        thirdRightData.getClass(),  thirdTopData.getClass(),
-                                        fourthLeftData.getClass(),  fourthBottomData.getClass(),
-                                        fourthRightData.getClass(), fourthTopData.getClass(),
-                                        fifthLeftData.getClass(),   fifthBottomData.getClass(),
-                                        fifthRightData.getClass(),  fifthTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass(),
+                fourthLeftData.getClass(), fourthBottomData.getClass(),
+                fourthRightData.getClass(), fourthTopData.getClass(),
+                fifthLeftData.getClass(), fifthBottomData.getClass(),
+                fifthRightData.getClass(), fifthTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-            rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else if (leftValue.equals(fourthLeftData) && bottomValue.equals(fourthBottomData) &&
-            rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
+                rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && bottomValue.equals(fifthBottomData) &&
-            rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
+                rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
             fifthBranch.run();
         } else {
             elseBranch.run();
@@ -2018,16 +2003,16 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-            V1 fifthLeftData,   V2 fifthBottomData,
-            V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
+            V1 fifthLeftData, V2 fifthBottomData,
+            V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
@@ -2053,34 +2038,34 @@ public final class TuplePattern {
                V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
                Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),   firstBottomData.getClass(),
-                                       firstRightData.getClass(),  firstTopData.getClass(),
-                                       secondLeftData.getClass(),  secondBottomData.getClass(),
-                                       secondRightData.getClass(), secondTopData.getClass(),
-                                       thirdLeftData.getClass(),   thirdBottomData.getClass(),
-                                       thirdRightData.getClass(),  thirdTopData.getClass(),
-                                       fourthLeftData.getClass(),  fourthBottomData.getClass(),
-                                       fourthRightData.getClass(), fourthTopData.getClass(),
-                                       fifthLeftData.getClass(),   fifthBottomData.getClass(),
-                                       fifthRightData.getClass(),  fifthTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass(),
+                fourthLeftData.getClass(), fourthBottomData.getClass(),
+                fourthRightData.getClass(), fourthTopData.getClass(),
+                fifthLeftData.getClass(), fifthBottomData.getClass(),
+                fifthRightData.getClass(), fifthTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-                   rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-                   rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else if (leftValue.equals(fourthLeftData) && bottomValue.equals(fourthBottomData) &&
-                   rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
+                rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && bottomValue.equals(fifthBottomData) &&
-                   rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
+                rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
             fifthBranch.run();
         } else {
             varBranch.accept(leftValue, bottomValue, rightValue, topValue);
@@ -2088,16 +2073,16 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-            V1 fifthLeftData,   V2 fifthBottomData,
-            V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
+            V1 fifthLeftData, V2 fifthBottomData,
+            V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
@@ -2116,14 +2101,14 @@ public final class TuplePattern {
                V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
                V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
-               V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch)  {
+               V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                     firstLeftData.getClass(),  firstRightData.getClass(),
-                                     secondLeftData.getClass(), secondRightData.getClass(),
-                                     thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                     fourthLeftData.getClass(), fourthRightData.getClass(),
-                                     fifthLeftData.getClass(),  fifthRightData.getClass(),
-                                     sixthLeftData.getClass(),  sixthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthRightData.getClass(),
+                sixthLeftData.getClass(), sixthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -2145,12 +2130,12 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-            V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch) {
+            V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch) {
         match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
                 secondLeftData, secondRightData, secondBranch,
@@ -2188,12 +2173,12 @@ public final class TuplePattern {
                V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                    fourthLeftData.getClass(), fourthRightData.getClass(),
-                                    fifthLeftData.getClass(),  fifthRightData.getClass(),
-                                    sixthLeftData.getClass(),  sixthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthRightData.getClass(),
+                sixthLeftData.getClass(), sixthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -2215,12 +2200,12 @@ public final class TuplePattern {
     }
 
     public <V1, V2>
-    void as(V1 firstLeftData,  V2 firstRightData,  Runnable firstBranch,
+    void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-            V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch,
+            V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(biData.first(), biData.second(),
                 firstLeftData, firstRightData, firstBranch,
@@ -2243,12 +2228,12 @@ public final class TuplePattern {
                V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch,
                Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         if (!Reflection.checkBiTypes(leftValue.getClass(), rightValue.getClass(),
-                                    firstLeftData.getClass(),  firstRightData.getClass(),
-                                    secondLeftData.getClass(), secondRightData.getClass(),
-                                    thirdLeftData.getClass(),  thirdRightData.getClass(),
-                                    fourthLeftData.getClass(), fourthRightData.getClass(),
-                                    fifthLeftData.getClass(),  fifthRightData.getClass(),
-                                    sixthLeftData.getClass(),  sixthRightData.getClass())) {
+                firstLeftData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthRightData.getClass(),
+                sixthLeftData.getClass(), sixthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -2272,10 +2257,10 @@ public final class TuplePattern {
     public <V1, V2>
     void as(V1 firstLeftData, V2 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthRightData,  Runnable fifthBranch,
-            V1 sixthLeftData,  V2 sixthRightData,  Runnable sixthBranch,
+            V1 fifthLeftData, V2 fifthRightData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthRightData, Runnable sixthBranch,
             Class<Var> varClass, BiConsumer<V1, V2> varBranch) {
         match((V1) biData.first(), (V2) biData.second(),
                 firstLeftData, firstRightData, firstBranch,
@@ -2295,14 +2280,14 @@ public final class TuplePattern {
                V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
                V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
                V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
-               V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch)  {
+               V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                       fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
-                                       fifthLeftData.getClass(),  fifthMiddleData.getClass(),  fifthRightData.getClass(),
-                                       sixthLeftData.getClass(),  sixthMiddleData.getClass(),  sixthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthMiddleData.getClass(), fifthRightData.getClass(),
+                sixthLeftData.getClass(), sixthMiddleData.getClass(), sixthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -2316,7 +2301,7 @@ public final class TuplePattern {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && middleValue.equals(fifthMiddleData) && rightValue.equals(fifthRightData)) {
             fifthBranch.run();
-        }  else if (leftValue.equals(sixthLeftData) && middleValue.equals(sixthMiddleData) && rightValue.equals(sixthRightData)) {
+        } else if (leftValue.equals(sixthLeftData) && middleValue.equals(sixthMiddleData) && rightValue.equals(sixthRightData)) {
             sixthBranch.run();
         } else {
             throw new PatternException("Statement must to have only sixth branches");
@@ -2326,10 +2311,10 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-            V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch) {
+            V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch) {
         match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
                 secondLeftData, secondMiddleData, secondRightData, secondBranch,
@@ -2367,12 +2352,12 @@ public final class TuplePattern {
                V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                       fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
-                                       fifthLeftData.getClass(),  fifthMiddleData.getClass(),  fifthRightData.getClass(),
-                                       sixthLeftData.getClass(),  sixthMiddleData.getClass(),  sixthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthMiddleData.getClass(), fifthRightData.getClass(),
+                sixthLeftData.getClass(), sixthMiddleData.getClass(), sixthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -2386,7 +2371,7 @@ public final class TuplePattern {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && middleValue.equals(fifthMiddleData) && rightValue.equals(fifthRightData)) {
             fifthBranch.run();
-        }  else if (leftValue.equals(sixthLeftData) && middleValue.equals(sixthMiddleData) && rightValue.equals(sixthRightData)) {
+        } else if (leftValue.equals(sixthLeftData) && middleValue.equals(sixthMiddleData) && rightValue.equals(sixthRightData)) {
             sixthBranch.run();
         } else {
             elseBranch.run();
@@ -2396,10 +2381,10 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-            V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch,
+            V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(triData.first(), triData.second(), triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
@@ -2422,12 +2407,12 @@ public final class TuplePattern {
                V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch,
                Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         if (!Reflection.checkTrioTypes(leftValue.getClass(), middleValue.getClass(), rightValue.getClass(),
-                                       firstLeftData.getClass(),  firstMiddleData.getClass(),  firstRightData.getClass(),
-                                       secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
-                                       thirdLeftData.getClass(),  thirdMiddleData.getClass(),  thirdRightData.getClass(),
-                                       fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
-                                       fifthLeftData.getClass(),  fifthMiddleData.getClass(),  fifthRightData.getClass(),
-                                       sixthLeftData.getClass(),  sixthMiddleData.getClass(),  sixthRightData.getClass())) {
+                firstLeftData.getClass(), firstMiddleData.getClass(), firstRightData.getClass(),
+                secondLeftData.getClass(), secondMiddleData.getClass(), secondRightData.getClass(),
+                thirdLeftData.getClass(), thirdMiddleData.getClass(), thirdRightData.getClass(),
+                fourthLeftData.getClass(), fourthMiddleData.getClass(), fourthRightData.getClass(),
+                fifthLeftData.getClass(), fifthMiddleData.getClass(), fifthRightData.getClass(),
+                sixthLeftData.getClass(), sixthMiddleData.getClass(), sixthRightData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
@@ -2441,7 +2426,7 @@ public final class TuplePattern {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && middleValue.equals(fifthMiddleData) && rightValue.equals(fifthRightData)) {
             fifthBranch.run();
-        }  else if (leftValue.equals(sixthLeftData) && middleValue.equals(sixthMiddleData) && rightValue.equals(sixthRightData)) {
+        } else if (leftValue.equals(sixthLeftData) && middleValue.equals(sixthMiddleData) && rightValue.equals(sixthRightData)) {
             sixthBranch.run();
         } else {
             varBranch.accept(leftValue, middleValue, rightValue);
@@ -2451,10 +2436,10 @@ public final class TuplePattern {
     public <V1, V2, V3>
     void as(V1 firstLeftData, V2 firstMiddleData, V3 firstRightData, Runnable firstBranch,
             V1 secondLeftData, V2 secondMiddleData, V3 secondRightData, Runnable secondBranch,
-            V1 thirdLeftData,  V2 thirdMiddleData,  V3 thirdRightData,  Runnable thirdBranch,
+            V1 thirdLeftData, V2 thirdMiddleData, V3 thirdRightData, Runnable thirdBranch,
             V1 fourthLeftData, V2 fourthMiddleData, V3 fourthRightData, Runnable fourthBranch,
-            V1 fifthLeftData,  V2 fifthMiddleData,  V3 fifthRightData,  Runnable fifthBranch,
-            V1 sixthLeftData,  V2 sixthMiddleData,  V3 sixthRightData,  Runnable sixthBranch,
+            V1 fifthLeftData, V2 fifthMiddleData, V3 fifthRightData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthMiddleData, V3 sixthRightData, Runnable sixthBranch,
             Class<Var> varClass, TriConsumer<V1, V2, V3> varBranch) {
         match((V1) triData.first(), (V2) triData.second(), (V3) triData.third(),
                 firstLeftData, firstMiddleData, firstRightData, firstBranch,
@@ -2480,34 +2465,34 @@ public final class TuplePattern {
                V1 fifthLeftData, V2 fifthBottomData,
                V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
                V1 sixthLeftData, V2 sixthBottomData,
-               V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch)  {
+               V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(), rightValue.getClass(), topValue.getClass(),
-                firstLeftData.getClass(),  firstBottomData.getClass(),  firstRightData.getClass(),  firstTopData.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(), firstRightData.getClass(), firstTopData.getClass(),
                 secondLeftData.getClass(), secondBottomData.getClass(), secondRightData.getClass(), secondTopData.getClass(),
-                thirdLeftData.getClass(),  thirdBottomData.getClass(),  thirdRightData.getClass(),  thirdTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(), thirdRightData.getClass(), thirdTopData.getClass(),
                 fourthLeftData.getClass(), fourthBottomData.getClass(), fourthRightData.getClass(), fourthTopData.getClass(),
-                fifthLeftData.getClass(),  fifthBottomData.getClass(),  fifthRightData.getClass(),  fifthTopData.getClass(),
-                sixthLeftData.getClass(),  sixthBottomData.getClass(),  sixthRightData.getClass(),  sixthTopData.getClass())) {
+                fifthLeftData.getClass(), fifthBottomData.getClass(), fifthRightData.getClass(), fifthTopData.getClass(),
+                sixthLeftData.getClass(), sixthBottomData.getClass(), sixthRightData.getClass(), sixthTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-            rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else if (leftValue.equals(fourthLeftData) && bottomValue.equals(fourthBottomData) &&
-            rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
+                rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && bottomValue.equals(fifthBottomData) &&
-            rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
+                rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
             fifthBranch.run();
         } else if (leftValue.equals(sixthLeftData) && bottomValue.equals(sixthBottomData) &&
-            rightValue.equals(sixthRightData) && topValue.equals(sixthTopData)) {
+                rightValue.equals(sixthRightData) && topValue.equals(sixthTopData)) {
             sixthBranch.run();
         } else {
             throw new PatternException("Statement must to have only sixth branches");
@@ -2515,18 +2500,18 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-            V1 fifthLeftData,   V2 fifthBottomData,
-            V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-            V1 sixthLeftData,   V2 sixthBottomData,
-            V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch) {
+            V1 fifthLeftData, V2 fifthBottomData,
+            V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthBottomData,
+            V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
                 secondLeftData, secondBottomData, secondRightData, secondTopData, secondBranch,
@@ -2570,39 +2555,39 @@ public final class TuplePattern {
                V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),   firstBottomData.getClass(),
-                                       firstRightData.getClass(),  firstTopData.getClass(),
-                                       secondLeftData.getClass(),  secondBottomData.getClass(),
-                                       secondRightData.getClass(), secondTopData.getClass(),
-                                       thirdLeftData.getClass(),   thirdBottomData.getClass(),
-                                       thirdRightData.getClass(),  thirdTopData.getClass(),
-                                       fourthLeftData.getClass(),  fourthBottomData.getClass(),
-                                       fourthRightData.getClass(), fourthTopData.getClass(),
-                                       fifthLeftData.getClass(),   fifthBottomData.getClass(),
-                                       fifthRightData.getClass(),  fifthTopData.getClass(),
-                                       sixthLeftData.getClass(),   sixthBottomData.getClass(),
-                                       sixthRightData.getClass(),  sixthTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass(),
+                fourthLeftData.getClass(), fourthBottomData.getClass(),
+                fourthRightData.getClass(), fourthTopData.getClass(),
+                fifthLeftData.getClass(), fifthBottomData.getClass(),
+                fifthRightData.getClass(), fifthTopData.getClass(),
+                sixthLeftData.getClass(), sixthBottomData.getClass(),
+                sixthRightData.getClass(), sixthTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-            rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-            rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else if (leftValue.equals(fourthLeftData) && bottomValue.equals(fourthBottomData) &&
-            rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
+                rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && bottomValue.equals(fifthBottomData) &&
-            rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
+                rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
             fifthBranch.run();
         } else if (leftValue.equals(sixthLeftData) && bottomValue.equals(sixthBottomData) &&
-            rightValue.equals(sixthRightData) && topValue.equals(sixthTopData)) {
+                rightValue.equals(sixthRightData) && topValue.equals(sixthTopData)) {
             sixthBranch.run();
         } else {
             elseBranch.run();
@@ -2610,18 +2595,18 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-            V1 fifthLeftData,   V2 fifthBottomData,
-            V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-            V1 sixthLeftData,   V2 sixthBottomData,
-            V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch,
+            V1 fifthLeftData, V2 fifthBottomData,
+            V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthBottomData,
+            V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(quarData.first(), quarData.second(), quarData.third(), quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,
@@ -2650,39 +2635,39 @@ public final class TuplePattern {
                V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch,
                Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         if (!Reflection.checkQuarTypes(leftValue.getClass(), bottomValue.getClass(),
-                                       rightValue.getClass(), topValue.getClass(),
-                                       firstLeftData.getClass(),   firstBottomData.getClass(),
-                                       firstRightData.getClass(),  firstTopData.getClass(),
-                                       secondLeftData.getClass(),  secondBottomData.getClass(),
-                                       secondRightData.getClass(), secondTopData.getClass(),
-                                       thirdLeftData.getClass(),   thirdBottomData.getClass(),
-                                       thirdRightData.getClass(),  thirdTopData.getClass(),
-                                       fourthLeftData.getClass(),  fourthBottomData.getClass(),
-                                       fourthRightData.getClass(), fourthTopData.getClass(),
-                                       fifthLeftData.getClass(),   fifthBottomData.getClass(),
-                                       fifthRightData.getClass(),  fifthTopData.getClass(),
-                                       sixthLeftData.getClass(),   sixthBottomData.getClass(),
-                                       sixthRightData.getClass(),  sixthTopData.getClass())) {
+                rightValue.getClass(), topValue.getClass(),
+                firstLeftData.getClass(), firstBottomData.getClass(),
+                firstRightData.getClass(), firstTopData.getClass(),
+                secondLeftData.getClass(), secondBottomData.getClass(),
+                secondRightData.getClass(), secondTopData.getClass(),
+                thirdLeftData.getClass(), thirdBottomData.getClass(),
+                thirdRightData.getClass(), thirdTopData.getClass(),
+                fourthLeftData.getClass(), fourthBottomData.getClass(),
+                fourthRightData.getClass(), fourthTopData.getClass(),
+                fifthLeftData.getClass(), fifthBottomData.getClass(),
+                fifthRightData.getClass(), fifthTopData.getClass(),
+                sixthLeftData.getClass(), sixthBottomData.getClass(),
+                sixthRightData.getClass(), sixthTopData.getClass())) {
             throw new PatternException("Types in brunches must to be equals");
         }
 
         if (leftValue.equals(firstLeftData) && bottomValue.equals(firstBottomData) &&
-            rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
+                rightValue.equals(firstRightData) && topValue.equals(firstTopData)) {
             firstBranch.run();
         } else if (leftValue.equals(secondLeftData) && bottomValue.equals(secondBottomData) &&
-                   rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
+                rightValue.equals(secondRightData) && topValue.equals(secondTopData)) {
             secondBranch.run();
         } else if (leftValue.equals(thirdLeftData) && bottomValue.equals(thirdBottomData) &&
-                   rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
+                rightValue.equals(thirdRightData) && topValue.equals(thirdTopData)) {
             thirdBranch.run();
         } else if (leftValue.equals(fourthLeftData) && bottomValue.equals(fourthBottomData) &&
-                   rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
+                rightValue.equals(fourthRightData) && topValue.equals(fourthTopData)) {
             fourthBranch.run();
         } else if (leftValue.equals(fifthLeftData) && bottomValue.equals(fifthBottomData) &&
-                   rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
+                rightValue.equals(fifthRightData) && topValue.equals(fifthTopData)) {
             fifthBranch.run();
         } else if (leftValue.equals(sixthLeftData) && bottomValue.equals(sixthBottomData) &&
-                   rightValue.equals(sixthRightData) && topValue.equals(sixthTopData)) {
+                rightValue.equals(sixthRightData) && topValue.equals(sixthTopData)) {
             sixthBranch.run();
         } else {
             varBranch.accept(leftValue, bottomValue, rightValue, topValue);
@@ -2690,18 +2675,18 @@ public final class TuplePattern {
     }
 
     public <V1, V2, V3, V4>
-    void as(V1 firstLeftData,  V2 firstBottomData,
+    void as(V1 firstLeftData, V2 firstBottomData,
             V3 firstRightData, V4 firstTopData, Runnable firstBranch,
-            V1 secondLeftData,  V2 secondBottomData,
+            V1 secondLeftData, V2 secondBottomData,
             V3 secondRightData, V4 secondTopData, Runnable secondBranch,
-            V1 thirdLeftData,   V2 thirdBottomData,
-            V3 thirdRightData,  V4 thirdTopData,  Runnable thirdBranch,
-            V1 fourthLeftData,  V2 fourthBottomData,
+            V1 thirdLeftData, V2 thirdBottomData,
+            V3 thirdRightData, V4 thirdTopData, Runnable thirdBranch,
+            V1 fourthLeftData, V2 fourthBottomData,
             V3 fourthRightData, V4 fourthTopData, Runnable fourthBranch,
-            V1 fifthLeftData,   V2 fifthBottomData,
-            V3 fifthRightData,  V4 fifthTopData, Runnable fifthBranch,
-            V1 sixthLeftData,   V2 sixthBottomData,
-            V3 sixthRightData,  V4 sixthTopData, Runnable sixthBranch,
+            V1 fifthLeftData, V2 fifthBottomData,
+            V3 fifthRightData, V4 fifthTopData, Runnable fifthBranch,
+            V1 sixthLeftData, V2 sixthBottomData,
+            V3 sixthRightData, V4 sixthTopData, Runnable sixthBranch,
             Class<Var> varClass, QuarConsumer<V1, V2, V3, V4> varBranch) {
         match((V1) quarData.first(), (V2) quarData.second(), (V3) quarData.third(), (V4) quarData.fourth(),
                 firstLeftData, firstBottomData, firstRightData, firstTopData, firstBranch,

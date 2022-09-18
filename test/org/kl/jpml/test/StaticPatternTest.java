@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -24,14 +24,10 @@
 package org.kl.jpml.test;
 
 import org.junit.jupiter.api.Test;
-import org.kl.jpml.pattern.StaticPattern;
 import org.kl.jpml.test.shape.*;
-import org.kl.jpml.util.Result;
 
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,20 +73,6 @@ public class StaticPatternTest {
         match(data1,
                 Optional::empty, () -> out.println("empty value"),
                 Optional::get, v -> out.println("value: " + v)
-        );
-
-        Result<Integer, SQLException> data2 = Result.of(new SQLException());
-
-        match(data2,
-                Result::error, e -> out.println("get error: " + e),
-                Result::value, (Consumer<Integer>) v -> out.println("get value: " + v)
-        );
-
-        Result<Integer, ArithmeticException> data3 = Result.of((Supplier<Integer>) () -> 4 / 0);
-
-        match(data3,
-                Result::error, e -> out.println("get error: " + e),
-                Result::value, (Consumer<Integer>) v -> out.println("get value: " + v)
         );
 
         /* 1 - 2 */
@@ -196,13 +178,6 @@ public class StaticPatternTest {
         match(data1).as(
                 Optional::empty, () -> out.println("empty value"),
                 Optional::get, v -> out.println("value: " + v)
-        );
-
-        Result<Integer, SQLException> data2 = Result.of(new SQLException());
-
-        match(data2).as(
-                Result::error, e -> out.println("get error: " + e),
-                Result::value, (Consumer<Integer>) v -> out.println("get value: " + v)
         );
 
         /* 1 - 2 */
@@ -315,17 +290,6 @@ public class StaticPatternTest {
                 Optional::empty, () -> 0,
                 Optional::get, v -> v
         );
-
-        assertEquals(result, 5);
-
-        Result<Integer, SQLException> data2 = Result.of(new SQLException());
-
-        result = match(data2,
-                Result::error, e -> -1,
-                Result::value, v -> v
-        );
-
-        assertEquals(result, -1);
 
         /* 1 - 2 */
         figure = new Rectangle();
@@ -455,15 +419,6 @@ public class StaticPatternTest {
         );
 
         assertEquals(result, 1);
-
-        Result<Integer, SQLException> data2 = Result.of(new SQLException());
-
-        result = match(data2).as(
-                Result::error, e -> -1,
-                Result::value, v -> 1
-        );
-
-        assertEquals(result, -1);
 
         /* 1 - 2 */
         figure = new Rectangle();

@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -36,29 +36,24 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/*
+/**
  * Property pattern allow match type and access to fields class.
  * Maximum number of branches for match three with three
  * value params.
  */
 public final class PropertyPattern {
-    private static Object data;
-    private static PropertyPattern instance;
+    private final Object value;
 
-    private PropertyPattern() {}
+    private <V> PropertyPattern(V value) {
+        this.value = value;
+    }
 
     public static <V> PropertyPattern match(V value) {
-        data = value;
-
-        if (instance == null) {
-            instance = new PropertyPattern();
-        }
-
-        return instance;
+        return new PropertyPattern(value);
     }
 
     public static <V, T>
-    void foreach(Collection<V> data, Tuple.Tuple2<String, T> item, Consumer<T> consumer)  {
+    void foreach(Collection<V> data, Tuple.Tuple2<String, T> item, Consumer<T> consumer) {
         for (V value : data) {
             Object[] args = Reflection.fetchFields(value, 1, (String) item.first());
 
@@ -76,7 +71,7 @@ public final class PropertyPattern {
     }
 
     public static <V, T>
-    void let(V data, Tuple.Tuple2<String, T> item, Consumer<T> consumer)  {
+    void let(V data, Tuple.Tuple2<String, T> item, Consumer<T> consumer) {
         Object[] args = Reflection.fetchFields(data, 1, item.first());
 
         consumer.accept((T) args[0]);
@@ -123,7 +118,7 @@ public final class PropertyPattern {
 
     public <C, T>
     void as(Class<C> clazz, Tuple.Tuple2<String, T> item, Consumer<T> branch) {
-        match(data, clazz, item, branch);
+        match(value, clazz, item, branch);
     }
 
     public static <V, C, T, R>
@@ -139,7 +134,7 @@ public final class PropertyPattern {
 
     public <C, T, R>
     R as(Class<C> clazz, Tuple.Tuple2<String, T> item, Function<T, R> branch) {
-        return match(data, clazz, item, branch);
+        return match(value, clazz, item, branch);
     }
 
     private static <V, T, R>
@@ -172,7 +167,7 @@ public final class PropertyPattern {
 
     public <U, C, T>
     void as(Class<C> clazz, Function<U, T> function, Consumer<T> branch) {
-        match(data, clazz, function, branch);
+        match(value, clazz, function, branch);
     }
 
     public static <V, U, C, T, R>
@@ -186,7 +181,7 @@ public final class PropertyPattern {
 
     public <U, C, T, R>
     R as(Class<C> clazz, Function<U, T> function, Function<T, R> branch) {
-        return match(data, clazz, function, branch);
+        return match(value, clazz, function, branch);
     }
 
     private static <V, U, T, R>
@@ -196,7 +191,7 @@ public final class PropertyPattern {
     }
 
     public static <V, T1, T2>
-    void foreach(Collection<V> data, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> consumer)  {
+    void foreach(Collection<V> data, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> consumer) {
         for (V value : data) {
             Object[] args = Reflection.fetchFields(value, 2, item.first(), item.third());
 
@@ -208,7 +203,7 @@ public final class PropertyPattern {
     void foreach(Collection<V> data,
                  Function<V, T1> firstFunction, Function<V, T2> secondFunction, BiConsumer<T1, T2> consumer) {
         for (V value : data) {
-            T1 firstArg  = firstFunction.apply(value);
+            T1 firstArg = firstFunction.apply(value);
             T2 secondArg = secondFunction.apply(value);
 
             consumer.accept(firstArg, secondArg);
@@ -223,7 +218,7 @@ public final class PropertyPattern {
     }
 
     public static <V, T1, T2>
-    void let(V data, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> consumer)  {
+    void let(V data, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> consumer) {
         Object[] args = Reflection.fetchFields(data, 2, item.first(), item.third());
 
         consumer.accept((T1) args[0], (T2) args[1]);
@@ -232,7 +227,7 @@ public final class PropertyPattern {
     public static <V, T1, T2>
     void let(V data,
              Function<V, T1> firstFunction, Function<V, T2> secondFunction, BiConsumer<T1, T2> consumer) {
-        T1 firstArg  = firstFunction.apply(data);
+        T1 firstArg = firstFunction.apply(data);
         T2 secondArg = secondFunction.apply(data);
 
         consumer.accept(firstArg, secondArg);
@@ -260,11 +255,11 @@ public final class PropertyPattern {
     private static <V, T1, T2>
     boolean executeBranch(V value, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> branch) {
         Object[] args = Reflection.fetchFields(value, 2, item.first(), item.third());
-        Object firstArg  = item.second();
+        Object firstArg = item.second();
         Object secondArg = item.fourth();
 
         if ((firstArg == null && secondArg == null) ||
-            (Reflection.compareValues(firstArg, args[0]) && Reflection.compareValues(secondArg, args[1]))) {
+                (Reflection.compareValues(firstArg, args[0]) && Reflection.compareValues(secondArg, args[1]))) {
             branch.accept((T1) args[0], (T2) args[1]);
             return true;
         }
@@ -274,7 +269,7 @@ public final class PropertyPattern {
 
     public <C, T1, T2>
     void as(Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, BiConsumer<T1, T2> branch) {
-        match(data, clazz, item, branch);
+        match(value, clazz, item, branch);
     }
 
     public static <V, C, T1, T2, R>
@@ -291,11 +286,11 @@ public final class PropertyPattern {
     private static <V, T1, T2, R>
     R executeBranch(V value, Tuple.Tuple4<String, T1, String, T2> item, BiFunction<T1, T2, R> branch) {
         Object[] args = Reflection.fetchFields(value, 2, item.first(), item.third());
-        Object firstArg  = item.second();
+        Object firstArg = item.second();
         Object secondArg = item.fourth();
 
         if ((firstArg == null && secondArg == null) ||
-            (Reflection.compareValues(firstArg, args[0]) && Reflection.compareValues(secondArg, args[1]))) {
+                (Reflection.compareValues(firstArg, args[0]) && Reflection.compareValues(secondArg, args[1]))) {
             return branch.apply((T1) args[0], (T2) args[1]);
         }
 
@@ -304,7 +299,7 @@ public final class PropertyPattern {
 
     public <C, T1, T2, R>
     R as(Class<C> clazz, Tuple.Tuple4<String, T1, String, T2> item, BiFunction<T1, T2, R> branch) {
-        return match(data, clazz, item, branch);
+        return match(value, clazz, item, branch);
     }
 
     public static <V, U, C, T1, T2>
@@ -320,8 +315,8 @@ public final class PropertyPattern {
 
     private static <V, U, T1, T2>
     void executeBranch(V value, Function<U, T1> firstFunction,
-                       Function<U, T2> secondFunction, BiConsumer<T1, T2> branch)  {
-        T1 firstArg  = firstFunction.apply((U) value);
+                       Function<U, T2> secondFunction, BiConsumer<T1, T2> branch) {
+        T1 firstArg = firstFunction.apply((U) value);
         T2 secondArg = secondFunction.apply((U) value);
 
         branch.accept(firstArg, secondArg);
@@ -329,7 +324,7 @@ public final class PropertyPattern {
 
     public <U, C, T1, T2>
     void as(Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction, BiConsumer<T1, T2> branch) {
-        match(data, clazz, firstFunction, secondFunction, branch);
+        match(value, clazz, firstFunction, secondFunction, branch);
     }
 
     public static <V, U, C, T1, T2, R>
@@ -345,7 +340,7 @@ public final class PropertyPattern {
     private static <V, U, T1, T2, R>
     R executeBranch(V value, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
                     BiFunction<T1, T2, R> branch) {
-        T1 firstArg  = firstFunction.apply((U) value);
+        T1 firstArg = firstFunction.apply((U) value);
         T2 secondArg = secondFunction.apply((U) value);
 
         return branch.apply(firstArg, secondArg);
@@ -354,12 +349,12 @@ public final class PropertyPattern {
     public <U, C, T1, T2, R>
     R as(Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
          BiFunction<T1, T2, R> branch) {
-        return match(data, clazz, firstFunction, secondFunction, branch);
+        return match(value, clazz, firstFunction, secondFunction, branch);
     }
 
     public static <V, T1, T2, T3>
     void foreach(Collection<V> data,
-                 Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> consumer)  {
+                 Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> consumer) {
         for (V value : data) {
             Object[] args = Reflection.fetchFields(value, 3, item.first(), item.third(), item.fifth());
 
@@ -372,9 +367,9 @@ public final class PropertyPattern {
                  Function<V, T1> firstFunction, Function<V, T2> secondFunction,
                  Function<V, T3> thirdFunction, TriConsumer<T1, T2, T3> consumer) {
         for (V value : data) {
-            T1 firstArg  = firstFunction.apply(value);
+            T1 firstArg = firstFunction.apply(value);
             T2 secondArg = secondFunction.apply(value);
-            T3 thirdArg  = thirdFunction.apply(value);
+            T3 thirdArg = thirdFunction.apply(value);
 
             consumer.accept(firstArg, secondArg, thirdArg);
         }
@@ -382,7 +377,7 @@ public final class PropertyPattern {
 
     public static <V, T1, T2, T3>
     void let(V data,
-             Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> consumer)  {
+             Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> consumer) {
         Object[] args = Reflection.fetchFields(data, 3, item.first(), item.third(), item.fifth());
 
         consumer.accept((T1) args[0], (T2) args[1], (T3) args[2]);
@@ -392,9 +387,9 @@ public final class PropertyPattern {
     void let(V data,
              Function<V, T1> firstFunction, Function<V, T2> secondFunction,
              Function<V, T3> thirdFunction, TriConsumer<T1, T2, T3> consumer) {
-        T1 firstArg  = firstFunction.apply(data);
+        T1 firstArg = firstFunction.apply(data);
         T2 secondArg = secondFunction.apply(data);
-        T3 thirdArg  = thirdFunction.apply(data);
+        T3 thirdArg = thirdFunction.apply(data);
 
         consumer.accept(firstArg, secondArg, thirdArg);
     }
@@ -405,9 +400,9 @@ public final class PropertyPattern {
     }
 
     public static <T1, T2, T3>
-    Tuple.Tuple6<String, T1, String, T2, String, T3> of(String firstField,  T1 firstValue,
+    Tuple.Tuple6<String, T1, String, T2, String, T3> of(String firstField, T1 firstValue,
                                                         String secondField, T2 secondValue,
-                                                        String thirdField,  T3 thirdValue) {
+                                                        String thirdField, T3 thirdValue) {
         return new Tuple.Tuple6<>(firstField, firstValue, secondField, secondValue, thirdField, thirdValue);
     }
 
@@ -424,13 +419,13 @@ public final class PropertyPattern {
     private static <V, T1, T2, T3>
     boolean executeBranch(V value, Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> branch) {
         Object[] args = Reflection.fetchFields(value, 3, item.first(), item.third(), item.fifth());
-        Object firstArg  = item.second();
+        Object firstArg = item.second();
         Object secondArg = item.fourth();
-        Object thirdArg  = item.sixth();
+        Object thirdArg = item.sixth();
 
         if ((firstArg == null && secondArg == null && thirdArg == null) ||
-            (Reflection.compareValues(firstArg, args[0]) && Reflection.compareValues(secondArg, args[1]) &&
-             Reflection.compareValues(thirdArg, args[2]))) {
+                (Reflection.compareValues(firstArg, args[0]) && Reflection.compareValues(secondArg, args[1]) &&
+                        Reflection.compareValues(thirdArg, args[2]))) {
             branch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return true;
         }
@@ -440,7 +435,7 @@ public final class PropertyPattern {
 
     public <C, T1, T2, T3>
     void as(Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriConsumer<T1, T2, T3> branch) {
-        match(data, clazz, item, branch);
+        match(value, clazz, item, branch);
     }
 
 
@@ -460,13 +455,13 @@ public final class PropertyPattern {
     R executeBranch(V value,
                     Tuple.Tuple6<String, T1, String, T2, String, T3> item, TriFunction<T1, T2, T3, R> branch) {
         Object[] args = Reflection.fetchFields(value, 3, item.first(), item.third(), item.fifth());
-        Object firstArg  = item.second();
+        Object firstArg = item.second();
         Object secondArg = item.fourth();
-        Object thirdArg  = item.sixth();
+        Object thirdArg = item.sixth();
 
         if ((firstArg == null && secondArg == null && thirdArg == null) ||
-            (Reflection.compareValues(firstArg, args[0]) && Reflection.compareValues(secondArg, args[1]) &&
-            Reflection.compareValues(thirdArg, args[2]))) {
+                (Reflection.compareValues(firstArg, args[0]) && Reflection.compareValues(secondArg, args[1]) &&
+                        Reflection.compareValues(thirdArg, args[2]))) {
             return branch.apply((T1) args[0], (T2) args[1], (T3) args[2]);
         }
 
@@ -476,7 +471,7 @@ public final class PropertyPattern {
     public <C, T1, T2, T3, R>
     R as(Class<C> clazz, Tuple.Tuple6<String, T1, String, T2, String, T3> item,
          TriFunction<T1, T2, T3, R> branch) {
-        return match(data, clazz, item, branch);
+        return match(value, clazz, item, branch);
     }
 
     public static <V, U, C, T1, T2, T3>
@@ -493,9 +488,9 @@ public final class PropertyPattern {
     private static <V, U, T1, T2, T3>
     void executeBranch(V value, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
                        Function<U, T3> thirdFunction, TriConsumer<T1, T2, T3> consumer) {
-        T1 firstArg  = firstFunction.apply((U) value);
+        T1 firstArg = firstFunction.apply((U) value);
         T2 secondArg = secondFunction.apply((U) value);
-        T3 thirdArg  = thirdFunction.apply((U) value);
+        T3 thirdArg = thirdFunction.apply((U) value);
 
         consumer.accept(firstArg, secondArg, thirdArg);
     }
@@ -503,7 +498,7 @@ public final class PropertyPattern {
     public <V1, C, T1, T2, T3>
     void as(Class<C> clazz, Function<V1, T1> firstFunction, Function<V1, T2> secondFunction,
             Function<V1, T3> thirdFunction, TriConsumer<T1, T2, T3> branch) {
-        match(data, clazz, firstFunction, secondFunction, thirdFunction, branch);
+        match(value, clazz, firstFunction, secondFunction, thirdFunction, branch);
     }
 
     public static <V, U, C, T1, T2, T3, R>
@@ -519,9 +514,9 @@ public final class PropertyPattern {
     private static <V, U, T1, T2, T3, R>
     R executeBranch(V value, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
                     Function<U, T3> thirdFunction, TriFunction<T1, T2, T3, R> branch) {
-        T1 firstArg  = firstFunction.apply((U) value);
+        T1 firstArg = firstFunction.apply((U) value);
         T2 secondArg = secondFunction.apply((U) value);
-        T3 thirdArg  = thirdFunction.apply((U) value);
+        T3 thirdArg = thirdFunction.apply((U) value);
 
         return branch.apply(firstArg, secondArg, thirdArg);
     }
@@ -529,8 +524,8 @@ public final class PropertyPattern {
     public <U, C, T1, T2, T3, R>
     R as(Class<C> clazz, Function<U, T1> firstFunction, Function<U, T2> secondFunction,
          Function<U, T3> thirdFunction, TriFunction<T1, T2, T3, R> branch) {
-        return match(data, clazz, firstFunction, secondFunction,
-                       thirdFunction, branch);
+        return match(value, clazz, firstFunction, secondFunction,
+                thirdFunction, branch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -550,9 +545,9 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2>
     void as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Consumer<T2> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -576,9 +571,9 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, R>
     R as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T2> secondItem, Function<T2, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -600,9 +595,9 @@ public final class PropertyPattern {
     public <U1, U2, C1, C2, T1, T2>
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Function<U2, T2> secondFunction, Consumer<T2> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, firstBranch,
-                secondClazz,secondFunction,secondBranch);
+                secondClazz, secondFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -622,9 +617,9 @@ public final class PropertyPattern {
     public <U1, U2, C1, C2, T1, T2, R>
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<T2, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstFunction, firstBranch,
-                       secondClazz,secondFunction,secondBranch);
+        return match(value,
+                firstClazz, firstFunction, firstBranch,
+                secondClazz, secondFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -644,9 +639,9 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3>
     void as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, BiConsumer<T2, T3> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -670,9 +665,9 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3, R>
     R as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T2, String, T3> secondItem, BiFunction<T2, T3, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3>
@@ -695,7 +690,7 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Function<U2, T2> secondFunction,
             Function<U2, T3> thirdFunction, BiConsumer<T2, T3> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, firstBranch,
                 secondClazz, secondFunction, thirdFunction, secondBranch);
     }
@@ -718,9 +713,9 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
          BiFunction<T2, T3, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstFunction, firstBranch,
-                       secondClazz, secondFunction, thirdFunction, secondBranch);
+        return match(value,
+                firstClazz, firstFunction, firstBranch,
+                secondClazz, secondFunction, thirdFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -740,9 +735,9 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3>
     void as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Consumer<T3> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -766,9 +761,9 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3, R>
     R as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T3> secondItem, Function<T3, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3>
@@ -791,7 +786,7 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction,
             Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Function<U2, T3> thirdFunction, Consumer<T3> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, secondFunction, firstBranch,
                 secondClazz, thirdFunction, secondBranch);
     }
@@ -814,9 +809,9 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
          BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<T3, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstFunction, secondFunction, firstBranch,
-                       secondClazz, thirdFunction, secondBranch);
+        return match(value,
+                firstClazz, firstFunction, secondFunction, firstBranch,
+                secondClazz, thirdFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -836,9 +831,9 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3, T4>
     void as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, BiConsumer<T3, T4> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -862,9 +857,9 @@ public final class PropertyPattern {
     public <C1, C2, T1, T2, T3, T4, R>
     R as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T3, String, T4> secondItem, BiFunction<T3, T4, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -873,7 +868,7 @@ public final class PropertyPattern {
                Class<C1> firstClazz, Function<U1, T1> firstFunction,
                Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
                Class<C2> secondClazz, Function<U2, T3> thirdFunction,
-               Function<U2, T4> fourthFunction, BiConsumer<T3, T4> secondBranch)  {
+               Function<U2, T4> fourthFunction, BiConsumer<T3, T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             executeBranch(value, firstFunction, secondFunction, firstBranch);
             return;
@@ -890,7 +885,7 @@ public final class PropertyPattern {
             Function<U1, T2> secondFunction, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Function<U2, T3> thirdFunction,
             Function<U2, T4> fourthFunction, BiConsumer<T3, T4> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, secondFunction, firstBranch,
                 secondClazz, thirdFunction, fourthFunction, secondBranch);
     }
@@ -910,14 +905,14 @@ public final class PropertyPattern {
         throw new PatternException("Statement must to have only two branches");
     }
 
-    public <U1, U2, C1, C2, T1, T2, T3, T4,R>
+    public <U1, U2, C1, C2, T1, T2, T3, T4, R>
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
          BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
          BiFunction<T3, T4, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstFunction, secondFunction,firstBranch,
-                       secondClazz, thirdFunction, fourthFunction, secondBranch);
+        return match(value,
+                firstClazz, firstFunction, secondFunction, firstBranch,
+                secondClazz, thirdFunction, fourthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -925,7 +920,7 @@ public final class PropertyPattern {
     void match(V value,
                Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
                Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
-               TriConsumer<T2, T3, T4> secondBranch)  {
+               TriConsumer<T2, T3, T4> secondBranch) {
         if (firstClazz == value.getClass()) {
             if (executeBranch(value, firstItem, firstBranch)) return;
         } else if (secondClazz == value.getClass()) {
@@ -939,9 +934,9 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
             TriConsumer<T2, T3, T4> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -967,9 +962,9 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Tuple.Tuple2<String, T1> firstItem, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T2, String, T3, String, T4> secondItem,
          TriFunction<T2, T3, T4, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4>
@@ -992,7 +987,7 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Consumer<T1> firstBranch,
             Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
             Function<U2, T4> fourthFunction, TriConsumer<T2, T3, T4> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, firstBranch,
                 secondClazz, secondFunction, thirdFunction, fourthFunction, secondBranch);
     }
@@ -1011,13 +1006,13 @@ public final class PropertyPattern {
         throw new PatternException("Statement must to have only two branches");
     }
 
-    public <U1, U2, C1, C2, T1, T2, T3, T4,R>
+    public <U1, U2, C1, C2, T1, T2, T3, T4, R>
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<T1, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T2> secondFunction, Function<U2, T3> thirdFunction,
          Function<U2, T4> fourthFunction, TriFunction<T2, T3, T4, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstFunction, firstBranch,
-                       secondClazz, secondFunction, thirdFunction, fourthFunction, secondBranch);
+        return match(value,
+                firstClazz, firstFunction, firstBranch,
+                secondClazz, secondFunction, thirdFunction, fourthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -1039,9 +1034,9 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
             TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Consumer<T4> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -1067,9 +1062,9 @@ public final class PropertyPattern {
     R as(Class<C1> firstClazz, Tuple.Tuple6<String, T1, String, T2, String, T3> firstItem,
          TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple2<String, T4> secondItem, Function<T4, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4>
@@ -1090,9 +1085,9 @@ public final class PropertyPattern {
 
     public <U1, U2, C1, C2, T1, T2, T3, T4>
     void as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
-            Function<U1, T3> thirdFunction,TriConsumer<T1, T2, T3> firstBranch,
+            Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Function<U2, T4> fourthFunction, Consumer<T4> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                 secondClazz, fourthFunction, secondBranch);
     }
@@ -1112,12 +1107,12 @@ public final class PropertyPattern {
         throw new PatternException("Statement must to have only two branches");
     }
 
-    public <U1, U2, C1, C2, T1, T2, T3, T4,R>
+    public <U1, U2, C1, C2, T1, T2, T3, T4, R>
     R as(Class<C1> firstClazz, Function<U1, T1> firstFunction, Function<U1, T2> secondFunction,
          Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T4> fourthFunction,
          Function<T4, R> secondBranch) {
-        return match(data,
+        return match(value,
                 firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                 secondClazz, fourthFunction, secondBranch);
     }
@@ -1143,9 +1138,9 @@ public final class PropertyPattern {
             TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem,
             TriConsumer<T4, T5, T6> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -1173,9 +1168,9 @@ public final class PropertyPattern {
          TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T4, String, T5, String, T6> secondItem,
          TriFunction<T4, T5, T6, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5, T6>
@@ -1200,7 +1195,7 @@ public final class PropertyPattern {
             Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
             Function<U2, T6> sixthFunction, TriConsumer<T4, T5, T6> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                 secondClazz, fourthFunction, fifthFunction, sixthFunction, secondBranch);
     }
@@ -1225,9 +1220,9 @@ public final class PropertyPattern {
          Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
          Function<U2, T6> sixthFunction, TriFunction<T4, T5, T6, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
-                       secondClazz, fourthFunction, fifthFunction, sixthFunction, secondBranch);
+        return match(value,
+                firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
+                secondClazz, fourthFunction, fifthFunction, sixthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -1249,9 +1244,9 @@ public final class PropertyPattern {
     void as(Class<C1> firstClazz, Tuple.Tuple4<String, T1, String, T2> firstItem, BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem,
             TriConsumer<T3, T4, T5> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -1279,9 +1274,9 @@ public final class PropertyPattern {
          BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple6<String, T3, String, T4, String, T5> secondItem,
          TriFunction<T3, T4, T5, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5>
@@ -1306,7 +1301,7 @@ public final class PropertyPattern {
             BiConsumer<T1, T2> firstBranch,
             Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
             Function<U2, T5> fifthFunction, TriConsumer<T3, T4, T5> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, secondFunction, firstBranch,
                 secondClazz, thirdFunction, fourthFunction, fifthFunction, secondBranch);
     }
@@ -1331,9 +1326,9 @@ public final class PropertyPattern {
          BiFunction<T1, T2, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T3> thirdFunction, Function<U2, T4> fourthFunction,
          Function<U2, T5> fifthFunction, TriFunction<T3, T4, T5, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstFunction, secondFunction, firstBranch,
-                       secondClazz, thirdFunction, fourthFunction, fifthFunction, secondBranch);
+        return match(value,
+                firstClazz, firstFunction, secondFunction, firstBranch,
+                secondClazz, thirdFunction, fourthFunction, fifthFunction, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -1357,9 +1352,9 @@ public final class PropertyPattern {
             TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem,
             BiConsumer<T4, T5> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstItem, firstBranch,
-                secondClazz,secondItem,secondBranch);
+                secondClazz, secondItem, secondBranch);
     }
 
     @SuppressWarnings("Duplicates")
@@ -1387,9 +1382,9 @@ public final class PropertyPattern {
          TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Tuple.Tuple4<String, T4, String, T5> secondItem,
          BiFunction<T4, T5, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstItem, firstBranch,
-                       secondClazz,secondItem,secondBranch);
+        return match(value,
+                firstClazz, firstItem, firstBranch,
+                secondClazz, secondItem, secondBranch);
     }
 
     public static <V, U1, U2, C1, C2, T1, T2, T3, T4, T5>
@@ -1414,7 +1409,7 @@ public final class PropertyPattern {
             Function<U1, T3> thirdFunction, TriConsumer<T1, T2, T3> firstBranch,
             Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
             BiConsumer<T4, T5> secondBranch) {
-        match(data,
+        match(value,
                 firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
                 secondClazz, fourthFunction, fifthFunction, secondBranch);
     }
@@ -1439,8 +1434,8 @@ public final class PropertyPattern {
          Function<U1, T3> thirdFunction, TriFunction<T1, T2, T3, R> firstBranch,
          Class<C2> secondClazz, Function<U2, T4> fourthFunction, Function<U2, T5> fifthFunction,
          BiFunction<T4, T5, R> secondBranch) {
-        return match(data,
-                       firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
-                       secondClazz, fourthFunction, fifthFunction, secondBranch);
+        return match(value,
+                firstClazz, firstFunction, secondFunction, thirdFunction, firstBranch,
+                secondClazz, fourthFunction, fifthFunction, secondBranch);
     }
 }

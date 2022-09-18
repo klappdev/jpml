@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import static org.kl.jpml.pattern.PositionPattern.*;
 public class PositionPatternTest {
 
     @Test
-    public void matchesStatementTest() {
+    public void matchStatementTest() {
         Figure figure;
 
         /* 1 */
@@ -131,7 +131,7 @@ public class PositionPatternTest {
     }
 
     @Test
-    public void matchesAsStatementTest() {
+    public void matchAsStatementTest() {
         Figure figure;
 
         /* 1 */
@@ -229,7 +229,7 @@ public class PositionPatternTest {
     }
 
     @Test
-    public void matchesExpressionTest() {
+    public void matchExpressionTest() {
         /* 1 */
         Figure figure = new Circle(5);
 
@@ -349,7 +349,7 @@ public class PositionPatternTest {
     }
 
     @Test
-    public void matchesAsExpressionTest() {
+    public void matchAsExpressionTest() {
         /* 1 */
         Figure figure = new Circle(5);
 

@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -34,27 +34,22 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/*
+/**
  * Type test pattern allow match type and then extract
  * value. Maximum number of branches for match six.
  */
 public final class TypeTestPattern {
-    private static TypeTestPattern instance;
-    private static Object value;
+    private final Object value;
 
-    private TypeTestPattern() {}
-
-    public static <V> TypeTestPattern match(V other) {
-        value = other;
-
-        if (instance == null) {
-            instance = new TypeTestPattern();
-        }
-
-        return instance;
+    private <V> TypeTestPattern(V value) {
+        this.value = value;
     }
 
-    @SuppressWarnings("unused")
+    public static <V> TypeTestPattern match(V value) {
+        return new TypeTestPattern(value);
+    }
+
+
     private static <T> Consumer<Object> acceptType(Class<T> clazz, Consumer<? super T> consumer) {
         return x -> {
             if (clazz.isInstance(x)) {
@@ -72,11 +67,11 @@ public final class TypeTestPattern {
         }
     }
 
-    public <T> void as(Class<T> clazz, Consumer<T> consumer)  {
+    public <T> void as(Class<T> clazz, Consumer<T> consumer) {
         match(value, clazz, consumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T> void match(V value,
                                     Class<T> clazz, Consumer<T> consumer,
                                     Class<Else> defaultClass, Runnable defaultConsumer) {
@@ -90,11 +85,11 @@ public final class TypeTestPattern {
     }
 
     public <T> void as(Class<T> clazz, Consumer<T> consumer,
-                       Class<Else> defaultClass, Runnable defaultConsumer)  {
+                       Class<Else> defaultClass, Runnable defaultConsumer) {
         match(value, clazz, consumer, defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T> void match(V value,
                                     Class<T> clazz, Purchaser<T> purchaser,
                                     Class<Var> varClass, Purchaser<V> varPurchaser) {
@@ -108,11 +103,11 @@ public final class TypeTestPattern {
     }
 
     public <T, V> void as(Class<T> clazz, Purchaser<T> purchaser,
-                          Class<Var> varClass, Purchaser<V> varPurchaser)  {
+                          Class<Var> varClass, Purchaser<V> varPurchaser) {
         match((V) value, clazz, purchaser, varClass, varPurchaser);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T> void match(V value,
                                     Class<T> clazz, Consumer<T> consumer,
                                     Class<Null> nullClass, Runnable nullConsumer,
@@ -126,11 +121,11 @@ public final class TypeTestPattern {
 
     public <T, V> void as(Class<T> clazz, Consumer<T> consumer,
                           Class<Null> nullClass, Runnable nullConsumer,
-                          Class<Else> defaultClass, Runnable defaultConsumer)  {
+                          Class<Else> defaultClass, Runnable defaultConsumer) {
         match((V) value, clazz, consumer, nullClass, nullConsumer, defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T> void match(V value,
                                     Class<T> clazz, Purchaser<T> purchaser,
                                     Class<Null> nullClass, Runnable nullPurchaser,
@@ -153,7 +148,7 @@ public final class TypeTestPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Function<T, R> function,
                                     Class<Else> defaultClass, Supplier<R> defaultSupplier) {
@@ -166,7 +161,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Function<T, R> function,
                                     Class<Var> varClass, Routine<V, R> defaultRoutine) {
@@ -179,7 +174,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Function<T, R> function,
                                     Class<Null> nullClass, Supplier<R> nullSupplier,
@@ -191,7 +186,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Function<T, R> function,
                                     Class<Null> nullClass, Supplier<R> nullSupplier,
@@ -216,13 +211,13 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                            Class<T2> secondClazz, Consumer<T2> secondConsumer)  {
+                            Class<T2> secondClazz, Consumer<T2> secondConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2> void match(V value,
                                          Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                          Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -239,15 +234,15 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                       Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                       Class<Else> defaultClass, Runnable defaultConsumer)  {
+                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                            Class<Else> defaultClass, Runnable defaultConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2> void match(V value,
                                          Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                          Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -264,15 +259,15 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                          Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                          Class<Var> varClass, Purchaser<V> varPurchaser)  {
+                               Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
+                               Class<Var> varClass, Purchaser<V> varPurchaser) {
         match((V) value,
-              firstClazz, firstPurchaser,
-              secondClazz, secondPurchaser,
-              varClass, varPurchaser);
+                firstClazz, firstPurchaser,
+                secondClazz, secondPurchaser,
+                varClass, varPurchaser);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2> void match(V value,
                                          Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                          Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -287,17 +282,17 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, V> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                          Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                          Class<Null> nullClass, Runnable nullConsumer,
-                          Class<Else> defaultClass, Runnable defaultConsumer)  {
+                               Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                               Class<Null> nullClass, Runnable nullConsumer,
+                               Class<Else> defaultClass, Runnable defaultConsumer) {
         match((V) value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              nullClass, nullConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2> void match(V value,
                                          Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                          Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -306,8 +301,8 @@ public final class TypeTestPattern {
         if (value == null) {
             nullPurchaser.run();
         } else {
-            match(value, firstClazz,  firstPurchaser,
-                           secondClazz, secondPurchaser,
+            match(value, firstClazz, firstPurchaser,
+                    secondClazz, secondPurchaser,
                     varClass, varPurchaser);
         }
     }
@@ -326,7 +321,7 @@ public final class TypeTestPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -340,7 +335,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -354,7 +349,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -364,11 +359,11 @@ public final class TypeTestPattern {
             return nullSupplier.get();
         } else {
             return match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  defaultClass, defaultSupplier);
+                    defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -377,9 +372,9 @@ public final class TypeTestPattern {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return match(value, firstClazz,  firstFunction,
-                                  secondClazz, secondFunction,
-                           varClass, defaultRoutine);
+            return match(value, firstClazz, firstFunction,
+                    secondClazz, secondFunction,
+                    varClass, defaultRoutine);
         }
     }
 
@@ -399,15 +394,15 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                            Class<T3> thirdClazz, Consumer<T3> thirdConsumer)  {
+                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                Class<T3> thirdClazz, Consumer<T3> thirdConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3> void match(V value,
                                              Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                              Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -427,9 +422,9 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                            Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                            Class<Else> defaultClass, Runnable defaultConsumer)  {
+                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                Class<Else> defaultClass, Runnable defaultConsumer) {
         match(value,
                 firstClazz, firstConsumer,
                 secondClazz, secondConsumer,
@@ -437,7 +432,7 @@ public final class TypeTestPattern {
                 defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3> void match(V value,
                                              Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                              Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -449,7 +444,7 @@ public final class TypeTestPattern {
             firstPurchaser.obtain((T1) value);
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
             secondPurchaser.obtain((T2) value);
-        }else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
+        } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
             thirdPurchaser.obtain((T3) value);
         } else {
             varPurchaser.obtain(value);
@@ -457,17 +452,17 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                               Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                               Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                               Class<Var> varClass, Purchaser<V> varPurchaser)  {
+                                   Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
+                                   Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
+                                   Class<Var> varClass, Purchaser<V> varPurchaser) {
         match((V) value,
-              firstClazz, firstPurchaser,
-              secondClazz, secondPurchaser,
-              thirdClazz, thirdPurchaser,
-              varClass, varPurchaser);
+                firstClazz, firstPurchaser,
+                secondClazz, secondPurchaser,
+                thirdClazz, thirdPurchaser,
+                varClass, varPurchaser);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3> void match(V value,
                                              Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                              Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -477,25 +472,25 @@ public final class TypeTestPattern {
         if (value == null) {
             nullConsumer.run();
         } else {
-            match(value, firstClazz, firstConsumer, secondClazz,  secondConsumer,
-                           thirdClazz, thirdConsumer, defaultClass, defaultConsumer);
+            match(value, firstClazz, firstConsumer, secondClazz, secondConsumer,
+                    thirdClazz, thirdConsumer, defaultClass, defaultConsumer);
         }
     }
 
     public <T1, T2, T3, V> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                               Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                               Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                               Class<Null> nullClass, Runnable nullConsumer,
-                               Class<Else> defaultClass, Runnable defaultConsumer)  {
+                                   Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                   Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                   Class<Null> nullClass, Runnable nullConsumer,
+                                   Class<Else> defaultClass, Runnable defaultConsumer) {
         match((V) value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              nullClass, nullConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3> void match(V value,
                                              Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                              Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -505,9 +500,9 @@ public final class TypeTestPattern {
         if (value == null) {
             nullPurchaser.run();
         } else {
-            match(value, firstClazz,  firstPurchaser,
-                           secondClazz, secondPurchaser,
-                           thirdClazz,  thirdPurchaser,
+            match(value, firstClazz, firstPurchaser,
+                    secondClazz, secondPurchaser,
+                    thirdClazz, thirdPurchaser,
                     varClass, varPurchaser);
         }
     }
@@ -529,14 +524,14 @@ public final class TypeTestPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Function<T1, R> firstFunction,
                                              Class<T2> secondClazz, Function<T2, R> secondFunction,
                                              Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                              Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction);
+                thirdClazz, thirdFunction);
         if (result != null) {
             return result;
         } else {
@@ -544,14 +539,14 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Function<T1, R> firstFunction,
                                              Class<T2> secondClazz, Function<T2, R> secondFunction,
                                              Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                              Class<Var> varClass, Routine<V, R> defaultRoutine) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction);
+                thirdClazz, thirdFunction);
 
         if (result != null) {
             return result;
@@ -560,7 +555,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Function<T1, R> firstFunction,
                                              Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -571,11 +566,11 @@ public final class TypeTestPattern {
             return nullSupplier.get();
         } else {
             return match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, defaultClass, defaultSupplier);
+                    thirdClazz, thirdFunction, defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Function<T1, R> firstFunction,
                                              Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -585,10 +580,10 @@ public final class TypeTestPattern {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return match(value, firstClazz,  firstFunction,
-                                  secondClazz, secondFunction,
-                                  thirdClazz,  thirdFunction,
-                           varClass, defaultRoutine);
+            return match(value, firstClazz, firstFunction,
+                    secondClazz, secondFunction,
+                    thirdClazz, thirdFunction,
+                    varClass, defaultRoutine);
         }
     }
 
@@ -611,17 +606,17 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                Class<T4> forthClazz, Consumer<T4> forthConsumer)  {
+                                    Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                    Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                    Class<T4> forthClazz, Consumer<T4> forthConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4> void match(V value,
                                                  Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                  Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -644,19 +639,19 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                Class<Else> defaultClass, Runnable defaultConsumer)  {
+                                    Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                    Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                    Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                    Class<Else> defaultClass, Runnable defaultConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4> void match(V value,
                                                  Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                                  Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -679,19 +674,19 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                   Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                   Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                   Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                   Class<Var> varClass, Purchaser<V> varPurchaser)  {
+                                       Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
+                                       Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
+                                       Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
+                                       Class<Var> varClass, Purchaser<V> varPurchaser) {
         match((V) value,
-              firstClazz, firstPurchaser,
-              secondClazz, secondPurchaser,
-              thirdClazz, thirdPurchaser,
-              fourthClazz, fourthPurchaser,
-              varClass, varPurchaser);
+                firstClazz, firstPurchaser,
+                secondClazz, secondPurchaser,
+                thirdClazz, thirdPurchaser,
+                fourthClazz, fourthPurchaser,
+                varClass, varPurchaser);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4> void match(V value,
                                                  Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                  Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -703,27 +698,27 @@ public final class TypeTestPattern {
             nullConsumer.run();
         } else {
             match(value, firstClazz, firstConsumer, secondClazz, secondConsumer,
-                           thirdClazz, thirdConsumer, forthClazz,  forthConsumer,
-                           defaultClass, defaultConsumer);
+                    thirdClazz, thirdConsumer, forthClazz, forthConsumer,
+                    defaultClass, defaultConsumer);
         }
     }
 
     public <T1, T2, T3, T4, V> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                   Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                   Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                   Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                   Class<Null> nullClass, Runnable nullConsumer,
-                                   Class<Else> defaultClass, Runnable defaultConsumer)  {
+                                       Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                       Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                       Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                       Class<Null> nullClass, Runnable nullConsumer,
+                                       Class<Else> defaultClass, Runnable defaultConsumer) {
         match((V) value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer,
-              nullClass, nullConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4> void match(V value,
                                                  Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                                  Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -734,10 +729,10 @@ public final class TypeTestPattern {
         if (value == null) {
             nullPurchaser.run();
         } else {
-            match(value, firstClazz,  firstPurchaser,
-                           secondClazz, secondPurchaser,
-                           thirdClazz,  thirdPurchaser,
-                           forthClazz,  forthPurchaser,
+            match(value, firstClazz, firstPurchaser,
+                    secondClazz, secondPurchaser,
+                    thirdClazz, thirdPurchaser,
+                    forthClazz, forthPurchaser,
                     varClass, varPurchaser);
         }
     }
@@ -762,7 +757,7 @@ public final class TypeTestPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                  Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -770,7 +765,7 @@ public final class TypeTestPattern {
                                                  Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                  Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction);
+                thirdClazz, thirdFunction, forthClazz, forthFunction);
         if (result != null) {
             return result;
         } else {
@@ -778,7 +773,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                  Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -786,7 +781,7 @@ public final class TypeTestPattern {
                                                  Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                  Class<Var> varClass, Routine<V, R> defaultRoutine) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction);
+                thirdClazz, thirdFunction, forthClazz, forthFunction);
 
         if (result != null) {
             return result;
@@ -795,7 +790,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                  Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -807,12 +802,12 @@ public final class TypeTestPattern {
             return nullSupplier.get();
         } else {
             return match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction,
-                           defaultClass, defaultSupplier);
+                    thirdClazz, thirdFunction, forthClazz, forthFunction,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                  Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -823,11 +818,11 @@ public final class TypeTestPattern {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return match(value, firstClazz,  firstFunction,
-                                  secondClazz, secondFunction,
-                                  thirdClazz,  thirdFunction,
-                                  forthClazz,  forthFunction,
-                           varClass, defaultRoutine);
+            return match(value, firstClazz, firstFunction,
+                    secondClazz, secondFunction,
+                    thirdClazz, thirdFunction,
+                    forthClazz, forthFunction,
+                    varClass, defaultRoutine);
         }
     }
 
@@ -853,19 +848,19 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                    Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                    Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                    Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                    Class<T5> fifthClazz, Consumer<T5> fifthConsumer)  {
+                                        Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                        Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                        Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                        Class<T5> fifthClazz, Consumer<T5> fifthConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer,
-              fifthClazz, fifthConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer,
+                fifthClazz, fifthConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5> void match(V value,
                                                      Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                      Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -891,21 +886,21 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                    Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                    Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                    Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                    Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
-                                    Class<Else> defaultClass, Runnable defaultConsumer)  {
+                                        Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                        Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                        Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                        Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
+                                        Class<Else> defaultClass, Runnable defaultConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer,
-              fifthClazz, fifthConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer,
+                fifthClazz, fifthConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5> void match(V value,
                                                      Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                                      Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -931,21 +926,21 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4, T5, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                       Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                       Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                       Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                       Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
-                                       Class<Var> varClass, Purchaser<V> varPurchaser)  {
+                                           Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
+                                           Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
+                                           Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
+                                           Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
+                                           Class<Var> varClass, Purchaser<V> varPurchaser) {
         match((V) value,
-              firstClazz, firstPurchaser,
-              secondClazz, secondPurchaser,
-              thirdClazz, thirdPurchaser,
-              fourthClazz, fourthPurchaser,
-              fifthClazz, fifthPurchaser,
-              varClass, varPurchaser);
+                firstClazz, firstPurchaser,
+                secondClazz, secondPurchaser,
+                thirdClazz, thirdPurchaser,
+                fourthClazz, fourthPurchaser,
+                fifthClazz, fifthPurchaser,
+                varClass, varPurchaser);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5> void match(V value,
                                                      Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                      Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -958,29 +953,29 @@ public final class TypeTestPattern {
             nullConsumer.run();
         } else {
             match(value, firstClazz, firstConsumer, secondClazz, secondConsumer,
-                           thirdClazz, thirdConsumer, forthClazz,  forthConsumer,
-                           fifthClazz, fifthConsumer, defaultClass, defaultConsumer);
+                    thirdClazz, thirdConsumer, forthClazz, forthConsumer,
+                    fifthClazz, fifthConsumer, defaultClass, defaultConsumer);
         }
     }
 
     public <T1, T2, T3, T4, T5, V> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                       Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                       Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Else> defaultClass, Runnable defaultConsumer)  {
+                                           Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                           Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                           Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                           Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
+                                           Class<Null> nullClass, Runnable nullConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
         match((V) value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer,
-              fifthClazz, fifthConsumer,
-              nullClass, nullConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer,
+                fifthClazz, fifthConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5> void match(V value,
                                                      Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                                      Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -992,11 +987,11 @@ public final class TypeTestPattern {
         if (value == null) {
             nullPurchaser.run();
         } else {
-            match(value, firstClazz,  firstPurchaser,
-                           secondClazz, secondPurchaser,
-                           thirdClazz,  thirdPurchaser,
-                           forthClazz,  forthPurchaser,
-                           fifthClazz,  fifthPurchaser,
+            match(value, firstClazz, firstPurchaser,
+                    secondClazz, secondPurchaser,
+                    thirdClazz, thirdPurchaser,
+                    forthClazz, forthPurchaser,
+                    fifthClazz, fifthPurchaser,
                     varClass, varPurchaser);
         }
     }
@@ -1024,7 +1019,7 @@ public final class TypeTestPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, R> R match(V value,
                                                      Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                      Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -1033,8 +1028,8 @@ public final class TypeTestPattern {
                                                      Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction,
-                                  fifthClazz, fifthFunction);
+                thirdClazz, thirdFunction, forthClazz, forthFunction,
+                fifthClazz, fifthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1042,7 +1037,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, R> R match(V value,
                                                      Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                      Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -1051,8 +1046,8 @@ public final class TypeTestPattern {
                                                      Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                      Class<Var> varClass, Routine<V, R> defaultRoutine) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction,
-                                  fifthClazz, fifthFunction);
+                thirdClazz, thirdFunction, forthClazz, forthFunction,
+                fifthClazz, fifthFunction);
 
         if (result != null) {
             return result;
@@ -1061,7 +1056,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, R> R match(V value,
                                                      Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                      Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -1074,12 +1069,12 @@ public final class TypeTestPattern {
             return nullSupplier.get();
         } else {
             return match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction,
-                                  fifthClazz, fifthFunction, defaultClass, defaultSupplier);
+                    thirdClazz, thirdFunction, forthClazz, forthFunction,
+                    fifthClazz, fifthFunction, defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, R> R match(V value,
                                                      Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                      Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -1091,12 +1086,12 @@ public final class TypeTestPattern {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return match(value, firstClazz,  firstFunction,
-                                  secondClazz, secondFunction,
-                                  thirdClazz,  thirdFunction,
-                                  forthClazz,  forthFunction,
-                                  fifthClazz,  fifthFunction,
-                           varClass, defaultRoutine);
+            return match(value, firstClazz, firstFunction,
+                    secondClazz, secondFunction,
+                    thirdClazz, thirdFunction,
+                    forthClazz, forthFunction,
+                    fifthClazz, fifthFunction,
+                    varClass, defaultRoutine);
         }
     }
 
@@ -1125,21 +1120,21 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                        Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                        Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                        Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                        Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
-                                        Class<T6> sixthClazz, Consumer<T6> sixthConsumer)  {
+                                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                            Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                            Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                            Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
+                                            Class<T6> sixthClazz, Consumer<T6> sixthConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer,
-              fifthClazz, fifthConsumer,
-              sixthClazz, sixthConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer,
+                fifthClazz, fifthConsumer,
+                sixthClazz, sixthConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
                                                          Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                          Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -1168,23 +1163,23 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                        Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                        Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                        Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                        Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
-                                        Class<T6> sixthClazz, Consumer<T6> sixthConsumer,
-                                        Class<Else> defaultClass, Runnable defaultConsumer)  {
+                                            Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                            Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                            Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                            Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
+                                            Class<T6> sixthClazz, Consumer<T6> sixthConsumer,
+                                            Class<Else> defaultClass, Runnable defaultConsumer) {
         match(value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer,
-              fifthClazz, fifthConsumer,
-              sixthClazz, sixthConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer,
+                fifthClazz, fifthConsumer,
+                sixthClazz, sixthConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
                                                          Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                                          Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -1213,23 +1208,23 @@ public final class TypeTestPattern {
     }
 
     public <T1, T2, T3, T4, T5, T6, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                           Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                           Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                           Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                           Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
-                                           Class<T6> sixthClazz, Purchaser<T6> sixthPurchaser,
-                                           Class<Var> varClass, Purchaser<V> varPurchaser)  {
+                                               Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
+                                               Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
+                                               Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
+                                               Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
+                                               Class<T6> sixthClazz, Purchaser<T6> sixthPurchaser,
+                                               Class<Var> varClass, Purchaser<V> varPurchaser) {
         match((V) value,
-              firstClazz, firstPurchaser,
-              secondClazz, secondPurchaser,
-              thirdClazz, thirdPurchaser,
-              fourthClazz, fourthPurchaser,
-              fifthClazz, fifthPurchaser,
-              sixthClazz, sixthPurchaser,
-              varClass, varPurchaser);
+                firstClazz, firstPurchaser,
+                secondClazz, secondPurchaser,
+                thirdClazz, thirdPurchaser,
+                fourthClazz, fourthPurchaser,
+                fifthClazz, fifthPurchaser,
+                sixthClazz, sixthPurchaser,
+                varClass, varPurchaser);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
                                                          Class<T1> firstClazz, Consumer<T1> firstConsumer,
                                                          Class<T2> secondClazz, Consumer<T2> secondConsumer,
@@ -1243,32 +1238,32 @@ public final class TypeTestPattern {
             nullConsumer.run();
         } else {
             match(value, firstClazz, firstConsumer, secondClazz, secondConsumer,
-                           thirdClazz, thirdConsumer, forthClazz,  forthConsumer,
-                           fifthClazz, fifthConsumer, sixthClazz,  sixthConsumer,
+                    thirdClazz, thirdConsumer, forthClazz, forthConsumer,
+                    fifthClazz, fifthConsumer, sixthClazz, sixthConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
     public <T1, T2, T3, T4, T5, T6, V> void as(Class<T1> firstClazz, Consumer<T1> firstConsumer,
-                                           Class<T2> secondClazz, Consumer<T2> secondConsumer,
-                                           Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
-                                           Class<T4> forthClazz, Consumer<T4> forthConsumer,
-                                           Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
-                                           Class<T6> sixthClazz, Consumer<T6> sixthConsumer,
-                                           Class<Null> nullClass, Runnable nullConsumer,
-                                           Class<Else> defaultClass, Runnable defaultConsumer)  {
+                                               Class<T2> secondClazz, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Consumer<T3> thirdConsumer,
+                                               Class<T4> forthClazz, Consumer<T4> forthConsumer,
+                                               Class<T5> fifthClazz, Consumer<T5> fifthConsumer,
+                                               Class<T6> sixthClazz, Consumer<T6> sixthConsumer,
+                                               Class<Null> nullClass, Runnable nullConsumer,
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
         match((V) value,
-              firstClazz, firstConsumer,
-              secondClazz, secondConsumer,
-              thirdClazz, thirdConsumer,
-              forthClazz, forthConsumer,
-              fifthClazz, fifthConsumer,
-              sixthClazz, sixthConsumer,
-              nullClass, nullConsumer,
-              defaultClass, defaultConsumer);
+                firstClazz, firstConsumer,
+                secondClazz, secondConsumer,
+                thirdClazz, thirdConsumer,
+                forthClazz, forthConsumer,
+                fifthClazz, fifthConsumer,
+                sixthClazz, sixthConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
                                                          Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
                                                          Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
@@ -1281,12 +1276,12 @@ public final class TypeTestPattern {
         if (value == null) {
             nullPurchaser.run();
         } else {
-            match(value, firstClazz,  firstPurchaser,
-                           secondClazz, secondPurchaser,
-                           thirdClazz,  thirdPurchaser,
-                           forthClazz,  forthPurchaser,
-                           fifthClazz,  fifthPurchaser,
-                           sixthClazz,  sixthPurchaser,
+            match(value, firstClazz, firstPurchaser,
+                    secondClazz, secondPurchaser,
+                    thirdClazz, thirdPurchaser,
+                    forthClazz, forthPurchaser,
+                    fifthClazz, fifthPurchaser,
+                    sixthClazz, sixthPurchaser,
                     varClass, varPurchaser);
         }
     }
@@ -1317,7 +1312,7 @@ public final class TypeTestPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
                                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -1327,8 +1322,8 @@ public final class TypeTestPattern {
                                                          Class<T6> sixthClazz, Function<T6, R> sixthFunction,
                                                          Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction,
-                                  fifthClazz, fifthFunction, sixthClazz,  sixthFunction);
+                thirdClazz, thirdFunction, forthClazz, forthFunction,
+                fifthClazz, fifthFunction, sixthClazz, sixthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1336,7 +1331,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
                                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -1346,8 +1341,8 @@ public final class TypeTestPattern {
                                                          Class<T6> sixthClazz, Function<T6, R> sixthFunction,
                                                          Class<Var> varClass, Routine<V, R> defaultRoutine) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction,
-                                  fifthClazz, fifthFunction, sixthClazz,  sixthFunction);
+                thirdClazz, thirdFunction, forthClazz, forthFunction,
+                fifthClazz, fifthFunction, sixthClazz, sixthFunction);
 
         if (result != null) {
             return result;
@@ -1356,7 +1351,7 @@ public final class TypeTestPattern {
         }
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
                                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -1370,14 +1365,14 @@ public final class TypeTestPattern {
             return nullSupplier.get();
         } else {
             return match(value, firstClazz, firstFunction, secondClazz, secondFunction,
-                                  thirdClazz, thirdFunction, forthClazz,  forthFunction,
-                                  fifthClazz, fifthFunction, sixthClazz,  sixthFunction,
-                           defaultClass, defaultSupplier);
+                    thirdClazz, thirdFunction, forthClazz, forthFunction,
+                    fifthClazz, fifthFunction, sixthClazz, sixthFunction,
+                    defaultClass, defaultSupplier);
         }
 
     }
 
-    @SuppressWarnings("unused")
+
     public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
                                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
@@ -1390,13 +1385,13 @@ public final class TypeTestPattern {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return match(value, firstClazz,  firstFunction,
-                                  secondClazz, secondFunction,
-                                  thirdClazz,  thirdFunction,
-                                  forthClazz,  forthFunction,
-                                  fifthClazz,  fifthFunction,
-                                  sixthClazz,  sixthFunction,
-                           varClass, defaultRoutine);
+            return match(value, firstClazz, firstFunction,
+                    secondClazz, secondFunction,
+                    thirdClazz, thirdFunction,
+                    forthClazz, forthFunction,
+                    fifthClazz, fifthFunction,
+                    sixthClazz, sixthFunction,
+                    varClass, defaultRoutine);
         }
     }
 }

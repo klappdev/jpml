@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -28,27 +28,25 @@ import org.kl.jpml.reflect.Reflection;
 
 import java.util.function.Consumer;
 
+/**
+ * Exhaustive pattern allow match exhaustive subclasses type.
+ */
 public final class ExhaustivePattern {
-    private static Object sealedValue;
-    private static ExhaustivePattern instance;
+    private final Object sealedValue;
 
-    private ExhaustivePattern() {}
+    private <V> ExhaustivePattern(V value) {
+        this.sealedValue = value;
+    }
 
     public static <V> ExhaustivePattern match(V value) {
-        sealedValue = value;
-
-        if (instance == null) {
-            instance = new ExhaustivePattern();
-        }
-
-        return instance;
+        return new ExhaustivePattern(value);
     }
 
     public static <V, T1, T2>
     void match(V value,
                Class<T1> firstClazz, Consumer<T1> firstBranch,
                Class<T2> secondClazz, Consumer<T2> secondBranch) {
-        Reflection.verifyExhaustiveness(value, new Class<?>[]{ firstClazz, secondClazz });
+        Reflection.verifyExhaustiveness(value, new Class<?>[]{firstClazz, secondClazz});
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
@@ -59,7 +57,7 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2>
-    void as(Class<T1> firstClazz,  Consumer<T1> firstBranch,
+    void as(Class<T1> firstClazz, Consumer<T1> firstBranch,
             Class<T2> secondClazz, Consumer<T2> secondBranch) {
         match(sealedValue,
                 firstClazz, firstBranch,
@@ -70,7 +68,7 @@ public final class ExhaustivePattern {
     R match(V value,
             Class<T1> firstClazz, Routine<T1, R> firstBranch,
             Class<T2> secondClazz, Routine<T2, R> secondBranch) {
-        Reflection.verifyExhaustiveness(value, new Class<?>[]{ firstClazz, secondClazz });
+        Reflection.verifyExhaustiveness(value, new Class<?>[]{firstClazz, secondClazz});
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
@@ -83,11 +81,11 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, R>
-    R as(Class<T1> firstClazz,  Routine<T1, R> firstBranch,
+    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
          Class<T2> secondClazz, Routine<T2, R> secondBranch) {
         return match(sealedValue,
-                       firstClazz, firstBranch,
-                       secondClazz, secondBranch);
+                firstClazz, firstBranch,
+                secondClazz, secondBranch);
     }
 
     public static <V, T1, T2, T3>
@@ -95,7 +93,7 @@ public final class ExhaustivePattern {
                Class<T1> firstClazz, Consumer<T1> firstBranch,
                Class<T2> secondClazz, Consumer<T2> secondBranch,
                Class<T3> thirdClazz, Consumer<T3> thirdBranch) {
-        Reflection.verifyExhaustiveness(value, new Class<?>[]{ firstClazz, secondClazz, thirdClazz });
+        Reflection.verifyExhaustiveness(value, new Class<?>[]{firstClazz, secondClazz, thirdClazz});
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
@@ -108,7 +106,7 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, T3>
-    void as(Class<T1> firstClazz,  Consumer<T1> firstBranch,
+    void as(Class<T1> firstClazz, Consumer<T1> firstBranch,
             Class<T2> secondClazz, Consumer<T2> secondBranch,
             Class<T3> thirdClazz, Consumer<T3> thirdBranch) {
         match(sealedValue,
@@ -122,7 +120,7 @@ public final class ExhaustivePattern {
             Class<T1> firstClazz, Routine<T1, R> firstBranch,
             Class<T2> secondClazz, Routine<T2, R> secondBranch,
             Class<T3> thirdClazz, Routine<T3, R> thirdBranch) {
-        Reflection.verifyExhaustiveness(value, new Class<?>[]{ firstClazz, secondClazz, thirdClazz });
+        Reflection.verifyExhaustiveness(value, new Class<?>[]{firstClazz, secondClazz, thirdClazz});
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
@@ -137,13 +135,13 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, T3, R>
-    R as(Class<T1> firstClazz,  Routine<T1, R> firstBranch,
+    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
          Class<T2> secondClazz, Routine<T2, R> secondBranch,
-         Class<T3> thirdClazz,  Routine<T3, R> thirdBranch) {
+         Class<T3> thirdClazz, Routine<T3, R> thirdBranch) {
         return match(sealedValue,
-                       firstClazz, firstBranch,
-                       secondClazz, secondBranch,
-                       thirdClazz, thirdBranch);
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch);
     }
 
     public static <V, T1, T2, T3, T4>
@@ -169,7 +167,7 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, T3, T4>
-    void as(Class<T1> firstClazz,  Consumer<T1> firstBranch,
+    void as(Class<T1> firstClazz, Consumer<T1> firstBranch,
             Class<T2> secondClazz, Consumer<T2> secondBranch,
             Class<T3> thirdClazz, Consumer<T3> thirdBranch,
             Class<T4> fourthClazz, Consumer<T4> fourthBranch) {
@@ -205,15 +203,15 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, T3, T4, R>
-    R as(Class<T1> firstClazz,  Routine<T1, R> firstBranch,
+    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
          Class<T2> secondClazz, Routine<T2, R> secondBranch,
-         Class<T3> thirdClazz,  Routine<T3, R> thirdBranch,
+         Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
          Class<T4> fourthClazz, Routine<T4, R> fourthBranch) {
         return match(sealedValue,
-                       firstClazz, firstBranch,
-                       secondClazz, secondBranch,
-                       thirdClazz, thirdBranch,
-                       fourthClazz, fourthBranch);
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch,
+                fourthClazz, fourthBranch);
     }
 
     public static <V, T1, T2, T3, T4, T5>
@@ -243,11 +241,11 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, T3, T4, T5>
-    void as(Class<T1> firstClazz,  Consumer<T1> firstBranch,
+    void as(Class<T1> firstClazz, Consumer<T1> firstBranch,
             Class<T2> secondClazz, Consumer<T2> secondBranch,
             Class<T3> thirdClazz, Consumer<T3> thirdBranch,
             Class<T4> fourthClazz, Consumer<T4> fourthBranch,
-            Class<T5> fifthClazz,  Consumer<T5> fifthBranch) {
+            Class<T5> fifthClazz, Consumer<T5> fifthBranch) {
         match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
@@ -285,17 +283,17 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, T3, T4, T5, R>
-    R as(Class<T1> firstClazz,  Routine<T1, R> firstBranch,
+    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
          Class<T2> secondClazz, Routine<T2, R> secondBranch,
-         Class<T3> thirdClazz,  Routine<T3, R> thirdBranch,
+         Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
          Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
-         Class<T5> fifthClazz,  Routine<T5, R> fifthBranch) {
+         Class<T5> fifthClazz, Routine<T5, R> fifthBranch) {
         return match(sealedValue,
-                       firstClazz, firstBranch,
-                       secondClazz, secondBranch,
-                       thirdClazz, thirdBranch,
-                       fourthClazz, fourthBranch,
-                       fifthClazz, fifthBranch);
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch,
+                fourthClazz, fourthBranch,
+                fifthClazz, fifthBranch);
     }
 
     public static <V, T1, T2, T3, T4, T5, T6>
@@ -328,12 +326,12 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, T3, T4, T5, T6>
-    void as(Class<T1> firstClazz,  Consumer<T1> firstBranch,
+    void as(Class<T1> firstClazz, Consumer<T1> firstBranch,
             Class<T2> secondClazz, Consumer<T2> secondBranch,
             Class<T3> thirdClazz, Consumer<T3> thirdBranch,
             Class<T4> fourthClazz, Consumer<T4> fourthBranch,
-            Class<T5> fifthClazz,  Consumer<T5> fifthBranch,
-            Class<T6> sixthClazz,  Consumer<T6> sixthBranch) {
+            Class<T5> fifthClazz, Consumer<T5> fifthBranch,
+            Class<T6> sixthClazz, Consumer<T6> sixthBranch) {
         match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
@@ -375,18 +373,18 @@ public final class ExhaustivePattern {
     }
 
     public <T1, T2, T3, T4, T5, T6, R>
-    R as(Class<T1> firstClazz,  Routine<T1, R> firstBranch,
+    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
          Class<T2> secondClazz, Routine<T2, R> secondBranch,
-         Class<T3> thirdClazz,  Routine<T3, R> thirdBranch,
+         Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
          Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
-         Class<T5> fifthClazz,  Routine<T5, R> fifthBranch,
-         Class<T6> sixthClazz,  Routine<T6, R> sixthBranch) {
+         Class<T5> fifthClazz, Routine<T5, R> fifthBranch,
+         Class<T6> sixthClazz, Routine<T6, R> sixthBranch) {
         return match(sealedValue,
-                       firstClazz, firstBranch,
-                       secondClazz, secondBranch,
-                       thirdClazz, thirdBranch,
-                       fourthClazz, fourthBranch,
-                       fifthClazz, fifthBranch,
-                       sixthClazz, sixthBranch);
+                firstClazz, firstBranch,
+                secondClazz, secondBranch,
+                thirdClazz, thirdBranch,
+                fourthClazz, fourthBranch,
+                fifthClazz, fifthBranch,
+                sixthClazz, sixthBranch);
     }
 }

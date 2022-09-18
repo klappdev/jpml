@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -30,15 +30,23 @@ import org.kl.jpml.state.Var;
 
 import java.util.function.*;
 
-/*
+/**
  * Guard pattern allow match type and check condition for the
  * truth at one time. Maximum number of branches for match six.
  */
 public final class GuardPattern {
-    private GuardPattern() {}
+    private final Object value;
 
-    public static <V, T> void matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer) {
+    private <V> GuardPattern(V value) {
+        this.value = value;
+    }
+
+    public static <V> GuardPattern match(V value) {
+        return new GuardPattern(value);
+    }
+
+    public static <V, T> void match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer) {
         Class<?> valueClass = value.getClass();
 
         if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
@@ -48,10 +56,13 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T> void matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
-                                      Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <T> void as(Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer) {
+        match(value, clazz, predicate, consumer);
+    }
+
+    public static <V, T> void match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                                    Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
@@ -64,10 +75,14 @@ public final class GuardPattern {
         defaultConsumer.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T> void matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
-                                      Class<Var> varClass, Consumer<V> varConsumer) {
+    public <T> void as(Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                       Class<Else> defaultClass, Runnable defaultConsumer) {
+        match(value, clazz, predicate, consumer, defaultClass, defaultConsumer);
+    }
+
+    public static <V, T> void match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                                    Class<Var> varClass, Consumer<V> varConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
@@ -80,35 +95,53 @@ public final class GuardPattern {
         varConsumer.accept(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T> void matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
-                                      Class<Null> nullClass, Runnable nullConsumer,
-                                      Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T> void as(Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                          Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, clazz, predicate, consumer, varClass, varConsumer);
+    }
+
+    public static <V, T> void match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                                    Class<Null> nullClass, Runnable nullConsumer,
+                                    Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, clazz, predicate, consumer, defaultClass, defaultConsumer);
+            match(value, clazz, predicate, consumer, defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T> void matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
-                                      Class<Null> nullClass, Runnable nullConsumer,
-                                      Class<Var> varClass,   Consumer<V> varConsumer) {
+    public <V, T> void as(Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                          Class<Null> nullClass, Runnable nullConsumer,
+                          Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, clazz, predicate, consumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T> void match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                                    Class<Null> nullClass, Runnable nullConsumer,
+                                    Class<Var> varClass, Consumer<V> varConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, clazz, predicate, consumer, varClass, varConsumer);
+            match(value, clazz, predicate, consumer, varClass, varConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                           Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
-                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T> void as(Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                          Class<Null> nullClass, Runnable nullConsumer,
+                          Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, clazz, predicate, consumer,
+                nullClass, nullConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2> void match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                         Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -125,23 +158,40 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T> void matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
-                                      Class<Null> nullClass, Runnable nullConsumer,
-                                      Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
-                                      Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                            Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                            Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                varClazz, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T> void match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                                    Class<Null> nullClass, Runnable nullConsumer,
+                                    Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                    Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, clazz, predicate, consumer,
+            match(value, clazz, predicate, consumer,
                     varClass, varPredicate, varConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    public static <V, T, R> R matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Function<T, R> function) {
+    public <V, T> void as(Class<T> clazz, Predicate<T> predicate, Consumer<T> consumer,
+                          Class<Null> nullClass, Runnable nullConsumer,
+                          Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                          Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, clazz, predicate, consumer,
+                nullClass, nullConsumer,
+                varClass, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T, R> R match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Function<T, R> function) {
         Class<?> valueClass = value.getClass();
 
         if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
@@ -153,11 +203,11 @@ public final class GuardPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T, R> R matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
-                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, clazz, predicate, function);
+
+    public static <V, T, R> R match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                                    Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, clazz, predicate, function);
 
         if (result != null) {
             return result;
@@ -166,11 +216,11 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T, R> R matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
-                                      Class<Var> varClass, Function<V, R> varFunction) {
-        R result = matches(value, clazz, predicate, function);
+
+    public static <V, T, R> R match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                                    Class<Var> varClass, Function<V, R> varFunction) {
+        R result = match(value, clazz, predicate, function);
 
         if (result != null) {
             return result;
@@ -180,11 +230,11 @@ public final class GuardPattern {
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
-    public static <V, T, R> R matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
-                                      Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, clazz, predicate, function);
+    public static <V, T, R> R match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                                    Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                    Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, clazz, predicate, function);
 
         if (result != null) {
             return result;
@@ -197,48 +247,48 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T, R> R matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
-                                      Class<Null> nullClass, Supplier<R> nullSupplier,
-                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T, R> R match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                                    Class<Null> nullClass, Supplier<R> nullSupplier,
+                                    Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, clazz, predicate, function, defaultClass, defaultSupplier);
+            return match(value, clazz, predicate, function, defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T, R> R matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
-                                      Class<Null> nullClass, Supplier<R> nullSupplier,
-                                      Class<Var>  varClass,  Function<V, R> varFunction) {
+
+    public static <V, T, R> R match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                                    Class<Null> nullClass, Supplier<R> nullSupplier,
+                                    Class<Var> varClass, Function<V, R> varFunction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, clazz, predicate, function, varClass, varFunction);
+            return match(value, clazz, predicate, function, varClass, varFunction);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T, R> R matches(V value,
-                                      Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
-                                      Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                      Class<Var>  varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                      Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T, R> R match(V value,
+                                    Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                                    Class<Null> nullClass, Supplier<R> nullSupplier,
+                                    Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                    Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, clazz, predicate, function,
-                           varClass, varPredicate, varSupplier,
-                           defaultClass, defaultSupplier);
+            return match(value, clazz, predicate, function,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    public static <V, T1, T2> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer) {
+    public static <V, T1, T2> void match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -255,11 +305,17 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <T1, T2> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                            Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer) {
+        match(value,
+                firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer);
+    }
+
+    public static <V, T1, T2> void match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -279,11 +335,18 @@ public final class GuardPattern {
         defaultConsumer.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2> void matches(V value,
-                                   Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                   Class<Var> varClass, Consumer<V> varConsumer) {
+    public <T1, T2> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                            Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                            Class<Else> defaultClass, Runnable defaultConsumer) {
+        match(value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2> void match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                         Class<Var> varClass, Consumer<V> varConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -303,59 +366,95 @@ public final class GuardPattern {
         varConsumer.accept(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                           Class<Null> nullClass, Runnable nullConsumer,
-                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                               Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2> void match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                         Class<Null> nullClass, Runnable nullConsumer,
+                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                           Class<Null> nullClass, Runnable nullConsumer,
-                                           Class<Var> varClass,   Consumer<V> varConsumer) {
+    public <V, T1, T2> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                               Class<Null> nullClass, Runnable nullConsumer,
+                               Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2> void match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                         Class<Null> nullClass, Runnable nullConsumer,
+                                         Class<Var> varClass, Consumer<V> varConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
                     varClass, varConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                           Class<Null> nullClass, Runnable nullConsumer,
-                                           Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
-                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                               Class<Null> nullClass, Runnable nullConsumer,
+                               Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                nullClass, nullConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2> void match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                         Class<Null> nullClass, Runnable nullConsumer,
+                                         Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
                     varClass, varPredicate, varConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2> void matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                           Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
-                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                               Class<Null> nullClass, Runnable nullConsumer,
+                               Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                               Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                nullClass, nullConsumer,
+                varClass, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2> void match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                         Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -379,9 +478,19 @@ public final class GuardPattern {
         }
     }
 
-    public static <V, T1, T2, R> R matches(V value,
-                                   Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                   Class<T2> secondClazz, Predicate<T2> secondPredicate,  Function<T2, R> secondFunction) {
+    public <V, T1, T2> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                               Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                               Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                varClazz, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, R> R match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -400,13 +509,12 @@ public final class GuardPattern {
     }
 
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, R> R matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz, firstPredicate, firstFunction,
-                                  secondClazz, secondPredicate, secondFunction);
+    public static <V, T1, T2, R> R match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                         Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction);
         if (result != null) {
             return result;
         } else {
@@ -414,13 +522,13 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, R> R matches(V value,
-                                   Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                   Class<Var> varClass,   Function<V, R> varFunction) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction);
+
+    public static <V, T1, T2, R> R match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                         Class<Var> varClass, Function<V, R> varFunction) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction);
         if (result != null) {
             return result;
         } else {
@@ -429,13 +537,13 @@ public final class GuardPattern {
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
-    public static <V, T1, T2, R> R matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                           Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction);
+    public static <V, T1, T2, R> R match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                         Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                         Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction);
 
         if (result != null) {
             return result;
@@ -448,57 +556,57 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, R> R matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                           Class<Null> nullClass, Supplier<R> nullSupplier,
-                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, R> R match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                         Class<Null> nullClass, Supplier<R> nullSupplier,
+                                         Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate,  Function<T2, R> secondFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Var> varClass,   Function<V, R> varFunction) {
+
+    public static <V, T1, T2, R> R match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                         Class<Null> nullClass, Supplier<R> nullSupplier,
+                                         Class<Var> varClass, Function<V, R> varFunction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                           varClass, varFunction);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    varClass, varFunction);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, R> R matches(V value,
-                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                           Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                           Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, R> R match(V value,
+                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                         Class<Null> nullClass, Supplier<R> nullSupplier,
+                                         Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                         Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                           varClass, varPredicate, varSupplier,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    public static <V, T1, T2, T3> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer) {
+    public static <V, T1, T2, T3> void match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -522,12 +630,20 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3> void matches(V value,
-                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                               Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <T1, T2, T3> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer) {
+        match(value,
+                firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer);
+    }
+
+    public static <V, T1, T2, T3> void match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                             Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -554,12 +670,21 @@ public final class GuardPattern {
         defaultConsumer.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3> void matches(V value,
-                                               Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                               Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                               Class<Var> varClass, Consumer<V> varConsumer) {
+    public <T1, T2, T3> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                Class<Else> defaultClass, Runnable defaultConsumer) {
+        match(value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3> void match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                             Class<Var> varClass, Consumer<V> varConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -586,66 +711,110 @@ public final class GuardPattern {
         varConsumer.accept(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3> void matches(V value,
-                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                               Class<Null> nullClass, Runnable nullConsumer,
-                                               Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                   Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2, T3> void match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                             Class<Null> nullClass, Runnable nullConsumer,
+                                             Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Var> varClass,   Consumer<V> varConsumer) {
+    public <V, T1, T2, T3> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                   Class<Null> nullClass, Runnable nullConsumer,
+                                   Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3> void match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                             Class<Null> nullClass, Runnable nullConsumer,
+                                             Class<Var> varClass, Consumer<V> varConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
                     varClass, varConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3> void matches(V value,
-                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                               Class<Null> nullClass, Runnable nullConsumer,
-                                               Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
-                                               Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                   Class<Null> nullClass, Runnable nullConsumer,
+                                   Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                nullClass, nullConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2, T3> void match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                             Class<Null> nullClass, Runnable nullConsumer,
+                                             Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                             Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
                     varClass, varPredicate, varConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3> void matches(V value,
-                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                               Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
-                                               Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                   Class<Null> nullClass, Runnable nullConsumer,
+                                   Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                   Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                nullClass, nullConsumer,
+                varClass, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3> void match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                             Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                             Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -676,10 +845,22 @@ public final class GuardPattern {
         }
     }
 
-    public static <V, T1, T2, T3, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction) {
+    public <V, T1, T2, T3> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                   Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                   Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                varClazz, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, R> R match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -703,14 +884,14 @@ public final class GuardPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, R> R matches(V value,
-                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz, thirdPredicate, thirdFunction);
+
+    public static <V, T1, T2, T3, R> R match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                             Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction);
         if (result != null) {
             return result;
         } else {
@@ -718,15 +899,15 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<Var> varClass,   Function<V, R> varFunction) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction);
+
+    public static <V, T1, T2, T3, R> R match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                             Class<Var> varClass, Function<V, R> varFunction) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction);
         if (result != null) {
             return result;
         } else {
@@ -735,15 +916,15 @@ public final class GuardPattern {
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
-    public static <V, T1, T2, T3, R> R matches(V value,
-                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                               Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction);
+    public static <V, T1, T2, T3, R> R match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                             Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                             Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction);
 
         if (result != null) {
             return result;
@@ -756,64 +937,64 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, R> R matches(V value,
-                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                               Class<Null> nullClass, Supplier<R> nullSupplier,
-                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, T3, R> R match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                             Class<Null> nullClass, Supplier<R> nullSupplier,
+                                             Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                          defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Var> varClass, Function<V, R> varFunction) {
+
+    public static <V, T1, T2, T3, R> R match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                             Class<Null> nullClass, Supplier<R> nullSupplier,
+                                             Class<Var> varClass, Function<V, R> varFunction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                           varClass, varFunction);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    varClass, varFunction);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, R> R matches(V value,
-                                               Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                               Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                               Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, T3, R> R match(V value,
+                                             Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                             Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                             Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                             Class<Null> nullClass, Supplier<R> nullSupplier,
+                                             Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                             Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                           varClass, varPredicate, varSupplier,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    public static <V, T1, T2, T3, T4> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer) {
+    public static <V, T1, T2, T3, T4> void match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                 Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -844,13 +1025,23 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4> void matches(V value,
-                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                   Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <T1, T2, T3, T4> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                    Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                    Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                    Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer) {
+        match(value,
+                firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4> void match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                 Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                 Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -884,13 +1075,24 @@ public final class GuardPattern {
         defaultConsumer.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<Var> varClass, Consumer<V> varConsumer) {
+    public <T1, T2, T3, T4> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                    Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                    Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                    Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                    Class<Else> defaultClass, Runnable defaultConsumer) {
+        match(value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4> void match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                 Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                 Class<Var> varClass, Consumer<V> varConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -924,73 +1126,125 @@ public final class GuardPattern {
         varConsumer.accept(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4> void matches(V value,
-                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                   Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                   Class<Null> nullClass, Runnable nullConsumer,
-                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                       Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4> void match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                 Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                 Class<Null> nullClass, Runnable nullConsumer,
+                                                 Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
+    public <V, T1, T2, T3, T4> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
                                        Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
                                        Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
                                        Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Var> varClass,   Consumer<V> varConsumer) {
+                                       Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4> void match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                 Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                 Class<Null> nullClass, Runnable nullConsumer,
+                                                 Class<Var> varClass, Consumer<V> varConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
                     varClass, varConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4> void matches(V value,
-                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                   Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                   Class<Null> nullClass, Runnable nullConsumer,
-                                                   Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
-                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                       Class<Null> nullClass, Runnable nullConsumer,
+                                       Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                nullClass, nullConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4> void match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                 Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                 Class<Null> nullClass, Runnable nullConsumer,
+                                                 Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                                 Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
                     varClass, varPredicate, varConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4> void matches(V value,
-                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                   Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                   Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
-                                                   Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                       Class<Null> nullClass, Runnable nullConsumer,
+                                       Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                       Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                nullClass, nullConsumer,
+                varClass, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4> void match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                 Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                 Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                                 Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1028,11 +1282,25 @@ public final class GuardPattern {
         }
     }
 
-    public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> fourthPredicate, Function<T4, R> forthFunction) {
+    public <V, T1, T2, T3, T4> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                       Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                       Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                varClazz, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, R> R match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                 Class<T4> forthClazz, Predicate<T4> fourthPredicate, Function<T4, R> forthFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1062,15 +1330,15 @@ public final class GuardPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                   Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz, thirdPredicate, thirdFunction, forthClazz,  forthPredicate,  forthFunction);
+
+    public static <V, T1, T2, T3, T4, R> R match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                 Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                 Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction, forthClazz, forthPredicate, forthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1078,17 +1346,17 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<Var> varClass,   Function<V, R> varFunction) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction);
+
+    public static <V, T1, T2, T3, T4, R> R match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                 Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                 Class<Var> varClass, Function<V, R> varFunction) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                forthClazz, forthPredicate, forthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1097,17 +1365,17 @@ public final class GuardPattern {
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
-    public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                   Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                   Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction);
+    public static <V, T1, T2, T3, T4, R> R match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                 Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                 Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                 Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                forthClazz, forthPredicate, forthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1119,71 +1387,71 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                   Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                   Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, T3, T4, R> R match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                 Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                 Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                 Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Var> varClass,   Function<V, R> varFunction) {
+
+    public static <V, T1, T2, T3, T4, R> R match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                 Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                 Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                 Class<Var> varClass, Function<V, R> varFunction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                           varClass, varFunction);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    varClass, varFunction);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, R> R matches(V value,
-                                                   Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                   Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                   Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                                   Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, T3, T4, R> R match(V value,
+                                                 Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                 Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                 Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                 Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                 Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                 Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                 Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                           varClass, varPredicate, varSupplier,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer) {
+    public static <V, T1, T2, T3, T4, T5> void match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                     Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1221,12 +1489,25 @@ public final class GuardPattern {
         }
     }
 
-    public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> fourthPredicate, Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction) {
+    public <T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                        Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                        Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                        Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                        Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer) {
+        match(value,
+                firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, R> R match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                     Class<T4> forthClazz, Predicate<T4> fourthPredicate, Function<T4, R> forthFunction,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1262,14 +1543,14 @@ public final class GuardPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
-                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
+
+    public static <V, T1, T2, T3, T4, T5> void match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                     Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                     Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1310,14 +1591,27 @@ public final class GuardPattern {
         defaultConsumer.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<Var> varClass, Consumer<V> varConsumer) {
+    public <T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                        Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                        Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                        Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                        Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                        Class<Else> defaultClass, Runnable defaultConsumer) {
+        match(value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5> void match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                     Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                     Class<Var> varClass, Consumer<V> varConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1358,80 +1652,140 @@ public final class GuardPattern {
         varConsumer.accept(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
-                                                       Class<Null> nullClass, Runnable nullConsumer,
-                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                           Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5> void match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                     Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                     Class<Null> nullClass, Runnable nullConsumer,
+                                                     Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
-                           fifthClazz,  fifthPredicate,  fifthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
+                    fifthClazz, fifthPredicate, fifthConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Var> varClass,   Consumer<V> varConsumer) {
+    public <V, T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                           Class<Null> nullClass, Runnable nullConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5> void match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                     Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                     Class<Null> nullClass, Runnable nullConsumer,
+                                                     Class<Var> varClass, Consumer<V> varConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
-                           fifthClazz,  fifthPredicate,  fifthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
+                    fifthClazz, fifthPredicate, fifthConsumer,
                     varClass, varConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
-                                                       Class<Null> nullClass, Runnable nullConsumer,
-                                                       Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
-                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                           Class<Null> nullClass, Runnable nullConsumer,
+                                           Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                nullClass, nullConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5> void match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                     Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                     Class<Null> nullClass, Runnable nullConsumer,
+                                                     Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                                     Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
-                           fifthClazz,  fifthPredicate,  fifthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
+                    fifthClazz, fifthPredicate, fifthConsumer,
                     varClass, varPredicate, varConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5> void matches(V value,
-                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
-                                                       Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
-                                                       Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                           Class<Null> nullClass, Runnable nullConsumer,
+                                           Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                nullClass, nullConsumer,
+                varClass, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5> void match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                     Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                     Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                                     Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1476,17 +1830,32 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                       Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
-                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz, thirdPredicate, thirdFunction, forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz, fifthPredicate, fifthFunction);
+    public <V, T1, T2, T3, T4, T5> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                           Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                varClazz, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, R> R match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                     Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                     Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction, forthClazz, forthPredicate, forthFunction,
+                fifthClazz, fifthPredicate, fifthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1494,19 +1863,19 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<Var> varClass,   Function<V, R> varFunction) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction);
+
+    public static <V, T1, T2, T3, T4, T5, R> R match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                     Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                     Class<Var> varClass, Function<V, R> varFunction) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                forthClazz, forthPredicate, forthFunction,
+                fifthClazz, fifthPredicate, fifthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1515,19 +1884,19 @@ public final class GuardPattern {
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
-    public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                       Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
-                                                       Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction);
+    public static <V, T1, T2, T3, T4, T5, R> R match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                     Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                     Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                     Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                forthClazz, forthPredicate, forthFunction,
+                fifthClazz, fifthPredicate, fifthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1539,78 +1908,78 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                       Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
-                                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, T3, T4, T5, R> R match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                     Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                     Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                     Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate,  Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Var> varClass,   Function<V, R> varFunction) {
+
+    public static <V, T1, T2, T3, T4, T5, R> R match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                     Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                     Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                     Class<Var> varClass, Function<V, R> varFunction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction,
-                           varClass, varFunction);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    varClass, varFunction);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, R> R matches(V value,
-                                                       Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                       Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                       Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
-                                                       Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                                       Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, T3, T4, T5, R> R match(V value,
+                                                     Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                     Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                     Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                     Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                     Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                     Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                     Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                     Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction,
-                           varClass, varPredicate, varSupplier,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Consumer<T6> sixthConsumer) {
+    public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                         Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1655,13 +2024,28 @@ public final class GuardPattern {
         }
     }
 
-    public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> fourthPredicate, Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Function<T6, R> sixthFunction) {
+    public <T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                            Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                            Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                            Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                            Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                            Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer) {
+        match(value,
+                firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                sixthClazz, sixthPredicate, sixthConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                         Class<T4> forthClazz, Predicate<T4> fourthPredicate, Function<T4, R> forthFunction,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1703,15 +2087,15 @@ public final class GuardPattern {
         return null;
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
-                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
-                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+
+    public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                         Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1759,15 +2143,30 @@ public final class GuardPattern {
         defaultConsumer.run();
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Consumer<T6> sixthConsumer,
-                                       Class<Var> varClass,   Consumer<V> varConsumer) {
+    public <T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                            Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                            Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                            Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                            Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                            Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                            Class<Else> defaultClass, Runnable defaultConsumer) {
+        match(value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                sixthClazz, sixthPredicate, sixthConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                         Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                         Class<Var> varClass, Consumer<V> varConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1815,87 +2214,155 @@ public final class GuardPattern {
         varConsumer.accept(value);
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
-                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
-                                                           Class<Null> nullClass, Runnable nullConsumer,
-                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                               Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                sixthClazz, sixthPredicate, sixthConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                         Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                         Class<Null> nullClass, Runnable nullConsumer,
+                                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
-                           fifthClazz,  fifthPredicate,  fifthConsumer,
-                           sixthClazz,  sixthPredicate,  sixthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
+                    fifthClazz, fifthPredicate, fifthConsumer,
+                    sixthClazz, sixthPredicate, sixthConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Consumer<T1> firstConsumer,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Consumer<T3> thirdConsumer,
-                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Consumer<T5> fifthConsumer,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Consumer<T6> sixthConsumer,
-                                       Class<Null> nullClass, Runnable nullConsumer,
-                                       Class<Var> varClass,   Consumer<V> varConsumer) {
+    public <V, T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                               Class<Null> nullClass, Runnable nullConsumer,
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                sixthClazz, sixthPredicate, sixthConsumer,
+                nullClass, nullConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                         Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                         Class<Null> nullClass, Runnable nullConsumer,
+                                                         Class<Var> varClass, Consumer<V> varConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
-                           fifthClazz,  fifthPredicate,  fifthConsumer,
-                           sixthClazz,  sixthPredicate,  sixthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
+                    fifthClazz, fifthPredicate, fifthConsumer,
+                    sixthClazz, sixthPredicate, sixthConsumer,
                     varClass, varConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
-                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
-                                                           Class<Null> nullClass, Runnable nullConsumer,
-                                                           Class<Var> varClass, Predicate<V>  varPredicate, Runnable varConsumer,
-                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                               Class<Null> nullClass, Runnable nullConsumer,
+                                               Class<Var> varClass, Consumer<V> varConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                sixthClazz, sixthPredicate, sixthConsumer,
+                nullClass, nullConsumer,
+                varClass, varConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                         Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                         Class<Null> nullClass, Runnable nullConsumer,
+                                                         Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         if (value == null) {
             nullConsumer.run();
         } else {
-            matches(value, firstClazz,  firstPredicate,  firstConsumer,
-                           secondClazz, secondPredicate, secondConsumer,
-                           thirdClazz,  thirdPredicate,  thirdConsumer,
-                           fourthClazz, fourthPredicate, fourthConsumer,
-                           fifthClazz,  fifthPredicate,  fifthConsumer,
-                           sixthClazz,  sixthPredicate,  sixthConsumer,
+            match(value, firstClazz, firstPredicate, firstConsumer,
+                    secondClazz, secondPredicate, secondConsumer,
+                    thirdClazz, thirdPredicate, thirdConsumer,
+                    fourthClazz, fourthPredicate, fourthConsumer,
+                    fifthClazz, fifthPredicate, fifthConsumer,
+                    sixthClazz, sixthPredicate, sixthConsumer,
                     varClass, varPredicate, varConsumer,
                     defaultClass, defaultConsumer);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6> void matches(V value,
-                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
-                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
-                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
-                                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
-                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
-                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
-                                                           Class<Var> varClazz, Predicate<V>  varPredicate, Runnable varConsumer,
-                                                           Class<Else> defaultClass, Runnable defaultConsumer) {
+    public <V, T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                               Class<Null> nullClass, Runnable nullConsumer,
+                                               Class<Var> varClass, Predicate<V> varPredicate, Runnable varConsumer,
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                sixthClazz, sixthPredicate, sixthConsumer,
+                nullClass, nullConsumer,
+                varClass, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                                         Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                                         Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                                         Class<Else> defaultClass, Runnable defaultConsumer) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
@@ -1947,18 +2414,35 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                           Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
-                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
-                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz, thirdPredicate, thirdFunction, forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz, fifthPredicate, fifthFunction, sixthClazz,  sixthPredicate,  sixthFunction);
+    public <V, T1, T2, T3, T4, T5, T6> void as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Consumer<T2> secondConsumer,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Consumer<T3> thirdConsumer,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Consumer<T4> fourthConsumer,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Consumer<T5> fifthConsumer,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Consumer<T6> sixthConsumer,
+                                               Class<Var> varClazz, Predicate<V> varPredicate, Runnable varConsumer,
+                                               Class<Else> defaultClass, Runnable defaultConsumer) {
+        match((V) value, firstClazz, firstPredicate, firstConsumer,
+                secondClazz, secondPredicate, secondConsumer,
+                thirdClazz, thirdPredicate, thirdConsumer,
+                fourthClazz, fourthPredicate, fourthConsumer,
+                fifthClazz, fifthPredicate, fifthConsumer,
+                sixthClazz, sixthPredicate, sixthConsumer,
+                varClazz, varPredicate, varConsumer,
+                defaultClass, defaultConsumer);
+    }
+
+    public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                         Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                         Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction, secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction, forthClazz, forthPredicate, forthFunction,
+                fifthClazz, fifthPredicate, fifthFunction, sixthClazz, sixthPredicate, sixthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1966,21 +2450,21 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Function<T6, R> sixthFunction,
-                                       Class<Var> varClass,   Function<V, R> varFunction) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction,
-                                  sixthClazz,  sixthPredicate,  sixthFunction);
+
+    public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                         Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                         Class<Var> varClass, Function<V, R> varFunction) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                forthClazz, forthPredicate, forthFunction,
+                fifthClazz, fifthPredicate, fifthFunction,
+                sixthClazz, sixthPredicate, sixthFunction);
         if (result != null) {
             return result;
         } else {
@@ -1989,21 +2473,21 @@ public final class GuardPattern {
     }
 
     @SuppressWarnings({"Duplicates", "unused"})
-    public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                           Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
-                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
-                                                           Class<Var> varClass, Predicate<V>  varPredicate, Supplier<R> varSupplier,
-                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
-        R result = matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction,
-                                  sixthClazz,  sixthPredicate,  sixthFunction);
+    public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                         Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                         Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                         Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        R result = match(value, firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                forthClazz, forthPredicate, forthFunction,
+                fifthClazz, fifthPredicate, fifthFunction,
+                sixthClazz, sixthPredicate, sixthFunction);
         if (result != null) {
             return result;
         } else {
@@ -2015,74 +2499,74 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                           Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
-                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
-                                                           Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                         Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                         Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                         Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction,
-                                  sixthClazz,  sixthPredicate,  sixthFunction,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    sixthClazz, sixthPredicate, sixthFunction,
+                    defaultClass, defaultSupplier);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                       Class<T1> firstClazz,  Predicate<T1> firstPredicate,  Function<T1, R> firstFunction,
-                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                       Class<T3> thirdClazz,  Predicate<T3> thirdPredicate,  Function<T3, R> thirdFunction,
-                                       Class<T4> forthClazz,  Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                       Class<T5> fifthClazz,  Predicate<T5> fifthPredicate,  Function<T5, R> fifthFunction,
-                                       Class<T6> sixthClazz,  Predicate<T6> sixthPredicate,  Function<T6, R> sixthFunction,
-                                       Class<Null> nullClass, Supplier<R> nullSupplier,
-                                       Class<Var> varClass,   Function<V, R> varFunction) {
+
+    public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                         Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                         Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                         Class<Var> varClass, Function<V, R> varFunction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction,
-                                  sixthClazz,  sixthPredicate,  sixthFunction,
-                           varClass, varFunction);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    sixthClazz, sixthPredicate, sixthFunction,
+                    varClass, varFunction);
         }
     }
 
-    @SuppressWarnings("unused")
-    public static <V, T1, T2, T3, T4, T5, T6, R> R matches(V value,
-                                                           Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
-                                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
-                                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
-                                                           Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
-                                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
-                                                           Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
-                                                           Class<Null> nullClass, Supplier<R>  nullSupplier,
-                                                           Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
-                                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+
+    public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
+                                                         Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                                         Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                                         Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                                         Class<T4> forthClazz, Predicate<T4> forthPredicate, Function<T4, R> forthFunction,
+                                                         Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                                         Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                                         Class<Null> nullClass, Supplier<R> nullSupplier,
+                                                         Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                                         Class<Else> defaultClass, Supplier<R> defaultSupplier) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return matches(value, firstClazz,  firstPredicate,  firstFunction,
-                                  secondClazz, secondPredicate, secondFunction,
-                                  thirdClazz,  thirdPredicate,  thirdFunction,
-                                  forthClazz,  forthPredicate,  forthFunction,
-                                  fifthClazz,  fifthPredicate,  fifthFunction,
-                                  sixthClazz,  sixthPredicate,  sixthFunction,
-                           varClass, varPredicate, varSupplier,
-                           defaultClass, defaultSupplier);
+            return match(value, firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    forthClazz, forthPredicate, forthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    sixthClazz, sixthPredicate, sixthFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
         }
     }
 }
