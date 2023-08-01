@@ -121,7 +121,7 @@ Using this library developer can write in the following way.
    );
 ```
 
-**Exhaustive pattern* allow match exhaustive subclasses type.
+**Exhaustive pattern** allow match exhaustive subclasses type.
 
 ```Java
    public sealed class Result<T, E extends Throwable> {

@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2023 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -203,6 +203,9 @@ public final class GuardPattern {
         return null;
     }
 
+    public <V, T, R> R as(Class<T> clazz, Predicate<T> predicate, Function<T, R> function) {
+        return match((V) value, clazz, predicate, function);
+    }
 
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
@@ -216,6 +219,12 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T, R> R as(Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                          Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                     clazz, predicate, function,
+                     defaultClass, defaultSupplier);
+    }
 
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
@@ -229,7 +238,13 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings({"Duplicates", "unused"})
+    public <V, T, R> R as(Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                          Class<Var> varClass, Function<V, R> varFunction) {
+        return match((V) value,
+                     clazz, predicate, function,
+                     varClass, varFunction);
+    }
+
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
                                     Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
@@ -247,6 +262,14 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T, R> R as(Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                          Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                          Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                     clazz, predicate, function,
+                     varClass, varPredicate, varSupplier,
+                     defaultClass, defaultSupplier);
+    }
 
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
@@ -259,6 +282,14 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T, R> R as(Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
+                          Class<Null> nullClass, Supplier<R> nullSupplier,
+                          Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                     clazz, predicate, function,
+                     nullClass, nullSupplier,
+                     defaultClass, defaultSupplier);
+    }
 
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Predicate<T> predicate, Function<T, R> function,
@@ -508,6 +539,12 @@ public final class GuardPattern {
         return null;
     }
 
+    public <V, T1, T2, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction);
+    }
 
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -522,6 +559,14 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                     firstClazz, firstPredicate, firstFunction,
+                     secondClazz, secondPredicate, secondFunction,
+                     defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -536,7 +581,15 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings({"Duplicates", "unused"})
+    public <V, T1, T2, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                               Class<Var> varClass, Function<V, R> varFunction) {
+        return match((V) value,
+                     firstClazz, firstPredicate, firstFunction,
+                     secondClazz, secondPredicate, secondFunction,
+                     varClass, varFunction);
+    }
+
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
                                          Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
@@ -556,6 +609,16 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                               Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -571,6 +634,16 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                               Class<Null> nullClass, Supplier<R> nullSupplier,
+                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    nullClass, nullSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -884,6 +957,14 @@ public final class GuardPattern {
         return null;
     }
 
+    public <V, T1, T2, T3, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction) {
+        return match((V) value,
+                firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction);
+    }
 
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -899,6 +980,16 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -915,7 +1006,17 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings({"Duplicates", "unused"})
+    public <V, T1, T2, T3, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                   Class<Var> varClass, Function<V, R> varFunction) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    varClass, varFunction);
+    }
+
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
                                              Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
@@ -937,6 +1038,18 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                   Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -954,6 +1067,18 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                   Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                   Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                   Class<Null> nullClass, Supplier<R> nullSupplier,
+                                   Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    nullClass, nullSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, R> R match(V value,
                                              Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -1330,6 +1455,16 @@ public final class GuardPattern {
         return null;
     }
 
+    public <V, T1, T2, T3, T4, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction) {
+        return match((V) value,
+                firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                fourthClazz, fourthPredicate, fourthFunction);
+    }
 
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -1346,6 +1481,18 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                fourthClazz, fourthPredicate, fourthFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -1364,7 +1511,19 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings({"Duplicates", "unused"})
+    public <V, T1, T2, T3, T4, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                       Class<Var> varClass, Function<V, R> varFunction) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    varClass, varFunction);
+    }
+
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
                                                  Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
@@ -1387,6 +1546,20 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                       Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -1406,6 +1579,20 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                       Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                       Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                       Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                       Class<Null> nullClass, Supplier<R> nullSupplier,
+                                       Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    nullClass, nullSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, R> R match(V value,
                                                  Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -1543,6 +1730,18 @@ public final class GuardPattern {
         return null;
     }
 
+    public <V, T1, T2, T3, T4, T5, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction) {
+        return match((V) value,
+                firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                fourthClazz, fourthPredicate, fourthFunction,
+                fifthClazz, fifthPredicate, fifthFunction);
+    }
 
     public static <V, T1, T2, T3, T4, T5> void match(V value,
                                                      Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
@@ -1863,6 +2062,20 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, T5, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                fourthClazz, fourthPredicate, fourthFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                fifthClazz, fifthPredicate, fifthFunction,
+                defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, T5, R> R match(V value,
                                                      Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -1883,7 +2096,21 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings({"Duplicates", "unused"})
+    public <V, T1, T2, T3, T4, T5, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                           Class<Var> varClass, Function<V, R> varFunction) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    varClass, varFunction);
+    }
+
     public static <V, T1, T2, T3, T4, T5, R> R match(V value,
                                                      Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
                                                      Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
@@ -1908,6 +2135,22 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, T5, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                           Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, T5, R> R match(V value,
                                                      Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -1929,6 +2172,22 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, T5, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                           Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                           Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                           Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                           Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                           Class<Null> nullClass, Supplier<R> nullSupplier,
+                                           Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    nullClass, nullSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, T5, R> R match(V value,
                                                      Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -2087,6 +2346,20 @@ public final class GuardPattern {
         return null;
     }
 
+    public <V, T1, T2, T3, T4, T5, T6, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction) {
+        return match((V) value,
+                firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                fourthClazz, fourthPredicate, fourthFunction,
+                fifthClazz, fifthPredicate, fifthFunction,
+                sixthClazz, sixthPredicate, sixthFunction);
+    }
 
     public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
                                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Consumer<T1> firstConsumer,
@@ -2450,6 +2723,22 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, T5, T6, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                firstClazz, firstPredicate, firstFunction,
+                secondClazz, secondPredicate, secondFunction,
+                fourthClazz, fourthPredicate, fourthFunction,
+                thirdClazz, thirdPredicate, thirdFunction,
+                fifthClazz, fifthPredicate, fifthFunction,
+                sixthClazz, sixthPredicate, sixthFunction,
+                defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
                                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -2472,7 +2761,23 @@ public final class GuardPattern {
         }
     }
 
-    @SuppressWarnings({"Duplicates", "unused"})
+    public <V, T1, T2, T3, T4, T5, T6, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                               Class<Var> varClass, Function<V, R> varFunction) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    sixthClazz, sixthPredicate, sixthFunction,
+                    varClass, varFunction);
+    }
+
     public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
                                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
                                                          Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
@@ -2499,6 +2804,24 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, T5, T6, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                               Class<Var> varClass, Predicate<V> varPredicate, Supplier<R> varSupplier,
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    sixthClazz, sixthPredicate, sixthFunction,
+                    varClass, varPredicate, varSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
                                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
@@ -2522,6 +2845,24 @@ public final class GuardPattern {
         }
     }
 
+    public <V, T1, T2, T3, T4, T5, T6, R> R as(Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
+                                               Class<T2> secondClazz, Predicate<T2> secondPredicate, Function<T2, R> secondFunction,
+                                               Class<T3> thirdClazz, Predicate<T3> thirdPredicate, Function<T3, R> thirdFunction,
+                                               Class<T4> fourthClazz, Predicate<T4> fourthPredicate, Function<T4, R> fourthFunction,
+                                               Class<T5> fifthClazz, Predicate<T5> fifthPredicate, Function<T5, R> fifthFunction,
+                                               Class<T6> sixthClazz, Predicate<T6> sixthPredicate, Function<T6, R> sixthFunction,
+                                               Class<Null> nullClass, Supplier<R> nullSupplier,
+                                               Class<Else> defaultClass, Supplier<R> defaultSupplier) {
+        return match((V) value,
+                    firstClazz, firstPredicate, firstFunction,
+                    secondClazz, secondPredicate, secondFunction,
+                    thirdClazz, thirdPredicate, thirdFunction,
+                    fourthClazz, fourthPredicate, fourthFunction,
+                    fifthClazz, fifthPredicate, fifthFunction,
+                    sixthClazz, sixthPredicate, sixthFunction,
+                    nullClass, nullSupplier,
+                    defaultClass, defaultSupplier);
+    }
 
     public static <V, T1, T2, T3, T4, T5, T6, R> R match(V value,
                                                          Class<T1> firstClazz, Predicate<T1> firstPredicate, Function<T1, R> firstFunction,
