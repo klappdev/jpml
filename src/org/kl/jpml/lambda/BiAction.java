@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -26,21 +26,12 @@ package org.kl.jpml.lambda;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface Routine<T, R> {
+public interface BiAction<T1, T2, R> {
 
-    R hold(T t);
+    R action(T1 t1, T2 t2);
 
-    default <V> Routine<V, R> compose(Routine<? super V, ? extends T> before) {
-        Objects.requireNonNull(before);
-        return (V v) -> hold(before.hold(v));
-    }
-
-    default <V> Routine<T, V> andThen(Routine<? super R, ? extends V> after) {
+    default <V> BiAction<T1, T2, V> andThen(Action<? super R, ? extends V> after) {
         Objects.requireNonNull(after);
-        return (T t) -> after.hold(hold(t));
-    }
-
-    static <T> Routine<T, T> identity() {
-        return t -> t;
+        return (T1 t1, T2 t2) -> after.action(action(t1, t2));
     }
 }

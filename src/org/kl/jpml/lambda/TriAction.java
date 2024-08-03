@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -25,13 +25,12 @@ package org.kl.jpml.lambda;
 
 import java.util.Objects;
 
-public interface TriPurchaser<T1, T2, T3> {
+public interface TriAction<T1, T2, T3, R> {
 
-    void obtain(T1 t1, T2 t2, T3 t3);
+    R action(T1 t1, T2 t2, T3 t3);
 
-    default TriPurchaser<T1, T2, T3> andThen(TriPurchaser<? super T1, ? super T2, ? super T3> after) {
+    default <V> TriAction<T1, T2, T3, V> andThen(Action<? super R, ? extends V> after) {
         Objects.requireNonNull(after);
-
-        return (t1, t2, t3) -> { obtain(t1, t2, t3); after.obtain(t1, t2, t3); };
+        return (T1 t1, T2 t2, T3 t3) -> after.action(action(t1, t2, t3));
     }
 }

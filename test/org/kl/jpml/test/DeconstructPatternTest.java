@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import org.kl.jpml.lambda.Purchaser;
+import org.kl.jpml.lambda.Acceptor;
 import org.kl.jpml.test.shape.*;
 import org.kl.jpml.state.Else;
 import org.kl.jpml.state.Null;
@@ -2888,13 +2888,13 @@ public class DeconstructPatternTest {
         /* 1 */
         match(data,
                 Circle.class, (Integer r) -> out.println("Circle square: " + ((int) (2 * Math.PI * r))),
-                Var.class, (Purchaser<String>) any -> out.println("Var value 1 type")
+                Var.class, (Acceptor<String>) any -> out.println("Var value 1 type")
         );
 
         /* 2 */
         match(data,
                 Rectangle.class, (Integer w, Integer h) -> out.println("Rectangle square: " + (w * h)),
-                Var.class, (Purchaser<String>) any -> out.println("Var value 2 type")
+                Var.class, (Acceptor<String>) any -> out.println("Var value 2 type")
         );
 
         /* 3 */
@@ -2902,7 +2902,7 @@ public class DeconstructPatternTest {
                 Parallelepiped.class, (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 3 type");
                 }
         );
@@ -2915,7 +2915,7 @@ public class DeconstructPatternTest {
                 Quadrate.class, (Integer a) -> {
                     out.println("Quadrate square: " + (a * a));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 1-1 type");
                 }
         );
@@ -2928,7 +2928,7 @@ public class DeconstructPatternTest {
                 Rectangle.class, (Integer w, Integer h) -> {
                     out.println("Rectangle square: " + (w * h));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 1-2 type");
                 }
         );
@@ -2941,7 +2941,7 @@ public class DeconstructPatternTest {
                 Quadrate.class, (Integer a) -> {
                     out.println("Quadrate square: " + (a * a));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 2-1 type");
                 }
         );
@@ -2954,7 +2954,7 @@ public class DeconstructPatternTest {
                 Rectangle.class, (Integer w, Integer h) -> {
                     out.println("Rectangle square: " + (w * h));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 2-2 type");
                 }
         );
@@ -2967,7 +2967,7 @@ public class DeconstructPatternTest {
                 Parallelepiped.class, (Short w, Short l, Short h) -> {
                     out.println("Parallelepiped square: " + 2 * (w * l + l * h + w * h));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 1-3 type");
                 }
         );
@@ -2980,7 +2980,7 @@ public class DeconstructPatternTest {
                 Circle.class, (Integer r) -> {
                     out.println("Circle    square: " + ((int) (2 * Math.PI * r)));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 3-1 type");
                 }
         );
@@ -2993,7 +2993,7 @@ public class DeconstructPatternTest {
                 Tripiped.class, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 3-3 type");
                 }
         );
@@ -3006,7 +3006,7 @@ public class DeconstructPatternTest {
                 Tripiped.class, (Float w, Float l, Float h) -> {
                     out.println("Tripiped square: " + 2 * (w * l + l * h + w * h));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 2-3 type");
                 }
         );
@@ -3019,7 +3019,7 @@ public class DeconstructPatternTest {
                 Triangle.class, (Double w, Double h) -> {
                     out.println("Triangle  square: " + (w * h));
                 },
-                Var.class, (Purchaser<String>) any -> {
+                Var.class, (Acceptor<String>) any -> {
                     out.println("Var value 3-2 type");
                 }
         );

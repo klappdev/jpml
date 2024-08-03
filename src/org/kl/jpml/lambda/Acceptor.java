@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -26,11 +26,11 @@ package org.kl.jpml.lambda;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface Purchaser<T> {
-    void obtain(T t);
+public interface Acceptor<T> {
+    void accept(T t);
 
-    default Purchaser<T> andThen(Purchaser<? super T> after) {
+    default Acceptor<T> andThen(Acceptor<? super T> after) {
         Objects.requireNonNull(after);
-        return (T t) -> { obtain(t); after.obtain(t); };
+        return (T t) -> { accept(t); after.accept(t); };
     }
 }

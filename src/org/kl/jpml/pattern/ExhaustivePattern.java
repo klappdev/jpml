@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  */
 package org.kl.jpml.pattern;
 
-import org.kl.jpml.lambda.Routine;
+import org.kl.jpml.lambda.Action;
 import org.kl.jpml.reflect.Reflection;
 
 import java.util.function.Consumer;
@@ -66,23 +66,23 @@ public final class ExhaustivePattern {
 
     public static <V, T1, T2, R>
     R match(V value,
-            Class<T1> firstClazz, Routine<T1, R> firstBranch,
-            Class<T2> secondClazz, Routine<T2, R> secondBranch) {
+            Class<T1> firstClazz, Action<T1, R> firstBranch,
+            Class<T2> secondClazz, Action<T2, R> secondBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{firstClazz, secondClazz});
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
-            return firstBranch.hold((T1) value);
+            return firstBranch.action((T1) value);
         } else if (secondClazz == valueClass) {
-            return secondBranch.hold((T2) value);
+            return secondBranch.action((T2) value);
         }
 
         return null;
     }
 
     public <T1, T2, R>
-    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
-         Class<T2> secondClazz, Routine<T2, R> secondBranch) {
+    R as(Class<T1> firstClazz, Action<T1, R> firstBranch,
+         Class<T2> secondClazz, Action<T2, R> secondBranch) {
         return match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch);
@@ -117,27 +117,27 @@ public final class ExhaustivePattern {
 
     public static <V, T1, T2, T3, R>
     R match(V value,
-            Class<T1> firstClazz, Routine<T1, R> firstBranch,
-            Class<T2> secondClazz, Routine<T2, R> secondBranch,
-            Class<T3> thirdClazz, Routine<T3, R> thirdBranch) {
+            Class<T1> firstClazz, Action<T1, R> firstBranch,
+            Class<T2> secondClazz, Action<T2, R> secondBranch,
+            Class<T3> thirdClazz, Action<T3, R> thirdBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{firstClazz, secondClazz, thirdClazz});
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
-            return firstBranch.hold((T1) value);
+            return firstBranch.action((T1) value);
         } else if (secondClazz == valueClass) {
-            return secondBranch.hold((T2) value);
+            return secondBranch.action((T2) value);
         } else if (thirdClazz == valueClass) {
-            return thirdBranch.hold((T3) value);
+            return thirdBranch.action((T3) value);
         }
 
         return null;
     }
 
     public <T1, T2, T3, R>
-    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
-         Class<T2> secondClazz, Routine<T2, R> secondBranch,
-         Class<T3> thirdClazz, Routine<T3, R> thirdBranch) {
+    R as(Class<T1> firstClazz, Action<T1, R> firstBranch,
+         Class<T2> secondClazz, Action<T2, R> secondBranch,
+         Class<T3> thirdClazz, Action<T3, R> thirdBranch) {
         return match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
@@ -180,33 +180,33 @@ public final class ExhaustivePattern {
 
     public static <V, T1, T2, T3, T4, R>
     R match(V value,
-            Class<T1> firstClazz, Routine<T1, R> firstBranch,
-            Class<T2> secondClazz, Routine<T2, R> secondBranch,
-            Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
-            Class<T4> fourthClazz, Routine<T4, R> fourthBranch) {
+            Class<T1> firstClazz, Action<T1, R> firstBranch,
+            Class<T2> secondClazz, Action<T2, R> secondBranch,
+            Class<T3> thirdClazz, Action<T3, R> thirdBranch,
+            Class<T4> fourthClazz, Action<T4, R> fourthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz, fourthClazz
         });
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
-            return firstBranch.hold((T1) value);
+            return firstBranch.action((T1) value);
         } else if (secondClazz == valueClass) {
-            return secondBranch.hold((T2) value);
+            return secondBranch.action((T2) value);
         } else if (thirdClazz == valueClass) {
-            return thirdBranch.hold((T3) value);
+            return thirdBranch.action((T3) value);
         } else if (fourthClazz == valueClass) {
-            return fourthBranch.hold((T4) value);
+            return fourthBranch.action((T4) value);
         }
 
         return null;
     }
 
     public <T1, T2, T3, T4, R>
-    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
-         Class<T2> secondClazz, Routine<T2, R> secondBranch,
-         Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
-         Class<T4> fourthClazz, Routine<T4, R> fourthBranch) {
+    R as(Class<T1> firstClazz, Action<T1, R> firstBranch,
+         Class<T2> secondClazz, Action<T2, R> secondBranch,
+         Class<T3> thirdClazz, Action<T3, R> thirdBranch,
+         Class<T4> fourthClazz, Action<T4, R> fourthBranch) {
         return match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
@@ -256,11 +256,11 @@ public final class ExhaustivePattern {
 
     public static <V, T1, T2, T3, T4, T5, R>
     R match(V value,
-            Class<T1> firstClazz, Routine<T1, R> firstBranch,
-            Class<T2> secondClazz, Routine<T2, R> secondBranch,
-            Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
-            Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
-            Class<T5> fifthClazz, Routine<T5, R> fifthBranch) {
+            Class<T1> firstClazz, Action<T1, R> firstBranch,
+            Class<T2> secondClazz, Action<T2, R> secondBranch,
+            Class<T3> thirdClazz, Action<T3, R> thirdBranch,
+            Class<T4> fourthClazz, Action<T4, R> fourthBranch,
+            Class<T5> fifthClazz, Action<T5, R> fifthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz,
                 fourthClazz, fifthClazz
@@ -268,26 +268,26 @@ public final class ExhaustivePattern {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
-            return firstBranch.hold((T1) value);
+            return firstBranch.action((T1) value);
         } else if (secondClazz == valueClass) {
-            return secondBranch.hold((T2) value);
+            return secondBranch.action((T2) value);
         } else if (thirdClazz == valueClass) {
-            return thirdBranch.hold((T3) value);
+            return thirdBranch.action((T3) value);
         } else if (fourthClazz == valueClass) {
-            return fourthBranch.hold((T4) value);
+            return fourthBranch.action((T4) value);
         } else if (fifthClazz == valueClass) {
-            return fifthBranch.hold((T5) value);
+            return fifthBranch.action((T5) value);
         }
 
         return null;
     }
 
     public <T1, T2, T3, T4, T5, R>
-    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
-         Class<T2> secondClazz, Routine<T2, R> secondBranch,
-         Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
-         Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
-         Class<T5> fifthClazz, Routine<T5, R> fifthBranch) {
+    R as(Class<T1> firstClazz, Action<T1, R> firstBranch,
+         Class<T2> secondClazz, Action<T2, R> secondBranch,
+         Class<T3> thirdClazz, Action<T3, R> thirdBranch,
+         Class<T4> fourthClazz, Action<T4, R> fourthBranch,
+         Class<T5> fifthClazz, Action<T5, R> fifthBranch) {
         return match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,
@@ -343,12 +343,12 @@ public final class ExhaustivePattern {
 
     public static <V, T1, T2, T3, T4, T5, T6, R>
     R match(V value,
-            Class<T1> firstClazz, Routine<T1, R> firstBranch,
-            Class<T2> secondClazz, Routine<T2, R> secondBranch,
-            Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
-            Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
-            Class<T5> fifthClazz, Routine<T5, R> fifthBranch,
-            Class<T6> sixthClazz, Routine<T6, R> sixthBranch) {
+            Class<T1> firstClazz, Action<T1, R> firstBranch,
+            Class<T2> secondClazz, Action<T2, R> secondBranch,
+            Class<T3> thirdClazz, Action<T3, R> thirdBranch,
+            Class<T4> fourthClazz, Action<T4, R> fourthBranch,
+            Class<T5> fifthClazz, Action<T5, R> fifthBranch,
+            Class<T6> sixthClazz, Action<T6, R> sixthBranch) {
         Reflection.verifyExhaustiveness(value, new Class<?>[]{
                 firstClazz, secondClazz, thirdClazz,
                 fourthClazz, fifthClazz, sixthClazz
@@ -356,29 +356,29 @@ public final class ExhaustivePattern {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass) {
-            return firstBranch.hold((T1) value);
+            return firstBranch.action((T1) value);
         } else if (secondClazz == valueClass) {
-            return secondBranch.hold((T2) value);
+            return secondBranch.action((T2) value);
         } else if (thirdClazz == valueClass) {
-            return thirdBranch.hold((T3) value);
+            return thirdBranch.action((T3) value);
         } else if (fourthClazz == valueClass) {
-            return fourthBranch.hold((T4) value);
+            return fourthBranch.action((T4) value);
         } else if (fifthClazz == valueClass) {
-            return fifthBranch.hold((T5) value);
+            return fifthBranch.action((T5) value);
         } else if (sixthClazz == valueClass) {
-            return sixthBranch.hold((T6) value);
+            return sixthBranch.action((T6) value);
         }
 
         return null;
     }
 
     public <T1, T2, T3, T4, T5, T6, R>
-    R as(Class<T1> firstClazz, Routine<T1, R> firstBranch,
-         Class<T2> secondClazz, Routine<T2, R> secondBranch,
-         Class<T3> thirdClazz, Routine<T3, R> thirdBranch,
-         Class<T4> fourthClazz, Routine<T4, R> fourthBranch,
-         Class<T5> fifthClazz, Routine<T5, R> fifthBranch,
-         Class<T6> sixthClazz, Routine<T6, R> sixthBranch) {
+    R as(Class<T1> firstClazz, Action<T1, R> firstBranch,
+         Class<T2> secondClazz, Action<T2, R> secondBranch,
+         Class<T3> thirdClazz, Action<T3, R> thirdBranch,
+         Class<T4> fourthClazz, Action<T4, R> fourthBranch,
+         Class<T5> fifthClazz, Action<T5, R> fifthBranch,
+         Class<T6> sixthClazz, Action<T6, R> sixthBranch) {
         return match(sealedValue,
                 firstClazz, firstBranch,
                 secondClazz, secondBranch,

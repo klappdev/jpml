@@ -1,9 +1,9 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
- * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * Permission is hereby  granted, free of charge, to any  person accepting a copy
  * of this software and associated  documentation files (the "Software"), to deal
  * in the Software  without restriction, including without  limitation the rights
  * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
@@ -81,12 +81,12 @@ public final class DeconstructPattern {
 
     public static <V, C, T>
     void match(V value,
-               Class<C> clazz, Purchaser<T> branch,
+               Class<C> clazz, Acceptor<T> branch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            branch.obtain((T) args[0]);
+            branch.accept((T) args[0]);
             return;
         }
 
@@ -94,29 +94,29 @@ public final class DeconstructPattern {
     }
 
     public <C, T>
-    void as(Class<C> clazz, Purchaser<T> branch,
+    void as(Class<C> clazz, Acceptor<T> branch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(value, clazz, branch, elseClass, elseBranch);
     }
 
     public static <V, C, T>
     void match(V value,
-               Class<C> clazz, Purchaser<T> branch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C> clazz, Acceptor<T> branch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            branch.obtain((T) args[0]);
+            branch.accept((T) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
     public static <V, C, T>
     void match(V value,
-               Class<C> clazz, Purchaser<T> branch,
+               Class<C> clazz, Acceptor<T> branch,
                Class<Null> nullClass, Runnable nullBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
@@ -129,9 +129,9 @@ public final class DeconstructPattern {
 
     public static <V, C, T>
     void match(V value,
-               Class<C> clazz, Purchaser<T> branch,
+               Class<C> clazz, Acceptor<T> branch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -169,13 +169,13 @@ public final class DeconstructPattern {
     public static <V, C, T, R>
     R match(V value,
             Class<C> clazz, Function<T, R> branch,
-            Class<Var> varClass, Routine<V, R> varBranch) {
+            Class<Var> varClass, Action<V, R> varBranch) {
         R result = match(value, clazz, branch);
 
         if (result != null) {
             return result;
         } else {
-            return varBranch.hold(value);
+            return varBranch.action(value);
         }
     }
 
@@ -197,7 +197,7 @@ public final class DeconstructPattern {
     R match(V value,
             Class<C> clazz, Function<T, R> branch,
             Class<Null> nullClass, Supplier<R> nullBranch,
-            Class<Var> varClass, Routine<V, R> varBranch) {
+            Class<Var> varClass, Action<V, R> varBranch) {
         if (value == null) {
             return nullBranch.get();
         } else {
@@ -245,12 +245,12 @@ public final class DeconstructPattern {
 
     public static <V, C, T1, T2>
     void match(V value,
-               Class<C> clazz, BiPurchaser<T1, T2> branch,
+               Class<C> clazz, BiAcceptor<T1, T2> branch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            branch.obtain((T1) args[0], (T2) args[1]);
+            branch.accept((T1) args[0], (T2) args[1]);
             return;
         }
 
@@ -258,28 +258,28 @@ public final class DeconstructPattern {
     }
 
     public <C, T1, T2>
-    void as(Class<C> clazz, BiPurchaser<T1, T2> branch,
+    void as(Class<C> clazz, BiAcceptor<T1, T2> branch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(value, clazz, branch, elseClass, elseBranch);
     }
 
     public static <V, C, T1, T2>
     void match(V value,
-               Class<C> clazz, BiPurchaser<T1, T2> branch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C> clazz, BiAcceptor<T1, T2> branch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            branch.obtain((T1) args[0], (T2) args[0]);
+            branch.accept((T1) args[0], (T2) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C, T1, T2>
     void match(V value,
-               Class<C> clazz, BiPurchaser<T1, T2> branch,
+               Class<C> clazz, BiAcceptor<T1, T2> branch,
                Class<Null> nullClass, Runnable nullBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
@@ -291,9 +291,9 @@ public final class DeconstructPattern {
 
     public static <V, C, T1, T2>
     void match(V value,
-               Class<C> clazz, BiPurchaser<T1, T2> branch,
+               Class<C> clazz, BiAcceptor<T1, T2> branch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -346,12 +346,12 @@ public final class DeconstructPattern {
 
     public static <V, C, T1, T2, T3>
     void match(V value,
-               Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+               Class<C> clazz, TriAcceptor<T1, T2, T3> branch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            branch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            branch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         }
 
@@ -359,28 +359,28 @@ public final class DeconstructPattern {
     }
 
     public <C, T1, T2, T3>
-    void as(Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+    void as(Class<C> clazz, TriAcceptor<T1, T2, T3> branch,
             Class<Else> elseClass, Runnable elseBranch) {
         match(value, clazz, branch, elseClass, elseBranch);
     }
 
     public static <V, C, T1, T2, T3>
     void match(V value,
-               Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C> clazz, TriAcceptor<T1, T2, T3> branch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (clazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            branch.obtain((T1) args[0], (T2) args[0], (T3) args[2]);
+            branch.accept((T1) args[0], (T2) args[0], (T3) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C, T1, T2, T3>
     void match(V value,
-               Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+               Class<C> clazz, TriAcceptor<T1, T2, T3> branch,
                Class<Null> nullClass, Runnable nullBranch,
                Class<Else> elseClass, Runnable elseBranch) {
         if (value == null) {
@@ -392,9 +392,9 @@ public final class DeconstructPattern {
 
     public static <V, C, T1, T2, T3>
     void match(V value,
-               Class<C> clazz, TriPurchaser<T1, T2, T3> branch,
+               Class<C> clazz, TriAcceptor<T1, T2, T3> branch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -467,22 +467,22 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, Purchaser<T2> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, Acceptor<T2> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T2) args[0]);
+            secondBranch.accept((T2) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2>
@@ -502,10 +502,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, Purchaser<T2> secondBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, Acceptor<T2> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -585,22 +585,22 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T2, T3> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T2) args[0], (T3) args[1]);
+            secondBranch.accept((T2) args[0], (T3) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, T3>
@@ -620,10 +620,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T2, T3> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -703,20 +703,20 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, Purchaser<T3> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, Acceptor<T3> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T3) args[0]);
+            secondBranch.accept((T3) args[0]);
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, T3>
@@ -736,10 +736,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, Purchaser<T3> secondBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, Acceptor<T3> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -819,22 +819,22 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T3, T4> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T3) args[0], (T4) args[1]);
+            secondBranch.accept((T3) args[0], (T4) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, T3, T4>
@@ -854,10 +854,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T3, T4> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -937,22 +937,22 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T2, T3, T4> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T2) args[0], (T3) args[1], (T4) args[2]);
+            secondBranch.accept((T2) args[0], (T3) args[1], (T4) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, T3, T4>
@@ -972,10 +972,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T2, T3, T4> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -1055,22 +1055,22 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, Purchaser<T4> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Acceptor<T4> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T4) args[0]);
+            secondBranch.accept((T4) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, T3, T4>
@@ -1090,10 +1090,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, Purchaser<T4> secondBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Acceptor<T4> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -1173,22 +1173,22 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T4, T5, T6> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T4) args[0], (T5) args[1], (T6) args[2]);
+            secondBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
@@ -1208,10 +1208,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T4, T5, T6> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -1291,22 +1291,22 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T3, T4, T5> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T3) args[0], (T4) args[1], (T5) args[2]);
+            secondBranch.accept((T3) args[0], (T4) args[1], (T5) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, T5>
@@ -1326,10 +1326,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T3, T4, T5> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -1409,22 +1409,22 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T4, T5> secondBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T4) args[0], (T5) args[1]);
+            secondBranch.accept((T4) args[0], (T5) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, T3, T4, T5>
@@ -1444,10 +1444,10 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T4, T5> secondBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -1542,28 +1542,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, Purchaser<T2> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T3> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, Acceptor<T2> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T3> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T2) args[0]);
+            secondBranch.accept((T2) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T3) args[0]);
+            thirdBranch.accept((T3) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, C3, T3>
@@ -1585,11 +1585,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, Purchaser<T2> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T3> thirdBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, Acceptor<T2> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T3> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -1668,28 +1668,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, Purchaser<T2> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T3, T4> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, Acceptor<T2> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T3, T4> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T2) args[0]);
+            secondBranch.accept((T2) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T3) args[0], (T4) args[1]);
+            thirdBranch.accept((T3) args[0], (T4) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, C3, T3, T4>
@@ -1711,11 +1711,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, Purchaser<T2> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T3, T4> thirdBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, Acceptor<T2> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T3, T4> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -1794,28 +1794,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T4, T5> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T2, T3> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T4, T5> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T2) args[0], (T3) args[1]);
+            secondBranch.accept((T2) args[0], (T3) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T4) args[0], (T5) args[1]);
+            thirdBranch.accept((T4) args[0], (T5) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
@@ -1837,11 +1837,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T4, T5> thirdBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T2, T3> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T4, T5> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -1920,28 +1920,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T5, T6> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T3) args[0], (T4) args[1]);
+            secondBranch.accept((T3) args[0], (T4) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T5) args[0], (T6) args[1]);
+            thirdBranch.accept((T5) args[0], (T6) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
@@ -1964,11 +1964,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T5, T6> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -2047,28 +2047,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, Purchaser<T3> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T4> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, Acceptor<T3> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T4> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T3) args[0]);
+            secondBranch.accept((T3) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T4) args[0]);
+            thirdBranch.accept((T4) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, C3, T3, T4>
@@ -2090,11 +2090,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, Purchaser<T3> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T4> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, Acceptor<T3> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T4> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -2173,28 +2173,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T3, T4> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T5> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T3) args[0], (T4) args[1]);
+            secondBranch.accept((T3) args[0], (T4) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T5) args[0]);
+            thirdBranch.accept((T5) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
@@ -2216,11 +2216,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T3, T4> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T5> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -2299,28 +2299,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, Purchaser<T3> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T4, T5> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, Acceptor<T3> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T4, T5> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T3) args[0]);
+            secondBranch.accept((T3) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T4) args[0], (T5) args[1]);
+            thirdBranch.accept((T4) args[0], (T5) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
@@ -2342,11 +2342,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, Purchaser<T3> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T4, T5> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, Acceptor<T3> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T4, T5> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -2424,28 +2424,28 @@ public final class DeconstructPattern {
     }
 
     public static <V, C1, T1, C2, T2, C3, T3, T4> void match(V value,
-                                                             Class<C1> firstClazz, Purchaser<T1> firstBranch,
-                                                             Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                                                             Class<C3> thirdClazz, Purchaser<T4> thirdBranch,
-                                                             Class<Var> varClass, Purchaser<V> varBranch) {
+                                                             Class<C1> firstClazz, Acceptor<T1> firstBranch,
+                                                             Class<C2> secondClazz, BiAcceptor<T2, T3> secondBranch,
+                                                             Class<C3> thirdClazz, Acceptor<T4> thirdBranch,
+                                                             Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T2) args[0], (T3) args[1]);
+            secondBranch.accept((T2) args[0], (T3) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T4) args[0]);
+            thirdBranch.accept((T4) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -2467,11 +2467,11 @@ public final class DeconstructPattern {
 
 
     public static <V, C1, T1, C2, T2, C3, T3, T4> void match(V value,
-                                                             Class<C1> firstClazz, Purchaser<T1> firstBranch,
-                                                             Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-                                                             Class<C3> thirdClazz, Purchaser<T4> thirdBranch,
+                                                             Class<C1> firstClazz, Acceptor<T1> firstBranch,
+                                                             Class<C2> secondClazz, BiAcceptor<T2, T3> secondBranch,
+                                                             Class<C3> thirdClazz, Acceptor<T4> thirdBranch,
                                                              Class<Null> nullClass, Runnable nullBranch,
-                                                             Class<Var> varClass, Purchaser<V> varBranch) {
+                                                             Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -2550,28 +2550,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, Purchaser<T2> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T3, T4, T5> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, Acceptor<T2> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T3, T4, T5> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T2) args[0]);
+            secondBranch.accept((T2) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T3) args[0], (T4) args[1], (T5) args[2]);
+            thirdBranch.accept((T3) args[0], (T4) args[1], (T5) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -2595,11 +2595,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, Purchaser<T2> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T3, T4, T5> thirdBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, Acceptor<T2> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T3, T4, T5> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -2678,28 +2678,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T5, T6, T7> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T2) args[0], (T3) args[1], (T4) args[2]);
+            secondBranch.accept((T2) args[0], (T3) args[1], (T4) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T5) args[0], (T6) args[1], (T7) args[2]);
+            thirdBranch.accept((T5) args[0], (T6) args[1], (T7) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -2723,11 +2723,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T5, T6, T7> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -2806,28 +2806,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8, T9>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T7, T8, T9> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T7, T8, T9> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T4) args[0], (T5) args[1], (T6) args[2]);
+            secondBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T7) args[0], (T8) args[1], (T9) args[2]);
+            thirdBranch.accept((T7) args[0], (T8) args[1], (T9) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -2851,11 +2851,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8, T9>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T7, T8, T9> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T7, T8, T9> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -2934,28 +2934,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, Purchaser<T4> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Acceptor<T4> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T5> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T4) args[0]);
+            secondBranch.accept((T4) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T5) args[0]);
+            thirdBranch.accept((T5) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -2979,11 +2979,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, Purchaser<T4> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Acceptor<T4> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T5> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -3062,28 +3062,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T7> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T7> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T4) args[0], (T5) args[1], (T6) args[2]);
+            secondBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T7) args[0]);
+            thirdBranch.accept((T7) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -3107,11 +3107,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T7> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T7> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -3190,28 +3190,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, Purchaser<T4> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Acceptor<T4> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T5, T6, T7> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T4) args[0]);
+            secondBranch.accept((T4) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T5) args[0], (T6) args[1], (T7) args[2]);
+            thirdBranch.accept((T5) args[0], (T6) args[1], (T7) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -3235,11 +3235,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, Purchaser<T4> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Acceptor<T4> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T5, T6, T7> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -3318,28 +3318,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T5> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T2) args[0], (T3) args[1], (T4) args[2]);
+            secondBranch.accept((T2) args[0], (T3) args[1], (T4) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T5) args[0]);
+            thirdBranch.accept((T5) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -3363,11 +3363,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T5> thirdBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T5> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -3446,28 +3446,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T5, T6, T7> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T3) args[0], (T4) args[1]);
+            secondBranch.accept((T3) args[0], (T4) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T5) args[0], (T6) args[1], (T7) args[2]);
+            thirdBranch.accept((T5) args[0], (T6) args[1], (T7) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -3491,11 +3491,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T3, T4> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T5, T6, T7> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T3, T4> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T5, T6, T7> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -3574,28 +3574,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T6, T7, T8> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T6, T7, T8> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T3) args[0], (T4) args[1], (T5) args[2]);
+            secondBranch.accept((T3) args[0], (T4) args[1], (T5) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T6) args[0], (T7) args[1], (T8) args[2]);
+            thirdBranch.accept((T6) args[0], (T7) args[1], (T8) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -3619,11 +3619,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T6, T7, T8> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T6, T7, T8> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -3702,28 +3702,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T6, T7> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T6, T7> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T4) args[0], (T5) args[1]);
+            secondBranch.accept((T4) args[0], (T5) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T6) args[0], (T7) args[1]);
+            thirdBranch.accept((T6) args[0], (T7) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -3747,11 +3747,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T6, T7> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T6, T7> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -3830,28 +3830,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T7, T8> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T7, T8> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T4) args[0], (T5) args[1], (T6) args[2]);
+            secondBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T7) args[0], (T8) args[1]);
+            thirdBranch.accept((T7) args[0], (T8) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -3875,11 +3875,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T4, T5, T6> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T7, T8> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T4, T5, T6> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T7, T8> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -3958,28 +3958,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T6, T7, T8> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T6, T7, T8> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T4) args[0], (T5) args[1]);
+            secondBranch.accept((T4) args[0], (T5) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T6) args[0], (T7) args[1], (T8) args[2]);
+            thirdBranch.accept((T6) args[0], (T7) args[1], (T8) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -4003,11 +4003,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7, T8>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T6, T7, T8> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T4, T5> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T6, T7, T8> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -4086,28 +4086,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T6, T7> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T6, T7> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T3) args[0], (T4) args[1], (T5) args[2]);
+            secondBranch.accept((T3) args[0], (T4) args[1], (T5) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T6) args[0], (T7) args[1]);
+            thirdBranch.accept((T6) args[0], (T7) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -4131,11 +4131,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6, T7>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T6, T7> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T6, T7> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -4214,28 +4214,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T4, T5, T6> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T2, T3> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T4, T5, T6> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T2) args[0], (T3) args[1]);
+            secondBranch.accept((T2) args[0], (T3) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T4) args[0], (T5) args[1], (T6) args[2]);
+            thirdBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -4259,11 +4259,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T2, T3> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T4, T5, T6> thirdBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T2, T3> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T4, T5, T6> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -4342,28 +4342,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T6> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T4, T5> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T6> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            secondBranch.obtain((T4) args[0], (T5) args[1]);
+            secondBranch.accept((T4) args[0], (T5) args[1]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T6) args[0]);
+            thirdBranch.accept((T6) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -4387,11 +4387,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, BiPurchaser<T4, T5> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T6> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, BiAcceptor<T4, T5> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T6> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -4470,28 +4470,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, Purchaser<T3> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T4, T5, T6> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, Acceptor<T3> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T4, T5, T6> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T3) args[0]);
+            secondBranch.accept((T3) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            thirdBranch.obtain((T4) args[0], (T5) args[1], (T6) args[2]);
+            thirdBranch.accept((T4) args[0], (T5) args[1], (T6) args[2]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -4515,11 +4515,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, Purchaser<T3> secondBranch,
-               Class<C3> thirdClazz, TriPurchaser<T4, T5, T6> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, Acceptor<T3> secondBranch,
+               Class<C3> thirdClazz, TriAcceptor<T4, T5, T6> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -4598,28 +4598,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, Purchaser<T4> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Acceptor<T4> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T5, T6> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1], (T3) args[2]);
+            firstBranch.accept((T1) args[0], (T2) args[1], (T3) args[2]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            secondBranch.obtain((T4) args[0]);
+            secondBranch.accept((T4) args[0]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T5) args[0], (T6) args[1]);
+            thirdBranch.accept((T5) args[0], (T6) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -4643,11 +4643,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, TriPurchaser<T1, T2, T3> firstBranch,
-               Class<C2> secondClazz, Purchaser<T4> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<C1> firstClazz, TriAcceptor<T1, T2, T3> firstBranch,
+               Class<C2> secondClazz, Acceptor<T4> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T5, T6> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -4726,28 +4726,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T5, T6> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            firstBranch.obtain((T1) args[0]);
+            firstBranch.accept((T1) args[0]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T2) args[0], (T3) args[1], (T4) args[2]);
+            secondBranch.accept((T2) args[0], (T3) args[1], (T4) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            thirdBranch.obtain((T5) args[0], (T6) args[1]);
+            thirdBranch.accept((T5) args[0], (T6) args[1]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -4771,11 +4771,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, Purchaser<T1> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T2, T3, T4> secondBranch,
-               Class<C3> thirdClazz, BiPurchaser<T5, T6> thirdBranch,
+               Class<C1> firstClazz, Acceptor<T1> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T2, T3, T4> secondBranch,
+               Class<C3> thirdClazz, BiAcceptor<T5, T6> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {
@@ -4854,28 +4854,28 @@ public final class DeconstructPattern {
 
     public static <V, C1, C2, C3, T1, T2, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T6> thirdBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T6> thirdBranch,
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (firstClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 2);
 
-            firstBranch.obtain((T1) args[0], (T2) args[1]);
+            firstBranch.accept((T1) args[0], (T2) args[1]);
             return;
         } else if (secondClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 3);
 
-            secondBranch.obtain((T3) args[0], (T4) args[1], (T5) args[2]);
+            secondBranch.accept((T3) args[0], (T4) args[1], (T5) args[2]);
             return;
         } else if (thirdClazz == value.getClass()) {
             Object[] args = Reflection.invokeExtractor(value, 1);
 
-            thirdBranch.obtain((T6) args[0]);
+            thirdBranch.accept((T6) args[0]);
             return;
         }
 
-        varBranch.obtain(value);
+        varBranch.accept(value);
     }
 
 
@@ -4899,11 +4899,11 @@ public final class DeconstructPattern {
 
     public static <V, C1, T1, C2, T2, C3, T3, T4, T5, T6>
     void match(V value,
-               Class<C1> firstClazz, BiPurchaser<T1, T2> firstBranch,
-               Class<C2> secondClazz, TriPurchaser<T3, T4, T5> secondBranch,
-               Class<C3> thirdClazz, Purchaser<T6> thirdBranch,
+               Class<C1> firstClazz, BiAcceptor<T1, T2> firstBranch,
+               Class<C2> secondClazz, TriAcceptor<T3, T4, T5> secondBranch,
+               Class<C3> thirdClazz, Acceptor<T6> thirdBranch,
                Class<Null> nullClass, Runnable nullBranch,
-               Class<Var> varClass, Purchaser<V> varBranch) {
+               Class<Var> varClass, Acceptor<V> varBranch) {
         if (value == null) {
             nullBranch.run();
         } else {

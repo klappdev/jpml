@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@
  */
 package org.kl.jpml.pattern;
 
-import org.kl.jpml.lambda.Purchaser;
-import org.kl.jpml.lambda.Routine;
+import org.kl.jpml.lambda.Acceptor;
+import org.kl.jpml.lambda.Action;
 import org.kl.jpml.reflect.Reflection;
 import org.kl.jpml.state.Else;
 import org.kl.jpml.state.Null;
@@ -91,20 +91,20 @@ public final class TypeTestPattern {
 
 
     public static <V, T> void match(V value,
-                                    Class<T> clazz, Purchaser<T> purchaser,
-                                    Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                    Class<T> clazz, Acceptor<T> purchaser,
+                                    Class<Var> varClass, Acceptor<V> varAcceptor) {
         Class<?> valueClass = value.getClass();
 
         if (clazz == valueClass || Reflection.isPrimitive(clazz, valueClass)) {
-            purchaser.obtain((T) value);
+            purchaser.accept((T) value);
         } else {
-            varPurchaser.obtain(value);
+            varAcceptor.accept(value);
         }
     }
 
-    public <T, V> void as(Class<T> clazz, Purchaser<T> purchaser,
-                          Class<Var> varClass, Purchaser<V> varPurchaser) {
-        match((V) value, clazz, purchaser, varClass, varPurchaser);
+    public <T, V> void as(Class<T> clazz, Acceptor<T> purchaser,
+                          Class<Var> varClass, Acceptor<V> varAcceptor) {
+        match((V) value, clazz, purchaser, varClass, varAcceptor);
     }
 
 
@@ -127,13 +127,13 @@ public final class TypeTestPattern {
 
 
     public static <V, T> void match(V value,
-                                    Class<T> clazz, Purchaser<T> purchaser,
-                                    Class<Null> nullClass, Runnable nullPurchaser,
-                                    Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                    Class<T> clazz, Acceptor<T> purchaser,
+                                    Class<Null> nullClass, Runnable nullAcceptor,
+                                    Class<Var> varClass, Acceptor<V> varAcceptor) {
         if (value == null) {
-            nullPurchaser.run();
+            nullAcceptor.run();
         } else {
-            match(value, clazz, purchaser, varClass, varPurchaser);
+            match(value, clazz, purchaser, varClass, varAcceptor);
         }
     }
 
@@ -164,13 +164,13 @@ public final class TypeTestPattern {
 
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Function<T, R> function,
-                                    Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                    Class<Var> varClass, Action<V, R> defaultAction) {
         R result = match(value, clazz, function);
 
         if (result != null) {
             return result;
         } else {
-            return defaultRoutine.hold(value);
+            return defaultAction.action(value);
         }
     }
 
@@ -190,11 +190,11 @@ public final class TypeTestPattern {
     public static <V, T, R> R match(V value,
                                     Class<T> clazz, Function<T, R> function,
                                     Class<Null> nullClass, Supplier<R> nullSupplier,
-                                    Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                    Class<Var> varClass, Action<V, R> defaultAction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
-            return match(value, clazz, function, varClass, defaultRoutine);
+            return match(value, clazz, function, varClass, defaultAction);
         }
     }
 
@@ -244,27 +244,27 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2> void match(V value,
-                                         Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                         Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                         Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                         Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                         Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                         Class<Var> varClass, Acceptor<V> varAcceptor) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
-            firstPurchaser.obtain((T1) value);
+            firstAcceptor.accept((T1) value);
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
-            secondPurchaser.obtain((T2) value);
+            secondAcceptor.accept((T2) value);
         } else {
-            varPurchaser.obtain(value);
+            varAcceptor.accept(value);
         }
     }
 
-    public <T1, T2, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                               Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                               Class<Var> varClass, Purchaser<V> varPurchaser) {
+    public <T1, T2, V> void as(Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                               Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                               Class<Var> varClass, Acceptor<V> varAcceptor) {
         match((V) value,
-                firstClazz, firstPurchaser,
-                secondClazz, secondPurchaser,
-                varClass, varPurchaser);
+                firstClazz, firstAcceptor,
+                secondClazz, secondAcceptor,
+                varClass, varAcceptor);
     }
 
 
@@ -294,16 +294,16 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2> void match(V value,
-                                         Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                         Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                         Class<Null> nullClass, Runnable nullPurchaser,
-                                         Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                         Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                         Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                         Class<Null> nullClass, Runnable nullAcceptor,
+                                         Class<Var> varClass, Acceptor<V> varAcceptor) {
         if (value == null) {
-            nullPurchaser.run();
+            nullAcceptor.run();
         } else {
-            match(value, firstClazz, firstPurchaser,
-                    secondClazz, secondPurchaser,
-                    varClass, varPurchaser);
+            match(value, firstClazz, firstAcceptor,
+                    secondClazz, secondAcceptor,
+                    varClass, varAcceptor);
         }
     }
 
@@ -339,13 +339,13 @@ public final class TypeTestPattern {
     public static <V, T1, T2, R> R match(V value,
                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
-                                         Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                         Class<Var> varClass, Action<V, R> defaultAction) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction);
 
         if (result != null) {
             return result;
         } else {
-            return defaultRoutine.hold(value);
+            return defaultAction.action(value);
         }
     }
 
@@ -368,13 +368,13 @@ public final class TypeTestPattern {
                                          Class<T1> firstClazz, Function<T1, R> firstFunction,
                                          Class<T2> secondClazz, Function<T2, R> secondFunction,
                                          Class<Null> nullClass, Supplier<R> nullSupplier,
-                                         Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                         Class<Var> varClass, Action<V, R> defaultAction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
             return match(value, firstClazz, firstFunction,
                     secondClazz, secondFunction,
-                    varClass, defaultRoutine);
+                    varClass, defaultAction);
         }
     }
 
@@ -434,32 +434,32 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2, T3> void match(V value,
-                                             Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                             Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                             Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                             Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                             Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                             Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                             Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                             Class<Var> varClass, Acceptor<V> varAcceptor) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
-            firstPurchaser.obtain((T1) value);
+            firstAcceptor.accept((T1) value);
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
-            secondPurchaser.obtain((T2) value);
+            secondAcceptor.accept((T2) value);
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
-            thirdPurchaser.obtain((T3) value);
+            thirdAcceptor.accept((T3) value);
         } else {
-            varPurchaser.obtain(value);
+            varAcceptor.accept(value);
         }
     }
 
-    public <T1, T2, T3, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                   Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                   Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                   Class<Var> varClass, Purchaser<V> varPurchaser) {
+    public <T1, T2, T3, V> void as(Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                   Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                   Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                   Class<Var> varClass, Acceptor<V> varAcceptor) {
         match((V) value,
-                firstClazz, firstPurchaser,
-                secondClazz, secondPurchaser,
-                thirdClazz, thirdPurchaser,
-                varClass, varPurchaser);
+                firstClazz, firstAcceptor,
+                secondClazz, secondAcceptor,
+                thirdClazz, thirdAcceptor,
+                varClass, varAcceptor);
     }
 
 
@@ -492,18 +492,18 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2, T3> void match(V value,
-                                             Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                             Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                             Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                             Class<Null> nullClass, Runnable nullPurchaser,
-                                             Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                             Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                             Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                             Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                             Class<Null> nullClass, Runnable nullAcceptor,
+                                             Class<Var> varClass, Acceptor<V> varAcceptor) {
         if (value == null) {
-            nullPurchaser.run();
+            nullAcceptor.run();
         } else {
-            match(value, firstClazz, firstPurchaser,
-                    secondClazz, secondPurchaser,
-                    thirdClazz, thirdPurchaser,
-                    varClass, varPurchaser);
+            match(value, firstClazz, firstAcceptor,
+                    secondClazz, secondAcceptor,
+                    thirdClazz, thirdAcceptor,
+                    varClass, varAcceptor);
         }
     }
 
@@ -544,14 +544,14 @@ public final class TypeTestPattern {
                                              Class<T1> firstClazz, Function<T1, R> firstFunction,
                                              Class<T2> secondClazz, Function<T2, R> secondFunction,
                                              Class<T3> thirdClazz, Function<T3, R> thirdFunction,
-                                             Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                             Class<Var> varClass, Action<V, R> defaultAction) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
                 thirdClazz, thirdFunction);
 
         if (result != null) {
             return result;
         } else {
-            return defaultRoutine.hold(value);
+            return defaultAction.action(value);
         }
     }
 
@@ -576,14 +576,14 @@ public final class TypeTestPattern {
                                              Class<T2> secondClazz, Function<T2, R> secondFunction,
                                              Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                              Class<Null> nullClass, Supplier<R> nullSupplier,
-                                             Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                             Class<Var> varClass, Action<V, R> defaultAction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
             return match(value, firstClazz, firstFunction,
                     secondClazz, secondFunction,
                     thirdClazz, thirdFunction,
-                    varClass, defaultRoutine);
+                    varClass, defaultAction);
         }
     }
 
@@ -653,37 +653,37 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2, T3, T4> void match(V value,
-                                                 Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                                 Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                                 Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                                 Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                                 Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                                 Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                                 Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                                 Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                                 Class<T4> fourthClazz, Acceptor<T4> fourthAcceptor,
+                                                 Class<Var> varClass, Acceptor<V> varAcceptor) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
-            firstPurchaser.obtain((T1) value);
+            firstAcceptor.accept((T1) value);
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
-            secondPurchaser.obtain((T2) value);
+            secondAcceptor.accept((T2) value);
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
-            thirdPurchaser.obtain((T3) value);
+            thirdAcceptor.accept((T3) value);
         } else if (fourthClazz == valueClass || Reflection.isPrimitive(fourthClazz, valueClass)) {
-            fourthPurchaser.obtain((T4) value);
+            fourthAcceptor.accept((T4) value);
         } else {
-            varPurchaser.obtain(value);
+            varAcceptor.accept(value);
         }
     }
 
-    public <T1, T2, T3, T4, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                       Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                       Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                       Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                       Class<Var> varClass, Purchaser<V> varPurchaser) {
+    public <T1, T2, T3, T4, V> void as(Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                       Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                       Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                       Class<T4> fourthClazz, Acceptor<T4> fourthAcceptor,
+                                       Class<Var> varClass, Acceptor<V> varAcceptor) {
         match((V) value,
-                firstClazz, firstPurchaser,
-                secondClazz, secondPurchaser,
-                thirdClazz, thirdPurchaser,
-                fourthClazz, fourthPurchaser,
-                varClass, varPurchaser);
+                firstClazz, firstAcceptor,
+                secondClazz, secondAcceptor,
+                thirdClazz, thirdAcceptor,
+                fourthClazz, fourthAcceptor,
+                varClass, varAcceptor);
     }
 
 
@@ -720,20 +720,20 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2, T3, T4> void match(V value,
-                                                 Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                                 Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                                 Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                                 Class<T4> forthClazz, Purchaser<T4> forthPurchaser,
-                                                 Class<Null> nullClass, Runnable nullPurchaser,
-                                                 Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                                 Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                                 Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                                 Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                                 Class<T4> forthClazz, Acceptor<T4> forthAcceptor,
+                                                 Class<Null> nullClass, Runnable nullAcceptor,
+                                                 Class<Var> varClass, Acceptor<V> varAcceptor) {
         if (value == null) {
-            nullPurchaser.run();
+            nullAcceptor.run();
         } else {
-            match(value, firstClazz, firstPurchaser,
-                    secondClazz, secondPurchaser,
-                    thirdClazz, thirdPurchaser,
-                    forthClazz, forthPurchaser,
-                    varClass, varPurchaser);
+            match(value, firstClazz, firstAcceptor,
+                    secondClazz, secondAcceptor,
+                    thirdClazz, thirdAcceptor,
+                    forthClazz, forthAcceptor,
+                    varClass, varAcceptor);
         }
     }
 
@@ -779,14 +779,14 @@ public final class TypeTestPattern {
                                                  Class<T2> secondClazz, Function<T2, R> secondFunction,
                                                  Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                                  Class<T4> forthClazz, Function<T4, R> forthFunction,
-                                                 Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                                 Class<Var> varClass, Action<V, R> defaultAction) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
                 thirdClazz, thirdFunction, forthClazz, forthFunction);
 
         if (result != null) {
             return result;
         } else {
-            return defaultRoutine.hold(value);
+            return defaultAction.action(value);
         }
     }
 
@@ -814,7 +814,7 @@ public final class TypeTestPattern {
                                                  Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                                  Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                  Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                 Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                                 Class<Var> varClass, Action<V, R> defaultAction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -822,7 +822,7 @@ public final class TypeTestPattern {
                     secondClazz, secondFunction,
                     thirdClazz, thirdFunction,
                     forthClazz, forthFunction,
-                    varClass, defaultRoutine);
+                    varClass, defaultAction);
         }
     }
 
@@ -902,42 +902,42 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2, T3, T4, T5> void match(V value,
-                                                     Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                                     Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                                     Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                                     Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                                     Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
-                                                     Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                                     Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                                     Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                                     Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                                     Class<T4> fourthClazz, Acceptor<T4> fourthAcceptor,
+                                                     Class<T5> fifthClazz, Acceptor<T5> fifthAcceptor,
+                                                     Class<Var> varClass, Acceptor<V> varAcceptor) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
-            firstPurchaser.obtain((T1) value);
+            firstAcceptor.accept((T1) value);
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
-            secondPurchaser.obtain((T2) value);
+            secondAcceptor.accept((T2) value);
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
-            thirdPurchaser.obtain((T3) value);
+            thirdAcceptor.accept((T3) value);
         } else if (fourthClazz == valueClass || Reflection.isPrimitive(fourthClazz, valueClass)) {
-            fourthPurchaser.obtain((T4) value);
+            fourthAcceptor.accept((T4) value);
         } else if (fifthClazz == valueClass || Reflection.isPrimitive(fifthClazz, valueClass)) {
-            fifthPurchaser.obtain((T5) value);
+            fifthAcceptor.accept((T5) value);
         } else {
-            varPurchaser.obtain(value);
+            varAcceptor.accept(value);
         }
     }
 
-    public <T1, T2, T3, T4, T5, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                           Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                           Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                           Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                           Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
-                                           Class<Var> varClass, Purchaser<V> varPurchaser) {
+    public <T1, T2, T3, T4, T5, V> void as(Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                           Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                           Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                           Class<T4> fourthClazz, Acceptor<T4> fourthAcceptor,
+                                           Class<T5> fifthClazz, Acceptor<T5> fifthAcceptor,
+                                           Class<Var> varClass, Acceptor<V> varAcceptor) {
         match((V) value,
-                firstClazz, firstPurchaser,
-                secondClazz, secondPurchaser,
-                thirdClazz, thirdPurchaser,
-                fourthClazz, fourthPurchaser,
-                fifthClazz, fifthPurchaser,
-                varClass, varPurchaser);
+                firstClazz, firstAcceptor,
+                secondClazz, secondAcceptor,
+                thirdClazz, thirdAcceptor,
+                fourthClazz, fourthAcceptor,
+                fifthClazz, fifthAcceptor,
+                varClass, varAcceptor);
     }
 
 
@@ -977,22 +977,22 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2, T3, T4, T5> void match(V value,
-                                                     Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                                     Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                                     Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                                     Class<T4> forthClazz, Purchaser<T4> forthPurchaser,
-                                                     Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
-                                                     Class<Null> nullClass, Runnable nullPurchaser,
-                                                     Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                                     Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                                     Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                                     Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                                     Class<T4> forthClazz, Acceptor<T4> forthAcceptor,
+                                                     Class<T5> fifthClazz, Acceptor<T5> fifthAcceptor,
+                                                     Class<Null> nullClass, Runnable nullAcceptor,
+                                                     Class<Var> varClass, Acceptor<V> varAcceptor) {
         if (value == null) {
-            nullPurchaser.run();
+            nullAcceptor.run();
         } else {
-            match(value, firstClazz, firstPurchaser,
-                    secondClazz, secondPurchaser,
-                    thirdClazz, thirdPurchaser,
-                    forthClazz, forthPurchaser,
-                    fifthClazz, fifthPurchaser,
-                    varClass, varPurchaser);
+            match(value, firstClazz, firstAcceptor,
+                    secondClazz, secondAcceptor,
+                    thirdClazz, thirdAcceptor,
+                    forthClazz, forthAcceptor,
+                    fifthClazz, fifthAcceptor,
+                    varClass, varAcceptor);
         }
     }
 
@@ -1044,7 +1044,7 @@ public final class TypeTestPattern {
                                                      Class<T3> thirdClazz, Function<T3, R> thirdFunction,
                                                      Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                      Class<T5> fifthClazz, Function<T5, R> fifthFunction,
-                                                     Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                                     Class<Var> varClass, Action<V, R> defaultAction) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
                 thirdClazz, thirdFunction, forthClazz, forthFunction,
                 fifthClazz, fifthFunction);
@@ -1052,7 +1052,7 @@ public final class TypeTestPattern {
         if (result != null) {
             return result;
         } else {
-            return defaultRoutine.hold(value);
+            return defaultAction.action(value);
         }
     }
 
@@ -1082,7 +1082,7 @@ public final class TypeTestPattern {
                                                      Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                      Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                      Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                     Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                                     Class<Var> varClass, Action<V, R> defaultAction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -1091,7 +1091,7 @@ public final class TypeTestPattern {
                     thirdClazz, thirdFunction,
                     forthClazz, forthFunction,
                     fifthClazz, fifthFunction,
-                    varClass, defaultRoutine);
+                    varClass, defaultAction);
         }
     }
 
@@ -1181,47 +1181,47 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
-                                                         Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                                         Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                                         Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                                         Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                                         Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
-                                                         Class<T6> sixthClazz, Purchaser<T6> sixthPurchaser,
-                                                         Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                                         Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                                         Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                                         Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                                         Class<T4> fourthClazz, Acceptor<T4> fourthAcceptor,
+                                                         Class<T5> fifthClazz, Acceptor<T5> fifthAcceptor,
+                                                         Class<T6> sixthClazz, Acceptor<T6> sixthAcceptor,
+                                                         Class<Var> varClass, Acceptor<V> varAcceptor) {
         Class<?> valueClass = value.getClass();
 
         if (firstClazz == valueClass || Reflection.isPrimitive(firstClazz, valueClass)) {
-            firstPurchaser.obtain((T1) value);
+            firstAcceptor.accept((T1) value);
         } else if (secondClazz == valueClass || Reflection.isPrimitive(secondClazz, valueClass)) {
-            secondPurchaser.obtain((T2) value);
+            secondAcceptor.accept((T2) value);
         } else if (thirdClazz == valueClass || Reflection.isPrimitive(thirdClazz, valueClass)) {
-            thirdPurchaser.obtain((T3) value);
+            thirdAcceptor.accept((T3) value);
         } else if (fourthClazz == valueClass || Reflection.isPrimitive(fourthClazz, valueClass)) {
-            fourthPurchaser.obtain((T4) value);
+            fourthAcceptor.accept((T4) value);
         } else if (fifthClazz == valueClass || Reflection.isPrimitive(fifthClazz, valueClass)) {
-            fifthPurchaser.obtain((T5) value);
+            fifthAcceptor.accept((T5) value);
         } else if (sixthClazz == valueClass || Reflection.isPrimitive(sixthClazz, valueClass)) {
-            sixthPurchaser.obtain((T6) value);
+            sixthAcceptor.accept((T6) value);
         } else {
-            varPurchaser.obtain(value);
+            varAcceptor.accept(value);
         }
     }
 
-    public <T1, T2, T3, T4, T5, T6, V> void as(Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                               Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                               Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                               Class<T4> fourthClazz, Purchaser<T4> fourthPurchaser,
-                                               Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
-                                               Class<T6> sixthClazz, Purchaser<T6> sixthPurchaser,
-                                               Class<Var> varClass, Purchaser<V> varPurchaser) {
+    public <T1, T2, T3, T4, T5, T6, V> void as(Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                               Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                               Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                               Class<T4> fourthClazz, Acceptor<T4> fourthAcceptor,
+                                               Class<T5> fifthClazz, Acceptor<T5> fifthAcceptor,
+                                               Class<T6> sixthClazz, Acceptor<T6> sixthAcceptor,
+                                               Class<Var> varClass, Acceptor<V> varAcceptor) {
         match((V) value,
-                firstClazz, firstPurchaser,
-                secondClazz, secondPurchaser,
-                thirdClazz, thirdPurchaser,
-                fourthClazz, fourthPurchaser,
-                fifthClazz, fifthPurchaser,
-                sixthClazz, sixthPurchaser,
-                varClass, varPurchaser);
+                firstClazz, firstAcceptor,
+                secondClazz, secondAcceptor,
+                thirdClazz, thirdAcceptor,
+                fourthClazz, fourthAcceptor,
+                fifthClazz, fifthAcceptor,
+                sixthClazz, sixthAcceptor,
+                varClass, varAcceptor);
     }
 
 
@@ -1265,24 +1265,24 @@ public final class TypeTestPattern {
 
 
     public static <V, T1, T2, T3, T4, T5, T6> void match(V value,
-                                                         Class<T1> firstClazz, Purchaser<T1> firstPurchaser,
-                                                         Class<T2> secondClazz, Purchaser<T2> secondPurchaser,
-                                                         Class<T3> thirdClazz, Purchaser<T3> thirdPurchaser,
-                                                         Class<T4> forthClazz, Purchaser<T4> forthPurchaser,
-                                                         Class<T5> fifthClazz, Purchaser<T5> fifthPurchaser,
-                                                         Class<T6> sixthClazz, Purchaser<T6> sixthPurchaser,
-                                                         Class<Null> nullClass, Runnable nullPurchaser,
-                                                         Class<Var> varClass, Purchaser<V> varPurchaser) {
+                                                         Class<T1> firstClazz, Acceptor<T1> firstAcceptor,
+                                                         Class<T2> secondClazz, Acceptor<T2> secondAcceptor,
+                                                         Class<T3> thirdClazz, Acceptor<T3> thirdAcceptor,
+                                                         Class<T4> forthClazz, Acceptor<T4> forthAcceptor,
+                                                         Class<T5> fifthClazz, Acceptor<T5> fifthAcceptor,
+                                                         Class<T6> sixthClazz, Acceptor<T6> sixthAcceptor,
+                                                         Class<Null> nullClass, Runnable nullAcceptor,
+                                                         Class<Var> varClass, Acceptor<V> varAcceptor) {
         if (value == null) {
-            nullPurchaser.run();
+            nullAcceptor.run();
         } else {
-            match(value, firstClazz, firstPurchaser,
-                    secondClazz, secondPurchaser,
-                    thirdClazz, thirdPurchaser,
-                    forthClazz, forthPurchaser,
-                    fifthClazz, fifthPurchaser,
-                    sixthClazz, sixthPurchaser,
-                    varClass, varPurchaser);
+            match(value, firstClazz, firstAcceptor,
+                    secondClazz, secondAcceptor,
+                    thirdClazz, thirdAcceptor,
+                    forthClazz, forthAcceptor,
+                    fifthClazz, fifthAcceptor,
+                    sixthClazz, sixthAcceptor,
+                    varClass, varAcceptor);
         }
     }
 
@@ -1339,7 +1339,7 @@ public final class TypeTestPattern {
                                                          Class<T4> forthClazz, Function<T4, R> forthFunction,
                                                          Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                          Class<T6> sixthClazz, Function<T6, R> sixthFunction,
-                                                         Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                                         Class<Var> varClass, Action<V, R> defaultAction) {
         R result = match(value, firstClazz, firstFunction, secondClazz, secondFunction,
                 thirdClazz, thirdFunction, forthClazz, forthFunction,
                 fifthClazz, fifthFunction, sixthClazz, sixthFunction);
@@ -1347,7 +1347,7 @@ public final class TypeTestPattern {
         if (result != null) {
             return result;
         } else {
-            return defaultRoutine.hold(value);
+            return defaultAction.action(value);
         }
     }
 
@@ -1381,7 +1381,7 @@ public final class TypeTestPattern {
                                                          Class<T5> fifthClazz, Function<T5, R> fifthFunction,
                                                          Class<T6> sixthClazz, Function<T6, R> sixthFunction,
                                                          Class<Null> nullClass, Supplier<R> nullSupplier,
-                                                         Class<Var> varClass, Routine<V, R> defaultRoutine) {
+                                                         Class<Var> varClass, Action<V, R> defaultAction) {
         if (value == null) {
             return nullSupplier.get();
         } else {
@@ -1391,7 +1391,7 @@ public final class TypeTestPattern {
                     forthClazz, forthFunction,
                     fifthClazz, fifthFunction,
                     sixthClazz, sixthFunction,
-                    varClass, defaultRoutine);
+                    varClass, defaultAction);
         }
     }
 }

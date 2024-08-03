@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 package org.kl.jpml.pattern;
 
 import org.kl.jpml.lambda.Provider;
-import org.kl.jpml.lambda.Purchaser;
+import org.kl.jpml.lambda.Acceptor;
 import org.kl.jpml.util.Tuple;
 
 import java.util.*;
@@ -1213,23 +1213,23 @@ public final class SequencePattern {
         fifthBranch.accept(fifthSupplier.take().first(), fifthSupplier.take().second());
     }
 
-    public static <E> void match(Collection<E> data, Provider<Stream<E>> supplier, Purchaser<Stream<E>> branch) {
+    public static <E> void match(Collection<E> data, Provider<Stream<E>> supplier, Acceptor<Stream<E>> branch) {
         if (!data.isEmpty()) {
             init(data);
 
-            branch.obtain(supplier.take());
+            branch.accept(supplier.take());
         }
     }
 
-    public <E> void as(Provider<Stream<E>> supplier, Purchaser<Stream<E>> branch) {
-        branch.obtain(supplier.take());
+    public <E> void as(Provider<Stream<E>> supplier, Acceptor<Stream<E>> branch) {
+        branch.accept(supplier.take());
     }
 
-    public static <K, V> void match(Map<K, V> data, Provider<Stream<Map.Entry<K, V>>> supplier, Purchaser<Stream<Map.Entry<K, V>>> branch) {
+    public static <K, V> void match(Map<K, V> data, Provider<Stream<Map.Entry<K, V>>> supplier, Acceptor<Stream<Map.Entry<K, V>>> branch) {
         if (!data.isEmpty()) {
             init(data);
 
-            branch.obtain(supplier.take());
+            branch.accept(supplier.take());
         }
     }
 }

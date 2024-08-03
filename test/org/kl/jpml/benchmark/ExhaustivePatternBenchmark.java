@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  */
 package org.kl.jpml.benchmark;
 
-import org.kl.jpml.lambda.Routine;
+import org.kl.jpml.lambda.Action;
 import org.kl.jpml.test.color.*;
 import org.openjdk.jmh.Main;
 import org.openjdk.jmh.annotations.*;
@@ -160,7 +160,7 @@ public class ExhaustivePatternBenchmark {
     public int matchAsSealedBiExpressionReflective() {
         return match(biColor).as(
                 BiColor.Red.class,  r -> 0x1,
-                BiColor.Blue.class, (Routine<BiColor.Blue, Integer>) b -> 0x2
+                BiColor.Blue.class, (Action<BiColor.Blue, Integer>) b -> 0x2
         );
     }
 
@@ -178,7 +178,7 @@ public class ExhaustivePatternBenchmark {
         return match(triColor).as(
                 TriColor.Red.class,  r -> 0x1,
                 TriColor.Blue.class, b -> 0x2,
-                TriColor.White.class, (Routine<TriColor.White, Integer>) b -> 0x3
+                TriColor.White.class, (Action<TriColor.White, Integer>) b -> 0x3
         );
     }
 
@@ -198,7 +198,7 @@ public class ExhaustivePatternBenchmark {
                 QuarColor.Red.class,  r -> 0x1,
                 QuarColor.Blue.class, b -> 0x2,
                 QuarColor.White.class, w -> 0x3,
-                QuarColor.Black.class, (Routine<QuarColor.Black, Integer>) b -> 0x4
+                QuarColor.Black.class, (Action<QuarColor.Black, Integer>) b -> 0x4
         );
     }
 
@@ -220,7 +220,7 @@ public class ExhaustivePatternBenchmark {
                 QuinColor.Blue.class, b -> 0x2,
                 QuinColor.White.class, w -> 0x3,
                 QuinColor.Black.class, b -> 0x4,
-                QuinColor.Green.class, (Routine<QuinColor.Green, Integer>) g -> 0x5
+                QuinColor.Green.class, (Action<QuinColor.Green, Integer>) g -> 0x5
         );
     }
 
@@ -244,7 +244,7 @@ public class ExhaustivePatternBenchmark {
                 SexColor.White.class, w -> 0x3,
                 SexColor.Black.class, b -> 0x4,
                 SexColor.Green.class, g -> 0x5,
-                SexColor.Yellow.class, (Routine<SexColor.Yellow, Integer>) y -> 0x6
+                SexColor.Yellow.class, (Action<SexColor.Yellow, Integer>) y -> 0x6
         );
     }
 

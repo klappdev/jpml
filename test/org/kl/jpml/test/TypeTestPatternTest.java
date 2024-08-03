@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@
 package org.kl.jpml.test;
 
 import org.junit.jupiter.api.Test;
-import org.kl.jpml.lambda.Purchaser;
-import org.kl.jpml.lambda.Routine;
+import org.kl.jpml.lambda.Acceptor;
+import org.kl.jpml.lambda.Action;
 import org.kl.jpml.test.shape.Circle;
 import org.kl.jpml.test.shape.Figure;
 import org.kl.jpml.test.shape.Rectangle;
@@ -651,27 +651,27 @@ public class TypeTestPatternTest {
         /* 1 */
         match(data,
                 Byte.class, b -> System.out.println(b * b),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 1 type")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 1 type")
         );
 
         byte value1 = 1;
         match(value1,
                 byte.class, b -> System.out.println("pc1: " + b * b),
-                Var.class, (Purchaser<Byte>) any -> System.out.println("Else value 1 type")
+                Var.class, (Acceptor<Byte>) any -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
         match(data,
                 Byte.class, b -> System.out.println(b * b),
                 Short.class, s -> System.out.println(s * s),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 2 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 2 types")
         );
 
         short value2 = 2;
         match(value2,
                 byte.class, b -> System.out.println("pc2: " + b * b),
                 short.class, s -> System.out.println("pc2: " + s * s),
-                Var.class, (Purchaser<Short>) any -> System.out.println("Else value 2 types")
+                Var.class, (Acceptor<Short>) any -> System.out.println("Else value 2 types")
         );
 
         /* 3 */
@@ -679,7 +679,7 @@ public class TypeTestPatternTest {
                 Byte.class, b -> System.out.println(b * b),
                 Short.class, s -> System.out.println(s * s),
                 Integer.class, i -> System.out.println(i * i),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 3 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 3 types")
         );
 
         int value3 = 3;
@@ -687,7 +687,7 @@ public class TypeTestPatternTest {
                 byte.class, b -> System.out.println("pc3: " + b * b),
                 short.class, s -> System.out.println("pc3: " + s * s),
                 int.class, i -> System.out.println("pc3: " + i * i),
-                Var.class, (Purchaser<Integer>) any -> System.out.println("Else value 3 types")
+                Var.class, (Acceptor<Integer>) any -> System.out.println("Else value 3 types")
         );
 
         /* 4 */
@@ -696,7 +696,7 @@ public class TypeTestPatternTest {
                 Short.class, s -> System.out.println(s * s),
                 Integer.class, i -> System.out.println(i * i),
                 Long.class, l -> System.out.println(l * l),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 4 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 4 types")
         );
 
         long value4 = 4;
@@ -705,7 +705,7 @@ public class TypeTestPatternTest {
                 short.class, s -> System.out.println("pc4: " + s * s),
                 int.class, i -> System.out.println("pc4: " + i * i),
                 long.class, l -> System.out.println("pc4: " + l * l),
-                Var.class, (Purchaser<Long>) any -> System.out.println("Else value 4 types")
+                Var.class, (Acceptor<Long>) any -> System.out.println("Else value 4 types")
         );
 
         /* 5 */
@@ -715,7 +715,7 @@ public class TypeTestPatternTest {
                 Integer.class, i -> System.out.println(i * i),
                 Long.class, l -> System.out.println(l * l),
                 Float.class, f -> System.out.println(f * f),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 5 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 5 types")
         );
 
         float value5 = 5;
@@ -725,7 +725,7 @@ public class TypeTestPatternTest {
                 int.class, i -> System.out.println("pc5: " + i * i),
                 long.class, l -> System.out.println("pc5: " + l * l),
                 float.class, f -> System.out.println("pc5: " + f * f),
-                Var.class, (Purchaser<Float>) any -> System.out.println("Else value 5 types")
+                Var.class, (Acceptor<Float>) any -> System.out.println("Else value 5 types")
         );
 
         /* 6 */
@@ -736,7 +736,7 @@ public class TypeTestPatternTest {
                 Long.class, l -> System.out.println(l * l),
                 Float.class, f -> System.out.println(f * f),
                 Double.class, d -> System.out.println(d * d),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 6 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 6 types")
         );
 
         double value6 = 6;
@@ -747,14 +747,14 @@ public class TypeTestPatternTest {
                 long.class, l -> System.out.println("pc6: " + l * l * l),
                 float.class, f -> System.out.println("pc6: " + f * f * f),
                 double.class, d -> System.out.println("pc6: " + d * d * d),
-                Var.class, (Purchaser<Double>) any -> System.out.println("Else value 6 types")
+                Var.class, (Acceptor<Double>) any -> System.out.println("Else value 6 types")
         );
 
         /* 7 */
         match(data,
                 Rectangle.class, r -> System.out.println("rect:   " + r.square()),
                 Circle.class, c -> System.out.println("circle: " + c.square()),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else shape")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else shape")
         );
     }
 
@@ -765,27 +765,27 @@ public class TypeTestPatternTest {
         /* 1 */
         match(data).as(
                 Byte.class, b -> System.out.println(b * b),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 1 type")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 1 type")
         );
 
         byte value1 = 1;
         match(value1).as(
                 byte.class, b -> System.out.println("pc1: " + b * b),
-                Var.class, (Purchaser<Byte>) any -> System.out.println("Else value 1 type")
+                Var.class, (Acceptor<Byte>) any -> System.out.println("Else value 1 type")
         );
 
         /* 2 */
         match(data).as(
                 Byte.class, b -> System.out.println(b * b),
                 Short.class, s -> System.out.println(s * s),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 2 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 2 types")
         );
 
         short value2 = 2;
         match(value2).as(
                 byte.class, b -> System.out.println("pc2: " + b * b),
                 short.class, s -> System.out.println("pc2: " + s * s),
-                Var.class, (Purchaser<Short>) any -> System.out.println("Else value 2 types")
+                Var.class, (Acceptor<Short>) any -> System.out.println("Else value 2 types")
         );
 
         /* 3 */
@@ -793,7 +793,7 @@ public class TypeTestPatternTest {
                 Byte.class, b -> System.out.println(b * b),
                 Short.class, s -> System.out.println(s * s),
                 Integer.class, i -> System.out.println(i * i),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 3 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 3 types")
         );
 
         int value3 = 3;
@@ -801,7 +801,7 @@ public class TypeTestPatternTest {
                 byte.class, b -> System.out.println("pc3: " + b * b),
                 short.class, s -> System.out.println("pc3: " + s * s),
                 int.class, i -> System.out.println("pc3: " + i * i),
-                Var.class, (Purchaser<Integer>) any -> System.out.println("Else value 3 types")
+                Var.class, (Acceptor<Integer>) any -> System.out.println("Else value 3 types")
         );
 
         /* 4 */
@@ -810,7 +810,7 @@ public class TypeTestPatternTest {
                 Short.class, s -> System.out.println(s * s),
                 Integer.class, i -> System.out.println(i * i),
                 Long.class, l -> System.out.println(l * l),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 4 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 4 types")
         );
 
         long value4 = 4;
@@ -819,7 +819,7 @@ public class TypeTestPatternTest {
                 short.class, s -> System.out.println("pc4: " + s * s),
                 int.class, i -> System.out.println("pc4: " + i * i),
                 long.class, l -> System.out.println("pc4: " + l * l),
-                Var.class, (Purchaser<Long>) any -> System.out.println("Else value 4 types")
+                Var.class, (Acceptor<Long>) any -> System.out.println("Else value 4 types")
         );
 
         /* 5 */
@@ -829,7 +829,7 @@ public class TypeTestPatternTest {
                 Integer.class, i -> System.out.println(i * i),
                 Long.class, l -> System.out.println(l * l),
                 Float.class, f -> System.out.println(f * f),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 5 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 5 types")
         );
 
         float value5 = 5;
@@ -839,7 +839,7 @@ public class TypeTestPatternTest {
                 int.class, i -> System.out.println("pc5: " + i * i),
                 long.class, l -> System.out.println("pc5: " + l * l),
                 float.class, f -> System.out.println("pc5: " + f * f),
-                Var.class, (Purchaser<Float>) any -> System.out.println("Else value 5 types")
+                Var.class, (Acceptor<Float>) any -> System.out.println("Else value 5 types")
         );
 
         /* 6 */
@@ -850,7 +850,7 @@ public class TypeTestPatternTest {
                 Long.class, l -> System.out.println(l * l),
                 Float.class, f -> System.out.println(f * f),
                 Double.class, d -> System.out.println(d * d),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else value 6 types")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else value 6 types")
         );
 
         double value6 = 6;
@@ -861,14 +861,14 @@ public class TypeTestPatternTest {
                 long.class, l -> System.out.println("pc6: " + l * l * l),
                 float.class, f -> System.out.println("pc6: " + f * f * f),
                 double.class, d -> System.out.println("pc6: " + d * d * d),
-                Var.class, (Purchaser<Double>) any -> System.out.println("Else value 6 types")
+                Var.class, (Acceptor<Double>) any -> System.out.println("Else value 6 types")
         );
 
         /* 7 */
         match(data).as(
                 Rectangle.class, r -> System.out.println("rect:   " + r.square()),
                 Circle.class, c -> System.out.println("circle: " + c.square()),
-                Var.class, (Purchaser<String>) any -> System.out.println("Else shape")
+                Var.class, (Acceptor<String>) any -> System.out.println("Else shape")
         );
     }
 
@@ -2218,7 +2218,7 @@ public class TypeTestPatternTest {
                     int result = 2 * (b + b);
                     return result;
                 },
-                Var.class, (Routine<Integer, Integer>) any -> {
+                Var.class, (Action<Integer, Integer>) any -> {
                     System.out.println("Else value 1 types");
                     return 0;
                 }
@@ -2232,7 +2232,7 @@ public class TypeTestPatternTest {
                     int result = 2 * (b + b);
                     return result;
                 },
-                Var.class, (Routine<Byte, Integer>) any -> {
+                Var.class, (Action<Byte, Integer>) any -> {
                     System.out.println("Else value 1 types");
                     return 0;
                 }
@@ -2250,7 +2250,7 @@ public class TypeTestPatternTest {
                     int result = 2 * (s + s);
                     return result;
                 },
-                Var.class, (Routine<Integer, Integer>) any -> {
+                Var.class, (Action<Integer, Integer>) any -> {
                     System.out.println("Else value 2 types");
                     return 1;
                 }
@@ -2268,7 +2268,7 @@ public class TypeTestPatternTest {
                     int result = 2 * (s + s);
                     return result;
                 },
-                Var.class, (Routine<Short, Integer>) any -> {
+                Var.class, (Action<Short, Integer>) any -> {
                     System.out.println("Else value 2 types");
                     return 0;
                 }
@@ -2290,7 +2290,7 @@ public class TypeTestPatternTest {
                     int result = 2 * (i + i);
                     return result;
                 },
-                Var.class, (Routine<Long, Integer>) any -> {
+                Var.class, (Action<Long, Integer>) any -> {
                     System.out.println("Else value 3 types");
                     return 2;
                 }
@@ -2312,7 +2312,7 @@ public class TypeTestPatternTest {
                     int result = 2 * (i + i);
                     return result;
                 },
-                Var.class, (Routine<Integer, Integer>) any -> {
+                Var.class, (Action<Integer, Integer>) any -> {
                     System.out.println("Else value 3 types");
                     return 0;
                 }
@@ -2338,7 +2338,7 @@ public class TypeTestPatternTest {
                     int result = (int) (2 * (l + l));
                     return result;
                 },
-                Var.class, (Routine<Float, Integer>) any -> {
+                Var.class, (Action<Float, Integer>) any -> {
                     System.out.println("Else value 4 types");
                     return 4;
                 }
@@ -2364,7 +2364,7 @@ public class TypeTestPatternTest {
                     int result = (int) (2 * (l + l));
                     return result;
                 },
-                Var.class, (Routine<Long, Integer>) any -> {
+                Var.class, (Action<Long, Integer>) any -> {
                     System.out.println("Else value 4 types");
                     return 0;
                 }
@@ -2394,7 +2394,7 @@ public class TypeTestPatternTest {
                     int result = (int) (2 * (f + f));
                     return result;
                 },
-                Var.class, (Routine<Double, Integer>) any -> {
+                Var.class, (Action<Double, Integer>) any -> {
                     System.out.println("Else value 5 types");
                     return 5;
                 }
@@ -2423,7 +2423,7 @@ public class TypeTestPatternTest {
                     int result = (int) (2 * (f + f));
                     return result;
                 },
-                Var.class, (Routine<Float, Integer>) any -> {
+                Var.class, (Action<Float, Integer>) any -> {
                     System.out.println("Else value 5 types");
                     return 0;
                 }
@@ -2510,7 +2510,7 @@ public class TypeTestPatternTest {
                     int result = c.square();
                     return result;
                 },
-                Var.class, (Routine<Integer, Integer>) any -> {
+                Var.class, (Action<Integer, Integer>) any -> {
                     System.out.println("Else shape");
                     return 5;
                 }
