@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2026 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  */
 package org.kl.jpml.error;
 
-public class PatternException extends RuntimeException {
+public final class PatternException extends RuntimeException {
     private final String message;
 
     public PatternException() {

@@ -126,7 +126,7 @@ Using this library developer can write in the following way.
 ```Java
    public sealed class Result<T, E extends Throwable> {
       public class Success<T> extends Result<T, E> { 
-         Success(T value) {} 
+         Success(T value) {}
       }
       public class Failure<E> extends Result<T, E> {
          Failture(E exception) {}
@@ -149,10 +149,10 @@ Using this library developer can write in the following way.
        private Result() {}
    
        public static class Success<T> extends Result<T, E> { 
-	  Success(T value) {} 
+	       Success(T value) {}
        }
        public static class Failure<E> extends Result<T, E> {
-	  Failture(E exception) {}
+	       Failure(E exception) {}
        }
     }
 	

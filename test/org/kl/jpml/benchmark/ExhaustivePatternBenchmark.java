@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2024 https://github.com/klappdev
+ * Copyright (c) 2019 - 2026 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -33,23 +33,23 @@ import java.util.concurrent.TimeUnit;
 import static org.kl.jpml.pattern.ExhaustivePattern.match;
 
 /*
-    UnionPatternBenchmark.matchSealedBiExpressionPlain           avgt    9   5,992 ±  0,332  ns/op
-    UnionPatternBenchmark.matchSealedTriExpressionPlain          avgt    9   7,199 ±  0,356  ns/op
-    UnionPatternBenchmark.matchSealedQuarExpressionPlain         avgt    9   8,349 ±  1,789  ns/op
-    UnionPatternBenchmark.matchSealedQuinExpressionPlain         avgt    9   8,163 ±  0,541  ns/op
-    UnionPatternBenchmark.matchSealedSexExpressionPlain          avgt    9   8,746 ±  0,600  ns/op
+    ExhaustivePattern.matchSealedBiExpressionPlain           avgt    9   5,992 ±  0,332  ns/op
+    ExhaustivePattern.matchSealedTriExpressionPlain          avgt    9   7,199 ±  0,356  ns/op
+    ExhaustivePattern.matchSealedQuarExpressionPlain         avgt    9   8,349 ±  1,789  ns/op
+    ExhaustivePattern.matchSealedQuinExpressionPlain         avgt    9   8,163 ±  0,541  ns/op
+    ExhaustivePattern.matchSealedSexExpressionPlain          avgt    9   8,746 ±  0,600  ns/op
 
-    UnionPatternBenchmark.matchSealedBiExpressionReflective      avgt    9  45,192 ± 11,951  ns/op
-    UnionPatternBenchmark.matchSealedTriExpressionReflective     avgt    9  43,413 ±  0,702  ns/op
-    UnionPatternBenchmark.matchSealedQuarExpressionReflective    avgt    9  59,127 ± 12,189  ns/op
-    UnionPatternBenchmark.matchSealedQuinExpressionReflective    avgt    9  57,653 ±  3,363  ns/op
-    UnionPatternBenchmark.matchSealedSexExpressionReflective     avgt    9  65,511 ±  4,214  ns/op
+    ExhaustivePattern.matchSealedBiExpressionReflective      avgt    9  45,192 ± 11,951  ns/op
+    ExhaustivePattern.matchSealedTriExpressionReflective     avgt    9  43,413 ±  0,702  ns/op
+    ExhaustivePattern.matchSealedQuarExpressionReflective    avgt    9  59,127 ± 12,189  ns/op
+    ExhaustivePattern.matchSealedQuinExpressionReflective    avgt    9  57,653 ±  3,363  ns/op
+    ExhaustivePattern.matchSealedSexExpressionReflective     avgt    9  65,511 ±  4,214  ns/op
 
-    UnionPatternBenchmark.matchAsSealedBiExpressionReflective    avgt    9  51,458 ± 20,076  ns/op
-    UnionPatternBenchmark.matchAsSealedTriExpressionReflective   avgt    9  51,867 ± 10,918  ns/op
-    UnionPatternBenchmark.matchAsSealedQuarExpressionReflective  avgt    9  60,489 ± 11,864  ns/op
-    UnionPatternBenchmark.matchAsSealedQuinExpressionReflective  avgt    9  65,481 ±  6,173  ns/op
-    UnionPatternBenchmark.matchAsSealedSexExpressionReflective   avgt    9  69,764 ± 11,748  ns/op
+    ExhaustivePattern.matchAsSealedBiExpressionReflective    avgt    9  51,458 ± 20,076  ns/op
+    ExhaustivePattern.matchAsSealedTriExpressionReflective   avgt    9  51,867 ± 10,918  ns/op
+    ExhaustivePattern.matchAsSealedQuarExpressionReflective  avgt    9  60,489 ± 11,864  ns/op
+    ExhaustivePattern.matchAsSealedQuinExpressionReflective  avgt    9  65,481 ±  6,173  ns/op
+    ExhaustivePattern.matchAsSealedSexExpressionReflective   avgt    9  69,764 ± 11,748  ns/op
  */
 @Warmup(iterations = 3, time = 1)
 @Measurement(iterations = 3, time = 1)
